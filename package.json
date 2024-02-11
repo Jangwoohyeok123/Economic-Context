@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next/font": "^14.1.0",
     "clsx": "^2.1.0",
     "d3.js": "^0.0.2-security",
     "framer": "^2.4.1",

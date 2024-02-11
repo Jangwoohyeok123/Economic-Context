@@ -1,4 +1,4 @@
-import { Html, Head, Main, NextScript } from 'next/document'
+import { Html, Head, Main, NextScript } from "next/document";
 
 export default function Document() {
   return (
@@ -9,5 +9,9 @@ export default function Document() {
         <NextScript />
       </body>
     </Html>
-  )
+  );
 }
+/* 
+  서버에만 렌더링되고 html 문서의 구조를 정의하는 파일
+  서버사이드 렌더링시 실행되는 컴포넌트다.
+*/
