@@ -9,12 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next/font": "^14.1.0",
     "clsx": "^2.1.0",
     "d3.js": "^0.0.2-security",
     "framer": "^2.4.1",
     "next": "13.5.6",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "sass": "^1.70.0"
   },
   "devDependencies": {
     "@types/node": "^20",
