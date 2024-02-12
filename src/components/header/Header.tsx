@@ -19,13 +19,13 @@ export default function Header() {
 
   return (
     <header className={clsx(styles.Header, poppins.variable)}>
-      {router.pathname === "/" ? (
+      {router.pathname !== "/dashboard" ? (
         <nav className={clsx(styles.mainNav)}>
           <Link href="/">EconomicContext</Link>
           <div className={clsx(styles.users)}>
             <span>Bell</span>
             <Link href="/dashboard">MyContext</Link>
-            <span>Login</span>
+            <Link href="/login">Login</Link>
           </div>
         </nav>
       ) : (
@@ -33,7 +33,7 @@ export default function Header() {
           <Link href="/">EconomicContext</Link>
           <div className={clsx(styles.users)}>
             <Link href="/dashboard">MyContext</Link>
-            <span>Login</span>
+            <Link href="/login">Login</Link>
           </div>
         </nav>
       )}
