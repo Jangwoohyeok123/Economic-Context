@@ -1,0 +1,21 @@
+.Menu {
+  padding-top: 60px;
+  width: 15%;
+  min-height: calc(100vh - 60px);
+
+  padding-left: 40px;
+  font-family: var(--baseFont);
+  border-right: 1px solid #ccc;
+  background: #cfcfcf;
+
+  nav {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    position: fixed;
+  }
+
+  span {
+    font-size: 1.3rem;
+  }
+}
