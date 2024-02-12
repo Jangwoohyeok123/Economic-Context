@@ -11,9 +11,9 @@ const roboto = Roboto({
 
 export default function Dashboard() {
   return (
-    <div className={clsx(styles.Dashboard, roboto.variable)}>
+    <main className={clsx(styles.Dashboard, roboto.variable)}>
       <Menu />
       <div className={clsx(styles.wrap)}>asdasdsazxchgzxvcghjvzxc</div>
-    </div>
+    </main>
   );
 }

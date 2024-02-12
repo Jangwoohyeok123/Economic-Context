@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import styles from "./Home.module.scss";
 import { Poppins, Roboto } from "next/font/google";
+import { useRouter } from "next/router";
 
 // 전역 글꼴임
 const roboto = Roboto({
@@ -16,9 +17,15 @@ const poppins = Poppins({
 });
 
 export default function Pages() {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push("/1");
+  };
+
   return (
-    <div className={clsx(styles.Home, poppins.variable, roboto.variable)}>
-      Home
-    </div>
+    <main className={clsx(styles.Home, poppins.variable, roboto.variable)}>
+      <button onClick={handleClick}>asdasd</button>
+    </main>
   );
 }
