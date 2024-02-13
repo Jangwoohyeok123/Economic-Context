@@ -3,6 +3,7 @@ import styles from "./CatgId.module.scss";
 import { useRouter } from "next/router";
 import { Poppins, Roboto } from "next/font/google";
 import { useQueryfetchChartDataById } from "@/query/useQueryChartdata";
+import { useEffect, useState } from "react";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -19,12 +20,27 @@ const poppins = Poppins({
 export default function CatgId() {
   const router = useRouter();
   const { id: seriesId } = router.query;
-  const { data, isSuccess } = useQueryfetchChartDataById(seriesId);
+  const [Data, setData] = useState([]);
+
+  // const { data, isSuccess } = useQueryfetchChartDataById(seriesId);
+  useEffect(() => {
+    const a = fetch(`/api/hello?seriesId=${seriesId}`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => setData(data.observations));
+  }, []);
+
+  useEffect(() => {
+    console.log(Data);
+  }, [Data]);
 
   return (
-    <main
-      className={clsx(styles.CatgId, poppins.variable, roboto.variable)}
-    ></main>
+    <main className={clsx(styles.CatgId, poppins.variable, roboto.variable)}>
+      {Data.map((data, idx) => {
+        return <div key={idx}>{data.value}</div>;
+      })}
+    </main>
   );
 }
 

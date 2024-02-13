@@ -125,14 +125,6 @@ export async function getStaticProps() {
   );
   const jsonProduction = await fetchProductionCategory.json();
 
-  // server 에서는 잘 받아짐
-  const fetchdata = await fetch(
-    `https://api.stlouisfed.org/fred/series/observations?series_id=FHA30&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
-  );
-  const jsonTest = await fetchdata.json();
-
-  console.log(jsonTest);
-
   return {
     // props 는 json'Category이름' 꼴로 전송해야한다. 화면에 json 이후 글자가 표기되기 때문이다.
     props: {
