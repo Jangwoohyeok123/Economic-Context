@@ -4,8 +4,7 @@ import "@/styles/Reset.scss";
 import type { AppProps } from "next/app";
 import Header from "../components/header/Header";
 import { Poppins, Roboto } from "next/font/google";
-import Menu from "@/components/menu/Menu";
-import clsx from "clsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -21,12 +20,13 @@ const poppins = Poppins({
 
 // Notice that the Box component doesn't take any props, but we are trying to pass a children prop to it.
 export default function App({ Component, pageProps }: AppProps) {
+  const queryClient = new QueryClient();
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <Header />
       <Component {...pageProps} />
       {/* <Menu /> */}
-    </>
+    </QueryClientProvider>
   );
 }
 

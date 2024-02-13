@@ -1,9 +1,8 @@
 import clsx from "clsx";
 import styles from "./Home.module.scss";
 import { Poppins, Roboto } from "next/font/google";
-import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
-import { MouseEvent } from "react";
+import { Router, useRouter } from "next/router";
+import { useRef, useState } from "react";
 
 // 전역 글꼴임
 const roboto = Roboto({
@@ -59,14 +58,21 @@ export default function Pages({
   jsonConsume: Category;
   jsonProduction: Category;
 }) {
-  const CategoryNames = Object.keys(arguments[0]).map((ag) => {
-    return ag.slice(4);
+  const router = useRouter();
+  const CategoryNames = Object.keys(arguments[0]).map((arg) => {
+    return arg.slice(4);
   });
   const Categorys = Object.values(arguments[0]);
   const [Index, setIndex] = useState(0);
 
   const handleCategoryIndex = (idx: number) => {
     setIndex(idx);
+  };
+
+  const handleAboutPage = (seriesId: number) => {
+    router.push(`/${seriesId}`);
+
+    // fetching 과 동시에 about 페이지로 이동한다.
   };
 
   return (
@@ -87,7 +93,7 @@ export default function Pages({
               <h3>{series.title}</h3>
               <p>{series.id}</p>
               <button>save</button>
-              <button>more</button>
+              <button onClick={() => handleAboutPage(series.id)}>more</button>
             </div>
           );
         })}
@@ -119,7 +125,16 @@ export async function getStaticProps() {
   );
   const jsonProduction = await fetchProductionCategory.json();
 
+  // server 에서는 잘 받아짐
+  const fetchdata = await fetch(
+    `https://api.stlouisfed.org/fred/series/observations?series_id=FHA30&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
+  );
+  const jsonTest = await fetchdata.json();
+
+  console.log(jsonTest);
+
   return {
+    // props 는 json'Category이름' 꼴로 전송해야한다. 화면에 json 이후 글자가 표기되기 때문이다.
     props: {
       jsonInterest: jsonInterest,
       jsonExchange: jsonExchange,
