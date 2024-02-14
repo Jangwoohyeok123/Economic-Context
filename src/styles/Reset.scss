@@ -2,10 +2,17 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-size: 16px;
+}
+
+body {
   background-color: var(--bgColor);
   color: var(--fontColor);
   font-family: var(--baseFont);
-  font-size: 16px;
+}
+// page 는 main 으로 시작해라
+main {
+  padding-top: 60px;
 }
 ul,
 ol,
