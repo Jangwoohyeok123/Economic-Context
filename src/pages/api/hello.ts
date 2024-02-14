@@ -27,6 +27,7 @@ export default async function handler(
   // req params 를 통해 id 전달
   try {
     const { seriesId } = req.query;
+    // https ~ fred 는 baseurl 처리하기 => 변수로 뺼 수 있는 것은 빼기
     const response = await fetch(
       `https://api.stlouisfed.org/fred/series/observations?series_id=${seriesId}&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
     );

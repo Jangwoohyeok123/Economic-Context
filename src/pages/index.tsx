@@ -48,39 +48,32 @@ interface Category {
 
 // { props 의 key 값 }: { props 의 key 값: 타입 }
 export default function Pages({
-  jsonInterest,
-  jsonExchange,
-  jsonConsume,
-  jsonProduction,
+  Interest,
+  Exchange,
+  Consume,
+  Production,
 }: {
-  jsonInterest: Category;
-  jsonExchange: Category;
-  jsonConsume: Category;
-  jsonProduction: Category;
+  Interest: Category;
+  Exchange: Category;
+  Consume: Category;
+  Production: Category;
 }) {
   const router = useRouter();
-  const CategoryNames = Object.keys(arguments[0]).map((arg) => {
-    return arg.slice(4);
-  });
+  const CategoryNames = Object.keys(arguments[0]);
   const Categorys = Object.values(arguments[0]);
   const [Index, setIndex] = useState(0);
 
-  const handleCategoryIndex = (idx: number) => {
-    setIndex(idx);
-  };
-
-  const handleAboutPage = (seriesId: number) => {
+  const GotoAboutPage = (seriesId: number) => {
     router.push(`/${seriesId}`);
-
-    // fetching 과 동시에 about 페이지로 이동한다.
   };
 
+  // pr 은 남이보는 코드 => 최종본이라고 생각해야함 => 전까지는 개인차이
   return (
     <main className={clsx(styles.Home, poppins.variable, roboto.variable)}>
       <div className={clsx(styles.tab)}>
         {Categorys.map((el, idx) => {
           return (
-            <button key={idx} onClick={() => handleCategoryIndex(idx)}>
+            <button key={idx} onClick={() => setIndex(idx)}>
               {CategoryNames[idx]}
             </button>
           );
@@ -93,7 +86,7 @@ export default function Pages({
               <h3>{series.title}</h3>
               <p>{series.id}</p>
               <button>save</button>
-              <button onClick={() => handleAboutPage(series.id)}>more</button>
+              <button onClick={() => GotoAboutPage(series.id)}>more</button>
             </div>
           );
         })}
@@ -108,30 +101,33 @@ export async function getStaticProps() {
   const fetchInterestCategory = await fetch(
     `https://api.stlouisfed.org/fred/category/series?category_id=114&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
   );
-  const jsonInterest = await fetchInterestCategory.json();
+  const Interest = await fetchInterestCategory.json();
 
   const fetchExchangeCategory = await fetch(
     `https://api.stlouisfed.org/fred/category/series?category_id=94&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
   );
-  const jsonExchange = await fetchExchangeCategory.json();
+  const Exchange = await fetchExchangeCategory.json();
 
   const fetchConsumeCategory = await fetch(
     `https://api.stlouisfed.org/fred/category/series?category_id=9&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
   );
-  const jsonConsume = await fetchConsumeCategory.json();
+  const Consume = await fetchConsumeCategory.json();
 
   const fetchProductionCategory = await fetch(
     `https://api.stlouisfed.org/fred/category/series?category_id=31&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
   );
-  const jsonProduction = await fetchProductionCategory.json();
+  const Production = await fetchProductionCategory.json();
 
   return {
+    // 4개를 한 번에 호출해야하는지 고민해볼 것
+    // prefetching? hover 시 fetcing 이 일어나는 기능이 있음
+    // a fethcing 하고 bcd 는 prefetcging 이용할 수 있음 promise.all 과 고민해볼 것
     // props 는 json'Category이름' 꼴로 전송해야한다. 화면에 json 이후 글자가 표기되기 때문이다.
     props: {
-      jsonInterest: jsonInterest,
-      jsonExchange: jsonExchange,
-      jsonConsume: jsonConsume,
-      jsonProduction: jsonProduction,
+      Interest: Interest,
+      Exchange: Exchange,
+      Consume: Consume,
+      Production: Production,
     },
   };
 }

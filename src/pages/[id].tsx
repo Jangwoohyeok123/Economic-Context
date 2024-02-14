@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import styles from "./CatgId.module.scss";
+import styles from "./CategoryId.module.scss";
 import { useRouter } from "next/router";
 import { Poppins, Roboto } from "next/font/google";
 import { useQueryfetchChartDataById } from "@/query/useQueryChartdata";
