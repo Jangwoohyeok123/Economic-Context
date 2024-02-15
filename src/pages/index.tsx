@@ -46,7 +46,7 @@ interface Category {
   sort_order: string;
 }
 
-// { props 의 key 값 }: { props 의 key 값: 타입 }
+// { Interest: {}, Exchange: {}, Consume: {}, Production: {}} 꼴로 전달받음
 export default function Pages({
   Interest,
   Exchange,
@@ -98,23 +98,24 @@ export default function Pages({
 // server 쪽에서 popularity 기준으로 sort 를 진행하고 전달하고 싶은데 ...
 // promise.all 적용실패
 export async function getStaticProps() {
+  const baseUrl = "https://api.stlouisfed.org/fred/";
   const fetchInterestCategory = await fetch(
-    `https://api.stlouisfed.org/fred/category/series?category_id=114&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
+    `${baseUrl}category/series?category_id=114&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
   );
   const Interest = await fetchInterestCategory.json();
 
   const fetchExchangeCategory = await fetch(
-    `https://api.stlouisfed.org/fred/category/series?category_id=94&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
+    `${baseUrl}category/series?category_id=94&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
   );
   const Exchange = await fetchExchangeCategory.json();
 
   const fetchConsumeCategory = await fetch(
-    `https://api.stlouisfed.org/fred/category/series?category_id=9&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
+    `${baseUrl}category/series?category_id=9&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
   );
   const Consume = await fetchConsumeCategory.json();
 
   const fetchProductionCategory = await fetch(
-    `https://api.stlouisfed.org/fred/category/series?category_id=31&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
+    `${baseUrl}category/series?category_id=31&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
   );
   const Production = await fetchProductionCategory.json();
 
