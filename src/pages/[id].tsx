@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { Poppins, Roboto } from 'next/font/google';
 import { useEffect, useState } from 'react';
 import LineChart from '@/components/charts/line/LineChart';
-import searchDotAndSetValue from '@/utils/valueUtils';
+import searchDotAndSetValue from '@/utils/searchDotAndSetValue';
 
 interface DataItem {
 	date: Date;
