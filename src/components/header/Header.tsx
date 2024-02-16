@@ -17,6 +17,7 @@ const poppins = Poppins({
 export default function Header() {
   const router = useRouter();
 
+  // 나중에 조건부 렌더링 컴포넌트 분리
   return (
     <header className={clsx(styles.Header, poppins.variable)}>
       {router.pathname !== "/dashboard" ? (

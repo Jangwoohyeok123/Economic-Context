@@ -13,6 +13,10 @@ body {
 // page 는 main 으로 시작해라
 main {
   padding-top: 60px;
+  width: 80%;
+  margin: 0 auto;
+  color: var(--fontColor);
+  font-family: var(--baseFont);
 }
 ul,
 ol,
