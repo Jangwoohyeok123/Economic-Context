@@ -1,20 +1,44 @@
+$paddingLeft: 30px;
+
 .Menu {
-  padding-top: 60px;
-  width: 290px;
-  min-height: calc(100vh - 60px);
-  padding-left: 40px;
-  font-family: var(--baseFont);
-  border-right: 1px solid #ccc;
-  background: #cfcfcf;
+	width: var(--dashMenuLength);
+	min-height: calc(100vh);
+	font-family: var(--baseFont);
+	background: var(--fontColor);
+	color: var(--bgColor);
+	position: fixed;
 
-  nav {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    position: fixed;
-  }
+	nav {
+		display: flex;
+		flex-direction: column;
+		gap: 30px;
+		align-content: center;
 
-  span {
-    font-size: 1.3rem;
-  }
+		.logo {
+			font-size: 1.3rem;
+			background: #222;
+			height: 60px;
+			display: flex;
+			padding-left: $paddingLeft;
+			align-items: center;
+		}
+
+		span {
+			opacity: 0.5;
+			font-size: 1.3rem;
+			width: 100%;
+			padding-left: $paddingLeft;
+			transition: 0.3s opacity;
+
+			&:hover {
+				opacity: 1;
+				cursor: pointer;
+			}
+
+			&.on {
+				opacity: 1;
+				color: #fff;
+			}
+		}
+	}
 }

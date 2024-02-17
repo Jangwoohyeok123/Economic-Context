@@ -1,12 +1,32 @@
-.Dashboard {
-  padding-top: 60px;
-  font-family: var(--baseFont);
-  display: flex;
-  width: 100%;
+$sidePadding: 30px;
 
-  .wrap {
-    width: 100%;
-    height: 2000px;
-    background: #111;
-  }
+.Dashboard {
+	font-family: var(--baseFont);
+	width: 100%;
+
+	.dashHeader {
+		padding-right: $sidePadding;
+		padding-left: calc(var(--dashMenuLength) + $sidePadding);
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		height: 60px;
+		background: #fff;
+		box-shadow: 10px 10px 20px #eee;
+
+		h2 {
+			font-size: 1.2rem;
+			font-weight: 500;
+		}
+
+		span {
+			font-size: 1.2rem;
+		}
+	}
+
+	.wrap {
+		padding-left: calc(var(--dashMenuLength) + $sidePadding);
+		padding-right: $sidePadding;
+		padding-top: 30px;
+	}
 }
