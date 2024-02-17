@@ -1,33 +1,47 @@
-import "@/styles/Global.scss";
-import "@/styles/Reset.scss";
-
-import type { AppProps } from "next/app";
-import Header from "../components/header/Header";
-import { Poppins, Roboto } from "next/font/google";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import '@/styles/Global.scss';
+import '@/styles/Reset.scss';
+import type { AppProps } from 'next/app';
+import Header from '../components/header/Header';
+import { Poppins, Roboto } from 'next/font/google';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import React, { createContext, useState } from 'react';
+import { useRouter } from 'next/router';
 
 const roboto = Roboto({
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
-  variable: "--baseFont",
+	subsets: ['latin'],
+	weight: ['300', '400', '500'],
+	variable: '--baseFont'
 });
 
 const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
-  variable: "--pointFont",
+	subsets: ['latin'],
+	weight: ['300', '400', '500'],
+	variable: '--pointFont'
 });
 
-// Notice that the Box component doesn't take any props, but we are trying to pass a children prop to it.
-export default function App({ Component, pageProps }: AppProps) {
-  const queryClient = new QueryClient();
-  return (
-    <QueryClientProvider client={queryClient}>
-      <Header />
-      <Component {...pageProps} />
-      {/* <Menu /> */}
-    </QueryClientProvider>
-  );
+interface UserContextType {
+	SavedCardsCount: number;
+	setSavedCardsCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
-// react 공식문서는 props 와 component 의 합성을 권장한다. 다음은 합성 도중 children 을 prop 으로 전달하는 과정을 생략해 발생한 타입
+// 이 컨텍스트에는 어떤 내용이 들어갈지 interface + generic 으로 정의함
+export const UserContext = createContext<UserContextType>({
+	SavedCardsCount: 0, // 초기값 설정
+	setSavedCardsCount: () => {} // 빈 함수로 초기화
+});
+
+// 이 APP 컴포넌트에는 어떤 Props 를 사용할지 정의함
+export default function App({ Component, pageProps }: AppProps) {
+	const router = useRouter();
+	const [SavedCardsCount, setSavedCardsCount] = useState(0);
+
+	const queryClient = new QueryClient();
+	return (
+		<UserContext.Provider value={{ SavedCardsCount, setSavedCardsCount }}>
+			<QueryClientProvider client={queryClient}>
+				{router.pathname !== '/dashboard' ? <Header /> : <></>}
+				<Component {...pageProps} />
+			</QueryClientProvider>
+		</UserContext.Provider>
+	);
+}
