@@ -1,0 +1,72 @@
+$tablet: 1023px;
+$mobile: 650px;
+
+.IndicatorCardBase {
+	// desktop + laptop 공통 스타일
+	width: 230px;
+	height: 250px;
+	background: #fff;
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	box-shadow: 10px 10px 20px #dedede;
+
+	h3 {
+		font-size: 1.1rem;
+		font-weight: 500;
+		text-align: left;
+	}
+
+	.buttons {
+		display: flex;
+		justify-content: space-between;
+
+		button {
+			background: #fff;
+			padding: 6px 22px;
+			border-radius: 30px;
+			border: 1px solid #ccc;
+			cursor: pointer;
+			transition: 0.3s;
+			opacity: 0.6;
+
+			&:hover {
+				opacity: 1;
+				border: solid 1px var(--pointColor);
+				color: var(--pointColor);
+			}
+		}
+	}
+}
+
+.IndicatorCardMainPage {
+	@extend .IndicatorCardBase;
+
+	@media (max-width: $tablet) {
+		width: 30%;
+		background: #ccc;
+		padding: 15px;
+	}
+
+	@media (max-width: $mobile) {
+		width: 100%;
+		background: gray;
+		padding: 10px;
+	}
+}
+
+.IndicatorCardDashboard {
+	@extend .IndicatorCardBase;
+	height: 30vh;
+
+	@media (max-width: $tablet) {
+		background: blue;
+		padding: 15px;
+	}
+
+	@media (max-width: $mobile) {
+		background: gray;
+		padding: 10px;
+	}
+}
