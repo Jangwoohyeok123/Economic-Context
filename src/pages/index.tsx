@@ -4,6 +4,7 @@ import { Poppins, Roboto } from 'next/font/google';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import Image from 'next/image';
+import IndicatorCard from '@/components/cards/indicatorCard/IndicatorCard';
 
 // 전역 글꼴임
 export const roboto = Roboto({
@@ -78,12 +79,14 @@ export default function Pages({
 			alert('This service requires login');
 			router.push(`/login`);
 		}
-	}; // method, path
+	};
 
 	useEffect(() => {
+		// URL 쿼리에서 'code' 파라미터를 추출
 		const authCode = router.query.code;
 
 		if (authCode) {
+			// 1. 인가코드 전달
 			try {
 				fetch('http://localhost:3000/api/auth', {
 					method: 'POST',
@@ -103,8 +106,12 @@ export default function Pages({
 			} catch (error) {
 				console.error('Fetch error:', error);
 			}
+
+			// 2. mainpage 로 리다이렉트
+			// header 가 안보이게 만들어야 함
+			window.location.href = 'http://localhost:3000';
 		}
-	}, [router.query.code]);
+	}, [router.query]);
 
 	return (
 		<>
@@ -126,18 +133,13 @@ export default function Pages({
 						const seriesId = series.id;
 						const title = series.title;
 						return (
-							<div className={clsx(styles.card)} key={idx}>
-								<h3>{title}</h3>
-								<div className={clsx(styles.buttons)}>
-									<button
-										onClick={() => {
-											saveCardToDB(CategoryNames[Index], seriesId, false);
-										}}>
-										save
-									</button>
-									<button onClick={() => GotoAboutPage(seriesId)}>more</button>
-								</div>
-							</div>
+							<IndicatorCard
+								key={idx}
+								title={title}
+								leftButton={{ handler: () => saveCardToDB(CategoryNames[Index], seriesId, false), desc: 'save' }}
+								rightButton={{ handler: () => GotoAboutPage(seriesId), desc: 'more' }}
+								pageType={'main'}
+							/>
 						);
 					})}
 				</figure>

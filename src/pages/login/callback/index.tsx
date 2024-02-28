@@ -31,7 +31,6 @@ export default function Callback() {
 			}
 
 			// 2. mainpage 로 리다이렉트
-			// header 가 안보이게 만들어야 함
 			window.location.href = 'http://localhost:3000';
 		}
 	}, [router.query]);

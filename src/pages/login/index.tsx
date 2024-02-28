@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 export default function Login() {
 	const router = useRouter();
 	const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-	const redirectUrl = 'http://localhost:3000/login/callback';
+	const redirectUrl = 'http://localhost:3000';
 
 	const moveToHomepage = () => router.push('/');
 
