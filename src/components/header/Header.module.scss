@@ -15,6 +15,10 @@
 	.users {
 		display: flex;
 		gap: 20px;
+
+		span {
+			cursor: pointer;
+		}
 	}
 
 	.mainNav {
