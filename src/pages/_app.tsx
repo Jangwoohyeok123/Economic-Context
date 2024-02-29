@@ -5,9 +5,11 @@ import type { AppProps } from 'next/app';
 import Header from '../components/header/Header';
 import { Poppins, Roboto } from 'next/font/google';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import React, { createContext, useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/router';
 import { CheckedCardSetProvider } from '@/contexts/checkedCardSetContext';
+import { Provider } from 'react-redux';
+import store from '@/store/store';
 
 const roboto = Roboto({
 	subsets: ['latin'],
@@ -37,10 +39,12 @@ export default function App({ Component, pageProps }: AppProps) {
 
 	return (
 		<CheckedCardSetProvider>
-			<QueryClientProvider client={queryClient}>
-				{checkRouterPathname() ? <Header /> : <></>}
-				<Component {...pageProps} />
-			</QueryClientProvider>
+			<Provider store={store}>
+				<QueryClientProvider client={queryClient}>
+					{checkRouterPathname() ? <Header /> : <></>}
+					<Component {...pageProps} />
+				</QueryClientProvider>
+			</Provider>
 		</CheckedCardSetProvider>
 	);
 }
