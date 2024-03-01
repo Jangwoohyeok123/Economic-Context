@@ -1,0 +1,40 @@
+$h5-padddingBottom: 1px;
+$h5-fontWeight: 500;
+$borderColor: #555;
+.ModalBase {
+	font-family: var(--pointFont);
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 1000;
+	background-color: #fff;
+	color: #111;
+}
+
+.Overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100vh;
+	background: #111;
+	opacity: 0.3;
+	z-index: 999;
+}
+
+// SmallModal에 특화된 스타일
+.SmallModal {
+	@extend .ModalBase;
+	width: 380px; // 더 작은 최대 너비
+	height: 220px;
+	// 필요한 경우 여기에 추가적인 스타일을 적용
+}
+
+// BigModal에 특화된 스타일
+.BigModal {
+	@extend .ModalBase;
+	height: 500px;
+	max-width: 800px; // 더 큰 최대 너비
+	// 필요한 경우 여기에 추가적인 스타일을 적용
+}
