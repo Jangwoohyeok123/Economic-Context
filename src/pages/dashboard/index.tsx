@@ -1,77 +1,33 @@
 import { roboto, poppins } from '../index';
 import styles from './Dashboard.module.scss';
 import clsx from 'clsx';
-import { useContext, useEffect, useState } from 'react';
+import { useState } from 'react';
 import Menu from '@/components/menu/Menu';
 import Dashheader from '@/components/dashheader/DashHeader';
 import Indicators from '@/components/indicators/Indicators';
-import { CheckedCardSetContext } from '@/contexts/checkedCardSetContext';
-
-const 사용자가_선택한_카테고리_카드데이터_Consume = [
-	{
-		title: '10년물 국채'
-		// checked: true
-	},
-	{
-		title: '20년물 국채'
-	},
-	{
-		title: '20년물 국채'
-	}
-];
-
-const 사용자가_선택한_카테고리_카드데이터_Exchange = [
-	{
-		title: '10년물 국채'
-		// checked: true
-	},
-	{
-		title: '20년물 국채'
-	},
-	{
-		title: '20년물 국채'
-	}
-];
-
-const 사용자가_선택한_카테고리_카드데이터_Interest = [
-	{
-		title: '10년물 국채'
-		// checked: true
-	},
-	{
-		title: '20년물 국채'
-	},
-	{
-		title: '20년물 국채'
-	}
-];
+import MyContext from '@/components/myContext/MyContext';
 
 export default function Dashboard() {
 	const [Tabs] = useState(['Indicators', 'MyContext']);
 	const [TabsIndex, setSelectedIdx] = useState(0);
-	const { checkedCardSet, setCheckedCardSet } = useContext(CheckedCardSetContext);
-
-	useEffect(() => {
-		console.log(checkedCardSet);
-	}, [checkedCardSet]);
 
 	// Categorys 에 필요한 데이터: 사용자가 선택했던 카드데이터들
 	const [Categorys] = useState([
 		{
 			title: 'Interest',
-			clientCheckedData: ['10년물 국채', '20년물 국채', '30년물 국채']
+			clientCheckedData: ['10년물 국채', '20년물 국채', '30년물 국채', '40년물 국채', '50년물 국채']
 		},
 		{
 			title: 'Exchange',
-			clientCheckedData: ['10년물 환율', '20년물 환율', '30년물 환율']
+			clientCheckedData: ['10년물 환율', '20년물 환율', '30년물 환율', '40년물 환율', '50년물 환율']
 		},
 		{
 			title: 'Consume',
-			clientCheckedData: ['10년물 소비', '20년물 소비', '30년물 소비']
+			clientCheckedData: ['10년물 소비', '20년물 소비', '30년물 소비', '40년물 소비', '50년물 소비']
 		},
 		{
 			title: 'Production',
-			clientCheckedData: ['10년물 생산', '20년물 생산', '30년물 생산']
+			clientCheckedData: ['10년물 생산', '20년물 생산', '30년물 생산', '40년물 생산', '50년물 생산']
 		}
 	]);
 	const [CategoryIndex, setCategoryIndex] = useState(0);
@@ -87,7 +43,7 @@ export default function Dashboard() {
 				{Tabs[TabsIndex] === 'Indicators' ? (
 					<Indicators Categorys={Categorys} CategoryIndex={CategoryIndex} setCategoryIndex={setCategoryIndex} />
 				) : (
-					<div>MyContext</div>
+					<MyContext />
 				)}
 			</section>
 		</div>
