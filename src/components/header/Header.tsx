@@ -3,9 +3,10 @@ import styles from './Header.module.scss';
 import { Poppins } from 'next/font/google';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { useContext } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '@/actions/actions';
+import AlertModal from '../modals/alertModal/AlertModal';
 
 interface HeaderProps {
 	children: React.ReactNode;
@@ -21,20 +22,15 @@ export default function Header() {
 	const isLogin = useSelector(state => state.user.isLogin);
 	const router = useRouter();
 	const dispatch = useDispatch();
+	const [IsAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
 	const goToLoginPage = () => {
-		console.log(isLogin);
-		if (!isLogin) {
-			alert('custom alert 으로 로그인유도');
-			window.location.href = 'http://localhost:3000/login';
-		}
+		if (!isLogin) setIsAlertModalOpen(true);
 	};
 
 	const userLogout = () => {
-		console.log(isLogin);
-		alert('modal logout 알림');
 		dispatch(logout());
-		// window.location.href = 'http://localhost:3000';
+		window.location.href = 'http://localhost:3000';
 	};
 
 	// 나중에 조건부 렌더링 컴포넌트 분리
@@ -54,6 +50,17 @@ export default function Header() {
 					</div>
 				)}
 			</nav>
+			<AlertModal
+				isModalOpen={IsAlertModalOpen}
+				setIsModalOpen={setIsAlertModalOpen}
+				size={'small'}
+				header={'You need to login!'}
+				body={'Our service is required to login'}
+				leftButtonContent={'Cancle'}
+				leftButtonHandler={() => setIsAlertModalOpen(false)}
+				rightButtonContent={'Login'}
+				rightButtonHandler={() => (window.location.href = 'http://localhost:3000/login')}
+			/>
 		</header>
 	);
 }
