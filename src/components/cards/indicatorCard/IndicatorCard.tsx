@@ -1,49 +1,60 @@
 import clsx from 'clsx';
 import styles from './IndicatorCard.module.scss';
-
-type leftButton = {
-	handler: () => void;
-	desc: string;
-};
-
-type rightButton = {
-	handler: () => void;
-	desc: string;
-};
+import { useRef } from 'react';
+import { useSelector } from 'react-redux';
 
 interface IndicatorCardProps {
 	title: string;
-	leftButton: leftButton;
-	rightButton: rightButton;
+	leftButtonContent: string;
+	leftButtonHandler: () => void;
+	rightButtonContent: string;
+	rightButtonHandler: () => void;
 	pageType: string;
 }
 
 function checkingPageTypeAndModifyClassName(pageType: string) {
-	let className;
+	let className = 'defaultClassName';
 	if (pageType === 'main') {
 		className = 'IndicatorCardMainPage';
-	} else if ((pageType = 'dashbaord')) {
+	} else if (pageType === 'dashboard') {
 		className = 'IndicatorCardDashboard';
-	} else {
-		className = 'defaultClassName';
 	}
 
 	return className;
 }
 
-export default function IndicatorCard({ title, leftButton, rightButton, pageType }: IndicatorCardProps) {
+export default function IndicatorCard({
+	title,
+	leftButtonContent,
+	leftButtonHandler,
+	rightButtonContent,
+	rightButtonHandler,
+	pageType
+}: IndicatorCardProps) {
+	const refRightBtn = useRef<HTMLButtonElement>(null);
 	const CardClassName = checkingPageTypeAndModifyClassName(pageType);
+	const isLogin = useSelector(state => state.user.isLogin);
+
 	return (
 		<div className={clsx(styles[CardClassName])}>
 			<h3>{title}</h3>
 			<div className={clsx(styles.buttons)}>
-				<button type='button' onClick={leftButton.handler}>
-					{leftButton.desc}
+				<button className={clsx(styles.leftButton)} type='button' onClick={leftButtonHandler}>
+					{leftButtonContent}
 				</button>
-				<button type='button' onClick={rightButton.handler}>
-					{rightButton.desc}
+				<button
+					className={clsx(styles.rightButton)}
+					ref={refRightBtn}
+					type='button'
+					onClick={() => {
+						rightButtonHandler();
+						if (isLogin) refRightBtn.current?.classList.toggle(styles.on);
+					}}>
+					{rightButtonContent}
 				</button>
 			</div>
 		</div>
 	);
 }
+
+// , { [styles.on]: isLogin }
