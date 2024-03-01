@@ -2,7 +2,13 @@ import clsx from 'clsx';
 import styles from './Menu.module.scss';
 import Link from 'next/link';
 
-export default function Menu({ Tabs, SelectedIdx, setSelectedIdx }) {
+interface MenuProps {
+	Tabs: string[];
+	SelectedIdx: number;
+	setSelectedIdx: (index: number) => void;
+}
+
+export default function Menu({ Tabs, SelectedIdx, setSelectedIdx }: MenuProps) {
 	return (
 		<aside className={clsx(styles.Menu)}>
 			<nav>

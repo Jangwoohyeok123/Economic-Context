@@ -1,32 +1,9 @@
-$sidePadding: 30px;
-
 .Dashboard {
 	font-family: var(--baseFont);
 	width: 100%;
+	display: flex;
 
-	.dashHeader {
-		padding-right: $sidePadding;
-		padding-left: calc(var(--dashMenuLength) + $sidePadding);
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		height: 60px;
-		background: #fff;
-		box-shadow: 10px 10px 20px #eee;
-
-		h2 {
-			font-size: 1.2rem;
-			font-weight: 500;
-		}
-
-		span {
-			font-size: 1.2rem;
-		}
-	}
-
-	.wrap {
-		padding-left: calc(var(--dashMenuLength) + $sidePadding);
-		padding-right: $sidePadding;
-		padding-top: 30px;
+	section {
+		width: 100%;
 	}
 }

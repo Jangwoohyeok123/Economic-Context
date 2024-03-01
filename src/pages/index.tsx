@@ -2,18 +2,18 @@ import clsx from 'clsx';
 import styles from './Home.module.scss';
 import { Poppins, Roboto } from 'next/font/google';
 import { useRouter } from 'next/router';
-import { useContext, useState } from 'react';
-import { UserContext } from './_app';
+import { useContext, useEffect, useState } from 'react';
 import Image from 'next/image';
+import IndicatorCard from '@/components/cards/indicatorCard/IndicatorCard';
 
 // 전역 글꼴임
-const roboto = Roboto({
+export const roboto = Roboto({
 	subsets: ['latin'],
 	weight: ['300', '400', '500'],
 	variable: '--baseFont'
 });
 
-const poppins = Poppins({
+export const poppins = Poppins({
 	subsets: ['latin'],
 	weight: ['300', '400', '500'],
 	variable: '--pointFont'
@@ -61,7 +61,6 @@ export default function Pages({
 	Consume: Category;
 	Production: Category;
 }) {
-	const { SavedCardsCount, setSavedCardsCount } = useContext(UserContext);
 	const router = useRouter();
 	const CategoryNames = Object.keys(arguments[0]);
 	const Categorys = Object.values(arguments[0]);
@@ -75,13 +74,44 @@ export default function Pages({
 		// save 를 누르면 로그인 여부를 체크한다.
 		if (login) {
 			// db 로 부터 전달받은 id 배열을 탐색한 후 없다면 DB 에 추가하며 + 1
-			setSavedCardsCount(() => SavedCardsCount + 1);
 			// db save
 		} else {
 			alert('This service requires login');
 			router.push(`/login`);
 		}
 	};
+
+	useEffect(() => {
+		// URL 쿼리에서 'code' 파라미터를 추출
+		const authCode = router.query.code;
+
+		if (authCode) {
+			// 1. 인가코드 전달
+			try {
+				fetch('http://localhost:3000/api/auth', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({ code: authCode })
+				})
+					.then(response => response.json())
+					.then(data => {
+						console.log('Success:', data);
+						// 여기에 성공 시의 추가 로직을 구현할 수 있습니다.
+					})
+					.catch(error => {
+						console.error('Error:', error);
+					});
+			} catch (error) {
+				console.error('Fetch error:', error);
+			}
+
+			// 2. mainpage 로 리다이렉트
+			// header 가 안보이게 만들어야 함
+			window.location.href = 'http://localhost:3000';
+		}
+	}, [router.query]);
 
 	return (
 		<>
@@ -103,18 +133,13 @@ export default function Pages({
 						const seriesId = series.id;
 						const title = series.title;
 						return (
-							<div className={clsx(styles.card)} key={idx}>
-								<h3>{title}</h3>
-								<div className={clsx(styles.buttons)}>
-									<button
-										onClick={() => {
-											saveCardToDB(CategoryNames[Index], seriesId, false);
-										}}>
-										save
-									</button>
-									<button onClick={() => GotoAboutPage(seriesId)}>more</button>
-								</div>
-							</div>
+							<IndicatorCard
+								key={idx}
+								title={title}
+								leftButton={{ handler: () => saveCardToDB(CategoryNames[Index], seriesId, false), desc: 'save' }}
+								rightButton={{ handler: () => GotoAboutPage(seriesId), desc: 'more' }}
+								pageType={'main'}
+							/>
 						);
 					})}
 				</figure>

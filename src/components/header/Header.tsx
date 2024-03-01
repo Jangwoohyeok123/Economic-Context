@@ -3,8 +3,10 @@ import styles from './Header.module.scss';
 import { Poppins } from 'next/font/google';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { useContext } from 'react';
-import { UserContext } from '@/pages/_app';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '@/actions/actions';
+import AlertModal from '../modals/alertModal/AlertModal';
 
 interface HeaderProps {
 	children: React.ReactNode;
@@ -17,20 +19,48 @@ const poppins = Poppins({
 });
 
 export default function Header() {
-	const { SavedCardsCount, setSavedCardsCount } = useContext(UserContext);
+	const isLogin = useSelector(state => state.user.isLogin);
 	const router = useRouter();
+	const dispatch = useDispatch();
+	const [IsAlertModalOpen, setIsAlertModalOpen] = useState(false);
+
+	const goToLoginPage = () => {
+		if (!isLogin) setIsAlertModalOpen(true);
+	};
+
+	const userLogout = () => {
+		dispatch(logout());
+		window.location.href = 'http://localhost:3000';
+	};
 
 	// 나중에 조건부 렌더링 컴포넌트 분리
 	return (
 		<header className={clsx(styles.Header, poppins.variable)}>
 			<nav className={clsx(styles.mainNav)}>
 				<Link href='/'>EconomicContext</Link>
-				<div className={clsx(styles.users)}>
-					<span>Bell{SavedCardsCount}</span>
-					<Link href='/dashboard'>MyContext</Link>
-					<Link href='/login'>Login</Link>
-				</div>
+				{isLogin ? (
+					<div className={clsx(styles.users)}>
+						<Link href='/dashboard'>MyContext</Link>
+						<span onClick={userLogout}>Logout</span>
+					</div>
+				) : (
+					<div className={clsx(styles.users)}>
+						<span onClick={goToLoginPage}>MyContext</span>
+						<Link href='/login'>Login</Link>
+					</div>
+				)}
 			</nav>
+			<AlertModal
+				isModalOpen={IsAlertModalOpen}
+				setIsModalOpen={setIsAlertModalOpen}
+				size={'small'}
+				header={'You need to login!'}
+				body={'Our service is required to login'}
+				leftButtonContent={'Cancle'}
+				leftButtonHandler={() => setIsAlertModalOpen(false)}
+				rightButtonContent={'Login'}
+				rightButtonHandler={() => (window.location.href = 'http://localhost:3000/login')}
+			/>
 		</header>
 	);
 }
