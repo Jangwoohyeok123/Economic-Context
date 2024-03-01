@@ -4,6 +4,7 @@ export interface IndicatorCard {
 }
 
 export interface SavedCardSet {
+	[key: string]: Card[]; // 인덱스 시그니처 추가
 	interest: IndicatorCard[];
 	exchange: IndicatorCard[];
 	consume: IndicatorCard[];
