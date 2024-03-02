@@ -33,44 +33,5 @@
 		column-gap: 10px;
 		row-gap: 20px;
 		padding-top: 50px;
-
-		.card {
-			width: 20%;
-			height: 250px;
-			// border: 1px solid #ccc;
-			background: #fff;
-			padding: 20px;
-			display: flex;
-			flex-direction: column;
-			justify-content: space-between;
-			box-shadow: 10px 10px 20px #dedede;
-
-			h3 {
-				font-size: 1.1rem;
-				font-weight: 500;
-				text-align: left;
-			}
-
-			.buttons {
-				display: flex;
-				justify-content: space-between;
-
-				button {
-					background: #fff;
-					padding: 6px 22px;
-					border-radius: 30px;
-					border: 1px solid #ccc;
-					cursor: pointer;
-					transition: 0.3s;
-					opacity: 0.6;
-
-					&:hover {
-						opacity: 1;
-						border: solid 1px var(--pointColor);
-						color: var(--pointColor);
-					}
-				}
-			}
-		}
 	}
 }

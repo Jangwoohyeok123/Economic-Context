@@ -1,7 +1,11 @@
 $paddingLeft: 30px;
+$menuSize: 15%;
+$logoBottonMargin: 30px;
 
+// menu 와 otherwise 는 15:85 비율임
 .Menu {
-	width: var(--dashMenuLength);
+	// width: var(--dashMenuLength);
+	width: $menuSize;
 	min-height: calc(100vh);
 	font-family: var(--baseFont);
 	background: var(--fontColor);
@@ -10,24 +14,23 @@ $paddingLeft: 30px;
 	nav {
 		display: flex;
 		flex-direction: column;
-		gap: 30px;
 		align-content: center;
 
 		.logo {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 60px;
+			margin-bottom: $logoBottonMargin;
 			font-size: 1.3rem;
 			background: #222;
-			height: 60px;
-			display: flex;
-			padding-left: $paddingLeft;
-			align-items: center;
 		}
 
 		span {
 			opacity: 0.5;
 			font-size: 1.3rem;
-			width: 100%;
-			padding-left: $paddingLeft;
-			transition: 0.3s opacity;
+			transition: 0.3s;
+			padding: 15px 20px;
 
 			&:hover {
 				opacity: 1;
@@ -37,6 +40,7 @@ $paddingLeft: 30px;
 			&.on {
 				opacity: 1;
 				color: #fff;
+				background: #555;
 			}
 		}
 	}

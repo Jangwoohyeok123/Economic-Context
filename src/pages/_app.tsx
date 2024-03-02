@@ -7,7 +7,6 @@ import { Poppins, Roboto } from 'next/font/google';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import { useRouter } from 'next/router';
-import { CheckedCardSetProvider } from '@/contexts/checkedCardSetContext';
 import { Provider } from 'react-redux';
 import store from '@/store/store';
 
@@ -38,13 +37,11 @@ export default function App({ Component, pageProps }: AppProps) {
 	const queryClient = new QueryClient();
 
 	return (
-		<CheckedCardSetProvider>
-			<Provider store={store}>
-				<QueryClientProvider client={queryClient}>
-					{checkRouterPathname() ? <Header /> : <></>}
-					<Component {...pageProps} />
-				</QueryClientProvider>
-			</Provider>
-		</CheckedCardSetProvider>
+		<Provider store={store}>
+			<QueryClientProvider client={queryClient}>
+				{checkRouterPathname() ? <Header /> : <></>}
+				<Component {...pageProps} />
+			</QueryClientProvider>
+		</Provider>
 	);
 }

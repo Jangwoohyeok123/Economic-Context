@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import styles from './Dashheader.module.scss';
+import styles from './DashHeader.module.scss';
 
 export default function Dashheader({ Tabs, TabsIndex }) {
 	return (
