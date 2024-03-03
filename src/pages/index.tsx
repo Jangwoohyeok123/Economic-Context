@@ -25,13 +25,6 @@ export const poppins = Poppins({
 	variable: '--pointFont'
 });
 
-// export interface SavedCardSet {
-// 	interest: IndicatorCard[];
-// 	exchange: IndicatorCard[];
-// 	consume: IndicatorCard[];
-// 	production: IndicatorCard[];
-// }
-
 // 함수를 선언할 때 뭐가 들어갈지 정확히 정의할 때 타입스크립트를 사용한다.
 // { Interest: {}, Exchange: {}, Consume: {}, Production: {}} 꼴로 전달받음
 export default function Pages({
@@ -65,10 +58,6 @@ export default function Pages({
 		dispatch(addCard(categoryName, seriesId, title));
 	};
 
-	useEffect(() => {
-		console.log(savedCardSet);
-	}, [savedCardSet]);
-
 	const deleteCardInDB = () => {};
 
 	useEffect(() => {
@@ -87,7 +76,7 @@ export default function Pages({
 				})
 					.then(response => response.json())
 					.then(data => {
-						console.log('Success:', data);
+						// console.log('Success:', data);
 						// 여기에 성공 시의 추가 로직을 구현할 수 있습니다.
 					})
 					.catch(error => {
