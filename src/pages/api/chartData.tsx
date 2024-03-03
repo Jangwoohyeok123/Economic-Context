@@ -21,16 +21,15 @@ type ApiResponse = {
 // req: 클라이언트 요청 객체
 // res: 서버 응답객체
 
-const baseUrl = 'https://api.stlouisfed.org/fred/';
+export default async function getChartData(req: NextApiRequest, res: NextApiResponse<ApiResponse>) {
+	const baseUrl = process.env.NEXT_PUBLIC_FRED_BASEURL; 
+	const apiKey = process.env.NEXT_PUBLIC_FREDKEY;
 
-export default async function observations(req: NextApiRequest, res: NextApiResponse<ApiResponse>) {
-	// req params 를 통해 id 전달
 	try {
 		const { seriesId } = req.query;
-		// https ~ fred 는 baseurl 처리하기 => 변수로 뺼 수 있는 것은 빼기
 
 		const response = await fetch(
-			`${baseUrl}series/observations?series_id=${seriesId}&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
+			`${baseUrl}series/observations?series_id=${seriesId}&api_key=${apiKey}&file_type=json`
 		);
 		const json = await response.json();
 

@@ -24,11 +24,19 @@ export default function AlertModal({
 				<React.Fragment>
 					<div className={clsx(styles.Overlay)}></div>
 					<div className={clsx(styles[ModalClassName], roboto.variable, poppins.variable)}>
-						<h3>{header}</h3>
-						<div>{body}</div>
-						<div>
-							<button onClick={leftButtonHandler}>{leftButtonContent}</button>
-							<button onClick={rightButtonHandler}>{rightButtonContent}</button>
+						<div className={clsx(styles.modalWrap)}>
+							<div className={clsx(styles.content)}>
+								<h3>{header}</h3>
+								<div className={clsx(styles.modalBody)}>{body}</div>
+							</div>
+							<div className={clsx(styles.buttons)}>
+								<button className={clsx(styles.leftButton)} onClick={leftButtonHandler}>
+									{leftButtonContent}
+								</button>
+								<button className={clsx(styles.rightButton)} onClick={rightButtonHandler}>
+									{rightButtonContent}
+								</button>
+							</div>
 						</div>
 					</div>
 				</React.Fragment>,
