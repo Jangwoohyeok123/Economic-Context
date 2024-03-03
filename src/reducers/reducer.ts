@@ -30,8 +30,13 @@ interface savedCardSetAction {
 	};
 }
 
+/* 
+	1. 카테고리를 찾아서 배열에 추가하는 로직이 있어야함
+	2. 
+	3. 
+*/
 const savedCardSetReducer = (state = savedCardSetState, action) => {
-	if (action.type === 'add') {
+	if (action.type === '') {
 		const { category, card } = action.payload;
 		return {
 			...state,
