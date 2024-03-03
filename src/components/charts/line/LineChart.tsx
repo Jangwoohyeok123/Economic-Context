@@ -45,6 +45,9 @@ const LineChart = ({ title, values }: LineChartProps) => {
 			.attr('viewBox', [0, 0, width, height])
 			.attr('style', 'max-width: 100%; height: 100%');
 
+		// 중첩되는 chart 제거
+		svg.selectAll('*').remove();
+
 		// axis bottom 추가
 		svg
 			.append('g')
