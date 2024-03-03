@@ -3,6 +3,14 @@ import * as d3 from 'd3';
 import clsx from 'clsx';
 import styles from './LineChart.module.scss';
 
+/* LineChart 에게 원하는 것 
+	1. prop 으로 value, title 전달하기 (o)
+	2. 비율은 scss 로 처리할 수 있게 만들기 (o)
+	3. 컴포넌트에서 title 표기해주기 (o)
+	4. LineChart의 width, height 제어권을 사용하는 컴포넌트의 scss에게 넘겨주기 (x)
+	5. 마우스를 hover 했을 때 date 와 value 가 보이는 tooltop 연동해놓기 (x)
+*/
+
 interface Value {
 	date: Date;
 	value: number;
