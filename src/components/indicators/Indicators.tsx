@@ -30,15 +30,12 @@ export default function Indicators({ Categorys, CategoryIndex, setCategoryIndex 
 					return (
 						<IndicatorCard
 							key={idx}
-							title={clientData}
-							leftButton={{
-								handler: () => {
-									console.log('checking');
-								},
-								desc: 'checked'
-							}}
-							rightButton={{ handler: () => {}, desc: 'delete' }}
-							pageType={'dashboard'}
+							title={'hello'}
+							leftButtonContent='delete'
+							leftButtonHandler={() => alert('삭제')}
+							rightButtonContent='checking'
+							rightButtonHandler={() => console.log('save')}
+							pageType='dashboard'
 						/>
 					);
 				})}
