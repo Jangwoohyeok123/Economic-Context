@@ -28,6 +28,7 @@ interface LineChartProps {
 	className?: string;
 }
 // width, height, marginTop, marginRight, marginBottom, marginLeft,
+// 예약어를 안쓰기
 const LineChart = ({ title, values, className }: LineChartProps) => {
 	const svgRef = useRef<SVGSVGElement>(null);
 	const svgContainerRef = useRef<HTMLDivElement>(null);

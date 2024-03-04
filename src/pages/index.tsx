@@ -52,13 +52,13 @@ export default function Pages({
 		router.push(`/${seriesId}`);
 	};
 
-	const saveCardToDB = (categoryName: string, seriesId: string, title: string) => {
-		// 중복방지
-		if (savedCardSet[categoryName].find(obj => obj.seriesId === seriesId)) return;
-		dispatch(addCard(categoryName, seriesId, title));
-	};
+	const saveCardToDB = (categoryName: string, seriesId: string, title: string) => {};
 
 	const deleteCardInDB = () => {};
+
+	const test = () => {
+		fetch('http://localhost:4000');
+	};
 
 	useEffect(() => {
 		// URL 쿼리에서 'code' 파라미터를 추출
@@ -96,6 +96,7 @@ export default function Pages({
 				<div className={clsx(styles.mainImage)}>
 					<Image src='/mainImage.jpg' alt='mainImage' layout='fill' objectFit='cover' />
 				</div>
+				<button onClick={test}>test</button>
 				<div className={clsx(styles.tab)}>
 					{Categorys.map((el, idx) => {
 						return (

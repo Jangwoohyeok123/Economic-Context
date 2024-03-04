@@ -6,6 +6,12 @@ import { roboto, poppins } from '@/pages';
 import checkingModalSizeAndModifyClassName from '@/utils/checkingModalSizeAndModifyClassName';
 import { ModalProps } from '@/types/modalInterface';
 
+/* 컴포넌트 설명 
+	1. size prop 을 통해 modal size 제어권 생성 (o)
+	2. make 버튼 누르면 db 에 context 생성 (x)
+	3. ul list 는 fetching 한 데이터 꽂아넣기 (x)
+*/
+
 type desc = {
 	interest: [];
 	exchange: [];
@@ -47,11 +53,12 @@ export default function MakeConfirmModal({ isModalOpen, setIsModalOpen, children
 						</div>
 						<div className={clsx(styles.selectedIndicators)}>
 							<h5>Indicators</h5>
+							{/* fetching 한 이후 list 를 꽂아넣을 것 */}
 							<ul className={clsx(styles.selectedIndicators)}>
-								<li>Interest: {desc?.interest.length}개의 지표들</li>
-								<li>Exchange: {desc?.exchange.length}개의 지표들</li>
-								<li>Consume: {desc?.consume.length}개의 지표들</li>
-								<li>Production: {desc?.production.length}개의 지표들</li>
+								<li>Interest: {7}개의 지표들</li>
+								<li>Exchange: {7}개의 지표들</li>
+								<li>Consume: {7}개의 지표들</li>
+								<li>Production: {7}개의 지표들</li>
 							</ul>
 						</div>
 						<div className={clsx(styles.buttons)}>

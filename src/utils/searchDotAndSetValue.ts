@@ -7,7 +7,12 @@ interface DataProps {
 	value: string;
 }
 
+/* 
+	1. 원본데이터는 건드리지 말자
+*/
+
 // fred chartData 에 '.' 으로 인해 차트가 생성안될 때 사용하는 함수
+// .....1....333333535434123.
 export default function searchDotAndSetValue(Data: DataProps[]) {
 	// Data 를 전달받아서 처리하자
 	const dataLength = Data.length;
