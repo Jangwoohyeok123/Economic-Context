@@ -44,9 +44,7 @@ export default function Pages({ interest }: { interest: Category }) {
 		// userId 갖고오기
 		if (User.isLogin) {
 			const userId = User.userData.id;
-			axios.post(`http://localhost:4000/user/favorite/add/${userId}`, {
-				indicatorId: seriesId
-			});
+			axios.get(`http://localhost:4000/user/favorite/${1}`).then(response => console.log(response));
 		} else {
 			console.error('data Save 실패');
 		}
@@ -55,6 +53,7 @@ export default function Pages({ interest }: { interest: Category }) {
 	const deleteCardInDB = (seriesId: string): void => {
 		if (User.isLogin) {
 			const userId = User.userData.id;
+			console.log(1);
 			axios.post(`http://localhost:4000/user/favorite/delete/${userId}`, {
 				indicatorId: seriesId
 			});
@@ -70,30 +69,20 @@ export default function Pages({ interest }: { interest: Category }) {
 	useEffect(() => {
 		const authCode = router.query.code;
 
+		// async-await, try-catch 고려하기
 		if (authCode) {
-			try {
-				axios
-					.post(
-						'http://localhost:4000/auth/google',
-						{ code: authCode },
-						{
-							headers: {
-								'Content-Type': 'application/json'
-							}
-						}
-					)
-					.then(response => {
-						const jwt = response.data[0];
-						const userData = response.data[1];
-						sessionStorage.setItem('token', jwt);
-						dispatch(login(userData));
-					})
-					.catch(error => {
-						console.error('Error:', error);
-					});
-			} catch (error) {
-				console.error('Fetch error', error);
-			}
+			axios
+				.post('http://localhost:4000/auth/google', { code: authCode })
+				.then(response => {
+					const jwt = response.data[0];
+					const userData = response.data[1];
+					sessionStorage.setItem('token', jwt);
+					dispatch(login(userData));
+				})
+				.catch(error => {
+					console.error('Error:', error);
+					// error handling => 로그인 페이지로 유도같은
+				});
 		}
 	}, [router.query]);
 
