@@ -21,8 +21,8 @@ type ApiResponse = {
 // req: 클라이언트 요청 객체
 // res: 서버 응답객체
 
-export default async function getChartData(req: NextApiRequest, res: NextApiResponse<ApiResponse>) {
-	const baseUrl = process.env.NEXT_PUBLIC_FRED_BASEURL; 
+export default async function getChartValues(req: NextApiRequest, res: NextApiResponse<ApiResponse>) {
+	const baseUrl = process.env.NEXT_PUBLIC_FRED_BASEURL;
 	const apiKey = process.env.NEXT_PUBLIC_FREDKEY;
 
 	try {
