@@ -1,22 +1,29 @@
 import '@/styles/Global.scss';
 import '@/styles/Reset.scss';
 
+import store from '@/store/store';
+import { Provider } from 'react-redux';
+import { useRouter } from 'next/router';
 import type { AppProps } from 'next/app';
 import Header from '../components/header/Header';
 import { Poppins, Roboto } from 'next/font/google';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import React from 'react';
-import { useRouter } from 'next/router';
-import { Provider } from 'react-redux';
-import store from '@/store/store';
 
-const roboto = Roboto({
+export const categoryIds = {
+	interest: '114',
+	exchange: '94',
+	production: '9',
+	consume: '31'
+};
+
+export const roboto = Roboto({
 	subsets: ['latin'],
 	weight: ['300', '400', '500'],
 	variable: '--baseFont'
 });
 
-const poppins = Poppins({
+export const poppins = Poppins({
 	subsets: ['latin'],
 	weight: ['300', '400', '500'],
 	variable: '--pointFont'
@@ -41,6 +48,7 @@ export default function App({ Component, pageProps }: AppProps) {
 			<QueryClientProvider client={queryClient}>
 				{checkRouterPathname() ? <Header /> : <></>}
 				<Component {...pageProps} />
+				<ReactQueryDevtools initialIsOpen={false} />
 			</QueryClientProvider>
 		</Provider>
 	);
