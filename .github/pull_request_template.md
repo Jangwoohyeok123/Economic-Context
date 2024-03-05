@@ -1,11 +1,9 @@
-## PR 의 목적 
+## 브랜치의 목적 
+-
 -
 
-## 상황
+## PR 요약
+-
 -
 
-## ScreenShot 
-
-
-## To Reviwer
--
+## ScreenShot (Optional)
