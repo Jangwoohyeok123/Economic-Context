@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import styles from './MakeConfirmModal.module.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { roboto, poppins } from '@/pages';
+import { roboto, poppins } from '@/pages/_app';
 import checkingModalSizeAndModifyClassName from '@/utils/checkingModalSizeAndModifyClassName';
 import { ModalProps } from '@/types/modalInterface';
 
@@ -18,17 +18,6 @@ type desc = {
 	consume: [];
 	production: [];
 };
-
-function checkingModalTypeAndModifyClassName(type: string) {
-	let className = 'defaultClassName';
-	if (type === 'small') {
-		className = 'SmallModal';
-	} else if (type === 'big') {
-		className = 'BigModal';
-	}
-
-	return className;
-}
 
 export default function MakeConfirmModal({ isModalOpen, setIsModalOpen, children, size }: ModalProps) {
 	const ModalClassName = checkingModalSizeAndModifyClassName(size);

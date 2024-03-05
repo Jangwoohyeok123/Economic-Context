@@ -1,38 +1,24 @@
 import clsx from 'clsx';
-import styles from './Home.module.scss';
-import { Poppins, Roboto } from 'next/font/google';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import Image from 'next/image';
-import IndicatorCard from '@/components/cards/indicatorCard/IndicatorCard';
-import dynamic from 'next/dynamic';
-import { useDispatch, useSelector } from 'react-redux';
-import { Category } from '@/types/fredInterface';
 import axios from 'axios';
+import Image from 'next/image';
+import dynamic from 'next/dynamic';
+import styles from './Home.module.scss';
+import { useRouter } from 'next/router';
+import { roboto, poppins } from './_app';
 import { login } from '@/actions/actions';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { Category } from '@/types/fredInterface';
+import { useDispatch, useSelector } from 'react-redux';
+import IndicatorCard from '@/components/cards/indicatorCard/IndicatorCard';
 import changeNameToCategoryId from '@/utils/changeNameToCategoryId';
 
 const AlertModalDynamic = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
-
-export const roboto = Roboto({
-	subsets: ['latin'],
-	weight: ['300', '400', '500'],
-	variable: '--baseFont'
-});
-export const poppins = Poppins({
-	subsets: ['latin'],
-	weight: ['300', '400', '500'],
-	variable: '--pointFont'
-});
 
 const fetchCategory = async (categoryId: string) => {
 	const res = await fetch(`/api/category?categoryId=${categoryId}`);
 	const json = await res.json();
 
-	console.log('fetchCategory 데이터');
-	console.log(json.category.seriess);
-	console.log('fetchCategory 데이터');
 	return json.category.seriess;
 };
 
@@ -77,7 +63,7 @@ export default function Pages({ interest }: { interest: Category }) {
 		}
 	};
 
-	const refreshCategory = categoryName => {
+	const refreshCategory = (categoryName: string) => {
 		setCategoryIndex(categoryNames.indexOf(categoryName));
 	};
 
@@ -103,7 +89,6 @@ export default function Pages({ interest }: { interest: Category }) {
 						dispatch(login(userData));
 					})
 					.catch(error => {
-						// 이 부분에서 에러가 발생한다.
 						console.error('Error:', error);
 					});
 			} catch (error) {
@@ -128,43 +113,38 @@ export default function Pages({ interest }: { interest: Category }) {
 						);
 					})}
 				</div>
-				{/* <article className={clsx(styles.category)}>{}</article> */}
 				<figure className={clsx(styles.category)}>
-					{isSuccess ? (
-						Category.map((series, idx: number) => {
-							const seriesId = series.id;
-							const title = series.title;
-							if (idx === 1) console.log(Category);
+					{isSuccess
+						? Category.map((series, idx: number) => {
+								const seriesId = series.id;
+								const title = series.title;
 
-							return (
-								<IndicatorCard
-									key={idx}
-									title={title}
-									leftButtonContent={'more'}
-									leftButtonHandler={() => GotoAboutPage(seriesId)}
-									rightButtonContent={'save'}
-									rightButtonHandler={
-										User.isLogin ? () => saveCardToDB('114', seriesId, title) : () => setIsAlertModalOpen(true)
-									}
-									pageType={'main'}
-								/>
-							);
-						})
-					) : (
-						<></>
-					)}
+								return (
+									<IndicatorCard
+										key={idx}
+										title={title}
+										leftButtonContent='more'
+										leftButtonHandler={() => GotoAboutPage(seriesId)}
+										rightButtonContent='save'
+										rightButtonHandler={
+											User.isLogin ? () => saveCardToDB('114', seriesId, title) : () => setIsAlertModalOpen(true)
+										}
+										pageType='main'
+									/>
+								);
+						  })
+						: null}
 				</figure>
 			</main>
-			{/* save 버튼에서 사용한다. */}
 			<AlertModalDynamic
 				isModalOpen={IsAlertModalOpen}
 				setIsModalOpen={setIsAlertModalOpen}
-				size={'small'}
-				header={'You need to login!'}
-				body={'Our service is required to login'}
-				leftButtonContent={'Cancle'}
+				size='small'
+				header='You need to login!'
+				body='Our service is required to login'
+				leftButtonContent='Cancle'
 				leftButtonHandler={() => setIsAlertModalOpen(false)}
-				rightButtonContent={'Login'}
+				rightButtonContent='Login'
 				rightButtonHandler={() => (window.location.href = 'http://localhost:3000/login')}
 			/>
 		</>

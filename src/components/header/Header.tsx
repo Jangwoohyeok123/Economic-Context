@@ -53,12 +53,12 @@ export default function Header() {
 			<AlertModal
 				isModalOpen={IsAlertModalOpen}
 				setIsModalOpen={setIsAlertModalOpen}
-				size={'small'}
-				header={'You need to login!'}
-				body={'Our service is required to login'}
-				leftButtonContent={'Cancle'}
+				size='small'
+				header='You need to login!'
+				body='Our service is required to login'
+				leftButtonContent='Cancle'
 				leftButtonHandler={() => setIsAlertModalOpen(false)}
-				rightButtonContent={'Login'}
+				rightButtonContent='Login'
 				rightButtonHandler={() => (window.location.href = 'http://localhost:3000/login')}
 			/>
 		</header>
