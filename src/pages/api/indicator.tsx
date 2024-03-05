@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function getIndicatorData(req: NextApiRequest, res: NextApiResponse<ApiResponse>) {
+export default async function getIndicator(req: NextApiRequest, res: NextApiResponse<ApiResponse>) {
 	const baseUrl = process.env.NEXT_PUBLIC_FRED_BASEURL;
 	const apiKey = process.env.NEXT_PUBLIC_FREDKEY;
 
