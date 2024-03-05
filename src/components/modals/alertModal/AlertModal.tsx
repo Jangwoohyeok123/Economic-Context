@@ -9,7 +9,7 @@ import checkingModalSizeAndModifyClassName from '@/utils/checkingModalSizeAndMod
 export default function AlertModal({
 	isModalOpen,
 	setIsModalOpen,
-	size,
+	size, // union type
 	header,
 	body,
 	leftButtonContent,

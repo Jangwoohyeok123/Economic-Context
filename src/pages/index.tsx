@@ -7,13 +7,14 @@ import Image from 'next/image';
 import IndicatorCard from '@/components/cards/indicatorCard/IndicatorCard';
 import dynamic from 'next/dynamic';
 import { useDispatch, useSelector } from 'react-redux';
-import { SavedCardSet } from '@/types/dbInterface';
-import { Seriess, Category } from '@/types/fredInterface';
-import { addCard } from '@/actions/actions';
+import { Category } from '@/types/fredInterface';
+import axios from 'axios';
+import { login } from '@/actions/actions';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import changeNameToCategoryId from '@/utils/changeNameToCategoryId';
 
 const AlertModalDynamic = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
-// 전역 글꼴임
 export const roboto = Roboto({
 	subsets: ['latin'],
 	weight: ['300', '400', '500'],
@@ -25,68 +26,89 @@ export const poppins = Poppins({
 	variable: '--pointFont'
 });
 
-// 함수를 선언할 때 뭐가 들어갈지 정확히 정의할 때 타입스크립트를 사용한다.
-// { Interest: {}, Exchange: {}, Consume: {}, Production: {}} 꼴로 전달받음
-export default function Pages({
-	interest,
-	exchange,
-	consume,
-	production
-}: {
-	interest: Category;
-	exchange: Category;
-	consume: Category;
-	production: Category;
-}) {
+const fetchCategory = async (categoryId: string) => {
+	const res = await fetch(`/api/category?categoryId=${categoryId}`);
+	const json = await res.json();
+
+	console.log('fetchCategory 데이터');
+	console.log(json.category.seriess);
+	console.log('fetchCategory 데이터');
+	return json.category.seriess;
+};
+
+export default function Pages({ interest }: { interest: Category }) {
 	const router = useRouter();
-	const categoryNames = Object.keys(arguments[0]);
-	const [Categorys] = useState(Object.values(arguments[0]));
+	const categoryNames = ['interest', 'exchange', 'production', 'consume'];
 	const [CategoryIndex, setCategoryIndex] = useState(0);
-	const savedCardSet = useSelector(state => state.savedCardSet);
+	const { data: Category, isSuccess } = useQuery({
+		queryKey: ['category', categoryNames[CategoryIndex]],
+		queryFn: () => fetchCategory(changeNameToCategoryId(categoryNames[CategoryIndex]))
+	});
+
 	const dispatch = useDispatch();
 
 	const [IsAlertModalOpen, setIsAlertModalOpen] = useState(false);
-	const isLogin = useSelector(state => state.user.isLogin);
+	const User = useSelector(state => state.user);
 
 	const GotoAboutPage = (seriesId: string) => {
 		router.push(`/${seriesId}`);
 	};
 
 	const saveCardToDB = (categoryName: string, seriesId: string, title: string) => {
-		// 중복방지
-		if (savedCardSet[categoryName].find(obj => obj.seriesId === seriesId)) return;
-		dispatch(addCard(categoryName, seriesId, title));
+		// userId 갖고오기
+		if (User.isLogin) {
+			const userId = User.userData.id;
+			axios.post(`http://localhost:4000/user/favorite/add/${userId}`, {
+				indicatorId: seriesId
+			});
+		} else {
+			console.error('data Save 실패');
+		}
 	};
 
-	const deleteCardInDB = () => {};
+	const deleteCardInDB = (seriesId: string): void => {
+		if (User.isLogin) {
+			const userId = User.userData.id;
+			axios.post(`http://localhost:4000/user/favorite/delete/${userId}`, {
+				indicatorId: seriesId
+			});
+		} else {
+			console.error('data delete 실패');
+		}
+	};
+
+	const refreshCategory = categoryName => {
+		setCategoryIndex(categoryNames.indexOf(categoryName));
+	};
 
 	useEffect(() => {
-		// URL 쿼리에서 'code' 파라미터를 추출
 		const authCode = router.query.code;
 
 		if (authCode) {
-			// 1. 인가코드 전달
 			try {
-				fetch('http://localhost:3000/api/auth', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify({ code: authCode })
-				})
-					.then(response => response.json())
-					.then(data => {
-						// console.log('Success:', data);
-						// 여기에 성공 시의 추가 로직을 구현할 수 있습니다.
+				axios
+					.post(
+						'http://localhost:4000/auth/google',
+						{ code: authCode },
+						{
+							headers: {
+								'Content-Type': 'application/json'
+							}
+						}
+					)
+					.then(response => {
+						const jwt = response.data[0];
+						const userData = response.data[1];
+						sessionStorage.setItem('token', jwt);
+						dispatch(login(userData));
 					})
 					.catch(error => {
+						// 이 부분에서 에러가 발생한다.
 						console.error('Error:', error);
 					});
 			} catch (error) {
-				console.error('Fetch error:', error);
+				console.error('Fetch error', error);
 			}
-
-			window.location.href = 'http://localhost:3000';
 		}
 	}, [router.query]);
 
@@ -96,35 +118,41 @@ export default function Pages({
 				<div className={clsx(styles.mainImage)}>
 					<Image src='/mainImage.jpg' alt='mainImage' layout='fill' objectFit='cover' />
 				</div>
+
 				<div className={clsx(styles.tab)}>
-					{Categorys.map((el, idx) => {
+					{categoryNames.map((el, idx) => {
 						return (
-							<button key={idx} onClick={() => setCategoryIndex(idx)}>
+							<button key={idx} onClick={() => refreshCategory(categoryNames[idx])}>
 								{categoryNames[idx]}
 							</button>
 						);
 					})}
 				</div>
+				{/* <article className={clsx(styles.category)}>{}</article> */}
 				<figure className={clsx(styles.category)}>
-					{Categorys[CategoryIndex]?.seriess.map((series, idx: number) => {
-						const seriesId = series.id;
-						const title = series.title;
-						return (
-							<IndicatorCard
-								key={idx}
-								title={title}
-								leftButtonContent={'more'}
-								leftButtonHandler={() => GotoAboutPage(seriesId)}
-								rightButtonContent={'save'}
-								rightButtonHandler={
-									isLogin
-										? () => saveCardToDB(categoryNames[CategoryIndex], seriesId, title, idx)
-										: () => setIsAlertModalOpen(true)
-								}
-								pageType={'main'}
-							/>
-						);
-					})}
+					{isSuccess ? (
+						Category.map((series, idx: number) => {
+							const seriesId = series.id;
+							const title = series.title;
+							if (idx === 1) console.log(Category);
+
+							return (
+								<IndicatorCard
+									key={idx}
+									title={title}
+									leftButtonContent={'more'}
+									leftButtonHandler={() => GotoAboutPage(seriesId)}
+									rightButtonContent={'save'}
+									rightButtonHandler={
+										User.isLogin ? () => saveCardToDB('114', seriesId, title) : () => setIsAlertModalOpen(true)
+									}
+									pageType={'main'}
+								/>
+							);
+						})
+					) : (
+						<></>
+					)}
 				</figure>
 			</main>
 			{/* save 버튼에서 사용한다. */}
@@ -152,20 +180,20 @@ export async function getStaticProps() {
 	);
 	const interest = await fetchInterestCategory.json();
 
-	const fetchExchangeCategory = await fetch(
-		`${baseUrl}category/series?category_id=94&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
-	);
-	const exchange = await fetchExchangeCategory.json();
+	// const fetchExchangeCategory = await fetch(
+	// 	`${baseUrl}category/series?category_id=94&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
+	// );
+	// const exchange = await fetchExchangeCategory.json();
 
-	const fetchConsumeCategory = await fetch(
-		`${baseUrl}category/series?category_id=9&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
-	);
-	const consume = await fetchConsumeCategory.json();
+	// const fetchConsumeCategory = await fetch(
+	// 	`${baseUrl}category/series?category_id=9&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
+	// );
+	// const consume = await fetchConsumeCategory.json();
 
-	const fetchProductionCategory = await fetch(
-		`${baseUrl}category/series?category_id=31&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
-	);
-	const production = await fetchProductionCategory.json();
+	// const fetchProductionCategory = await fetch(
+	// 	`${baseUrl}category/series?category_id=31&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
+	// );
+	// const production = await fetchProductionCategory.json();
 
 	return {
 		// 4개를 한 번에 호출해야하는지 고민해볼 것
@@ -173,10 +201,10 @@ export async function getStaticProps() {
 		// a fethcing 하고 bcd 는 prefetcging 이용할 수 있음 promise.all 과 고민해볼 것
 		// props 는 json'Category이름' 꼴로 전송해야한다. 화면에 json 이후 글자가 표기되기 때문이다.
 		props: {
-			interest,
-			exchange,
-			consume,
-			production
+			interest
+			// exchange,
+			// consume,
+			// production
 		}
 	};
 }
