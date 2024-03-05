@@ -46,7 +46,7 @@ export default function App({ Component, pageProps }: AppProps) {
 	return (
 		<Provider store={store}>
 			<QueryClientProvider client={queryClient}>
-				{checkRouterPathname() ? <Header /> : <></>}
+				{checkRouterPathname() ? <Header /> : null}
 				<Component {...pageProps} />
 				<ReactQueryDevtools initialIsOpen={false} />
 			</QueryClientProvider>
