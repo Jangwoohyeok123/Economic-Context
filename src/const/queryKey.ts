@@ -1,6 +1,7 @@
 const queryKey = {
 	category: 'category',
-	indicator: 'indicator'
+	indicator: 'indicator',
+	user: 'user'
 };
 
 export default queryKey;
