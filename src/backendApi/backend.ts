@@ -33,7 +33,7 @@ export async function getUsersFavorite(userId: string) {
 	const backendUrl = 'http://localhost:4000';
 	try {
 		const response = await axios.get(`${backendUrl}/user/favorite/${userId}`);
-		return response;
+		return response.data;
 	} catch (error) {
 		console.error(error);
 		throw new Error('Failed to fetch user Data');
