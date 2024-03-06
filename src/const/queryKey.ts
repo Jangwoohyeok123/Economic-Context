@@ -1,5 +1,6 @@
 const queryKey = {
-	APT: 3
+	category: 'category',
+	indicator: 'indicator'
 };
 
 export default queryKey;
