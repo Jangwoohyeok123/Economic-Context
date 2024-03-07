@@ -25,10 +25,11 @@
 	}
 
 	form {
-		display: flex;
-		justify-content: space-between;
-		align-content: space-between;
-		flex-wrap: wrap;
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr 1fr;
+		grid-template-rows: 1fr 1fr;
+		column-gap: 50px;
+
 		border: 1px solid #ccc;
 		height: 65vh;
 
