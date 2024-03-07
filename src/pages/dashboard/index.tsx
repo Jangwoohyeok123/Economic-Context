@@ -1,16 +1,15 @@
 import clsx from 'clsx';
 import { useState } from 'react';
+import queryKey from '@/const/queryKey';
 import { roboto, poppins } from '../_app';
 import Menu from '@/components/menu/Menu';
+import app from '@/firebase/firebaseConfig';
 import styles from './Dashboard.module.scss';
+import { useQuery } from '@tanstack/react-query';
 import MyContext from '@/components/myContext/MyContext';
+import { getDatabase, ref, get } from 'firebase/database';
 import Dashheader from '@/components/dashheader/DashHeader';
 import Indicators from '@/components/indicators/Indicators';
-import { useQuery } from '@tanstack/react-query';
-import queryKey from '@/const/queryKey';
-import { getDatabase, ref, get } from 'firebase/database';
-import app from '@/firebase/firebaseConfig';
-import ChartModal from '@/components/modals/chartModal/ChartModal';
 
 type Favorite = {
 	title: string;
@@ -78,7 +77,6 @@ export default function Dashboard() {
 					)}
 				</section>
 			</div>
-			{/* <ChartModal></ChartModal> */}
 		</>
 	);
 }

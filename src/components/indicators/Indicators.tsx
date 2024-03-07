@@ -3,6 +3,8 @@ import styles from './Indicators.module.scss';
 import { Dispatch, SetStateAction, useState } from 'react';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
 import MakeConfirmModal from '../modals/makeConfirmModal/MakeConfirmModal';
+import ChartModal from '../modals/chartModal/ChartModal';
+import { changeNameToType } from '@/utils/changeNameToCategoryId';
 
 type Favorite = {
 	title: string;
@@ -20,6 +22,8 @@ interface IndicatorsProps {
 export default function Indicators({ favorites, CategoryIndex, setCategoryIndex }: IndicatorsProps) {
 	const [isOpenConfirmContext, setIsOpenConfirmContext] = useState(false);
 	const [categoryNames, setCategoryNames] = useState(['interest', 'exchange', 'consume', 'production']);
+	const [isChartModalOpen, setIsChartModalOpen] = useState(false);
+	console.log(favorites);
 
 	return (
 		<div className={clsx(styles.Indicators)}>
@@ -36,6 +40,10 @@ export default function Indicators({ favorites, CategoryIndex, setCategoryIndex 
 				{favorites.map((favorite, idx) => {
 					return (
 						<IndicatorCard
+							isChartModalOpen={isChartModalOpen}
+							setIsChartModalOpen={setIsChartModalOpen}
+							seriesId={favorite.seriesId}
+							categoryId={favorite.categoryId}
 							key={idx}
 							pageType='dashboard'
 							title={favorite.title}
@@ -70,6 +78,7 @@ export default function Indicators({ favorites, CategoryIndex, setCategoryIndex 
 				rightButtonContent={''}
 				rightButtonHandler={() => {}}
 			/>
+			<ChartModal isChartModalOpen={isChartModalOpen} setIsChartModalOpen={setIsChartModalOpen}></ChartModal>
 		</div>
 	);
 }

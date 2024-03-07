@@ -19,7 +19,8 @@ import Store from '@/types/storeInterface';
 import { addFavoriteIndicator, deleteFavoriteIndicator } from '@/firebase/logic';
 import ChartModal from '@/components/modals/chartModal/ChartModal';
 
-const AlertModalDynamic = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
+const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
+const DynamicChartModal = dynamic(() => import('@/components/modals/chartModal/ChartModal'), { ssr: false });
 
 const fetchCategory = async (categoryId: number) => {
 	const res = await fetch(`/api/category?categoryId=${categoryId}`);
@@ -117,7 +118,7 @@ export default function Pages({ interest }: { interest: Category }) {
 						: null}
 				</figure>
 			</main>
-			<AlertModalDynamic
+			<DynamicAlertModal
 				isModalOpen={isAlertModalOpen}
 				setIsModalOpen={setIsAlertModalOpen}
 				size='small'
