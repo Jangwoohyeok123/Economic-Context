@@ -1,18 +1,17 @@
 import clsx from 'clsx';
 import axios from 'axios';
 import ReactDOM from 'react-dom';
-import React, { useEffect, useState as useState } from 'react';
+import { useRouter } from 'next/router';
 import styles from './ChartModal.module.scss';
 import { roboto, poppins } from '@/pages/_app';
+import React, { useEffect, useState } from 'react';
 import { ChartModalProps } from '@/types/modalInterface';
 import LineChart from '@/components/charts/line/LineChart';
-import { useRouter } from 'next/router';
 
 export default function ChartModal({ isChartModalOpen, setIsChartModalOpen, children }: ChartModalProps) {
 	const [chartValues, setChartValues] = useState([]);
-	const [title, setTitle] = useState('');
 	const router = useRouter();
-	const { seriesId } = router.query;
+	const { seriesId, title } = router.query;
 
 	const clearUrl = () => {
 		const currentQuery = { ...router.query };
@@ -20,15 +19,12 @@ export default function ChartModal({ isChartModalOpen, setIsChartModalOpen, chil
 			pathname: router.pathname,
 			query: null
 		};
-		setTitle('');
-		// setChartValues([]);
 
 		router.replace(newUrl, undefined, { shallow: true });
 	};
 
 	useEffect(() => {
 		if (!seriesId) return;
-		// observation 용도
 		axios.get(`/api/chartValues?seriesId=${seriesId}`).then(response => {
 			setChartValues(
 				response.data.observations.observations.map(el => {
@@ -36,11 +32,6 @@ export default function ChartModal({ isChartModalOpen, setIsChartModalOpen, chil
 					return { date: new Date(el.date), value: Number(el.value) };
 				})
 			);
-		});
-
-		// title 용도
-		axios.get(`/api/indicator?seriesId=${seriesId}`).then(response => {
-			setTitle(response.data.indicator.seriess[0].title);
 		});
 	}, [seriesId]);
 
@@ -54,7 +45,7 @@ export default function ChartModal({ isChartModalOpen, setIsChartModalOpen, chil
 							clearUrl();
 						}}></div>
 					<div className={clsx(styles.ChartModal, roboto.variable, poppins.variable)}>
-						<LineChart title={title} values={chartValues}></LineChart>
+						{chartValues.length > 1 ? <LineChart title={title as string} values={chartValues}></LineChart> : null}
 					</div>
 				</React.Fragment>,
 				document.body
