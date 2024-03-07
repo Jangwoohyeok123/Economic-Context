@@ -1,16 +1,10 @@
 import clsx from 'clsx';
-import styles from './MakeConfirmModal.module.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { roboto, poppins } from '@/pages/_app';
+import styles from './MakeConfirmModal.module.scss';
+import { MakeModalProps } from '@/types/modalInterface';
 import checkingModalSizeAndModifyClassName from '@/utils/checkingModalSizeAndModifyClassName';
-import { ModalProps } from '@/types/modalInterface';
-
-/* 컴포넌트 설명 
-	1. size prop 을 통해 modal size 제어권 생성 (o)
-	2. make 버튼 누르면 db 에 context 생성 (x)
-	3. ul list 는 fetching 한 데이터 꽂아넣기 (x)
-*/
 
 type desc = {
 	interest: [];
@@ -19,13 +13,8 @@ type desc = {
 	production: [];
 };
 
-export default function MakeConfirmModal({ isModalOpen, setIsModalOpen, children, size }: ModalProps) {
+export default function MakeConfirmModal({ isModalOpen, setIsModalOpen, children, size }: MakeModalProps) {
 	const ModalClassName = checkingModalSizeAndModifyClassName(size);
-
-	const createContext = () => {
-		console.log('아래의 틀로 context 를 만듦');
-		console.log('{contextName, interest: [], exchange: [], ...posts: 빈배열}');
-	};
 
 	return isModalOpen
 		? ReactDOM.createPortal(
@@ -54,7 +43,7 @@ export default function MakeConfirmModal({ isModalOpen, setIsModalOpen, children
 							<button className={clsx(styles.leftButton)} onClick={() => setIsModalOpen(false)}>
 								Cancel
 							</button>
-							<button className={clsx(styles.rightButton)} onClick={createContext}>
+							<button className={clsx(styles.rightButton)} onClick={() => {}}>
 								Make
 							</button>
 						</div>
