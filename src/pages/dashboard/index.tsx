@@ -10,6 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 import queryKey from '@/const/queryKey';
 import { getDatabase, ref, get } from 'firebase/database';
 import app from '@/firebase/firebaseConfig';
+import ChartModal from '@/components/modals/chartModal/ChartModal';
 
 type Favorite = {
 	title: string;
@@ -62,19 +63,22 @@ export default function Dashboard() {
 	});
 
 	return (
-		<div className={clsx(styles.Dashboard, roboto.variable, poppins.variable)}>
-			<Menu Tabs={Tabs} SelectedIdx={TabsIndex} setSelectedIdx={setSelectedIdx} />
+		<>
+			<div className={clsx(styles.Dashboard, roboto.variable, poppins.variable)}>
+				<Menu Tabs={Tabs} SelectedIdx={TabsIndex} setSelectedIdx={setSelectedIdx} />
 
-			{/* section 에 padding 을 주면 header 가 문제생겨서 padding 을 각 요소에 나눠줌 */}
-			<section>
-				<Dashheader Tabs={Tabs} TabsIndex={TabsIndex} />
+				{/* section 에 padding 을 주면 header 가 문제생겨서 padding 을 각 요소에 나눠줌 */}
+				<section>
+					<Dashheader Tabs={Tabs} TabsIndex={TabsIndex} />
 
-				{Tabs[TabsIndex] === 'Indicators' && isSuccess ? (
-					<Indicators favorites={favorites} CategoryIndex={CategoryIndex} setCategoryIndex={setCategoryIndex} />
-				) : (
-					<MyContext />
-				)}
-			</section>
-		</div>
+					{Tabs[TabsIndex] === 'Indicators' && isSuccess ? (
+						<Indicators favorites={favorites} CategoryIndex={CategoryIndex} setCategoryIndex={setCategoryIndex} />
+					) : (
+						<MyContext />
+					)}
+				</section>
+			</div>
+			{/* <ChartModal></ChartModal> */}
+		</>
 	);
 }

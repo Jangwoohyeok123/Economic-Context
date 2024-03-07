@@ -8,3 +8,12 @@ export const login = (user: User) => {
 export const logout = () => {
 	return { type: 'logout' };
 };
+
+// chartModal
+export const open = () => {
+	return { type: 'open' };
+};
+
+export const close = () => {
+	return { type: 'close' };
+};
