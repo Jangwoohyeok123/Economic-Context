@@ -2,8 +2,8 @@ $tablet: 1023px;
 $mobile: 650px;
 
 .IndicatorCardBase {
-	width: 230px;
-	height: 250px;
+	width: 100%;
+	height: 100%;
 	background: #fff;
 	display: flex;
 	flex-direction: column;
@@ -50,30 +50,30 @@ $mobile: 650px;
 .IndicatorCardMainPage {
 	@extend .IndicatorCardBase;
 
-	@media (max-width: $tablet) {
-		width: 30%;
-		background: #ccc;
-		padding: 15px;
-	}
+	// @media (max-width: $tablet) {
+	// 	width: 30%;
+	// 	background: #ccc;
+	// 	padding: 15px;
+	// }
 
-	@media (max-width: $mobile) {
-		width: 100%;
-		background: gray;
-		padding: 10px;
-	}
+	// @media (max-width: $mobile) {
+	// 	width: 100%;
+	// 	background: gray;
+	// 	padding: 10px;
+	// }
 }
 
 .IndicatorCardDashboard {
 	@extend .IndicatorCardBase;
 	height: 30vh;
 
-	@media (max-width: $tablet) {
-		background: blue;
-		padding: 15px;
-	}
+	// @media (max-width: $tablet) {
+	// 	background: blue;
+	// 	padding: 15px;
+	// }
 
-	@media (max-width: $mobile) {
-		background: gray;
-		padding: 10px;
-	}
+	// @media (max-width: $mobile) {
+	// 	background: gray;
+	// 	padding: 10px;
+	// }
 }

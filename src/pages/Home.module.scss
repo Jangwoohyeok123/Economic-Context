@@ -27,11 +27,14 @@
 	}
 
 	.category {
-		display: flex;
-		justify-content: space-between;
-		flex-wrap: wrap;
-		column-gap: 10px;
-		row-gap: 20px;
 		padding-top: 50px;
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr 1fr;
+		column-gap: 50px;
+		row-gap: 50px;
+
+		> div {
+			height: 250px;
+		}
 	}
 }

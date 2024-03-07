@@ -11,11 +11,17 @@ import { useQuery } from '@tanstack/react-query';
 import { Category } from '@/types/fredInterface';
 import { useDispatch, useSelector } from 'react-redux';
 import IndicatorCard from '@/components/cards/indicatorCard/IndicatorCard';
-import changeNameToCategoryId from '@/utils/changeNameToCategoryId';
+import { changeNameToType, changeTypeToName } from '@/utils/changeNameToCategoryId';
+import { get, getDatabase, push, ref, remove, set } from 'firebase/database';
+import app from '@/firebase/firebaseConfig';
+import User from '@/types/userInterface';
+import Store from '@/types/storeInterface';
+import { addFavoriteIndicator, deleteFavoriteIndicator } from '@/firebase/logic';
+import ChartModal from '@/components/modals/chartModal/ChartModal';
 
 const AlertModalDynamic = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
-const fetchCategory = async (categoryId: string) => {
+const fetchCategory = async (categoryId: number) => {
 	const res = await fetch(`/api/category?categoryId=${categoryId}`);
 	const json = await res.json();
 
@@ -24,42 +30,22 @@ const fetchCategory = async (categoryId: string) => {
 
 export default function Pages({ interest }: { interest: Category }) {
 	const router = useRouter();
+	const db = getDatabase(app);
+	const dispatch = useDispatch();
+	const [categoryIndex, setCategoryIndex] = useState(0);
+	const user = useSelector((state: Store) => state.user);
+	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+	const [isChartModalOpen, setIsChartModalOpen] = useState(false);
+
 	const categoryNames = ['interest', 'exchange', 'production', 'consume'];
-	const [CategoryIndex, setCategoryIndex] = useState(0);
-	const { data: Category, isSuccess } = useQuery({
-		queryKey: ['category', categoryNames[CategoryIndex]],
-		queryFn: () => fetchCategory(changeNameToCategoryId(categoryNames[CategoryIndex]))
+	const { data: category, isSuccess } = useQuery({
+		queryKey: ['category', changeNameToType(categoryNames[categoryIndex])],
+		queryFn: () => fetchCategory(changeNameToType(categoryNames[categoryIndex]))
 	});
 
-	const dispatch = useDispatch();
-
-	const [IsAlertModalOpen, setIsAlertModalOpen] = useState(false);
-	const User = useSelector(state => state.user);
-
+	// () => GotoAboutPage(seriesId)
 	const GotoAboutPage = (seriesId: string) => {
 		router.push(`/${seriesId}`);
-	};
-
-	const saveCardToDB = (categoryName: string, seriesId: string, title: string) => {
-		// userId 갖고오기
-		if (User.isLogin) {
-			const userId = User.userData.id;
-			axios.get(`http://localhost:4000/user/favorite/${1}`).then(response => console.log(response));
-		} else {
-			console.error('data Save 실패');
-		}
-	};
-
-	const deleteCardInDB = (seriesId: string): void => {
-		if (User.isLogin) {
-			const userId = User.userData.id;
-			console.log(1);
-			axios.post(`http://localhost:4000/user/favorite/delete/${userId}`, {
-				indicatorId: seriesId
-			});
-		} else {
-			console.error('data delete 실패');
-		}
 	};
 
 	const refreshCategory = (categoryName: string) => {
@@ -104,19 +90,25 @@ export default function Pages({ interest }: { interest: Category }) {
 				</div>
 				<figure className={clsx(styles.category)}>
 					{isSuccess
-						? Category.map((series, idx: number) => {
+						? category.map((series: { id: string; title: string }, idx: number) => {
 								const seriesId = series.id;
 								const title = series.title;
 
 								return (
 									<IndicatorCard
 										key={idx}
+										seriesId={seriesId}
+										categoryId={changeNameToType(categoryNames[categoryIndex])}
+										isChartModalOpen={isChartModalOpen}
+										setIsChartModalOpen={setIsChartModalOpen}
 										title={title}
-										leftButtonContent='more'
-										leftButtonHandler={() => GotoAboutPage(seriesId)}
+										leftButtonContent='delete'
+										leftButtonHandler={() => {
+											deleteFavoriteIndicator(1, seriesId);
+										}}
 										rightButtonContent='save'
 										rightButtonHandler={
-											User.isLogin ? () => saveCardToDB('114', seriesId, title) : () => setIsAlertModalOpen(true)
+											user.isLogin ? () => addFavoriteIndicator(114, seriesId, title) : () => setIsAlertModalOpen(true)
 										}
 										pageType='main'
 									/>
@@ -126,7 +118,7 @@ export default function Pages({ interest }: { interest: Category }) {
 				</figure>
 			</main>
 			<AlertModalDynamic
-				isModalOpen={IsAlertModalOpen}
+				isModalOpen={isAlertModalOpen}
 				setIsModalOpen={setIsAlertModalOpen}
 				size='small'
 				header='You need to login!'
@@ -136,6 +128,7 @@ export default function Pages({ interest }: { interest: Category }) {
 				rightButtonContent='Login'
 				rightButtonHandler={() => (window.location.href = 'http://localhost:3000/login')}
 			/>
+			<ChartModal isChartModalOpen={isChartModalOpen} setIsChartModalOpen={setIsChartModalOpen}></ChartModal>
 		</>
 	);
 }

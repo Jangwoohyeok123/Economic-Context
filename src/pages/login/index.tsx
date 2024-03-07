@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import styles from './Login.module.scss';
 import Image from 'next/image';
-import { roboto, poppins } from '../index';
+import { roboto, poppins } from '../_app';
 import { useRouter } from 'next/router';
 
 export default function Login() {

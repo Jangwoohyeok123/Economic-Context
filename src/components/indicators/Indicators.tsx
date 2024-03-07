@@ -1,42 +1,48 @@
 import clsx from 'clsx';
 import styles from './Indicators.module.scss';
-import { Dispatch, SetStateAction, useContext, useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
 import MakeConfirmModal from '../modals/makeConfirmModal/MakeConfirmModal';
 
+type Favorite = {
+	title: string;
+	seriesId: string;
+	categoryId: number;
+};
+
 interface IndicatorsProps {
 	// Categorys 는 API 가 완성되면 다시 타입 지정한다.
-	Categorys: any;
+	favorites: Favorite[];
 	CategoryIndex: number;
 	setCategoryIndex: Dispatch<SetStateAction<number>>;
 }
 
-export default function Indicators({ Categorys, CategoryIndex, setCategoryIndex }: IndicatorsProps) {
+export default function Indicators({ favorites, CategoryIndex, setCategoryIndex }: IndicatorsProps) {
 	const [isOpenConfirmContext, setIsOpenConfirmContext] = useState(false);
+	const [categoryNames, setCategoryNames] = useState(['interest', 'exchange', 'consume', 'production']);
 
 	return (
 		<div className={clsx(styles.Indicators)}>
 			<nav>
-				{Categorys.map((category, idx) => {
+				{categoryNames.map((category, idx) => {
 					return (
 						<button key={idx} onClick={() => setCategoryIndex(idx)} className={CategoryIndex === idx ? styles.on : ''}>
-							{category.title}
+							{category}
 						</button>
 					);
 				})}
 			</nav>
 			<form>
-				{Categorys[CategoryIndex].clientCheckedData.map((clientData, idx) => {
+				{favorites.map((favorite, idx) => {
 					return (
 						<IndicatorCard
 							key={idx}
-							title={'hello'}
-							leftButtonContent='delete'
-							leftButtonHandler={() => alert('삭제')}
-							rightButtonContent='checking'
-							rightButtonHandler={() => console.log('save')}
 							pageType='dashboard'
-						/>
+							title={favorite.title}
+							leftButtonContent='delete'
+							leftButtonHandler={() => {}}
+							rightButtonContent='check'
+							rightButtonHandler={() => {}}></IndicatorCard>
 					);
 				})}
 			</form>
@@ -53,7 +59,17 @@ export default function Indicators({ Categorys, CategoryIndex, setCategoryIndex 
 				</div>
 			</footer>
 
-			<MakeConfirmModal isModalOpen={isOpenConfirmContext} setIsModalOpen={setIsOpenConfirmContext} size='big' />
+			<MakeConfirmModal
+				isModalOpen={isOpenConfirmContext}
+				setIsModalOpen={setIsOpenConfirmContext}
+				size='big'
+				header={''}
+				body={''}
+				leftButtonContent={''}
+				leftButtonHandler={() => {}}
+				rightButtonContent={''}
+				rightButtonHandler={() => {}}
+			/>
 		</div>
 	);
 }

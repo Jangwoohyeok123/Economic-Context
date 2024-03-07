@@ -1,36 +1,65 @@
-import { roboto, poppins } from '../index';
-import styles from './Dashboard.module.scss';
 import clsx from 'clsx';
 import { useState } from 'react';
+import { roboto, poppins } from '../_app';
 import Menu from '@/components/menu/Menu';
+import styles from './Dashboard.module.scss';
+import MyContext from '@/components/myContext/MyContext';
 import Dashheader from '@/components/dashheader/DashHeader';
 import Indicators from '@/components/indicators/Indicators';
-import MyContext from '@/components/myContext/MyContext';
+import { useQuery } from '@tanstack/react-query';
+import queryKey from '@/const/queryKey';
+import { getDatabase, ref, get } from 'firebase/database';
+import app from '@/firebase/firebaseConfig';
+
+type Favorite = {
+	title: string;
+	seriesId: string;
+	categoryId: number;
+};
+
+const fetchFavoritesByUserId = async (userId: number): Promise<Favorite[]> => {
+	const db = getDatabase(app);
+	const favoritesRef = ref(db, `/user/favorite/${userId}`);
+	const favoriteArray: Favorite[] = [];
+
+	await get(favoritesRef)
+		.then(snapshot => {
+			if (snapshot.exists()) {
+				const favoritesData = snapshot.val();
+				favoriteArray.push(favoritesData);
+			} else {
+				console.log('No data available');
+			}
+		})
+		.catch(error => {
+			console.error(error);
+		});
+
+	return favoriteArray;
+};
 
 export default function Dashboard() {
 	const [Tabs] = useState(['Indicators', 'MyContext']);
 	const [TabsIndex, setSelectedIdx] = useState(0);
 
-	// Categorys 에 필요한 데이터: 사용자가 선택했던 카드데이터들
-	const [Categorys] = useState([
-		{
-			title: 'Interest',
-			clientCheckedData: ['10년물 국채', '20년물 국채', '30년물 국채', '40년물 국채', '50년물 국채']
-		},
-		{
-			title: 'Exchange',
-			clientCheckedData: ['10년물 환율', '20년물 환율', '30년물 환율', '40년물 환율', '50년물 환율']
-		},
-		{
-			title: 'Consume',
-			clientCheckedData: ['10년물 소비', '20년물 소비', '30년물 소비', '40년물 소비', '50년물 소비']
-		},
-		{
-			title: 'Production',
-			clientCheckedData: ['10년물 생산', '20년물 생산', '30년물 생산', '40년물 생산', '50년물 생산']
-		}
-	]);
 	const [CategoryIndex, setCategoryIndex] = useState(0);
+	const { data: favorites, isSuccess } = useQuery({
+		queryKey: [queryKey.favorite, 1],
+		queryFn: async () => {
+			const db = getDatabase(app);
+			const favoriteDocRef = ref(db, `/user/favorite/${1}`);
+			const snapshot = await get(favoriteDocRef);
+			const favoriteArray: Favorite[] = [];
+
+			if (snapshot.exists()) {
+				snapshot.forEach(childSnapshot => {
+					favoriteArray.push(childSnapshot.val());
+				});
+			}
+
+			return favoriteArray;
+		}
+	});
 
 	return (
 		<div className={clsx(styles.Dashboard, roboto.variable, poppins.variable)}>
@@ -40,8 +69,8 @@ export default function Dashboard() {
 			<section>
 				<Dashheader Tabs={Tabs} TabsIndex={TabsIndex} />
 
-				{Tabs[TabsIndex] === 'Indicators' ? (
-					<Indicators Categorys={Categorys} CategoryIndex={CategoryIndex} setCategoryIndex={setCategoryIndex} />
+				{Tabs[TabsIndex] === 'Indicators' && isSuccess ? (
+					<Indicators favorites={favorites} CategoryIndex={CategoryIndex} setCategoryIndex={setCategoryIndex} />
 				) : (
 					<MyContext />
 				)}
@@ -49,5 +78,3 @@ export default function Dashboard() {
 		</div>
 	);
 }
-// 탭을 이동할 시 clinetCategoryCheckedArr[idx] 의 값을 할당한다.
-//

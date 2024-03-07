@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 
 const userInitialState = {
-	isLogin: false,
+	isLogin: true,
 	userData: {
 		createdAt: '',
 		email: '',
@@ -15,6 +15,7 @@ const userInitialState = {
 const userReducer = (state = userInitialState, action: { type: string; payload: any }) => {
 	if (action.type === 'login') {
 		const userData = action.payload;
+		console.log(userData);
 		return { ...state, userData: userData, isLogin: true };
 	} else if (action.type === 'logout') return { ...state, isLogin: false };
 

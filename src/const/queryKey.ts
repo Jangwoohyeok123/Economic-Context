@@ -1,5 +1,8 @@
 const queryKey = {
-	APT: 3
+	category: 'category',
+	indicator: 'indicator',
+	user: 'user',
+	favorite: 'user/favorite'
 };
 
 export default queryKey;
