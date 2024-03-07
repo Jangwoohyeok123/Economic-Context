@@ -1,9 +1,10 @@
 import clsx from 'clsx';
 import styles from './IndicatorCard.module.scss';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Store from '@/types/storeInterface';
+import ChartModal from '@/components/modals/chartModal/ChartModal';
 
 interface IndicatorCardProps {
 	seriesId: string;
@@ -37,6 +38,8 @@ export default function IndicatorCard({
 	rightButtonHandler,
 	pageType
 }: IndicatorCardProps) {
+	const [isModalOpen, setIsModalOpen] = useState(false);
+
 	const router = useRouter();
 	const refButtons = useRef<HTMLDivElement>(null);
 	const refRightBtn = useRef<HTMLButtonElement>(null);
@@ -48,23 +51,30 @@ export default function IndicatorCard({
 	};
 
 	return (
-		<div className={clsx(styles[CardClassName])} onClick={() => gotoAboutPage(seriesId)}>
-			<h3>{title}</h3>
-			<div className={clsx(styles.buttons)} ref={refButtons}>
-				<button className={clsx(styles.leftButton)} type='button' onClick={leftButtonHandler}>
-					{leftButtonContent}
-				</button>
-				<button
-					className={clsx(styles.rightButton)}
-					ref={refRightBtn}
-					type='button'
-					onClick={() => {
-						rightButtonHandler();
-						if (isLogin) refRightBtn.current?.classList.toggle(styles.on);
-					}}>
-					{rightButtonContent}
-				</button>
+		<>
+			<div className={clsx(styles[CardClassName])} onClick={() => gotoAboutPage(seriesId)}>
+				<h3>{title}</h3>
+				<div className={clsx(styles.buttons)} ref={refButtons}>
+					<button className={clsx(styles.leftButton)} type='button' onClick={leftButtonHandler}>
+						{leftButtonContent}
+					</button>
+					<button
+						className={clsx(styles.rightButton)}
+						ref={refRightBtn}
+						type='button'
+						onClick={() => {
+							rightButtonHandler();
+							if (isLogin) refRightBtn.current?.classList.toggle(styles.on);
+						}}>
+						{rightButtonContent}
+					</button>
+				</div>
 			</div>
-		</div>
+			<ChartModal
+				isModalOpen={isModalOpen}
+				setIsModalOpen={setIsModalOpen}
+				seriesId={seriesId}
+				title={title}></ChartModal>
+		</>
 	);
 }
