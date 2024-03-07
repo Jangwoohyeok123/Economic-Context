@@ -4,7 +4,10 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
 import MakeConfirmModal from '../modals/makeConfirmModal/MakeConfirmModal';
 import ChartModal from '../modals/chartModal/ChartModal';
-import { changeNameToType } from '@/utils/changeNameToCategoryId';
+import { useQuery } from '@tanstack/react-query';
+import queryKey from '@/const/queryKey';
+import app from '@/firebase/firebaseConfig';
+import { getDatabase, get, ref } from 'firebase/database';
 
 type Favorite = {
 	title: string;
@@ -14,16 +17,32 @@ type Favorite = {
 
 interface IndicatorsProps {
 	// Categorys 는 API 가 완성되면 다시 타입 지정한다.
-	favorites: Favorite[];
 	CategoryIndex: number;
 	setCategoryIndex: Dispatch<SetStateAction<number>>;
 }
 
-export default function Indicators({ favorites, CategoryIndex, setCategoryIndex }: IndicatorsProps) {
+export default function Indicators({ CategoryIndex, setCategoryIndex }: IndicatorsProps) {
 	const [isOpenConfirmContext, setIsOpenConfirmContext] = useState(false);
 	const [categoryNames, setCategoryNames] = useState(['interest', 'exchange', 'consume', 'production']);
 	const [isChartModalOpen, setIsChartModalOpen] = useState(false);
-	console.log(favorites);
+	const userId = 1;
+	const { data: favorites, isSuccess } = useQuery({
+		queryKey: [queryKey.favorite, userId],
+		queryFn: async () => {
+			const db = getDatabase(app);
+			const favoriteDocRef = ref(db, `/user/favorite/${userId}`);
+			const snapshot = await get(favoriteDocRef);
+			const favoritesArray: Favorite[] = [];
+
+			if (snapshot.exists()) {
+				snapshot.forEach(childSnapshot => {
+					favoritesArray.push(childSnapshot.val());
+				});
+			}
+
+			return favoritesArray;
+		}
+	});
 
 	return (
 		<div className={clsx(styles.Indicators)}>
@@ -37,22 +56,23 @@ export default function Indicators({ favorites, CategoryIndex, setCategoryIndex 
 				})}
 			</nav>
 			<form>
-				{favorites.map((favorite, idx) => {
-					return (
-						<IndicatorCard
-							isChartModalOpen={isChartModalOpen}
-							setIsChartModalOpen={setIsChartModalOpen}
-							seriesId={favorite.seriesId}
-							categoryId={favorite.categoryId}
-							key={idx}
-							pageType='dashboard'
-							title={favorite.title}
-							leftButtonContent='delete'
-							leftButtonHandler={() => {}}
-							rightButtonContent='check'
-							rightButtonHandler={() => {}}></IndicatorCard>
-					);
-				})}
+				{isSuccess &&
+					favorites.map((favorite, idx) => {
+						return (
+							<IndicatorCard
+								isChartModalOpen={isChartModalOpen}
+								setIsChartModalOpen={setIsChartModalOpen}
+								seriesId={favorite.seriesId}
+								categoryId={favorite.categoryId}
+								key={idx}
+								pageType='dashboard'
+								title={favorite.title}
+								leftButtonContent='delete'
+								leftButtonHandler={() => {}}
+								rightButtonContent='check'
+								rightButtonHandler={() => {}}></IndicatorCard>
+						);
+					})}
 			</form>
 			<footer>
 				<span className={clsx(styles.item)}></span>
