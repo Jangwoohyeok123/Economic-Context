@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 
 const userInitialState = {
-	isLogin: false,
+	isLogin: true,
 	userData: {
 		createdAt: '',
 		email: '',

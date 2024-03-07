@@ -1,11 +1,11 @@
-import { roboto, poppins } from '../index';
-import styles from './Dashboard.module.scss';
 import clsx from 'clsx';
 import { useState } from 'react';
+import { roboto, poppins } from '../_app';
 import Menu from '@/components/menu/Menu';
+import styles from './Dashboard.module.scss';
+import MyContext from '@/components/myContext/MyContext';
 import Dashheader from '@/components/dashheader/DashHeader';
 import Indicators from '@/components/indicators/Indicators';
-import MyContext from '@/components/myContext/MyContext';
 
 export default function Dashboard() {
 	const [Tabs] = useState(['Indicators', 'MyContext']);
@@ -49,5 +49,3 @@ export default function Dashboard() {
 		</div>
 	);
 }
-// 탭을 이동할 시 clinetCategoryCheckedArr[idx] 의 값을 할당한다.
-//

@@ -12,6 +12,8 @@ import { Category } from '@/types/fredInterface';
 import { useDispatch, useSelector } from 'react-redux';
 import IndicatorCard from '@/components/cards/indicatorCard/IndicatorCard';
 import { changeNameToType, changeTypeToName } from '@/utils/changeNameToCategoryId';
+import { getDatabase, push, ref, set } from 'firebase/database';
+import app from '@/firebase/firebaseConfig';
 
 const AlertModalDynamic = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
@@ -40,14 +42,22 @@ export default function Pages({ interest }: { interest: Category }) {
 		router.push(`/${seriesId}`);
 	};
 
-	const saveCardToDB = (categoryName: string, seriesId: string, title: string) => {
-		// userId 갖고오기
-		if (User.isLogin) {
-			const userId = User.userData.id;
-			axios.get(`http://localhost:4000/user/favorite/${1}`).then(response => console.log(response));
-		} else {
-			console.error('data Save 실패');
-		}
+	const addFavoriteIndicator = (categoryId: number, seriesId: string, title: string) => {
+		const db = getDatabase(app);
+		const userId = 1;
+		// `/user/${userId}/favorite`
+		const newDocRef = ref(db, `/user/favorite/${userId}`);
+		set(newDocRef, {
+			seriesId: seriesId,
+			categoryId: categoryId,
+			title: title
+		})
+			.then(() => {
+				alert('save 성공');
+			})
+			.catch(err => {
+				alert('error: ' + err.message);
+			});
 	};
 
 	const deleteCardInDB = (seriesId: string): void => {
@@ -116,7 +126,7 @@ export default function Pages({ interest }: { interest: Category }) {
 										leftButtonHandler={() => GotoAboutPage(seriesId)}
 										rightButtonContent='save'
 										rightButtonHandler={
-											User.isLogin ? () => saveCardToDB('114', seriesId, title) : () => setIsAlertModalOpen(true)
+											User.isLogin ? () => addFavoriteIndicator(114, seriesId, title) : () => setIsAlertModalOpen(true)
 										}
 										pageType='main'
 									/>
