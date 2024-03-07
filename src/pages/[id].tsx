@@ -31,11 +31,11 @@ export default function CategoryId() {
 	const [Values, setValues] = useState<DataItem[]>([]);
 
 	useEffect(() => {
-		fetch(`/api/chartData?seriesId=${seriesId}`)
+		fetch(`/api/chartValues?seriesId=${seriesId}`)
 			.then(response => {
 				return response.json();
 			})
-			.then(data => setData(data.observations));
+			.then(data => setData(data));
 
 		fetch(`/api/indicatorData?seriesId=${seriesId}`)
 			.then(response => {
