@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 
 export default function ChartModal({ isChartModalOpen, setIsChartModalOpen, children }: ChartModalProps) {
 	const [chartValues, setChartValues] = useState([]);
+	const [title, setTitle] = useState('');
 	const router = useRouter();
 	const { seriesId } = router.query;
 
@@ -19,25 +20,27 @@ export default function ChartModal({ isChartModalOpen, setIsChartModalOpen, chil
 			pathname: router.pathname,
 			query: null
 		};
+		setTitle('');
+		// setChartValues([]);
 
 		router.replace(newUrl, undefined, { shallow: true });
 	};
 
 	useEffect(() => {
 		if (!seriesId) return;
-		// title 용도
+		// observation 용도
 		axios.get(`/api/chartValues?seriesId=${seriesId}`).then(response => {
-			console.log(
+			setChartValues(
 				response.data.observations.observations.map(el => {
+					if (el.value === '.') el.value = 0;
 					return { date: new Date(el.date), value: Number(el.value) };
 				})
 			);
 		});
-		// .then(data => setData(data));
 
-		// observation 용도
+		// title 용도
 		axios.get(`/api/indicator?seriesId=${seriesId}`).then(response => {
-			console.log(response.data.indicator.seriess[0].title);
+			setTitle(response.data.indicator.seriess[0].title);
 		});
 	}, [seriesId]);
 
@@ -51,7 +54,7 @@ export default function ChartModal({ isChartModalOpen, setIsChartModalOpen, chil
 							clearUrl();
 						}}></div>
 					<div className={clsx(styles.ChartModal, roboto.variable, poppins.variable)}>
-						<LineChart title={'ddd'} values={chartValues}></LineChart>
+						<LineChart title={title} values={chartValues}></LineChart>
 					</div>
 				</React.Fragment>,
 				document.body
