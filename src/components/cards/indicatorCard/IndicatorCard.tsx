@@ -3,6 +3,7 @@ import styles from './IndicatorCard.module.scss';
 import { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import Store from '@/types/storeInterface';
 
 interface IndicatorCardProps {
 	seriesId: string;
@@ -39,16 +40,15 @@ export default function IndicatorCard({
 	const router = useRouter();
 	const refButtons = useRef<HTMLDivElement>(null);
 	const refRightBtn = useRef<HTMLButtonElement>(null);
-	const isLogin = useSelector(state => state.user.isLogin);
+	const isLogin = useSelector((state: Store) => state.user.isLogin);
 	const CardClassName = checkingPageTypeAndModifyClassName(pageType);
 
-	// () => GotoAboutPage(seriesId)
-	const GotoAboutPage = (seriesId: string) => {
+	const gotoAboutPage = (seriesId: string) => {
 		router.push(`/${seriesId}`);
 	};
 
 	return (
-		<div className={clsx(styles[CardClassName])}>
+		<div className={clsx(styles[CardClassName])} onClick={() => gotoAboutPage(seriesId)}>
 			<h3>{title}</h3>
 			<div className={clsx(styles.buttons)} ref={refButtons}>
 				<button className={clsx(styles.leftButton)} type='button' onClick={leftButtonHandler}>
@@ -68,5 +68,3 @@ export default function IndicatorCard({
 		</div>
 	);
 }
-
-// , { [styles.on]: isLogin }
