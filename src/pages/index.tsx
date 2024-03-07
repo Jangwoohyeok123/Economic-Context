@@ -23,7 +23,6 @@ const fetchCategory = async (categoryId: number) => {
 };
 
 export default function Pages({ interest }: { interest: Category }) {
-	console.log(interest);
 	const router = useRouter();
 	const categoryNames = ['interest', 'exchange', 'production', 'consume'];
 	const [categoryIndex, setCategoryIndex] = useState(0);
