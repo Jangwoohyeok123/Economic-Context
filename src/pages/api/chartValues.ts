@@ -24,7 +24,7 @@ type ApiResponse = {
 export default async function getChartValues(req: NextApiRequest, res: NextApiResponse<ApiResponse>) {
 	const baseUrl = process.env.NEXT_PUBLIC_FRED_BASEURL;
 	const apiKey = process.env.NEXT_PUBLIC_FREDKEY;
-
+	console.log('ddd');
 	try {
 		const { seriesId } = req.query;
 
@@ -33,8 +33,8 @@ export default async function getChartValues(req: NextApiRequest, res: NextApiRe
 		);
 		const json = await response.json();
 
-		res.status(200).json({ observations: json.observations });
-	} catch (err) {
-		res.status(500).json({ message: 'fetching 실패' });
+		res.status(200).json({ observations: json });
+	} catch (error) {
+		console.error('error' + error.message);
 	}
 }

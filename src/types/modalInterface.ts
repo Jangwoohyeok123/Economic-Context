@@ -12,9 +12,7 @@ export interface MakeModalProps {
 }
 
 export interface ChartModalProps {
-	title: string;
-	seriesId: string;
-	isModalOpen: boolean;
-	setIsModalOpen: (isModalOpen: boolean) => void;
+	isChartModalOpen: boolean;
+	setIsChartModalOpen: (isModalOpen: boolean) => void;
 	children?: React.ReactNode;
 }

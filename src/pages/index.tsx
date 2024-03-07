@@ -17,6 +17,7 @@ import app from '@/firebase/firebaseConfig';
 import User from '@/types/userInterface';
 import Store from '@/types/storeInterface';
 import { addFavoriteIndicator, deleteFavoriteIndicator } from '@/firebase/logic';
+import ChartModal from '@/components/modals/chartModal/ChartModal';
 
 const AlertModalDynamic = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
@@ -33,7 +34,9 @@ export default function Pages({ interest }: { interest: Category }) {
 	const dispatch = useDispatch();
 	const [categoryIndex, setCategoryIndex] = useState(0);
 	const user = useSelector((state: Store) => state.user);
-	const [IsAlertModalOpen, setIsAlertModalOpen] = useState(false);
+	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+	const [isChartModalOpen, setIsChartModalOpen] = useState(false);
+
 	const categoryNames = ['interest', 'exchange', 'production', 'consume'];
 	const { data: category, isSuccess } = useQuery({
 		queryKey: ['category', changeNameToType(categoryNames[categoryIndex])],
@@ -96,6 +99,8 @@ export default function Pages({ interest }: { interest: Category }) {
 										key={idx}
 										seriesId={seriesId}
 										categoryId={changeNameToType(categoryNames[categoryIndex])}
+										isChartModalOpen={isChartModalOpen}
+										setIsChartModalOpen={setIsChartModalOpen}
 										title={title}
 										leftButtonContent='delete'
 										leftButtonHandler={() => {
@@ -113,7 +118,7 @@ export default function Pages({ interest }: { interest: Category }) {
 				</figure>
 			</main>
 			<AlertModalDynamic
-				isModalOpen={IsAlertModalOpen}
+				isModalOpen={isAlertModalOpen}
 				setIsModalOpen={setIsAlertModalOpen}
 				size='small'
 				header='You need to login!'
@@ -123,6 +128,7 @@ export default function Pages({ interest }: { interest: Category }) {
 				rightButtonContent='Login'
 				rightButtonHandler={() => (window.location.href = 'http://localhost:3000/login')}
 			/>
+			<ChartModal isChartModalOpen={isChartModalOpen} setIsChartModalOpen={setIsChartModalOpen}></ChartModal>
 		</>
 	);
 }
