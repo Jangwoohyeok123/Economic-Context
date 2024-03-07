@@ -1,7 +1,8 @@
 const queryKey = {
 	category: 'category',
 	indicator: 'indicator',
-	user: 'user'
+	user: 'user',
+	favorite: 'user/favorite'
 };
 
 export default queryKey;
