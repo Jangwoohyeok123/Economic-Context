@@ -12,10 +12,11 @@ import { Category } from '@/types/fredInterface';
 import { useDispatch, useSelector } from 'react-redux';
 import IndicatorCard from '@/components/cards/indicatorCard/IndicatorCard';
 import { changeNameToType, changeTypeToName } from '@/utils/changeNameToCategoryId';
-import { get, getDatabase, push, ref, set } from 'firebase/database';
+import { get, getDatabase, push, ref, remove, set } from 'firebase/database';
 import app from '@/firebase/firebaseConfig';
 import User from '@/types/userInterface';
 import Store from '@/types/storeInterface';
+import { addFavoriteIndicator, deleteFavoriteIndicator } from '@/firebase/logic';
 
 const AlertModalDynamic = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
@@ -28,56 +29,21 @@ const fetchCategory = async (categoryId: number) => {
 
 export default function Pages({ interest }: { interest: Category }) {
 	const router = useRouter();
-	const categoryNames = ['interest', 'exchange', 'production', 'consume'];
+	const db = getDatabase(app);
+	const dispatch = useDispatch();
 	const [categoryIndex, setCategoryIndex] = useState(0);
+	const user = useSelector((state: Store) => state.user);
+	const [IsAlertModalOpen, setIsAlertModalOpen] = useState(false);
+	const categoryNames = ['interest', 'exchange', 'production', 'consume'];
 	const { data: category, isSuccess } = useQuery({
 		queryKey: ['category', changeNameToType(categoryNames[categoryIndex])],
 		queryFn: () => fetchCategory(changeNameToType(categoryNames[categoryIndex]))
 	});
 
-	const dispatch = useDispatch();
-
-	const [IsAlertModalOpen, setIsAlertModalOpen] = useState(false);
-	const user = useSelector((state: Store) => state.user);
-
+	// () => GotoAboutPage(seriesId)
 	const GotoAboutPage = (seriesId: string) => {
 		router.push(`/${seriesId}`);
 	};
-
-	const addFavoriteIndicator = (categoryId: number, seriesId: string, title: string) => {
-		const db = getDatabase(app);
-		const userId = 1;
-		const favoriteDocRef = ref(db, `/user/favorite/${userId}`);
-
-		get(favoriteDocRef).then(snapshot => {
-			let isExists = false;
-
-			snapshot.forEach(childrenSnapshot => {
-				const childData = childrenSnapshot.val();
-
-				if (childData.seriesId === seriesId) {
-					isExists = true;
-				}
-			});
-
-			if (!isExists) {
-				const newFavoriteRef = push(favoriteDocRef);
-				set(newFavoriteRef, {
-					seriesId: seriesId,
-					categoryId: categoryId,
-					title: title
-				})
-					.then(() => {
-						alert('save 성공');
-					})
-					.catch(err => {
-						alert('error: ' + err.message);
-					});
-			}
-		});
-	};
-
-	const deleteCardInDB = (seriesId: string): void => {};
 
 	const refreshCategory = (categoryName: string) => {
 		setCategoryIndex(categoryNames.indexOf(categoryName));
@@ -128,9 +94,13 @@ export default function Pages({ interest }: { interest: Category }) {
 								return (
 									<IndicatorCard
 										key={idx}
+										seriesId={seriesId}
+										categoryId={changeNameToType(categoryNames[categoryIndex])}
 										title={title}
-										leftButtonContent='more'
-										leftButtonHandler={() => GotoAboutPage(seriesId)}
+										leftButtonContent='delete'
+										leftButtonHandler={() => {
+											deleteFavoriteIndicator(1, seriesId);
+										}}
 										rightButtonContent='save'
 										rightButtonHandler={
 											user.isLogin ? () => addFavoriteIndicator(114, seriesId, title) : () => setIsAlertModalOpen(true)
