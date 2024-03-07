@@ -12,7 +12,7 @@ import { Category } from '@/types/fredInterface';
 import { useDispatch, useSelector } from 'react-redux';
 import IndicatorCard from '@/components/cards/indicatorCard/IndicatorCard';
 import { changeNameToType, changeTypeToName } from '@/utils/changeNameToCategoryId';
-import { getDatabase, push, ref, set } from 'firebase/database';
+import { get, getDatabase, push, ref, set } from 'firebase/database';
 import app from '@/firebase/firebaseConfig';
 
 const AlertModalDynamic = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
@@ -45,32 +45,37 @@ export default function Pages({ interest }: { interest: Category }) {
 	const addFavoriteIndicator = (categoryId: number, seriesId: string, title: string) => {
 		const db = getDatabase(app);
 		const userId = 1;
-		// `/user/${userId}/favorite`
-		const newDocRef = ref(db, `/user/favorite/${userId}`);
-		set(newDocRef, {
-			seriesId: seriesId,
-			categoryId: categoryId,
-			title: title
-		})
-			.then(() => {
-				alert('save 성공');
-			})
-			.catch(err => {
-				alert('error: ' + err.message);
+		const favoriteDocRef = ref(db, `/user/favorite/${userId}`);
+
+		get(favoriteDocRef).then(snapshot => {
+			let isExists = false;
+
+			snapshot.forEach(childrenSnapshot => {
+				const childData = childrenSnapshot.val();
+
+				if (childData.seriesId === seriesId) {
+					isExists = true;
+				}
 			});
+
+			if (!isExists) {
+				const newFavoriteRef = push(favoriteDocRef);
+				set(newFavoriteRef, {
+					seriesId: seriesId,
+					categoryId: categoryId,
+					title: title
+				})
+					.then(() => {
+						alert('save 성공');
+					})
+					.catch(err => {
+						alert('error: ' + err.message);
+					});
+			}
+		});
 	};
 
-	const deleteCardInDB = (seriesId: string): void => {
-		if (User.isLogin) {
-			const userId = User.userData.id;
-			console.log(1);
-			axios.post(`http://localhost:4000/user/favorite/delete/${userId}`, {
-				indicatorId: seriesId
-			});
-		} else {
-			console.error('data delete 실패');
-		}
-	};
+	const deleteCardInDB = (seriesId: string): void => {};
 
 	const refreshCategory = (categoryName: string) => {
 		setCategoryIndex(categoryNames.indexOf(categoryName));
