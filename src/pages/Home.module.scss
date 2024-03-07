@@ -32,5 +32,9 @@
 		grid-template-columns: 1fr 1fr 1fr 1fr;
 		column-gap: 50px;
 		row-gap: 50px;
+
+		> div {
+			height: 250px;
+		}
 	}
 }
