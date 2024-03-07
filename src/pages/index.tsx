@@ -11,11 +11,11 @@ import { useQuery } from '@tanstack/react-query';
 import { Category } from '@/types/fredInterface';
 import { useDispatch, useSelector } from 'react-redux';
 import IndicatorCard from '@/components/cards/indicatorCard/IndicatorCard';
-import changeNameToCategoryId from '@/utils/changeNameToCategoryId';
+import { changeNameToType, changeTypeToName } from '@/utils/changeNameToCategoryId';
 
 const AlertModalDynamic = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
-const fetchCategory = async (categoryId: string) => {
+const fetchCategory = async (categoryId: number) => {
 	const res = await fetch(`/api/category?categoryId=${categoryId}`);
 	const json = await res.json();
 
@@ -23,12 +23,13 @@ const fetchCategory = async (categoryId: string) => {
 };
 
 export default function Pages({ interest }: { interest: Category }) {
+	console.log(interest);
 	const router = useRouter();
 	const categoryNames = ['interest', 'exchange', 'production', 'consume'];
-	const [CategoryIndex, setCategoryIndex] = useState(0);
-	const { data: Category, isSuccess } = useQuery({
-		queryKey: ['category', categoryNames[CategoryIndex]],
-		queryFn: () => fetchCategory(changeNameToCategoryId(categoryNames[CategoryIndex]))
+	const [categoryIndex, setCategoryIndex] = useState(0);
+	const { data: category, isSuccess } = useQuery({
+		queryKey: ['category', changeNameToType(categoryNames[categoryIndex])],
+		queryFn: () => fetchCategory(changeNameToType(categoryNames[categoryIndex]))
 	});
 
 	const dispatch = useDispatch();
@@ -104,7 +105,7 @@ export default function Pages({ interest }: { interest: Category }) {
 				</div>
 				<figure className={clsx(styles.category)}>
 					{isSuccess
-						? Category.map((series, idx: number) => {
+						? category.map((series, idx: number) => {
 								const seriesId = series.id;
 								const title = series.title;
 
