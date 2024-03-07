@@ -14,6 +14,8 @@ import IndicatorCard from '@/components/cards/indicatorCard/IndicatorCard';
 import { changeNameToType, changeTypeToName } from '@/utils/changeNameToCategoryId';
 import { get, getDatabase, push, ref, set } from 'firebase/database';
 import app from '@/firebase/firebaseConfig';
+import User from '@/types/userInterface';
+import Store from '@/types/storeInterface';
 
 const AlertModalDynamic = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
@@ -36,7 +38,7 @@ export default function Pages({ interest }: { interest: Category }) {
 	const dispatch = useDispatch();
 
 	const [IsAlertModalOpen, setIsAlertModalOpen] = useState(false);
-	const User = useSelector(state => state.user);
+	const user = useSelector((state: Store) => state.user);
 
 	const GotoAboutPage = (seriesId: string) => {
 		router.push(`/${seriesId}`);
@@ -119,7 +121,7 @@ export default function Pages({ interest }: { interest: Category }) {
 				</div>
 				<figure className={clsx(styles.category)}>
 					{isSuccess
-						? category.map((series, idx: number) => {
+						? category.map((series: { id: string; title: string }, idx: number) => {
 								const seriesId = series.id;
 								const title = series.title;
 
@@ -131,7 +133,7 @@ export default function Pages({ interest }: { interest: Category }) {
 										leftButtonHandler={() => GotoAboutPage(seriesId)}
 										rightButtonContent='save'
 										rightButtonHandler={
-											User.isLogin ? () => addFavoriteIndicator(114, seriesId, title) : () => setIsAlertModalOpen(true)
+											user.isLogin ? () => addFavoriteIndicator(114, seriesId, title) : () => setIsAlertModalOpen(true)
 										}
 										pageType='main'
 									/>
