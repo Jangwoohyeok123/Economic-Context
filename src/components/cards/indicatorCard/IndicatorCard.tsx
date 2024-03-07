@@ -2,8 +2,11 @@ import clsx from 'clsx';
 import styles from './IndicatorCard.module.scss';
 import { useRef } from 'react';
 import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 
 interface IndicatorCardProps {
+	seriesId: string;
+	categoryId: number;
 	title: string;
 	leftButtonContent: string;
 	leftButtonHandler: () => void;
@@ -24,6 +27,8 @@ function checkingPageTypeAndModifyClassName(pageType: string) {
 }
 
 export default function IndicatorCard({
+	seriesId,
+	categoryId,
 	title,
 	leftButtonContent,
 	leftButtonHandler,
@@ -31,14 +36,21 @@ export default function IndicatorCard({
 	rightButtonHandler,
 	pageType
 }: IndicatorCardProps) {
+	const router = useRouter();
+	const refButtons = useRef<HTMLDivElement>(null);
 	const refRightBtn = useRef<HTMLButtonElement>(null);
-	const CardClassName = checkingPageTypeAndModifyClassName(pageType);
 	const isLogin = useSelector(state => state.user.isLogin);
+	const CardClassName = checkingPageTypeAndModifyClassName(pageType);
+
+	// () => GotoAboutPage(seriesId)
+	const GotoAboutPage = (seriesId: string) => {
+		router.push(`/${seriesId}`);
+	};
 
 	return (
 		<div className={clsx(styles[CardClassName])}>
 			<h3>{title}</h3>
-			<div className={clsx(styles.buttons)}>
+			<div className={clsx(styles.buttons)} ref={refButtons}>
 				<button className={clsx(styles.leftButton)} type='button' onClick={leftButtonHandler}>
 					{leftButtonContent}
 				</button>
