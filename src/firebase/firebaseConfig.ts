@@ -7,17 +7,17 @@ import { getAnalytics } from 'firebase/analytics';
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 export const firebaseConfig = {
-	apiKey: process.env.NEXT_PUBLIC_FIREBASE_APIKEY,
-	authDomain: process.env.NEXT_PUBLIC_FIREBASE__AUTH_DOMAIN,
-	databaseUrl: process.env.NEXT_PUBLIC_FIREBASE__DATABASE_URL,
-	projectId: process.env.NEXT_PUBLIC_FIREBASE__PROJECT_ID,
-	storageBucket: process.env.NEXT_PUBLIC_FIREBASE__STORAGEBUCKET,
-	messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE__MESSAGINGSENDER_ID,
-	appId: process.env.NEXT_PUBLIC_FIREBASE__APP_ID,
-	measurementId: process.env.NEXT_PUBLIC_FIREBASE__MEASUREMENT_ID
+	apiKey: 'AIzaSyAQtF-7V72XwQHoKJQUhWjpW-FfOblin04',
+	authDomain: 'economic-context-415504.firebaseapp.com',
+	databaseURL: 'https://economic-context-415504-default-rtdb.asia-southeast1.firebasedatabase.app',
+	projectId: 'economic-context-415504',
+	storageBucket: 'economic-context-415504.appspot.com',
+	messagingSenderId: '201145904598',
+	appId: '1:201145904598:web:e7c2c6e33247f03ee90877',
+	measurementId: 'G-53WP2MMD5V'
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+export const app = initializeApp(firebaseConfig);
+
 export default app;
