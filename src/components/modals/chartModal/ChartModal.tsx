@@ -6,7 +6,7 @@ import styles from './ChartModal.module.scss';
 import { roboto, poppins } from '@/pages/_app';
 import React, { useEffect, useState } from 'react';
 import { ChartModalProps } from '@/types/modalInterface';
-import LineChart from '@/components/charts/line/LineChart';
+import LineChart from '@/components/lineChart/LineChart';
 
 export default function ChartModal({ isChartModalOpen, setIsChartModalOpen, children }: ChartModalProps) {
 	const [chartValues, setChartValues] = useState([]);
