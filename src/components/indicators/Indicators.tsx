@@ -8,6 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import queryKey from '@/const/queryKey';
 import app from '@/firebase/firebaseConfig';
 import { getDatabase, get, ref } from 'firebase/database';
+import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 
 type Favorite = {
 	title: string;
@@ -21,11 +22,12 @@ interface IndicatorsProps {
 	setCategoryIndex: Dispatch<SetStateAction<number>>;
 }
 
-export default function Indicators({ CategoryIndex, setCategoryIndex }: IndicatorsProps) {
-	const [isOpenConfirmContext, setIsOpenConfirmContext] = useState(false);
-	const [categoryNames, setCategoryNames] = useState(['interest', 'exchange', 'consume', 'production']);
-	const [isChartModalOpen, setIsChartModalOpen] = useState(false);
+export default function Indicators() {
+	const categoryNames = ['interest', 'exchange', 'consume', 'production'];
+	const [categoryIndex, setCategoryIndex] = useState(0);
 	const userId = 1;
+	const [isOpenConfirmContext, setIsOpenConfirmContext] = useState(false);
+	const [isChartModalOpen, setIsChartModalOpen] = useState(false);
 	const { data: favorites, isSuccess } = useQuery({
 		queryKey: [queryKey.favorite, userId],
 		queryFn: async () => {
@@ -44,35 +46,55 @@ export default function Indicators({ CategoryIndex, setCategoryIndex }: Indicato
 		}
 	});
 
+	// 범용성있게 함수이름을 failterDataSet 라고 정의할까요?
+	const filterFavoriteByCategoryId = (favorites: Favorite[], categoryId: number) => {
+		return favorites.filter(favorite => favorite.categoryId === categoryId);
+	};
+
+	const pickCategory = (idx: number) => {
+		setCategoryIndex(idx);
+	};
+
 	return (
 		<div className={clsx(styles.Indicators)}>
 			<nav>
-				{categoryNames.map((category, idx) => {
+				{categoryNames.map((categoryName, index) => {
+					const categoryId = changeNameToCategoryId(categoryName);
 					return (
-						<button key={idx} onClick={() => setCategoryIndex(idx)} className={CategoryIndex === idx ? styles.on : ''}>
-							{category}
-						</button>
+						favorites && (
+							<button
+								key={index}
+								onClick={() => {
+									filterFavoriteByCategoryId(favorites, categoryId);
+									pickCategory(index);
+								}}
+								className={categoryIndex === index ? styles.on : ''}>
+								{categoryName}
+							</button>
+						)
 					);
 				})}
 			</nav>
 			<form>
 				{isSuccess &&
-					favorites.map((favorite, idx) => {
-						return (
-							<IndicatorCard
-								isChartModalOpen={isChartModalOpen}
-								setIsChartModalOpen={setIsChartModalOpen}
-								seriesId={favorite.seriesId}
-								categoryId={favorite.categoryId}
-								key={idx}
-								pageType='dashboard'
-								title={favorite.title}
-								leftButtonContent='delete'
-								leftButtonHandler={() => {}}
-								rightButtonContent='check'
-								rightButtonHandler={() => {}}></IndicatorCard>
-						);
-					})}
+					filterFavoriteByCategoryId(favorites, changeNameToCategoryId(categoryNames[categoryIndex])).map(
+						(favorite, idx) => {
+							return (
+								<IndicatorCard
+									isChartModalOpen={isChartModalOpen}
+									setIsChartModalOpen={setIsChartModalOpen}
+									seriesId={favorite.seriesId}
+									categoryId={favorite.categoryId}
+									key={idx}
+									pageType='dashboard'
+									title={favorite.title}
+									leftButtonContent='delete'
+									leftButtonHandler={() => {}}
+									rightButtonContent='check'
+									rightButtonHandler={() => {}}></IndicatorCard>
+							);
+						}
+					)}
 			</form>
 			<footer>
 				<span className={clsx(styles.item)}></span>

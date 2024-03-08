@@ -10,7 +10,6 @@ import Indicators from '@/components/indicators/Indicators';
 export default function Dashboard() {
 	const [Tabs] = useState(['Indicators', 'MyContext']);
 	const [TabsIndex, setSelectedIdx] = useState(0);
-	const [CategoryIndex, setCategoryIndex] = useState(0);
 
 	return (
 		<>
@@ -21,11 +20,7 @@ export default function Dashboard() {
 				<section>
 					<Dashheader Tabs={Tabs} TabsIndex={TabsIndex} />
 
-					{Tabs[TabsIndex] === 'Indicators' ? (
-						<Indicators CategoryIndex={CategoryIndex} setCategoryIndex={setCategoryIndex} />
-					) : (
-						<MyContext />
-					)}
+					{Tabs[TabsIndex] === 'Indicators' ? <Indicators /> : <MyContext />}
 				</section>
 			</div>
 		</>
