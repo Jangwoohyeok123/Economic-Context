@@ -11,7 +11,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Category } from '@/types/fredInterface';
 import { useDispatch, useSelector } from 'react-redux';
 import IndicatorCard from '@/components/cards/indicatorCard/IndicatorCard';
-import { changeNameToType, changeTypeToName } from '@/utils/changeNameToCategoryId';
+import { changeNameToCategoryId, changeCategoryIdToName } from '@/utils/changeNameToCategoryId';
 import { get, getDatabase, push, ref, remove, set } from 'firebase/database';
 import app from '@/firebase/firebaseConfig';
 import User from '@/types/userInterface';
@@ -40,8 +40,8 @@ export default function Pages({ interest }: { interest: Category }) {
 
 	const categoryNames = ['interest', 'exchange', 'production', 'consume'];
 	const { data: category, isSuccess } = useQuery({
-		queryKey: ['category', changeNameToType(categoryNames[categoryIndex])],
-		queryFn: () => fetchCategory(changeNameToType(categoryNames[categoryIndex]))
+		queryKey: ['category', changeNameToCategoryId(categoryNames[categoryIndex])],
+		queryFn: () => fetchCategory(changeNameToCategoryId(categoryNames[categoryIndex]))
 	});
 
 	// () => GotoAboutPage(seriesId)
@@ -99,7 +99,7 @@ export default function Pages({ interest }: { interest: Category }) {
 									<IndicatorCard
 										key={idx}
 										seriesId={seriesId}
-										categoryId={changeNameToType(categoryNames[categoryIndex])}
+										categoryId={changeNameToCategoryId(categoryNames[categoryIndex])}
 										isChartModalOpen={isChartModalOpen}
 										setIsChartModalOpen={setIsChartModalOpen}
 										title={title}
