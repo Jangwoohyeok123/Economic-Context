@@ -1,4 +1,4 @@
-import { roboto, poppins } from '../index';
+import { roboto, poppins } from '../_app';
 import styles from './Dashboard.module.scss';
 import clsx from 'clsx';
 import { useState } from 'react';
