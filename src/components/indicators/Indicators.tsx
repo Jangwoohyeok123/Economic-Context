@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import styles from './Indicators.module.scss';
 import { Dispatch, SetStateAction, useState } from 'react';
-import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
+import IndicatorCard from '../indicatorCard/IndicatorCard';
 import MakeConfirmModal from '../modals/makeConfirmModal/MakeConfirmModal';
 import ChartModal from '../modals/chartModal/ChartModal';
 import { useQuery } from '@tanstack/react-query';

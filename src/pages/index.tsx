@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Category } from '@/types/fredInterface';
 import { useDispatch, useSelector } from 'react-redux';
-import IndicatorCard from '@/components/cards/indicatorCard/IndicatorCard';
+import IndicatorCard from '@/components/indicatorCard/IndicatorCard';
 import { changeNameToCategoryId, changeCategoryIdToName } from '@/utils/changeNameToCategoryId';
 import { get, getDatabase, push, ref, remove, set } from 'firebase/database';
 import app from '@/firebase/firebaseConfig';
