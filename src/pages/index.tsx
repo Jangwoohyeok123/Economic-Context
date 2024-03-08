@@ -1,23 +1,22 @@
+import app from '@/firebase/firebaseConfig';
 import clsx from 'clsx';
 import axios from 'axios';
 import Image from 'next/image';
-import dynamic from 'next/dynamic';
+import Store from '@/types/storeInterface';
 import styles from './Home.module.scss';
-import { useRouter } from 'next/router';
-import { roboto, poppins } from './_app';
+import dynamic from 'next/dynamic';
 import { login } from '@/actions/actions';
-import { useEffect, useState } from 'react';
+import ChartModal from '@/components/modals/chartModal/ChartModal';
 import { useQuery } from '@tanstack/react-query';
 import { Category } from '@/types/fredInterface';
-import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 import IndicatorCard from '@/components/indicatorCard/IndicatorCard';
-import { changeNameToCategoryId, changeCategoryIdToName } from '@/utils/changeNameToCategoryId';
-import { get, getDatabase, push, ref, remove, set } from 'firebase/database';
-import app from '@/firebase/firebaseConfig';
-import User from '@/types/userInterface';
-import Store from '@/types/storeInterface';
+import { getDatabase } from 'firebase/database';
+import { roboto, poppins } from './_app';
+import { useEffect, useState } from 'react';
+import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
+import { useDispatch, useSelector } from 'react-redux';
 import { addFavoriteIndicator, deleteFavoriteIndicator } from '@/firebase/logic';
-import ChartModal from '@/components/modals/chartModal/ChartModal';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 const DynamicChartModal = dynamic(() => import('@/components/modals/chartModal/ChartModal'), { ssr: false });
@@ -43,11 +42,6 @@ export default function Pages({ interest }: { interest: Category }) {
 		queryKey: ['category', changeNameToCategoryId(categoryNames[categoryIndex])],
 		queryFn: () => fetchCategory(changeNameToCategoryId(categoryNames[categoryIndex]))
 	});
-
-	// () => GotoAboutPage(seriesId)
-	const GotoAboutPage = (seriesId: string) => {
-		router.push(`/${seriesId}`);
-	};
 
 	const refreshCategory = (categoryName: string) => {
 		setCategoryIndex(categoryNames.indexOf(categoryName));
@@ -94,12 +88,13 @@ export default function Pages({ interest }: { interest: Category }) {
 						? category.map((series: { id: string; title: string }, idx: number) => {
 								const seriesId = series.id;
 								const title = series.title;
+								const categoryId = changeNameToCategoryId(categoryNames[categoryIndex]);
 
 								return (
 									<IndicatorCard
 										key={idx}
 										seriesId={seriesId}
-										categoryId={changeNameToCategoryId(categoryNames[categoryIndex])}
+										categoryId={categoryId}
 										isChartModalOpen={isChartModalOpen}
 										setIsChartModalOpen={setIsChartModalOpen}
 										title={title}
@@ -109,7 +104,9 @@ export default function Pages({ interest }: { interest: Category }) {
 										}}
 										rightButtonContent='save'
 										rightButtonHandler={
-											user.isLogin ? () => addFavoriteIndicator(114, seriesId, title) : () => setIsAlertModalOpen(true)
+											user.isLogin
+												? () => addFavoriteIndicator(categoryId, seriesId, title)
+												: () => setIsAlertModalOpen(true)
 										}
 										pageType='main'
 									/>
@@ -129,7 +126,9 @@ export default function Pages({ interest }: { interest: Category }) {
 				rightButtonContent='Login'
 				rightButtonHandler={() => (window.location.href = 'http://localhost:3000/login')}
 			/>
-			<ChartModal isChartModalOpen={isChartModalOpen} setIsChartModalOpen={setIsChartModalOpen}></ChartModal>
+			<DynamicChartModal
+				isChartModalOpen={isChartModalOpen}
+				setIsChartModalOpen={setIsChartModalOpen}></DynamicChartModal>
 		</>
 	);
 }
