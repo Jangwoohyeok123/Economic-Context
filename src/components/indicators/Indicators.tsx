@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import styles from './Indicators.module.scss';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useState } from 'react';
 import IndicatorCard from '../indicatorCard/IndicatorCard';
 import MakeConfirmModal from '../modals/makeConfirmModal/MakeConfirmModal';
 import ChartModal from '../modals/chartModal/ChartModal';
@@ -16,18 +16,13 @@ type Favorite = {
 	categoryId: number;
 };
 
-interface IndicatorsProps {
-	// Categorys 는 API 가 완성되면 다시 타입 지정한다.
-	CategoryIndex: number;
-	setCategoryIndex: Dispatch<SetStateAction<number>>;
-}
-
 export default function Indicators() {
+	const userId = 1;
 	const categoryNames = ['interest', 'exchange', 'consume', 'production'];
 	const [categoryIndex, setCategoryIndex] = useState(0);
-	const userId = 1;
-	const [isOpenConfirmContext, setIsOpenConfirmContext] = useState(false);
 	const [isChartModalOpen, setIsChartModalOpen] = useState(false);
+	const [isOpenConfirmContext, setIsOpenConfirmContext] = useState(false);
+
 	const { data: favorites, isSuccess } = useQuery({
 		queryKey: [queryKey.favorite, userId],
 		queryFn: async () => {
