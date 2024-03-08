@@ -93,31 +93,3 @@ const LineChart = ({ title, values, className }: LineChartProps) => {
 };
 
 export default LineChart;
-
-/* tooltip 적용 
-	=> blueprint 코드
-	=> useEffect 내부에 추가하면 됨
-
-	const tooltip = d3.select(svgContainerRef.current).append('div').attr('class', styles.tooltip).style('opacity', 0);
-
-	// 데이터 포인트에 마우스 이벤트 추가
-	svg
-		.selectAll('.data-point')
-		.data(values)
-		.enter()
-		.append('circle')
-		.attr('class', 'data-point')
-		.attr('cx', d => x(d.date))
-		.attr('cy', d => y(d.value))
-		.attr('r', 5)
-		.on('mouseover', (event, d) => {
-			tooltip.transition().duration(200).style('opacity', 1);
-			tooltip
-				.html(`Date: ${d.date}<br/>Value: ${d.value}`)
-				.style('left', `${event.pageX}px`)
-				.style('top', `${event.pageY}px`);
-		})
-		.on('mouseout', () => {
-			tooltip.transition().duration(500).style('opacity', 0);
-		});
-*/

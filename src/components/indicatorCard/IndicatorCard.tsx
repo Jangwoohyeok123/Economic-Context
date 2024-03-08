@@ -47,14 +47,21 @@ export default function IndicatorCard({
 	const isLogin = useSelector((state: Store) => state.user.isLogin);
 	const CardClassName = checkingPageTypeAndModifyClassName(pageType);
 
-	const pushSeriesIdToURL = (seriesId: string) => {
-		router.push(`${router.pathname}?seriesId=${seriesId}`, undefined, { shallow: true });
+	const pushSeriesIdToUrlAndModalOpen = (seriesId: string) => {
+		router.push(`${router.pathname}?seriesId=${seriesId}&title=${title}`, undefined, { shallow: true });
 		setIsChartModalOpen(true);
+	};
+
+	const handleCardClick = (event: React.MouseEvent<HTMLDivElement>) => {
+		// refButtons의 DOM 노드가 event.target 또는 그 부모 중 하나인지 확인
+		if (refButtons.current && !refButtons.current.contains(event.target as Node)) {
+			pushSeriesIdToUrlAndModalOpen(seriesId);
+		}
 	};
 
 	return (
 		<>
-			<div className={clsx(styles[CardClassName])} onClick={() => pushSeriesIdToURL(seriesId)}>
+			<div className={clsx(styles[CardClassName])} onClick={handleCardClick}>
 				<h3>{title}</h3>
 				<div className={clsx(styles.buttons)} ref={refButtons}>
 					<button className={clsx(styles.leftButton)} type='button' onClick={leftButtonHandler}>

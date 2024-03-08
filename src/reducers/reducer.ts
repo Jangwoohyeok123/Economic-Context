@@ -22,8 +22,21 @@ const userReducer = (state = userInitialState, action: { type: string; payload: 
 	return state;
 };
 
+const chartModalInitialState = {
+	isModalOpen: false
+};
+
+const chartModalReducer = (state = chartModalInitialState, action: { type: string; payload: any }) => {
+	if (action.type === 'open') {
+		return { ...state, isModalOpen: true };
+	} else if (action.type === 'close') return { ...state, isModalOpen: false };
+
+	return state;
+};
+
 const combinedReducers = combineReducers({
-	user: userReducer
+	user: userReducer,
+	chartModal: chartModalReducer
 });
 
 export default combinedReducers;

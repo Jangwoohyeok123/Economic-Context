@@ -1,17 +1,17 @@
 import clsx from 'clsx';
 import axios from 'axios';
 import ReactDOM from 'react-dom';
-import React, { useEffect, useState as useState } from 'react';
+import { useRouter } from 'next/router';
 import styles from './ChartModal.module.scss';
 import { roboto, poppins } from '@/pages/_app';
+import React, { useEffect, useState } from 'react';
 import { ChartModalProps } from '@/types/modalInterface';
-import LineChart from '@/components/charts/line/LineChart';
-import { useRouter } from 'next/router';
+import LineChart from '@/components/lineChart/LineChart';
 
 export default function ChartModal({ isChartModalOpen, setIsChartModalOpen, children }: ChartModalProps) {
 	const [chartValues, setChartValues] = useState([]);
 	const router = useRouter();
-	const { seriesId } = router.query;
+	const { seriesId, title } = router.query;
 
 	const clearUrl = () => {
 		const currentQuery = { ...router.query };
@@ -25,19 +25,13 @@ export default function ChartModal({ isChartModalOpen, setIsChartModalOpen, chil
 
 	useEffect(() => {
 		if (!seriesId) return;
-		// title 용도
 		axios.get(`/api/chartValues?seriesId=${seriesId}`).then(response => {
-			console.log(
+			setChartValues(
 				response.data.observations.observations.map(el => {
+					if (el.value === '.') el.value = 0;
 					return { date: new Date(el.date), value: Number(el.value) };
 				})
 			);
-		});
-		// .then(data => setData(data));
-
-		// observation 용도
-		axios.get(`/api/indicator?seriesId=${seriesId}`).then(response => {
-			console.log(response.data.indicator.seriess[0].title);
 		});
 	}, [seriesId]);
 
@@ -51,7 +45,7 @@ export default function ChartModal({ isChartModalOpen, setIsChartModalOpen, chil
 							clearUrl();
 						}}></div>
 					<div className={clsx(styles.ChartModal, roboto.variable, poppins.variable)}>
-						<LineChart title={'ddd'} values={chartValues}></LineChart>
+						{chartValues.length > 1 ? <LineChart title={title as string} values={chartValues}></LineChart> : null}
 					</div>
 				</React.Fragment>,
 				document.body
