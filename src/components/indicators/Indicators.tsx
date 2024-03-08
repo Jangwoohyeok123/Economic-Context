@@ -8,32 +8,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import IndicatorCard from '../indicatorCard/IndicatorCard';
 import { Indicator } from '@/types/dbInterface';
 import MakeConfirmModal from '../modals/makeConfirmModal/MakeConfirmModal';
-import { getDatabase, get, ref, remove } from 'firebase/database';
+import { getDatabase, get, ref } from 'firebase/database';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
-
-export const deleteFavorite = async (userId: number, seriresId: string) => {
-	const db = getDatabase(app); // firebase Instance 갖고오기
-	const favoriteDocRef = ref(db, `/user/favorite/${userId}`); // 경로 생성
-	const snapshot = await get(favoriteDocRef); // get 한 결과를 snapshot 으로 전달받기 get 함수는 then 처리까지 스스로 처리함
-
-	// seriesId 가 일치하는 snapshot key 를 찾는다.
-	if (snapshot.exists()) {
-		let targetKeyToRemove = null;
-		snapshot.forEach(childSnapshot => {
-			const favorite = childSnapshot.val();
-			console.log(childSnapshot.key);
-
-			if (favorite.seriesId === seriresId) {
-				targetKeyToRemove = childSnapshot.key;
-			}
-		});
-
-		if (targetKeyToRemove) {
-			const refToRemove = ref(db, `user/favorite/${userId}/${targetKeyToRemove}`);
-			await remove(refToRemove);
-		}
-	}
-};
+import { deleteFavorite } from '@/firebase/logic';
 
 export default function Indicators() {
 	const userId = 1;

@@ -1,5 +1,5 @@
-import { get, getDatabase, push, ref, remove, set } from 'firebase/database';
 import app from './firebaseConfig';
+import { get, getDatabase, push, ref, remove, set } from 'firebase/database';
 
 export const addFavoriteIndicator = (categoryId: number, seriesId: string, title: string) => {
 	const db = getDatabase(app);
@@ -55,5 +55,29 @@ export const deleteFavoriteIndicator = async (userId: number = 1, seriesId: stri
 		}
 	} catch (error) {
 		console.error('Error fetching data:', error);
+	}
+};
+
+export const deleteFavorite = async (userId: number, seriresId: string) => {
+	const db = getDatabase(app); // firebase Instance 갖고오기
+	const favoriteDocRef = ref(db, `/user/favorite/${userId}`); // 경로 생성
+	const snapshot = await get(favoriteDocRef); // get 한 결과를 snapshot 으로 전달받기 get 함수는 then 처리까지 스스로 처리함
+
+	// seriesId 가 일치하는 snapshot key 를 찾는다.
+	if (snapshot.exists()) {
+		let targetKeyToRemove = null;
+		snapshot.forEach(childSnapshot => {
+			const favorite = childSnapshot.val();
+			console.log(childSnapshot.key);
+
+			if (favorite.seriesId === seriresId) {
+				targetKeyToRemove = childSnapshot.key;
+			}
+		});
+
+		if (targetKeyToRemove) {
+			const refToRemove = ref(db, `user/favorite/${userId}/${targetKeyToRemove}`);
+			await remove(refToRemove);
+		}
 	}
 };
