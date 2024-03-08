@@ -81,3 +81,37 @@ export const deleteFavorite = async (userId: number, seriresId: string) => {
 		}
 	}
 };
+
+// context
+export const addContextIndicator = (categoryId: number, seriesId: string, title: string) => {
+	const db = getDatabase(app);
+	const userId = 1;
+	const contextDocRef = ref(db, `/user/context/${userId}`);
+
+	get(contextDocRef).then(snapshot => {
+		let isExists = false;
+
+		snapshot.forEach(childrenSnapshot => {
+			const childData = childrenSnapshot.val();
+
+			if (childData.seriesId === seriesId) {
+				isExists = true;
+			}
+		});
+
+		if (!isExists) {
+			const newFavoriteRef = push(contextDocRef);
+			set(newFavoriteRef, {
+				seriesId: seriesId,
+				categoryId: categoryId,
+				title: title
+			})
+				.then(() => {
+					alert('save 성공');
+				})
+				.catch(err => {
+					alert('error: ' + err.message);
+				});
+		}
+	});
+};
