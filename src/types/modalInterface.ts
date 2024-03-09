@@ -13,3 +13,15 @@ export interface ChartModalProps {
 	setIsChartModalOpen: (isModalOpen: boolean) => void;
 	children?: React.ReactNode;
 }
+
+export interface AlertModalProps {
+	isModalOpen: boolean;
+	setIsModalOpen: (isModalOpen: boolean) => void;
+	size: string;
+	header: string;
+	body: string;
+	leftButtonContent: string;
+	leftButtonHandler: () => void;
+	rightButtonContent: string;
+	rightButtonHandler: () => void;
+}

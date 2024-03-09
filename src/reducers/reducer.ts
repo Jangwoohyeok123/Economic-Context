@@ -26,6 +26,7 @@ const chartModalInitialState = {
 	isModalOpen: false
 };
 
+// modal 은 전역으로 무조건 관리하자
 const chartModalReducer = (state = chartModalInitialState, action: { type: string; payload: any }) => {
 	if (action.type === 'open') {
 		return { ...state, isModalOpen: true };
@@ -34,9 +35,21 @@ const chartModalReducer = (state = chartModalInitialState, action: { type: strin
 	return state;
 };
 
+const validationModalReducer = (state = { isModalOpen: false }, action: { type: string; payload: boolean }) => {
+	switch (action.type) {
+		case 'OPEN_VALIDATE_MODAL':
+			return { ...state, isModalOpen: true };
+		case 'CLOSE_VALIDATE_MODAL':
+			return { ...state, isModalOpen: false };
+		default:
+			return state;
+	}
+};
+
 const combinedReducers = combineReducers({
 	user: userReducer,
-	chartModal: chartModalReducer
+	chartModal: chartModalReducer,
+	validationModal: validationModalReducer
 });
 
 export default combinedReducers;
