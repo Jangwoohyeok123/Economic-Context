@@ -4,8 +4,11 @@ import { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Store from '@/types/storeInterface';
+import { ActiveIndicators } from '../indicators/Indicators';
+import { changeCategoryIdToName } from '@/utils/changeNameToCategoryId';
 
 interface IndicatorCardProps {
+	activeIndicators: ActiveIndicators;
 	seriesId: string;
 	categoryId: number;
 	title: string;
@@ -30,6 +33,7 @@ function checkingPageTypeAndModifyClassName(pageType: string) {
 }
 
 export default function IndicatorCard({
+	activeIndicators,
 	seriesId,
 	categoryId,
 	title,
@@ -59,26 +63,34 @@ export default function IndicatorCard({
 		}
 	};
 
+	// activeindicators 안에 특정 category 에서 sereisId 를 갖고있다면 active handling 을 해주는 함수
+	const isButtonActive = (categoryName: string, seriesId: string) => {
+		return activeIndicators[categoryName].includes(seriesId);
+	};
+
 	return (
-		<>
-			<div className={clsx(styles[CardClassName])} onClick={handleCardClick}>
-				<h3>{title}</h3>
-				<div className={clsx(styles.buttons)} ref={refButtons}>
-					<button className={clsx(styles.leftButton)} type='button' onClick={leftButtonHandler}>
-						{leftButtonContent}
-					</button>
-					<button
-						className={clsx(styles.rightButton)}
-						ref={refRightBtn}
-						type='button'
-						onClick={() => {
-							rightButtonHandler();
-							if (isLogin) refRightBtn.current?.classList.toggle(styles.on);
-						}}>
-						{rightButtonContent}
-					</button>
-				</div>
+		<div className={clsx(styles[CardClassName])} onClick={handleCardClick}>
+			<h3>{title}</h3>
+			<div className={clsx(styles.buttons)} ref={refButtons}>
+				<button className={clsx(styles.leftButton)} type='button' onClick={leftButtonHandler}>
+					{leftButtonContent}
+				</button>
+				{/* 이 버튼의 seriesId 가 activeIndicators 에 포함되어 있다면 styles.on 을 제거하고, 그렇지 않다면 추가한다.*/}
+				<button
+					className={
+						isButtonActive(changeCategoryIdToName(categoryId), seriesId)
+							? clsx(styles.rightButton, styles.on)
+							: clsx(styles.rightButton)
+					}
+					ref={refRightBtn}
+					type='button'
+					onClick={() => {
+						rightButtonHandler();
+						if (isLogin) refRightBtn.current?.classList.toggle(styles.on);
+					}}>
+					{rightButtonContent}
+				</button>
 			</div>
-		</>
+		</div>
 	);
 }

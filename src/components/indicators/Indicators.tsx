@@ -3,14 +3,26 @@ import clsx from 'clsx';
 import styles from './Indicators.module.scss';
 import queryKey from '@/const/queryKey';
 import ChartModal from '../modals/chartModal/ChartModal';
-import { useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 import IndicatorCard from '../indicatorCard/IndicatorCard';
 import { Indicator } from '@/types/dbInterface';
 import MakeConfirmModal from '../modals/makeConfirmModal/MakeConfirmModal';
+import { deleteFavorite } from '@/firebase/favorite';
 import { getDatabase, get, ref } from 'firebase/database';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
-import { deleteFavorite } from '@/firebase/favorite';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+/* 
+  하나의 state 를 4 개의 탭에서 보여줄려고 filter 를 이용중인데, styles.on 을 각 탭에서의 카드를 클릭하면 부여해주고 있었다. 그런데, tab 이 바뀌어도 styles.on 이 초기화가 되지 않는데 뭐가 문제일까 ? 
+
+*/
+
+export interface ActiveIndicators {
+	[key: string]: string[];
+	interest: string[];
+	exchange: string[];
+	consume: string[];
+	production: string[];
+}
 
 export default function Indicators() {
 	const userId = 1;
@@ -18,7 +30,13 @@ export default function Indicators() {
 	const categoryNames = ['interest', 'exchange', 'consume', 'production'];
 	const [categoryIndex, setCategoryIndex] = useState(0);
 	const [isChartModalOpen, setIsChartModalOpen] = useState(false);
-	const [isOpenConfirmContext, setIsOpenConfirmContext] = useState(false);
+	const [isOpenModalForMakeContext, setIsOpenConfirmContext] = useState(false);
+	const [activeIndicators, setActiveIndicators] = useState<ActiveIndicators>({
+		interest: [],
+		exchange: [],
+		consume: [],
+		production: []
+	});
 
 	const { data: favorites, isSuccess } = useQuery({
 		queryKey: [queryKey.favorite, userId],
@@ -60,6 +78,47 @@ export default function Indicators() {
 		setCategoryIndex(idx);
 	};
 
+	const clickCheckButton = (categoryName: string, seriesId: string): void => {
+		setActiveIndicators(prevState => {
+			// 현재 카테고리에 해당하는 indicators 배열 복사
+			const updatedIndicators = [...prevState[categoryName]];
+			const index = updatedIndicators.indexOf(seriesId);
+
+			if (index > -1) updatedIndicators.splice(index, 1);
+			else updatedIndicators.push(seriesId);
+
+			return {
+				...prevState,
+				[categoryName]: updatedIndicators
+			};
+		});
+
+		console.log(activeIndicators);
+	};
+
+	useEffect(() => {
+		const newActiveIndicators: ActiveIndicators = {
+			interest: [],
+			exchange: [],
+			consume: [],
+			production: []
+		};
+
+		// favorites의 각 항목을 적절한 카테고리에 할당
+		favorites?.forEach(favorite => {
+			const categoryName = categoryNames.find(name => changeNameToCategoryId(name) === favorite.categoryId);
+			if (categoryName) {
+				newActiveIndicators[categoryName].push(favorite.seriesId);
+			}
+		});
+
+		// activeIndicators 상태 업데이트
+		setActiveIndicators(newActiveIndicators);
+		console.log(newActiveIndicators);
+	}, [favorites]);
+
+	// click 하면 acitveIdicators 에 포함되어 있으면 삭제하고 아니면 추가하는 로직을 만든다.
+
 	return (
 		<div className={clsx(styles.Indicators)}>
 			<nav>
@@ -87,6 +146,7 @@ export default function Indicators() {
 							const seriesId = favorite.seriesId;
 							return (
 								<IndicatorCard
+									activeIndicators={activeIndicators}
 									isChartModalOpen={isChartModalOpen}
 									setIsChartModalOpen={setIsChartModalOpen}
 									seriesId={favorite.seriesId}
@@ -99,7 +159,7 @@ export default function Indicators() {
 										deleteMutation.mutate({ userId, seriesId });
 									}}
 									rightButtonContent='check'
-									rightButtonHandler={() => {}}></IndicatorCard>
+									rightButtonHandler={() => clickCheckButton(categoryNames[categoryIndex], seriesId)}></IndicatorCard>
 							);
 						}
 					)}
@@ -118,7 +178,7 @@ export default function Indicators() {
 			</footer>
 
 			<MakeConfirmModal
-				isModalOpen={isOpenConfirmContext}
+				isModalOpen={isOpenModalForMakeContext}
 				setIsModalOpen={setIsOpenConfirmContext}
 				size='big'
 				header={''}
