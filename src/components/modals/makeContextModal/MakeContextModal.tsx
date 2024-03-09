@@ -1,9 +1,13 @@
 import clsx from 'clsx';
 import styles from './MakeContextModal.module.scss';
 import ReactDOM from 'react-dom';
+import { Indicator } from '@/types/dbInterface';
+import { addContext } from '@/firebase/context';
+import { useDispatch } from 'react-redux';
 import React, { useRef } from 'react';
 import { MakeModalProps } from '@/types/modalInterface';
 import { roboto, poppins } from '@/pages/_app';
+import { openValidateModal } from '@/actions/actions';
 import checkingModalSizeAndModifyClassName from '@/utils/checkingModalSizeAndModifyClassName';
 
 export default function MakeContextModal({
@@ -13,8 +17,36 @@ export default function MakeContextModal({
 	size,
 	activeIndicators
 }: MakeModalProps) {
+	const dispatch = useDispatch();
 	const ModalClassName = checkingModalSizeAndModifyClassName(size);
 	const refInputForContextName = useRef<HTMLInputElement>(null);
+
+	const makeContext = async () => {
+		let contextName;
+		if (refInputForContextName.current?.value !== '') {
+			contextName = refInputForContextName.current?.value;
+			console.log('ddd');
+		} else {
+			dispatch(openValidateModal());
+			return;
+		}
+		const contextIndicators: Indicator[] = [];
+		const activeIndicatorsKeys = Object.keys(activeIndicators);
+
+		activeIndicatorsKeys.forEach(categoryName => {
+			activeIndicators[categoryName].forEach(indicator => {
+				if (indicator.isActive) {
+					contextIndicators.push({
+						title: indicator.title,
+						seriesId: indicator.seriesId,
+						categoryId: indicator.categoryId
+					});
+				}
+			});
+		});
+
+		addContext(contextName, contextIndicators);
+	};
 
 	return isModalOpen
 		? ReactDOM.createPortal(
@@ -39,28 +71,14 @@ export default function MakeContextModal({
 							</ul>
 						</div>
 						<div className={clsx(styles.buttons)}>
-							<button className={clsx(styles.leftButton)} onClick={() => setIsModalOpen(false)}>
+							<button
+								className={clsx(styles.leftButton)}
+								onClick={() => {
+									setIsModalOpen(false);
+								}}>
 								Cancel
 							</button>
-							<button
-								className={clsx(styles.rightButton)}
-								onClick={() => {
-									const contextName = refInputForContextName.current?.value;
-									const contextIndicators = [];
-									const activeIndicatorsKeys = Object.keys(activeIndicators);
-
-									activeIndicatorsKeys.forEach(categoryName => {
-										activeIndicators[categoryName].forEach(indicator => {
-											if (indicator.isActive) {
-												contextIndicators.push({
-													title: indicator.title,
-													seriesId: indicator.seriesId,
-													categoryId: indicator.categoryId
-												});
-											}
-										});
-									});
-								}}>
+							<button className={clsx(styles.rightButton)} onClick={makeContext}>
 								Make
 							</button>
 						</div>

@@ -11,7 +11,8 @@ interface Context {
 export const addContext = async (contextName: string, indicators: Indicator[]) => {
 	const db = getDatabase(app);
 	const userId = 1; // 현재 사용자 ID
-	const contextDocRef = ref(db, `context/${userId}`);
+	const contextDocRef = ref(db, `context/${contextName}`);
+	console.log(indicators);
 
 	try {
 		const snapshot = await get(contextDocRef);
@@ -27,7 +28,7 @@ export const addContext = async (contextName: string, indicators: Indicator[]) =
 		if (!isExists) {
 			const newContextRef = push(contextDocRef);
 			await set(newContextRef, {
-				name: contextName,
+				userId: userId,
 				indicators: indicators
 			});
 			alert('Context 저장 성공');
