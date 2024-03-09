@@ -1,6 +1,7 @@
 import { ActiveIndicators } from '@/components/indicators/Indicators';
 
 export interface FreeModalProps {
+	className: string;
 	isModalOpen: boolean;
 	setIsModalOpen: (isOpen: boolean) => void;
 	children: React.ReactNode;

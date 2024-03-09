@@ -3,7 +3,7 @@ import styles from './FreeModal.module.scss';
 import ReactDOM from 'react-dom';
 import { FreeModalProps } from '@/types/modalInterface';
 
-export default function FreeModal({ isModalOpen, setIsModalOpen, children }: FreeModalProps) {
+export default function FreeModal({ className, isModalOpen, setIsModalOpen, children }: FreeModalProps) {
 	if (!isModalOpen) return null;
 
 	return ReactDOM.createPortal(
