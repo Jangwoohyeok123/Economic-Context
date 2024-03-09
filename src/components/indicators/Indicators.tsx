@@ -6,7 +6,7 @@ import ChartModal from '../modals/chartModal/ChartModal';
 import { useEffect, useState } from 'react';
 import IndicatorCard from '../indicatorCard/IndicatorCard';
 import { Indicator } from '@/types/dbInterface';
-import MakeConfirmModal from '../modals/makeConfirmModal/MakeConfirmModal';
+import MakeContextModal from '../modals/makeContextModal/MakeContextModal';
 import { deleteFavorite } from '@/firebase/favorite';
 import { getDatabase, get, ref } from 'firebase/database';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
@@ -201,7 +201,7 @@ export default function Indicators() {
 				</div>
 			</footer>
 
-			<MakeConfirmModal
+			<MakeContextModal
 				isModalOpen={isOpenModalForMakeContext}
 				setIsModalOpen={setIsOpenConfirmContext}
 				size='big'

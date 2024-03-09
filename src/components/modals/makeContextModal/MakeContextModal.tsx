@@ -1,13 +1,12 @@
 import clsx from 'clsx';
-import React, { useRef } from 'react';
-import styles from './MakeConfirmModal.module.scss';
+import styles from './MakeContextModal.module.scss';
 import ReactDOM from 'react-dom';
+import React, { useRef } from 'react';
 import { MakeModalProps } from '@/types/modalInterface';
 import { roboto, poppins } from '@/pages/_app';
-import { ActiveIndicators } from '@/components/indicators/Indicators';
 import checkingModalSizeAndModifyClassName from '@/utils/checkingModalSizeAndModifyClassName';
 
-export default function MakeConfirmModal({
+export default function MakeContextModal({
 	isModalOpen,
 	setIsModalOpen,
 	children,
@@ -61,8 +60,6 @@ export default function MakeConfirmModal({
 											}
 										});
 									});
-
-									// contextName, contextIndicator 를 활용해 firebase 에 저장하는 로직
 								}}>
 								Make
 							</button>
