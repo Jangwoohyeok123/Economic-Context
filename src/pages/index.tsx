@@ -16,7 +16,7 @@ import { roboto, poppins } from './_app';
 import { useEffect, useState } from 'react';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { useDispatch, useSelector } from 'react-redux';
-import { addFavoriteIndicator, deleteFavoriteIndicator } from '@/firebase/logic';
+import { addFavoriteIndicator, deleteFavoriteIndicator } from '@/firebase/favorite';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 const DynamicChartModal = dynamic(() => import('@/components/modals/chartModal/ChartModal'), { ssr: false });

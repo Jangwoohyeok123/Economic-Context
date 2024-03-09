@@ -10,7 +10,7 @@ import { Indicator } from '@/types/dbInterface';
 import MakeConfirmModal from '../modals/makeConfirmModal/MakeConfirmModal';
 import { getDatabase, get, ref } from 'firebase/database';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
-import { deleteFavorite } from '@/firebase/logic';
+import { deleteFavorite } from '@/firebase/favorite';
 
 export default function Indicators() {
 	const userId = 1;
