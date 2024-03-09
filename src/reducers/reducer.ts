@@ -35,12 +35,17 @@ const chartModalReducer = (state = chartModalInitialState, action: { type: strin
 	return state;
 };
 
-const validationModalReducer = (state = { isModalOpen: false }, action: { type: string; payload: boolean }) => {
+const validateNameModalInitialState = {
+	isOpen: false
+};
+
+const validateNameReducer = (state = validateNameModalInitialState, action) => {
 	switch (action.type) {
-		case 'OPEN_VALIDATE_MODAL':
-			return { ...state, isModalOpen: true };
-		case 'CLOSE_VALIDATE_MODAL':
-			return { ...state, isModalOpen: false };
+		case 'TOGGLE_VALIDATION_NAME_MODAL':
+			return {
+				...state,
+				isOpen: !state.isOpen
+			};
 		default:
 			return state;
 	}
@@ -49,7 +54,7 @@ const validationModalReducer = (state = { isModalOpen: false }, action: { type: 
 const combinedReducers = combineReducers({
 	user: userReducer,
 	chartModal: chartModalReducer,
-	validationModal: validationModalReducer
+	validateNameReducer: validateNameReducer
 });
 
 export default combinedReducers;

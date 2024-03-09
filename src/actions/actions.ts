@@ -18,11 +18,6 @@ export const chartModalClose = () => {
 	return { type: 'close' };
 };
 
-export const openValidateModal = () => {
-	return { type: 'OPEN_VALIDATE_MODAL' };
-};
-
-// 'CLOSE_VALIDATE_MODAL' 액션 생성자
-export const closeValidateModal = () => {
-	return { type: 'CLOSE_VALIDATE_MODAL' };
+export const toggleValidationNameModal = () => {
+	return { type: 'TOGGLE_VALIDATION_NAME_MODAL' };
 };

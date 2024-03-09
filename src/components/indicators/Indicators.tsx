@@ -2,16 +2,19 @@ import app from '@/firebase/firebaseConfig';
 import clsx from 'clsx';
 import styles from './Indicators.module.scss';
 import queryKey from '@/const/queryKey';
+import { poppins } from '@/pages/_app';
 import ChartModal from '../modals/chartModal/ChartModal';
-import { useEffect, useState } from 'react';
 import IndicatorCard from '../indicatorCard/IndicatorCard';
 import { Indicator } from '@/types/dbInterface';
+import { useDispatch, useSelector } from 'react-redux';
 import MakeContextModal from '../modals/makeContextModal/MakeContextModal';
+import ValidateNameModal from '../modals/validateNameModal/validateNameModal';
 import { deleteFavorite } from '@/firebase/favorite';
+import { useEffect, useState } from 'react';
 import { getDatabase, get, ref } from 'firebase/database';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useDispatch } from 'react-redux';
+import { toggleValidationNameModal } from '@/actions/actions';
 /* 
   하나의 state 를 4 개의 탭에서 보여줄려고 filter 를 이용중인데, styles.on 을 각 탭에서의 카드를 클릭하면 부여해주고 있었다. 그런데, tab 이 바뀌어도 styles.on 이 초기화가 되지 않는데 뭐가 문제일까 ? 
 
@@ -35,6 +38,7 @@ export interface ActiveIndicators {
 export default function Indicators() {
 	const userId = 1;
 	const dispatch = useDispatch();
+	const isValidationModalOpen = useSelector(state => state.validateNameReducer.isOpen);
 	const queryClient = useQueryClient();
 	const categoryNames = ['interest', 'exchange', 'consume', 'production'];
 	const [categoryIndex, setCategoryIndex] = useState(0);
@@ -111,6 +115,10 @@ export default function Indicators() {
 				[categoryName]: updatedIndicators
 			};
 		});
+	};
+
+	const toggleValidateNameModal = () => {
+		dispatch(toggleValidationNameModal());
 	};
 
 	useEffect(() => {
@@ -206,6 +214,16 @@ export default function Indicators() {
 				activeIndicators={activeIndicators}
 			/>
 			<ChartModal isChartModalOpen={isChartModalOpen} setIsChartModalOpen={setIsChartModalOpen} />
+			<ValidateNameModal
+				isValidationModalOpen={isValidationModalOpen}
+				setIsValidationModalOpen={() => dispatch(toggleValidationNameModal())}>
+				<div className={clsx(styles.validateNameModal, poppins.variable)}>
+					<p>Context Name 을 적어주세요</p>
+					<button onClick={() => dispatch(toggleValidationNameModal())}>Name 다시적기</button>
+				</div>
+			</ValidateNameModal>
 		</div>
 	);
 }
+
+// isValidationModalOpen
