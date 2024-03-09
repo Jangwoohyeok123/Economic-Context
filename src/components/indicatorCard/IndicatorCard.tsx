@@ -63,10 +63,16 @@ export default function IndicatorCard({
 		}
 	};
 
-	// activeindicators 안에 특정 category 에서 sereisId 를 갖고있다면 active handling 을 해주는 함수
-	const isButtonActive = (categoryName: string, seriesId: string) => {
-		return activeIndicators[categoryName].includes(seriesId);
-	};
+	// // activeindicators 안에 특정 category 에서 sereisId 를 갖고있다면 active handling 을 해주는 함수
+	// const isButtonActive = (categoryName: string, seriesId: string) => {
+	// 	return activeIndicators[categoryName].includes(seriesId);
+	// };
+
+	/* 
+								// isButtonActive(changeCategoryIdToName(categoryId), seriesId)
+						// 	? clsx(styles.rightButton, styles.on)
+	
+	*/
 
 	return (
 		<div className={clsx(styles[CardClassName])} onClick={handleCardClick}>
@@ -77,11 +83,7 @@ export default function IndicatorCard({
 				</button>
 				{/* 이 버튼의 seriesId 가 activeIndicators 에 포함되어 있다면 styles.on 을 제거하고, 그렇지 않다면 추가한다.*/}
 				<button
-					className={
-						isButtonActive(changeCategoryIdToName(categoryId), seriesId)
-							? clsx(styles.rightButton, styles.on)
-							: clsx(styles.rightButton)
-					}
+					className={clsx(styles.rightButton)}
 					ref={refRightBtn}
 					type='button'
 					onClick={() => {

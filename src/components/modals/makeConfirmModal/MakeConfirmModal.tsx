@@ -1,20 +1,21 @@
 import clsx from 'clsx';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { roboto, poppins } from '@/pages/_app';
+import React, { useRef } from 'react';
 import styles from './MakeConfirmModal.module.scss';
+import ReactDOM from 'react-dom';
 import { MakeModalProps } from '@/types/modalInterface';
+import { roboto, poppins } from '@/pages/_app';
+import { ActiveIndicators } from '@/components/indicators/Indicators';
 import checkingModalSizeAndModifyClassName from '@/utils/checkingModalSizeAndModifyClassName';
 
-type desc = {
-	interest: [];
-	exchange: [];
-	consume: [];
-	production: [];
-};
-
-export default function MakeConfirmModal({ isModalOpen, setIsModalOpen, children, size }: MakeModalProps) {
+export default function MakeConfirmModal({
+	isModalOpen,
+	setIsModalOpen,
+	children,
+	size,
+	activeIndicators
+}: MakeModalProps) {
 	const ModalClassName = checkingModalSizeAndModifyClassName(size);
+	const refInputForContextName = useRef<HTMLInputElement>(null);
 
 	return isModalOpen
 		? ReactDOM.createPortal(
@@ -27,23 +28,42 @@ export default function MakeConfirmModal({ isModalOpen, setIsModalOpen, children
 						</div>
 						<div className={clsx(styles.name)}>
 							<h5>Name</h5>
-							<input type='text' placeholder='Name of your context' />
+							<input type='text' placeholder='Name of your context' ref={refInputForContextName} />
 						</div>
 						<div className={clsx(styles.selectedIndicators)}>
 							<h5>Indicators</h5>
-							{/* fetching 한 이후 list 를 꽂아넣을 것 */}
 							<ul className={clsx(styles.selectedIndicators)}>
-								<li>Interest: {7}개의 지표들</li>
-								<li>Exchange: {7}개의 지표들</li>
-								<li>Consume: {7}개의 지표들</li>
-								<li>Production: {7}개의 지표들</li>
+								<li>Interest: {activeIndicators.interest.length} 개의 지표들</li>
+								<li>Exchange: {activeIndicators.exchange.length} 개의 지표들</li>
+								<li>Consume: {activeIndicators.consume.length} 개의 지표들</li>
+								<li>Production: {activeIndicators.production.length} 개의 지표들</li>
 							</ul>
 						</div>
 						<div className={clsx(styles.buttons)}>
 							<button className={clsx(styles.leftButton)} onClick={() => setIsModalOpen(false)}>
 								Cancel
 							</button>
-							<button className={clsx(styles.rightButton)} onClick={() => {}}>
+							<button
+								className={clsx(styles.rightButton)}
+								onClick={() => {
+									const contextName = refInputForContextName.current?.value;
+									const contextIndicators = [];
+									const activeIndicatorsKeys = Object.keys(activeIndicators);
+
+									activeIndicatorsKeys.forEach(categoryName => {
+										activeIndicators[categoryName].forEach(indicator => {
+											if (indicator.isActive) {
+												contextIndicators.push({
+													title: indicator.title,
+													seriesId: indicator.seriesId,
+													categoryId: indicator.categoryId
+												});
+											}
+										});
+									});
+
+									// contextName, contextIndicator 를 활용해 firebase 에 저장하는 로직
+								}}>
 								Make
 							</button>
 						</div>

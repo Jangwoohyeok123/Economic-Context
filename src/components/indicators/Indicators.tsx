@@ -16,12 +16,19 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 */
 
+export type ActiveIndicator = {
+	title: string;
+	seriesId: string;
+	categoryId: number;
+	isActive: boolean;
+};
+
 export interface ActiveIndicators {
-	[key: string]: string[];
-	interest: string[];
-	exchange: string[];
-	consume: string[];
-	production: string[];
+	[key: string]: ActiveIndicator[];
+	interest: ActiveIndicator[];
+	exchange: ActiveIndicator[];
+	consume: ActiveIndicator[];
+	production: ActiveIndicator[];
 }
 
 export default function Indicators() {
@@ -78,22 +85,30 @@ export default function Indicators() {
 		setCategoryIndex(idx);
 	};
 
-	const clickCheckButton = (categoryName: string, seriesId: string): void => {
+	const clickCheckButton = (title: string, categoryName: string, seriesId: string): void => {
 		setActiveIndicators(prevState => {
-			// 현재 카테고리에 해당하는 indicators 배열 복사
 			const updatedIndicators = [...prevState[categoryName]];
-			const index = updatedIndicators.indexOf(seriesId);
+			const index = updatedIndicators.findIndex(indicator => indicator.seriesId === seriesId);
 
-			if (index > -1) updatedIndicators.splice(index, 1);
-			else updatedIndicators.push(seriesId);
+			if (index > -1) {
+				updatedIndicators[index] = {
+					...updatedIndicators[index],
+					isActive: !updatedIndicators[index].isActive
+				};
+			} else {
+				updatedIndicators.push({
+					title: title,
+					seriesId: seriesId,
+					categoryId: changeNameToCategoryId(categoryName),
+					isActive: true
+				});
+			}
 
 			return {
 				...prevState,
 				[categoryName]: updatedIndicators
 			};
 		});
-
-		console.log(activeIndicators);
 	};
 
 	useEffect(() => {
@@ -104,20 +119,24 @@ export default function Indicators() {
 			production: []
 		};
 
-		// favorites의 각 항목을 적절한 카테고리에 할당
 		favorites?.forEach(favorite => {
 			const categoryName = categoryNames.find(name => changeNameToCategoryId(name) === favorite.categoryId);
 			if (categoryName) {
-				newActiveIndicators[categoryName].push(favorite.seriesId);
+				newActiveIndicators[categoryName].push({
+					title: favorite.title,
+					seriesId: favorite.seriesId,
+					categoryId: favorite.categoryId,
+					isActive: false
+				});
 			}
 		});
 
-		// activeIndicators 상태 업데이트
 		setActiveIndicators(newActiveIndicators);
-		console.log(newActiveIndicators);
 	}, [favorites]);
 
-	// click 하면 acitveIdicators 에 포함되어 있으면 삭제하고 아니면 추가하는 로직을 만든다.
+	useEffect(() => {
+		console.log(activeIndicators);
+	}, [activeIndicators]);
 
 	return (
 		<div className={clsx(styles.Indicators)}>
@@ -143,7 +162,10 @@ export default function Indicators() {
 				{isSuccess &&
 					filterFavoriteByCategoryId(favorites, changeNameToCategoryId(categoryNames[categoryIndex])).map(
 						(favorite, idx) => {
+							const title = favorite.title;
 							const seriesId = favorite.seriesId;
+							const categoryId = favorite.categoryId;
+
 							return (
 								<IndicatorCard
 									activeIndicators={activeIndicators}
@@ -159,7 +181,9 @@ export default function Indicators() {
 										deleteMutation.mutate({ userId, seriesId });
 									}}
 									rightButtonContent='check'
-									rightButtonHandler={() => clickCheckButton(categoryNames[categoryIndex], seriesId)}></IndicatorCard>
+									rightButtonHandler={() =>
+										clickCheckButton(title, categoryNames[categoryIndex], seriesId)
+									}></IndicatorCard>
 							);
 						}
 					)}
@@ -181,12 +205,7 @@ export default function Indicators() {
 				isModalOpen={isOpenModalForMakeContext}
 				setIsModalOpen={setIsOpenConfirmContext}
 				size='big'
-				header={''}
-				body={''}
-				leftButtonContent={''}
-				leftButtonHandler={() => {}}
-				rightButtonContent={''}
-				rightButtonHandler={() => {}}
+				activeIndicators={activeIndicators}
 			/>
 			<ChartModal isChartModalOpen={isChartModalOpen} setIsChartModalOpen={setIsChartModalOpen}></ChartModal>
 		</div>
