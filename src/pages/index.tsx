@@ -1,19 +1,23 @@
 import clsx from 'clsx';
-import axios from 'axios';
 import Image from 'next/image';
-import dynamic from 'next/dynamic';
+import axios from 'axios';
 import styles from './Home.module.scss';
+import dynamic from 'next/dynamic';
+import { Store } from '@/types/redux';
+import { login } from '@/actions/actions';
+import { useQuery } from '@tanstack/react-query';
+import IndicatorCard from '@/components/cards/indicatorCard/IndicatorCard';
 import { useRouter } from 'next/router';
 import { roboto, poppins } from './_app';
-import { login } from '@/actions/actions';
+import { changeNameToType } from '@/utils/changeNameToCategoryId';
+import { Category, Seriess } from '@/types/fredInterface';
 import { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Category } from '@/types/fredInterface';
 import { useDispatch, useSelector } from 'react-redux';
-import IndicatorCard from '@/components/cards/indicatorCard/IndicatorCard';
-import { changeNameToType, changeTypeToName } from '@/utils/changeNameToCategoryId';
+import const_queryKey from '@/const/queryKey';
+import User from '@/types/userInterface';
 
-const AlertModalDynamic = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
+const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
+const DynamicChartModal = dynamic(() => import('@/components/modals/chartModal/ChartModal'), { ssr: false });
 
 const fetchCategory = async (categoryId: number) => {
 	const res = await fetch(`/api/category?categoryId=${categoryId}`);
@@ -23,42 +27,28 @@ const fetchCategory = async (categoryId: number) => {
 };
 
 export default function Pages({ interest }: { interest: Category }) {
+	const User = useSelector((state: Store) => state.user);
 	const router = useRouter();
+	const dispatch = useDispatch();
 	const categoryNames = ['interest', 'exchange', 'production', 'consume'];
 	const [categoryIndex, setCategoryIndex] = useState(0);
+	const [IsAlertModalOpen, setIsAlertModalOpen] = useState(false);
+	const [isChartModalOpen, setIsChartModalOpen] = useState(false);
 	const { data: category, isSuccess } = useQuery({
-		queryKey: ['category', changeNameToType(categoryNames[categoryIndex])],
+		queryKey: [const_queryKey.category, changeNameToType(categoryNames[categoryIndex])],
 		queryFn: () => fetchCategory(changeNameToType(categoryNames[categoryIndex]))
 	});
-
-	const dispatch = useDispatch();
-
-	const [IsAlertModalOpen, setIsAlertModalOpen] = useState(false);
-	const User = useSelector(state => state.user);
 
 	const GotoAboutPage = (seriesId: string) => {
 		router.push(`/${seriesId}`);
 	};
 
 	const saveCardToDB = (categoryName: string, seriesId: string, title: string) => {
-		// userId 갖고오기
 		if (User.isLogin) {
-			const userId = User.userData.id;
-			axios.get(`http://localhost:4000/user/favorite/${1}`).then(response => console.log(response));
+			const userId = User.id;
+			axios.get(`http://localhost:4000/user/favorite/${userId}`).then(response => console.log(response));
 		} else {
 			console.error('data Save 실패');
-		}
-	};
-
-	const deleteCardInDB = (seriesId: string): void => {
-		if (User.isLogin) {
-			const userId = User.userData.id;
-			console.log(1);
-			axios.post(`http://localhost:4000/user/favorite/delete/${userId}`, {
-				indicatorId: seriesId
-			});
-		} else {
-			console.error('data delete 실패');
 		}
 	};
 
@@ -66,24 +56,28 @@ export default function Pages({ interest }: { interest: Category }) {
 		setCategoryIndex(categoryNames.indexOf(categoryName));
 	};
 
-	useEffect(() => {
-		const authCode = router.query.code;
-
-		// async-await, try-catch 고려하기
+	const setJwtAndUserData = (authCode: string) => {
 		if (authCode) {
 			axios
 				.post('http://localhost:4000/auth/google', { code: authCode })
 				.then(response => {
 					const jwt = response.data[0];
-					const userData = response.data[1];
+					const userData: User = response.data[1];
 					sessionStorage.setItem('token', jwt);
 					dispatch(login(userData));
+					router.push({
+						query: {}
+					});
 				})
 				.catch(error => {
 					console.error('Error:', error);
-					// error handling => 로그인 페이지로 유도같은
 				});
 		}
+	};
+
+	useEffect(() => {
+		const authCode = router.query.code;
+		if (authCode) setJwtAndUserData(authCode as string);
 	}, [router.query]);
 
 	return (
@@ -104,7 +98,7 @@ export default function Pages({ interest }: { interest: Category }) {
 				</div>
 				<figure className={clsx(styles.category)}>
 					{isSuccess
-						? category.map((series, idx: number) => {
+						? category.map((series: Seriess, idx: number) => {
 								const seriesId = series.id;
 								const title = series.title;
 
@@ -125,7 +119,7 @@ export default function Pages({ interest }: { interest: Category }) {
 						: null}
 				</figure>
 			</main>
-			<AlertModalDynamic
+			<DynamicAlertModal
 				isModalOpen={IsAlertModalOpen}
 				setIsModalOpen={setIsAlertModalOpen}
 				size='small'
@@ -136,6 +130,7 @@ export default function Pages({ interest }: { interest: Category }) {
 				rightButtonContent='Login'
 				rightButtonHandler={() => (window.location.href = 'http://localhost:3000/login')}
 			/>
+			<DynamicChartModal isChartModalOpen={isChartModalOpen} setIsChartModalOpen={setIsChartModalOpen} />
 		</>
 	);
 }

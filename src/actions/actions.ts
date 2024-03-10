@@ -2,9 +2,9 @@ import User from '@/types/userInterface';
 
 // user
 export const login = (user: User) => {
-	return { type: 'login', payload: user };
+	return { type: 'USER_LOGIN', payload: user };
 };
 
 export const logout = () => {
-	return { type: 'logout' };
+	return { type: 'USER_LOGOUT' };
 };

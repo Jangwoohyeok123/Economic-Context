@@ -1,7 +1,10 @@
-const queryKey = {
+const const_queryKey = {
 	category: 'category',
 	indicator: 'indicator',
-	user: 'user'
+	user: 'user',
+	favorite: 'favorite',
+	context: 'context',
+	journal: 'journal'
 };
 
-export default queryKey;
+export default const_queryKey;

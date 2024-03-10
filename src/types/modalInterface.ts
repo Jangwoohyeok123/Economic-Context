@@ -1,4 +1,4 @@
-export interface ModalProps {
+export type ModalProps = {
 	isModalOpen: boolean;
 	setIsModalOpen: (isModalOpen: boolean) => void;
 	size: string;
@@ -9,4 +9,10 @@ export interface ModalProps {
 	leftButtonHandler: () => void;
 	rightButtonContent: string;
 	rightButtonHandler: () => void;
-}
+};
+// isChartModalOpen, setIsChartModalOpen, children
+export type ChartModalProps = {
+	isChartModalOpen: boolean;
+	setIsChartModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	children?: React.ReactNode;
+};
