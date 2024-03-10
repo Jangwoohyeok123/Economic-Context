@@ -121,7 +121,11 @@ export default function Indicators() {
 		dispatch(toggleValidationNameModal());
 	};
 
+	// favorites 가 변할때마다 activeIndicators 가 동기화 되어야 한다.
+	//
 	useEffect(() => {
+		const prevActiveIndicators = { ...activeIndicators };
+
 		const newActiveIndicators: ActiveIndicators = {
 			interest: [],
 			exchange: [],
@@ -139,6 +143,15 @@ export default function Indicators() {
 					isActive: false
 				});
 			}
+		});
+
+		categoryNames.forEach((categoryName, idx) => {
+			prevActiveIndicators[categoryName].forEach(prevIndicator => {
+				const samePreviousIndicator = newActiveIndicators[categoryName].find(
+					indicator => indicator.seriesId === prevIndicator.seriesId
+				);
+				if (samePreviousIndicator) samePreviousIndicator.isActive = prevIndicator.isActive;
+			});
 		});
 
 		setActiveIndicators(newActiveIndicators);
@@ -166,6 +179,7 @@ export default function Indicators() {
 			</nav>
 			<form>
 				{isSuccess &&
+					activeIndicators &&
 					filterFavoriteByCategoryId(favorites, changeNameToCategoryId(categoryNames[categoryIndex])).map(
 						(favorite, idx) => {
 							const title = favorite.title;
@@ -225,5 +239,3 @@ export default function Indicators() {
 		</div>
 	);
 }
-
-// isValidationModalOpen

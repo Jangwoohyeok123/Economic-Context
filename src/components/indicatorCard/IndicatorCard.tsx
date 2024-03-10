@@ -70,12 +70,16 @@ export default function IndicatorCard({
 					{leftButtonContent}
 				</button>
 				<button
-					className={clsx(styles.rightButton)}
+					// [styles.on]: clsx 에서 제공하는 조건부 스타일 util
+					className={clsx(styles.rightButton, {
+						[styles.on]: activeIndicators[changeCategoryIdToName(categoryId)].find(
+							el => el.seriesId === seriesId && el.isActive
+						)
+					})}
 					ref={refRightBtn}
 					type='button'
 					onClick={() => {
 						rightButtonHandler();
-						if (isLogin) refRightBtn.current?.classList.toggle(styles.on);
 					}}>
 					{rightButtonContent}
 				</button>
