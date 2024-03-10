@@ -3,7 +3,7 @@ import styles from './AlertModal.module.scss';
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { roboto, poppins } from '@/pages/_app';
-import { MakeModalProps } from '@/types/modalInterface';
+import { AlertModalProps } from '@/types/modalInterface';
 import checkingModalSizeAndModifyClassName from '@/utils/checkingModalSizeAndModifyClassName';
 
 export default function AlertModal({
@@ -16,7 +16,7 @@ export default function AlertModal({
 	leftButtonHandler,
 	rightButtonContent,
 	rightButtonHandler
-}: MakeModalProps) {
+}: AlertModalProps) {
 	const ModalClassName = checkingModalSizeAndModifyClassName(size);
 
 	return isModalOpen

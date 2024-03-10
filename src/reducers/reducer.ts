@@ -22,8 +22,39 @@ const userReducer = (state = userInitialState, action: { type: string; payload: 
 	return state;
 };
 
+const chartModalInitialState = {
+	isModalOpen: false
+};
+
+// modal 은 전역으로 무조건 관리하자
+const chartModalReducer = (state = chartModalInitialState, action: { type: string; payload: any }) => {
+	if (action.type === 'open') {
+		return { ...state, isModalOpen: true };
+	} else if (action.type === 'close') return { ...state, isModalOpen: false };
+
+	return state;
+};
+
+const validateNameModalInitialState = {
+	isOpen: false
+};
+
+const validateNameReducer = (state = validateNameModalInitialState, action) => {
+	switch (action.type) {
+		case 'TOGGLE_VALIDATION_NAME_MODAL':
+			return {
+				...state,
+				isOpen: !state.isOpen
+			};
+		default:
+			return state;
+	}
+};
+
 const combinedReducers = combineReducers({
-	user: userReducer
+	user: userReducer,
+	chartModal: chartModalReducer,
+	validateNameReducer: validateNameReducer
 });
 
 export default combinedReducers;
