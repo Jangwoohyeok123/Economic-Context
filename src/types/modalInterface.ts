@@ -10,6 +10,7 @@ export interface FreeModalProps {
 export interface MakeModalProps {
 	isModalOpen: boolean;
 	setIsModalOpen: (isModalOpen: boolean) => void;
+	children?: React.ReactNode;
 	size: string;
 	activeIndicators: ActiveIndicators;
 }
