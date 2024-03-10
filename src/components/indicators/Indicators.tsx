@@ -121,8 +121,6 @@ export default function Indicators() {
 		dispatch(toggleValidationNameModal());
 	};
 
-	// favorites 가 변할때마다 activeIndicators 가 동기화 되어야 한다.
-	//
 	useEffect(() => {
 		const prevActiveIndicators = { ...activeIndicators };
 

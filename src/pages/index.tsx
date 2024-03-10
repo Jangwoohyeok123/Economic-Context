@@ -6,13 +6,13 @@ import Store from '@/types/storeInterface';
 import styles from './Home.module.scss';
 import dynamic from 'next/dynamic';
 import { login } from '@/actions/actions';
-import ChartModal from '@/components/modals/chartModal/ChartModal';
 import { useQuery } from '@tanstack/react-query';
-import { Category } from '@/types/fredInterface';
 import { useRouter } from 'next/router';
 import IndicatorCard from '@/components/indicatorCard/IndicatorCard';
 import { getDatabase } from 'firebase/database';
+import { EnhancedSeriess } from '@/types/fredInterface';
 import { roboto, poppins } from './_app';
+import { Category, Seriess } from '@/types/fredInterface';
 import { useEffect, useState } from 'react';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { useDispatch, useSelector } from 'react-redux';
@@ -36,9 +36,10 @@ export default function Pages({ interest }: { interest: Category }) {
 	const user = useSelector((state: Store) => state.user);
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 	const [isChartModalOpen, setIsChartModalOpen] = useState(false);
+	const [enhancedCategory, setEnhancedCategory] = useState<EnhancedSeriess[]>([]);
 
 	const categoryNames = ['interest', 'exchange', 'production', 'consume'];
-	const { data: category, isSuccess } = useQuery({
+	const { data: category, isSuccess } = useQuery<Seriess[]>({
 		queryKey: ['category', changeNameToCategoryId(categoryNames[categoryIndex])],
 		queryFn: () => fetchCategory(changeNameToCategoryId(categoryNames[categoryIndex]))
 	});
@@ -46,6 +47,21 @@ export default function Pages({ interest }: { interest: Category }) {
 	const refreshCategory = (categoryName: string) => {
 		setCategoryIndex(categoryNames.indexOf(categoryName));
 	};
+
+	const activeCard = (index: number) => {
+		setEnhancedCategory(prev => prev.map((item, idx) => (idx === index ? { ...item, isActive: true } : item)));
+	};
+
+	useEffect(() => {
+		if (isSuccess && category) {
+			// 각 항목에 isActive 속성을 추가합니다.
+			const updatedCategory = category.map(item => ({
+				...item,
+				isActive: false // 기본값 설정
+			}));
+			setEnhancedCategory(updatedCategory);
+		}
+	}, [category, isSuccess]);
 
 	useEffect(() => {
 		const authCode = router.query.code;
@@ -85,7 +101,7 @@ export default function Pages({ interest }: { interest: Category }) {
 				</div>
 				<figure className={clsx(styles.category)}>
 					{isSuccess
-						? category.map((series: { id: string; title: string }, idx: number) => {
+						? enhancedCategory.map((series: { id: string; title: string }, idx: number) => {
 								const seriesId = series.id;
 								const title = series.title;
 								const categoryId = changeNameToCategoryId(categoryNames[categoryIndex]);
@@ -93,6 +109,7 @@ export default function Pages({ interest }: { interest: Category }) {
 								return (
 									<IndicatorCard
 										key={idx}
+										data={enhancedCategory[idx]}
 										seriesId={seriesId}
 										categoryId={categoryId}
 										isChartModalOpen={isChartModalOpen}
@@ -105,7 +122,10 @@ export default function Pages({ interest }: { interest: Category }) {
 										rightButtonContent='save'
 										rightButtonHandler={
 											user.isLogin
-												? () => addFavoriteIndicator(categoryId, seriesId, title)
+												? () => {
+														addFavoriteIndicator(categoryId, seriesId, title);
+														activeCard(idx);
+												  }
 												: () => setIsAlertModalOpen(true)
 										}
 										pageType='main'

@@ -17,6 +17,10 @@ export interface Seriess {
 	units_short: string;
 }
 
+export interface EnhancedSeriess extends Seriess {
+	isActive: boolean;
+}
+
 export interface Category {
 	count: number;
 	limit: number;

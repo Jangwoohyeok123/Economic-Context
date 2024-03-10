@@ -1,14 +1,16 @@
 import clsx from 'clsx';
+import Store from '@/types/storeInterface';
 import styles from './IndicatorCard.module.scss';
 import { useRef } from 'react';
-import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import Store from '@/types/storeInterface';
+import { useSelector } from 'react-redux';
+import { EnhancedSeriess } from '@/types/fredInterface';
 import { ActiveIndicators } from '../indicators/Indicators';
 import { changeCategoryIdToName } from '@/utils/changeNameToCategoryId';
 
 interface IndicatorCardProps {
-	activeIndicators: ActiveIndicators;
+	activeIndicators?: ActiveIndicators;
+	data?: EnhancedSeriess;
 	seriesId: string;
 	categoryId: number;
 	title: string;
@@ -33,6 +35,7 @@ function checkingPageTypeAndModifyClassName(pageType: string) {
 }
 
 export default function IndicatorCard({
+	data,
 	activeIndicators,
 	seriesId,
 	categoryId,
@@ -63,27 +66,56 @@ export default function IndicatorCard({
 	};
 
 	return (
-		<div className={clsx(styles[CardClassName])} onClick={handleCardClick}>
-			<h3>{title}</h3>
-			<div className={clsx(styles.buttons)} ref={refButtons}>
-				<button className={clsx(styles.leftButton)} type='button' onClick={leftButtonHandler}>
-					{leftButtonContent}
-				</button>
-				<button
-					// [styles.on]: clsx 에서 제공하는 조건부 스타일 util
-					className={clsx(styles.rightButton, {
-						[styles.on]: activeIndicators[changeCategoryIdToName(categoryId)].find(
-							el => el.seriesId === seriesId && el.isActive
-						)
-					})}
-					ref={refRightBtn}
-					type='button'
-					onClick={() => {
-						rightButtonHandler();
-					}}>
-					{rightButtonContent}
-				</button>
-			</div>
-		</div>
+		<>
+			{activeIndicators ? (
+				<div className={clsx(styles[CardClassName])} onClick={handleCardClick}>
+					<h3>{title}</h3>
+					<div className={clsx(styles.buttons)} ref={refButtons}>
+						<button className={clsx(styles.leftButton)} type='button' onClick={leftButtonHandler}>
+							{leftButtonContent}
+						</button>
+						<button
+							// [styles.on]: clsx 에서 제공하는 조건부 스타일 util
+							className={clsx(styles.rightButton, {
+								[styles.on]: activeIndicators[changeCategoryIdToName(categoryId)].find(
+									el => el.seriesId === seriesId && el.isActive
+								)
+							})}
+							ref={refRightBtn}
+							type='button'
+							onClick={() => {
+								rightButtonHandler();
+							}}>
+							{rightButtonContent}
+						</button>
+					</div>
+				</div>
+			) : (
+				<>
+					{data ? (
+						<div className={clsx(styles[CardClassName])} onClick={handleCardClick}>
+							<h3>{title}</h3>
+							<div className={clsx(styles.buttons)} ref={refButtons}>
+								<button className={clsx(styles.leftButton)} type='button' onClick={leftButtonHandler}>
+									{leftButtonContent}
+								</button>
+								<button
+									// [styles.on]: clsx 에서 제공하는 조건부 스타일 util
+									className={clsx(styles.rightButton, {
+										[styles.on]: data.isActive
+									})}
+									ref={refRightBtn}
+									type='button'
+									onClick={() => {
+										rightButtonHandler();
+									}}>
+									{rightButtonContent}
+								</button>
+							</div>
+						</div>
+					) : null}
+				</>
+			)}
+		</>
 	);
 }

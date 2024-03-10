@@ -1,11 +1,11 @@
 import clsx from 'clsx';
-import { useState } from 'react';
-import { roboto, poppins } from '../_app';
 import Menu from '@/components/menu/Menu';
 import styles from './Dashboard.module.scss';
 import MyContext from '@/components/myContext/MyContext';
 import Dashheader from '@/components/dashheader/DashHeader';
 import Indicators from '@/components/indicators/Indicators';
+import { useState } from 'react';
+import { roboto, poppins } from '../_app';
 
 export default function Dashboard() {
 	const [Tabs] = useState(['Indicators', 'MyContext']);
