@@ -10,6 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import IndicatorCard from '@/components/indicatorCard/IndicatorCard';
 import { getDatabase } from 'firebase/database';
+import const_categoryId from '@/const/categoryId';
 import { EnhancedSeriess } from '@/types/fredInterface';
 import { roboto, poppins } from './_app';
 import { Category, Seriess } from '@/types/fredInterface';
@@ -22,13 +23,14 @@ const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/A
 const DynamicChartModal = dynamic(() => import('@/components/modals/chartModal/ChartModal'), { ssr: false });
 
 const fetchCategory = async (categoryId: number) => {
-	const res = await fetch(`/api/category?categoryId=${categoryId}`);
+	const baseUrl = 'http://localhost:3000/';
+	const res = await fetch(`${baseUrl}api/category?categoryId=${categoryId}`);
 	const json = await res.json();
 
 	return json.category.seriess;
 };
 
-export default function Pages({ interest }: { interest: Category }) {
+export default function Pages({ interest }: { interest: Seriess[] }) {
 	const router = useRouter();
 	const db = getDatabase(app);
 	const dispatch = useDispatch();
@@ -41,7 +43,8 @@ export default function Pages({ interest }: { interest: Category }) {
 	const categoryNames = ['interest', 'exchange', 'production', 'consume'];
 	const { data: category, isSuccess } = useQuery<Seriess[]>({
 		queryKey: ['category', changeNameToCategoryId(categoryNames[categoryIndex])],
-		queryFn: () => fetchCategory(changeNameToCategoryId(categoryNames[categoryIndex]))
+		queryFn: () => fetchCategory(changeNameToCategoryId(categoryNames[categoryIndex])),
+		initialData: interest
 	});
 
 	const refreshCategory = (categoryName: string) => {
@@ -156,11 +159,7 @@ export default function Pages({ interest }: { interest: Category }) {
 // server 쪽에서 popularity 기준으로 sort 를 진행하고 전달하고 싶은데 ...
 // promise.all 적용실패
 export async function getStaticProps() {
-	const baseUrl = 'https://api.stlouisfed.org/fred/';
-	const fetchInterestCategory = await fetch(
-		`${baseUrl}category/series?category_id=114&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
-	);
-	const interest = await fetchInterestCategory.json();
+	const interest = await fetchCategory(const_categoryId.interest);
 
 	// const fetchExchangeCategory = await fetch(
 	// 	`${baseUrl}category/series?category_id=94&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`

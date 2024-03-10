@@ -15,10 +15,7 @@ import { getDatabase, get, ref } from 'firebase/database';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toggleValidationNameModal } from '@/actions/actions';
-/* 
-  하나의 state 를 4 개의 탭에서 보여줄려고 filter 를 이용중인데, styles.on 을 각 탭에서의 카드를 클릭하면 부여해주고 있었다. 그런데, tab 이 바뀌어도 styles.on 이 초기화가 되지 않는데 뭐가 문제일까 ? 
-
-*/
+import Store from '@/types/storeInterface';
 
 export type ActiveIndicator = {
 	title: string;
@@ -38,7 +35,7 @@ export interface ActiveIndicators {
 export default function Indicators() {
 	const userId = 1;
 	const dispatch = useDispatch();
-	const isValidationModalOpen = useSelector(state => state.validateNameReducer.isOpen);
+	const isValidationModalOpen = useSelector((state: Store) => state.validateNameReducer.isOpen);
 	const queryClient = useQueryClient();
 	const categoryNames = ['interest', 'exchange', 'consume', 'production'];
 	const [categoryIndex, setCategoryIndex] = useState(0);
@@ -87,10 +84,6 @@ export default function Indicators() {
 		return favorites.filter(favorite => favorite.categoryId === categoryId);
 	};
 
-	const pickCategory = (idx: number) => {
-		setCategoryIndex(idx);
-	};
-
 	const clickCheckButton = (title: string, categoryName: string, seriesId: string): void => {
 		setActiveIndicators(prevState => {
 			const updatedIndicators = [...prevState[categoryName]];
@@ -115,10 +108,6 @@ export default function Indicators() {
 				[categoryName]: updatedIndicators
 			};
 		});
-	};
-
-	const toggleValidateNameModal = () => {
-		dispatch(toggleValidationNameModal());
 	};
 
 	useEffect(() => {
@@ -166,7 +155,7 @@ export default function Indicators() {
 								key={index}
 								onClick={() => {
 									filterFavoriteByCategoryId(favorites, categoryId);
-									pickCategory(index);
+									setCategoryIndex(index);
 								}}
 								className={categoryIndex === index ? styles.on : ''}>
 								{categoryName}

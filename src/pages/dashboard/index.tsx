@@ -16,7 +16,8 @@ export default function Dashboard() {
 			<div className={clsx(styles.Dashboard, roboto.variable, poppins.variable)}>
 				<Menu Tabs={Tabs} SelectedIdx={TabsIndex} setSelectedIdx={setSelectedIdx} />
 
-				{/* section 에 padding 을 주면 header 가 문제생겨서 padding 을 각 요소에 나눠줌 */}
+				{/* MyContext 가 렌더링될 때 데이터 페칭 vs dashboard 에서 미리 페칭한 후 Mycontext 에게 전달하기 */}
+				{/* 데시보드 들어갈 때 페칭하는게 좋으므로 Mycontext 에서 useQuery 를 통해 페칭하기 */}
 				<section>
 					<Dashheader Tabs={Tabs} TabsIndex={TabsIndex} />
 
