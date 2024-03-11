@@ -18,7 +18,7 @@ export type Seriess = {
 	units_short: string;
 };
 
-export interface EnhancedSeriess extends Seriess {
+export interface SeriessWithIsActive extends Seriess {
 	isActive: boolean;
 }
 

@@ -4,17 +4,17 @@ import styles from './Indicators.module.scss';
 import queryKey from '@/const/queryKey';
 import { poppins } from '@/pages/_app';
 import ChartModal from '../modals/chartModal/ChartModal';
-import IndicatorCard from '../indicatorCard/IndicatorCard';
+import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
 import { Indicator } from '@/types/dbInterface';
 import { useDispatch, useSelector } from 'react-redux';
 import MakeContextModal from '../modals/makeContextModal/MakeContextModal';
-import ValidateNameModal from '../modals/validateNameModal/validateNameModal';
+// import ValidateNameModal from '../modals/validateNameModal/validateNameModal';
 import { deleteFavorite } from '@/firebase/favorite';
 import { useEffect, useState } from 'react';
 import { getDatabase, get, ref } from 'firebase/database';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { toggleValidationNameModal } from '@/actions/actions';
+// import { toggleValidationNameModal } from '@/actions/actions';
 import Store from '@/types/storeInterface';
 
 export type ActiveIndicator = {
@@ -35,7 +35,7 @@ export interface ActiveIndicators {
 export default function Indicators() {
 	const userId = 1;
 	const dispatch = useDispatch();
-	const isValidationModalOpen = useSelector((state: Store) => state.validateNameReducer.isOpen);
+	// const isValidationModalOpen = useSelector((state: Store) => state.validateNameReducer.isOpen);
 	const queryClient = useQueryClient();
 	const categoryNames = ['interest', 'exchange', 'consume', 'production'];
 	const [categoryIndex, setCategoryIndex] = useState(0);
@@ -215,14 +215,14 @@ export default function Indicators() {
 				activeIndicators={activeIndicators}
 			/>
 			<ChartModal isChartModalOpen={isChartModalOpen} setIsChartModalOpen={setIsChartModalOpen} />
-			<ValidateNameModal
+			{/* <ValidateNameModal
 				isValidationModalOpen={isValidationModalOpen}
 				setIsValidationModalOpen={() => dispatch(toggleValidationNameModal())}>
 				<div className={clsx(styles.validateNameModal, poppins.variable)}>
 					<p>Context Name 을 적어주세요</p>
 					<button onClick={() => dispatch(toggleValidationNameModal())}>Name 다시적기</button>
 				</div>
-			</ValidateNameModal>
+			</ValidateNameModal> */}
 		</div>
 	);
 }

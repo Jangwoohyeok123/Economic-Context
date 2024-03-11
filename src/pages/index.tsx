@@ -13,9 +13,7 @@ import const_queryKey from '@/const/queryKey';
 import { getFavorite, getFavorites } from '@/backendApi/user';
 import { roboto, poppins } from './_app';
 import { Category, Seriess } from '@/types/fredInterface';
-import { Category, Seriess } from '@/types/fredInterface';
 import { useEffect, useState } from 'react';
-import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIndicator, getIndicators, getChartData } from '@/backendApi/fred';
@@ -161,12 +159,9 @@ export default function Pages({ interest }: { interest: Category }) {
 			</main>
 			<DynamicAlertModal
 				isModalOpen={isAlertModalOpen}
-			<DynamicAlertModal
-				isModalOpen={isAlertModalOpen}
 				setIsModalOpen={setIsAlertModalOpen}
 				size='small'
 				header='You need to login!'
-	@@ -136,44 +168,22 @@ export default function Pages({ interest }: { interest: Category }) {
 				rightButtonContent='Login'
 				rightButtonHandler={() => (window.location.href = 'http://localhost:3000/login')}
 			/>

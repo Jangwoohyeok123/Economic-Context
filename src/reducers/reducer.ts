@@ -20,9 +20,7 @@ const userReducer = (state = userInitialState, action: { type: string; payload: 
 };
 
 const combinedReducers = combineReducers({
-	user: userReducer,
-	chartModal: chartModalReducer,
-	validateNameReducer: validateNameReducer
+	user: userReducer
 });
 
 export default combinedReducers;

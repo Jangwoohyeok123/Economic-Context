@@ -22,7 +22,7 @@ export default function MakeContextModal({
 	const ModalClassName = checkingModalSizeAndModifyClassName(size);
 	const refInputForContextName = useRef<HTMLInputElement>(null);
 	const [contextIndicators, setContextIndicators] = useState<Indicator[]>([]);
-	const isValidationModalOpen = useSelector(state => state.validateNameReducer.isOpen);
+	// const isValidationModalOpen = useSelector(state => state.validateNameReducer.isOpen);
 
 	const makeContext = async () => {
 		let contextName: string;
@@ -67,7 +67,7 @@ export default function MakeContextModal({
 		});
 
 		setContextIndicators(newContextIndicators);
-	}, [activeIndicators, isValidationModalOpen]);
+	}, [activeIndicators]);
 
 	return isModalOpen && contextIndicators
 		? ReactDOM.createPortal(

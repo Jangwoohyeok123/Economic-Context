@@ -32,9 +32,3 @@ export interface AlertModalProps {
 	rightButtonContent: string;
 	rightButtonHandler: () => void;
 }
-// isChartModalOpen, setIsChartModalOpen, children
-export type ChartModalProps = {
-	isChartModalOpen: boolean;
-	setIsChartModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-	children?: React.ReactNode;
-};

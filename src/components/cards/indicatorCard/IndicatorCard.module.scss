@@ -1,0 +1,25 @@
+$tablet: 1023px;
+$mobile: 650px;
+
+.cardWrap {
+	padding: 20px;
+	background: #fff;
+	font-family: var(--baseFont);
+	box-shadow: 10px 10px 20px #dedede;
+
+	.IndicatorCard {
+		.header {
+			h3 {
+				padding-bottom: 10px;
+				font-family: var(--pointFont);
+				font-weight: 500;
+				font-size: 1.3rem;
+				line-height: 1.6rem;
+			}
+		}
+
+		.period {
+			text-align: left;
+		}
+	}
+}
