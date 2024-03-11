@@ -30,9 +30,15 @@
 				color: #fff;
 				background: #111;
 			}
+
+			&.on {
+				color: #fff;
+				background: #111;
+			}
 		}
 	}
 
+	// dataIndex === buttonIndex(by map)
 	.category {
 		padding-top: 50px;
 		display: grid;
