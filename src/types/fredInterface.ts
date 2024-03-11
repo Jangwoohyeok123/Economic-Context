@@ -18,6 +18,10 @@ export type Seriess = {
 	units_short: string;
 };
 
+export interface SeriessWithIsActive extends Seriess {
+	isActive: boolean;
+}
+
 export type Category = {
 	count: number;
 	limit: number;

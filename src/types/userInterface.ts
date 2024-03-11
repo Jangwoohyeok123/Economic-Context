@@ -1,6 +1,6 @@
 interface User {
 	isLogin: boolean;
-	id: string;
+	id: number;
 	google_id: string;
 	email: string;
 	picture_url: string;

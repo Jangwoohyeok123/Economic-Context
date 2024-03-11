@@ -1,22 +1,22 @@
 import clsx from 'clsx';
-import User, { Indicator, IndicatorWithIsActive } from '@/types/userInterface';
 import Image from 'next/image';
 import axios from 'axios';
 import styles from './Home.module.scss';
 import dynamic from 'next/dynamic';
 import { Store } from '@/types/redux';
 import { login } from '@/actions/actions';
-import { useQuery } from '@tanstack/react-query';
 import IndicatorCard from '@/components/cards/indicatorCard/IndicatorCard';
 import { useRouter } from 'next/router';
 import const_queryKey from '@/const/queryKey';
-import { getFavorite, getFavorites } from '@/backendApi/user';
 import { roboto, poppins } from './_app';
-import { Category, Seriess } from '@/types/fredInterface';
 import { useEffect, useState } from 'react';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { useDispatch, useSelector } from 'react-redux';
+import User, { Indicator, IndicatorWithIsActive } from '@/types/userInterface';
+import { Category, Seriess, SeriessWithIsActive } from '@/types/fredInterface';
 import { getIndicator, getIndicators, getChartData } from '@/backendApi/fred';
+import { QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { addFavorite, deleteFavorite, getFavorite, getFavorites } from '@/backendApi/user';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 const DynamicChartModal = dynamic(() => import('@/components/modals/chartModal/ChartModal'), { ssr: false });
@@ -39,20 +39,45 @@ export default function Pages({ interest }: { interest: Category }) {
 	const user = useSelector((state: Store) => state.user);
 	const router = useRouter();
 	const dispatch = useDispatch();
+	const queryClient = useQueryClient();
 	const categoryNames = ['interest', 'exchange', 'production', 'consume'];
 	const [categoryIndex, setCategoryIndex] = useState(0);
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 	const [isChartModalOpen, setIsChartModalOpen] = useState(false);
-	const [enhancedCategory, setEnhancedCategory] = useState([]);
+	const [enhancedCategoryWithIsActive, setEnhancedCategoryWithActive] = useState<SeriessWithIsActive[]>([]);
 	const { data: category, isSuccess: isCategoryExist } = useQuery({
 		queryKey: [const_queryKey.category, changeNameToCategoryId(categoryNames[categoryIndex])],
 		queryFn: () => getIndicators(changeNameToCategoryId(categoryNames[categoryIndex])),
 		initialData: interest.seriess
 	});
 
+	// useQuery
 	const { data: favorite, isSuccess: isFavoriteExist } = useQuery({
 		queryKey: [const_queryKey.favorite, user.id],
 		queryFn: () => getFavorite(user.id, changeNameToCategoryId(categoryNames[categoryIndex]))
+	});
+
+	// useMutaition: favorite 을 위한 add, delete
+	const addFavoriteMutation = useMutation({
+		mutationFn: ({ userId, seriesId }: { userId: number; seriesId: string }) => addFavorite(userId, seriesId),
+		onSuccess() {
+			queryClient.invalidateQueries({ queryKey: [const_queryKey.favorite, user.id] });
+			alert('add 성공');
+		},
+		onError(error) {
+			console.error(error);
+		}
+	});
+
+	const deleteFavoriteMutation = useMutation({
+		mutationFn: ({ userId, seriesId }: { userId: number; seriesId: string }) => deleteFavorite(userId, seriesId),
+		onSuccess() {
+			queryClient.invalidateQueries({ queryKey: [const_queryKey.favorite, user.id] });
+			alert('delete 성공');
+		},
+		onError(error) {
+			console.error(error);
+		}
 	});
 
 	const setJwtAndUserData = (authCode: string) => {
@@ -74,7 +99,13 @@ export default function Pages({ interest }: { interest: Category }) {
 		}
 	};
 
-	const buttonToggle = (seriesId: string, categoryId: number, indicatorIndex: number) => {};
+	const buttonToggle = (userId: number, isActive: boolean, seriesId: string) => {
+		if (isActive) {
+			deleteFavoriteMutation.mutate({ userId: userId, seriesId: seriesId });
+		} else {
+			addFavoriteMutation.mutate({ userId: userId, seriesId: seriesId });
+		}
+	};
 
 	useEffect(() => {
 		const authCode = router.query.code;
@@ -88,12 +119,13 @@ export default function Pages({ interest }: { interest: Category }) {
 				isActive: false
 			}));
 
-			favorite.forEach((favoriteIndicator: Indicator) => {
-				categoryWithIsActive.forEach((categoryIndicator: IndicatorWithIsActive) => {
-					if (favoriteIndicator.seriesId === categoryIndicator.seriesId) categoryIndicator.isActive = true;
+			favorite.forEach((favoriteIndicator: IndicatorWithIsActive) => {
+				categoryWithIsActive.forEach((categoryIndicator: SeriessWithIsActive) => {
+					if (favoriteIndicator.seriesId === categoryIndicator.id) categoryIndicator.isActive = true;
 				});
 			});
-			setEnhancedCategory(categoryWithIsActive);
+
+			setEnhancedCategoryWithActive(categoryWithIsActive);
 		}
 	}, [category, isCategoryExist, isFavoriteExist, favorite]);
 
@@ -103,7 +135,6 @@ export default function Pages({ interest }: { interest: Category }) {
 				<div className={clsx(styles.mainImage)}>
 					<Image src='/mainImage.jpg' alt='mainImage' layout='fill' objectFit='cover' />
 				</div>
-				{/* 현재 카테고리위치를 state 처리하고, button 중 index 와 일치하면 on 을 준다. */}
 				<div className={clsx(styles.categoryNames)}>
 					{categoryNames.map((_, idx) => {
 						return (
@@ -117,8 +148,52 @@ export default function Pages({ interest }: { interest: Category }) {
 					})}
 				</div>
 				<figure className={clsx(styles.category)}>
-					{isCategoryExist
-						? enhancedCategory.map((series: Seriess, idx: number) => {
+					{user.isLogin
+						? enhancedCategoryWithIsActive.map((series: SeriessWithIsActive, idx: number) => {
+								let notes;
+								const title = series.title;
+								const seriesId = series.id;
+								const frequecy = series.frequency;
+								const popularity = series.popularity;
+								const observation_start = series.observation_start;
+								const observation_end = series.observation_end;
+								const isActive = series.isActive;
+								if (series.notes) notes = series.notes;
+								return (
+									<IndicatorCard
+										key={idx}
+										title={title}
+										seriesId={seriesId}
+										categoryId={changeNameToCategoryId(categoryNames[categoryIndex])}
+										frequency={frequecy}
+										popularity={popularity}
+										notes={notes ? notes : ''}
+										observation_end={observation_end}
+										observation_start={observation_start}
+										className={styles.IndicatorCard}>
+										<div>
+											{notes ? (
+												<p>{notes}</p>
+											) : (
+												<p>This indicator does not have information about the indicator description.</p>
+											)}
+										</div>
+										<button
+											className={clsx(isActive ? styles.on : '')}
+											onClick={() => {
+												buttonToggle(user.id, isActive, seriesId);
+												setEnhancedCategoryWithActive(prevArray => {
+													return prevArray.map((item, mapIndex) => {
+														return mapIndex === idx ? { ...item, isActive: !item.isActive } : item;
+													});
+												});
+											}}>
+											save
+										</button>
+									</IndicatorCard>
+								);
+						  })
+						: category.map((series: Seriess, idx: number) => {
 								let notes;
 								const title = series.title;
 								const seriesId = series.id;
@@ -147,14 +222,10 @@ export default function Pages({ interest }: { interest: Category }) {
 												<p>This indicator does not have information about the indicator description.</p>
 											)}
 										</div>
-										<button
-											onClick={() => buttonToggle(seriesId, changeNameToCategoryId(categoryNames[categoryIndex]), idx)}>
-											save
-										</button>
+										<button onClick={() => setIsAlertModalOpen(true)}>save</button>
 									</IndicatorCard>
 								);
-						  })
-						: null}
+						  })}
 				</figure>
 			</main>
 			<DynamicAlertModal
