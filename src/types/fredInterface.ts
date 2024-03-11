@@ -18,7 +18,11 @@ export type Seriess = {
 	units_short: string;
 };
 
-export type Category = {
+export interface EnhancedSeriess extends Seriess {
+	isActive: boolean;
+}
+
+export interface Category {
 	count: number;
 	limit: number;
 	offset: number;
@@ -27,4 +31,4 @@ export type Category = {
 	realtime_start: string;
 	seriess: Seriess[];
 	sort_order: string;
-};
+}

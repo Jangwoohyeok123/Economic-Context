@@ -6,22 +6,15 @@ import styles from './ChartModal.module.scss';
 import { roboto, poppins } from '@/pages/_app';
 import React, { useEffect, useState } from 'react';
 import { ChartModalProps } from '@/types/modalInterface';
-import LineChart from '@/components/charts/line/LineChart';
+import LineChart from '@/components/lineChart/LineChart';
 
-/*
-
-	렌더링되면 2개의 api 를 호출한다.
-	1. api/chartdata?seriesId={seriesId}
-	2. api/indicatorData?seriesId={seriesId}
-	
-*/
-
-export default function ChartModal({ isChartModalOpen, setIsChartModalOpen }: ChartModalProps) {
+export default function ChartModal({ isChartModalOpen, setIsChartModalOpen, children }: ChartModalProps) {
 	const [chartValues, setChartValues] = useState([]);
 	const router = useRouter();
 	const { seriesId, title } = router.query;
 
 	const clearUrl = () => {
+		const currentQuery = { ...router.query };
 		const newUrl = {
 			pathname: router.pathname,
 			query: null
@@ -33,7 +26,6 @@ export default function ChartModal({ isChartModalOpen, setIsChartModalOpen }: Ch
 	useEffect(() => {
 		if (!seriesId) return;
 		axios.get(`/api/chartValues?seriesId=${seriesId}`).then(response => {
-			console.log(response.data.observations.observations);
 			setChartValues(
 				response.data.observations.observations.map(el => {
 					if (el.value === '.') el.value = 0;
