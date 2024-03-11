@@ -1,6 +1,6 @@
 import const_categoryTypes from '@/const/categoryId';
 
-export const changeNameToType = (categoryName: string): number => {
+export const changeNameToCategoryId = (categoryName: string): number => {
 	let type = const_categoryTypes.interest;
 	if (categoryName === 'interest') return (type = const_categoryTypes.interest);
 	if (categoryName === 'exchange') return (type = const_categoryTypes.exchange);

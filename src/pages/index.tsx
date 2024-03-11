@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import User from '@/types/userInterface';
 import Image from 'next/image';
 import axios from 'axios';
 import styles from './Home.module.scss';
@@ -8,53 +9,32 @@ import { login } from '@/actions/actions';
 import { useQuery } from '@tanstack/react-query';
 import IndicatorCard from '@/components/cards/indicatorCard/IndicatorCard';
 import { useRouter } from 'next/router';
-import { roboto, poppins } from './_app';
-import { changeNameToType } from '@/utils/changeNameToCategoryId';
-import { Category, Seriess } from '@/types/fredInterface';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import const_queryKey from '@/const/queryKey';
-import User from '@/types/userInterface';
+import { roboto, poppins } from './_app';
+import { Category, Seriess } from '@/types/fredInterface';
+import { useEffect, useRef, useState } from 'react';
+import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
+import { useDispatch, useSelector } from 'react-redux';
+import { getIndicator, getIndicators, getChartData } from '@/backendApi/fred';
+import const_categoryTypes from '@/const/categoryId';
+import const_categoryColor from '@/const/categoryColor';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 const DynamicChartModal = dynamic(() => import('@/components/modals/chartModal/ChartModal'), { ssr: false });
 
-const fetchCategory = async (categoryId: number) => {
-	const res = await fetch(`/api/category?categoryId=${categoryId}`);
-	const json = await res.json();
-
-	return json.category.seriess;
-};
-
 export default function Pages({ interest }: { interest: Category }) {
-	const User = useSelector((state: Store) => state.user);
+	const user = useSelector((state: Store) => state.user);
 	const router = useRouter();
 	const dispatch = useDispatch();
+	// const refCategoryButtons = useRef<HTMLButtonElement>([]);
 	const categoryNames = ['interest', 'exchange', 'production', 'consume'];
 	const [categoryIndex, setCategoryIndex] = useState(0);
 	const [IsAlertModalOpen, setIsAlertModalOpen] = useState(false);
 	const [isChartModalOpen, setIsChartModalOpen] = useState(false);
 	const { data: category, isSuccess } = useQuery({
-		queryKey: [const_queryKey.category, changeNameToType(categoryNames[categoryIndex])],
-		queryFn: () => fetchCategory(changeNameToType(categoryNames[categoryIndex]))
+		queryKey: [const_queryKey.category, changeNameToCategoryId(categoryNames[categoryIndex])],
+		queryFn: () => getIndicators(changeNameToCategoryId(categoryNames[categoryIndex]))
 	});
-
-	const GotoAboutPage = (seriesId: string) => {
-		router.push(`/${seriesId}`);
-	};
-
-	const saveCardToDB = (categoryName: string, seriesId: string, title: string) => {
-		if (User.isLogin) {
-			const userId = User.id;
-			axios.get(`http://localhost:4000/user/favorite/${userId}`).then(response => console.log(response));
-		} else {
-			console.error('data Save 실패');
-		}
-	};
-
-	const refreshCategory = (categoryName: string) => {
-		setCategoryIndex(categoryNames.indexOf(categoryName));
-	};
 
 	const setJwtAndUserData = (authCode: string) => {
 		if (authCode) {
@@ -75,6 +55,27 @@ export default function Pages({ interest }: { interest: Category }) {
 		}
 	};
 
+	// const categoryTabHover = (categoryId: number, idx: number) => {
+	// 	let backgroundColor: string = const_categoryColor.interest;
+	// 	if (categoryId === const_categoryTypes.interest) backgroundColor = const_categoryColor.interest;
+	// 	else if (categoryId === const_categoryTypes.exchange) backgroundColor = const_categoryColor.exchange;
+	// 	else if (categoryId === const_categoryTypes.production) backgroundColor = const_categoryColor.production;
+	// 	else if (categoryId === const_categoryTypes.consume) backgroundColor = const_categoryColor.consume;
+
+	// 	const mouseEnter = () => {
+	// 		if (refCategoryButtons.current[idx]) {
+	// 			refCategoryButtons.current[idx].style.backgroundColor = backgroundColor;
+	// 		}
+	// 	};
+	// 	const mouseLeave = () => {
+	// 		if (refCategoryButtons.current[idx]) {
+	// 			refCategoryButtons.current[idx].style.backgroundColor = '#efefef';
+	// 		}
+	// 	};
+
+	// 	return { mouseEnter, mouseLeave };
+	// };
+
 	useEffect(() => {
 		const authCode = router.query.code;
 		if (authCode) setJwtAndUserData(authCode as string);
@@ -87,10 +88,17 @@ export default function Pages({ interest }: { interest: Category }) {
 					<Image src='/mainImage.jpg' alt='mainImage' layout='fill' objectFit='cover' />
 				</div>
 
-				<div className={clsx(styles.tab)}>
-					{categoryNames.map((el, idx) => {
+				<div className={clsx(styles.categoryNames)}>
+					{categoryNames.map((categoryName, idx) => {
+						// const { mouseEnter, mouseLeave } = categoryTabHover(changeNameToCategoryId(categoryName), idx);
 						return (
-							<button key={idx} onClick={() => refreshCategory(categoryNames[idx])}>
+							<button
+								// ref={el => (refCategoryButtons.current[idx] = el)}
+								key={idx}
+								onClick={() => setCategoryIndex(idx)}
+								// onMouseEnter={mouseEnter}
+								// onMouseLeave={mouseLeave}
+							>
 								{categoryNames[idx]}
 							</button>
 						);
@@ -99,21 +107,36 @@ export default function Pages({ interest }: { interest: Category }) {
 				<figure className={clsx(styles.category)}>
 					{isSuccess
 						? category.map((series: Seriess, idx: number) => {
-								const seriesId = series.id;
+								let notes;
 								const title = series.title;
+								const seriesId = series.id;
+								const frequecy = series.frequency;
+								const popularity = series.popularity;
+								const observation_start = series.observation_start;
+								const observation_end = series.observation_end;
+								if (series.notes) notes = series.notes;
 
 								return (
 									<IndicatorCard
 										key={idx}
 										title={title}
-										leftButtonContent='more'
-										leftButtonHandler={() => GotoAboutPage(seriesId)}
-										rightButtonContent='save'
-										rightButtonHandler={
-											User.isLogin ? () => saveCardToDB('114', seriesId, title) : () => setIsAlertModalOpen(true)
-										}
-										pageType='main'
-									/>
+										seriesId={seriesId}
+										categoryId={changeNameToCategoryId(categoryNames[categoryIndex])}
+										frequency={frequecy}
+										popularity={popularity}
+										notes={notes ? notes : ''}
+										observation_end={observation_end}
+										observation_start={observation_start}
+										className={styles.IndicatorCard}>
+										<div>
+											{notes ? (
+												<p>{notes}</p>
+											) : (
+												<p>This indicator does not have information about the indicator description.</p>
+											)}
+										</div>
+										<button>save</button>
+									</IndicatorCard>
 								);
 						  })
 						: null}
@@ -137,7 +160,7 @@ export default function Pages({ interest }: { interest: Category }) {
 
 // server 쪽에서 popularity 기준으로 sort 를 진행하고 전달하고 싶은데 ...
 // promise.all 적용실패
-export async function getStaticProps() {
+export async function getServerSideProps() {
 	const baseUrl = 'https://api.stlouisfed.org/fred/';
 	const fetchInterestCategory = await fetch(
 		`${baseUrl}category/series?category_id=114&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`

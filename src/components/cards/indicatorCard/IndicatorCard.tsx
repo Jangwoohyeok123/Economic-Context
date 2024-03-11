@@ -1,60 +1,46 @@
 import clsx from 'clsx';
 import styles from './IndicatorCard.module.scss';
-import { useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { discontinueDelete } from '@/utils/deleteDiscontinue';
 
 interface IndicatorCardProps {
+	children: React.ReactNode;
+	notes?: string;
 	title: string;
-	leftButtonContent: string;
-	leftButtonHandler: () => void;
-	rightButtonContent: string;
-	rightButtonHandler: () => void;
-	pageType: string;
-}
-
-function checkingPageTypeAndModifyClassName(pageType: string) {
-	let className = 'defaultClassName';
-	if (pageType === 'main') {
-		className = 'IndicatorCardMainPage';
-	} else if (pageType === 'dashboard') {
-		className = 'IndicatorCardDashboard';
-	}
-
-	return className;
+	seriesId: string;
+	categoryId: number;
+	frequency: string;
+	popularity: number;
+	observation_end: string;
+	observation_start: string;
+	className: string;
 }
 
 export default function IndicatorCard({
+	children,
+	notes,
 	title,
-	leftButtonContent,
-	leftButtonHandler,
-	rightButtonContent,
-	rightButtonHandler,
-	pageType
+	seriesId,
+	categoryId,
+	frequency,
+	popularity,
+	observation_end,
+	observation_start,
+	className
 }: IndicatorCardProps) {
-	const refRightBtn = useRef<HTMLButtonElement>(null);
-	const CardClassName = checkingPageTypeAndModifyClassName(pageType);
-	const isLogin = useSelector(state => state.user.isLogin);
-
 	return (
-		<div className={clsx(styles[CardClassName])}>
-			<h3>{title}</h3>
-			<div className={clsx(styles.buttons)}>
-				<button className={clsx(styles.leftButton)} type='button' onClick={leftButtonHandler}>
-					{leftButtonContent}
-				</button>
-				<button
-					className={clsx(styles.rightButton)}
-					ref={refRightBtn}
-					type='button'
-					onClick={() => {
-						rightButtonHandler();
-						if (isLogin) refRightBtn.current?.classList.toggle(styles.on);
-					}}>
-					{rightButtonContent}
-				</button>
+		<div className={clsx(styles.cardWrap)}>
+			<div className={clsx(styles.IndicatorCard, className)}>
+				<div className={styles.header}>
+					<h3>{discontinueDelete(title)}</h3>
+					<div className={clsx(styles.period)}>
+						<div>
+							Period: {observation_start} ~ {observation_end}
+						</div>
+					</div>
+				</div>
+
+				{children}
 			</div>
 		</div>
 	);
 }
-
-// , { [styles.on]: isLogin }
