@@ -1,10 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-type Data = {
-	name: string;
-};
-
 interface Observation {
 	date: string;
 	realtime_end: string;
@@ -33,8 +29,8 @@ export default async function getChartValues(req: NextApiRequest, res: NextApiRe
 		);
 		const json = await response.json();
 
-		res.status(200).json({ observations: json.observations });
-	} catch (err) {
-		res.status(500).json({ message: 'fetching 실패' });
+		res.status(200).json(json);
+	} catch (error: any) {
+		console.error('error' + error.message);
 	}
 }

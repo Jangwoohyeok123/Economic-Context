@@ -5,6 +5,7 @@ export type Seriess = {
 	group_popularity: number;
 	id: string;
 	last_updated: string;
+	notes?: string;
 	observation_end: string;
 	observation_start: string;
 	popularity: number;
