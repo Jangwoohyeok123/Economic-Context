@@ -35,7 +35,9 @@ export default function CategoryId() {
 			.then(response => {
 				return response.json();
 			})
-			.then(data => setData(data.observations));
+			.then(data => {
+				return setData(data.observations);
+			});
 
 		fetch(`/api/indicatorData?seriesId=${seriesId}`)
 			.then(response => {

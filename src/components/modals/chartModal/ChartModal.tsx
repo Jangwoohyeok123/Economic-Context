@@ -8,6 +8,14 @@ import React, { useEffect, useState } from 'react';
 import { ChartModalProps } from '@/types/modalInterface';
 import LineChart from '@/components/charts/line/LineChart';
 
+/*
+
+	렌더링되면 2개의 api 를 호출한다.
+	1. api/chartdata?seriesId={seriesId}
+	2. api/indicatorData?seriesId={seriesId}
+	
+*/
+
 export default function ChartModal({ isChartModalOpen, setIsChartModalOpen }: ChartModalProps) {
 	const [chartValues, setChartValues] = useState([]);
 	const router = useRouter();
