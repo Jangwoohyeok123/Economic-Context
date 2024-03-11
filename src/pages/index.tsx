@@ -8,32 +8,18 @@ import { login } from '@/actions/actions';
 import IndicatorCard from '@/components/cards/indicatorCard/IndicatorCard';
 import { useRouter } from 'next/router';
 import const_queryKey from '@/const/queryKey';
+import { getIndicators } from '@/backendApi/fred';
 import { roboto, poppins } from './_app';
 import { useEffect, useState } from 'react';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { useDispatch, useSelector } from 'react-redux';
-import User, { Indicator, IndicatorWithIsActive } from '@/types/userInterface';
+import User, { IndicatorWithIsActive } from '@/types/userInterface';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Category, Seriess, SeriessWithIsActive } from '@/types/fredInterface';
-import { getIndicator, getIndicators, getChartData } from '@/backendApi/fred';
-import { QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { addFavorite, deleteFavorite, getFavorite, getFavorites } from '@/backendApi/user';
+import { addFavorite, deleteFavorite, getFavorite } from '@/backendApi/user';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 const DynamicChartModal = dynamic(() => import('@/components/modals/chartModal/ChartModal'), { ssr: false });
-
-/* 
-	fetching 순서 == enhancedCategory useEffect 과정
-	초기
-	1. category 데이터를 fred 에서 갖고온다. 
-	2. category 데이터에 isActive false 를 부여한다.
-	3. favorites 를 back 에서 갖고온다.
-	4. category 데이터 중 favorites 데이터와 일치하는 데이터는 isActive on 을 부여한다.
-
-	button 은 enhancedCategory 를 처리한다.
-	클릭하면 enhancedCategory 에서 isActive 를 toggle 한다.
-	클릭하면 modify 함수를 호출하여 isActive 가 false 면 save 한다.
-	클릭하면 modify 함수를 호출하여 isActive 가 true 면 delete 한다.
-*/
 
 export default function Pages({ interest }: { interest: Category }) {
 	const user = useSelector((state: Store) => state.user);
@@ -47,13 +33,12 @@ export default function Pages({ interest }: { interest: Category }) {
 	const [enhancedCategoryWithIsActive, setEnhancedCategoryWithActive] = useState<SeriessWithIsActive[]>([]);
 	const { data: category, isSuccess: isCategoryExist } = useQuery({
 		queryKey: [const_queryKey.category, changeNameToCategoryId(categoryNames[categoryIndex])],
-		queryFn: () => getIndicators(changeNameToCategoryId(categoryNames[categoryIndex])),
-		initialData: interest.seriess
+		queryFn: () => getIndicators(changeNameToCategoryId(categoryNames[categoryIndex]))
 	});
 
 	// useQuery
 	const { data: favorite, isSuccess: isFavoriteExist } = useQuery({
-		queryKey: [const_queryKey.favorite, user.id],
+		queryKey: [const_queryKey.favorite, changeNameToCategoryId(categoryNames[categoryIndex])],
 		queryFn: () => getFavorite(user.id, changeNameToCategoryId(categoryNames[categoryIndex]))
 	});
 
@@ -61,7 +46,9 @@ export default function Pages({ interest }: { interest: Category }) {
 	const addFavoriteMutation = useMutation({
 		mutationFn: ({ userId, seriesId }: { userId: number; seriesId: string }) => addFavorite(userId, seriesId),
 		onSuccess() {
-			queryClient.invalidateQueries({ queryKey: [const_queryKey.favorite, user.id] });
+			queryClient.invalidateQueries({
+				queryKey: [const_queryKey.favorite, changeNameToCategoryId(categoryNames[categoryIndex])]
+			});
 			alert('add 성공');
 		},
 		onError(error) {
@@ -72,7 +59,9 @@ export default function Pages({ interest }: { interest: Category }) {
 	const deleteFavoriteMutation = useMutation({
 		mutationFn: ({ userId, seriesId }: { userId: number; seriesId: string }) => deleteFavorite(userId, seriesId),
 		onSuccess() {
-			queryClient.invalidateQueries({ queryKey: [const_queryKey.favorite, user.id] });
+			queryClient.invalidateQueries({
+				queryKey: [const_queryKey.favorite, changeNameToCategoryId(categoryNames[categoryIndex])]
+			});
 			alert('delete 성공');
 		},
 		onError(error) {
@@ -100,6 +89,7 @@ export default function Pages({ interest }: { interest: Category }) {
 	};
 
 	const buttonToggle = (userId: number, isActive: boolean, seriesId: string) => {
+		console.log(user);
 		if (isActive) {
 			deleteFavoriteMutation.mutate({ userId: userId, seriesId: seriesId });
 		} else {
@@ -113,6 +103,7 @@ export default function Pages({ interest }: { interest: Category }) {
 	}, [router.query]);
 
 	useEffect(() => {
+		// console.log(enhancedCategoryWithIsActive);
 		if (isCategoryExist && category && isFavoriteExist && favorite) {
 			const categoryWithIsActive = category.map((item: Seriess) => ({
 				...item,
@@ -125,9 +116,16 @@ export default function Pages({ interest }: { interest: Category }) {
 				});
 			});
 
+			// console.log(favorite);
 			setEnhancedCategoryWithActive(categoryWithIsActive);
 		}
-	}, [category, isCategoryExist, isFavoriteExist, favorite]);
+	}, [category]);
+
+	useEffect(() => {
+		getFavorite(user.id, changeNameToCategoryId(categoryNames[categoryIndex])).then(favorites =>
+			console.log(favorites)
+		);
+	}, [enhancedCategoryWithIsActive]);
 
 	return (
 		<>
@@ -193,7 +191,8 @@ export default function Pages({ interest }: { interest: Category }) {
 									</IndicatorCard>
 								);
 						  })
-						: category.map((series: Seriess, idx: number) => {
+						: category &&
+						  category.map((series: Seriess, idx: number) => {
 								let notes;
 								const title = series.title;
 								const seriesId = series.id;
