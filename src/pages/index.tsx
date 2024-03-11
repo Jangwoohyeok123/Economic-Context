@@ -81,6 +81,7 @@ export default function Pages({ interest }: { interest: Category }) {
 		if (authCode) setJwtAndUserData(authCode as string);
 	}, [router.query]);
 
+	//
 	return (
 		<>
 			<main className={clsx(styles.Home, poppins.variable, roboto.variable)}>
