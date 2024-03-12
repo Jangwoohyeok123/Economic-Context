@@ -2,7 +2,6 @@
 	font-family: var(--baseFont);
 	width: 70%;
 	margin: 0 auto;
-	margin-bottom: 50px;
 
 	.mainImage {
 		width: 100vw;
@@ -83,5 +82,12 @@
 				}
 			}
 		}
+	}
+
+	.pagination {
+		padding: 50px;
+		display: flex;
+		justify-content: center;
+		gap: 20px;
 	}
 }
