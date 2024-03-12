@@ -33,7 +33,7 @@ export default function Pages({ interest }: { interest: Category }) {
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 	const [isChartModalOpen, setIsChartModalOpen] = useState(false);
 	const [enhancedCategoryWithIsActive, setEnhancedCategoryWithActive] = useState<SeriessWithIsActive[]>([]);
-	const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태
+	const [currentPage, setCurrentPage] = useState(0);
 	const itemsPerPage = 9;
 
 	const { data: category, isSuccess: isCategoryExist } = useQuery({
@@ -93,16 +93,16 @@ export default function Pages({ interest }: { interest: Category }) {
 
 	const saveButtonToggle = (userId: number, isActive: boolean, seriesId: string) => {
 		if (isActive) {
-			deleteFavoriteMutation.mutate({ userId: userId, seriesId: seriesId });
+			deleteFavoriteMutation.mutate({ userId, seriesId });
 		} else {
-			addFavoriteMutation.mutate({ userId: userId, seriesId: seriesId });
+			addFavoriteMutation.mutate({ userId, seriesId });
 		}
 	};
 
 	useEffect(() => {
 		const authCode = router.query.code;
 		if (authCode) setJwtAndUserData(authCode as string);
-	}, [router.query]);
+	}, []);
 
 	useEffect(() => {
 		if (isCategoryExist && category && isFavoriteExist && favorite) {
@@ -147,24 +147,25 @@ export default function Pages({ interest }: { interest: Category }) {
 						? enhancedCategoryWithIsActive
 								.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
 								.map((series: SeriessWithIsActive, idx: number) => {
-									let notes;
-									const title = series.title;
-									const seriesId = series.id;
-									const frequecy = series.frequency;
-									const popularity = series.popularity;
-									const observation_start = series.observation_start;
-									const observation_end = series.observation_end;
-									const isActive = series.isActive;
-									if (series.notes) notes = series.notes;
+									const {
+										title,
+										id: seriesId,
+										frequency,
+										popularity,
+										observation_start,
+										observation_end,
+										isActive
+									} = series;
+									const notes = series.notes ?? '';
 									return (
 										<IndicatorCard
 											key={idx}
 											title={title}
 											seriesId={seriesId}
 											categoryId={changeNameToCategoryId(categoryNames[categoryIndex])}
-											frequency={frequecy}
+											frequency={frequency}
 											popularity={popularity}
-											notes={notes ? notes : ''}
+											notes={notes}
 											observation_end={observation_end}
 											observation_start={observation_start}
 											className={styles.IndicatorCard}>
@@ -194,14 +195,8 @@ export default function Pages({ interest }: { interest: Category }) {
 						  category
 								.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
 								.map((series: Seriess, idx: number) => {
-									let notes;
-									const title = series.title;
-									const seriesId = series.id;
-									const frequecy = series.frequency;
-									const popularity = series.popularity;
-									const observation_start = series.observation_start;
-									const observation_end = series.observation_end;
-									if (series.notes) notes = series.notes;
+									const { title, id: seriesId, frequency, popularity, observation_start, observation_end } = series;
+									const notes = series.notes ?? '';
 
 									return (
 										<IndicatorCard
@@ -209,7 +204,7 @@ export default function Pages({ interest }: { interest: Category }) {
 											title={title}
 											seriesId={seriesId}
 											categoryId={changeNameToCategoryId(categoryNames[categoryIndex])}
-											frequency={frequecy}
+											frequency={frequency}
 											popularity={popularity}
 											notes={notes ? notes : ''}
 											observation_end={observation_end}
