@@ -17,6 +17,8 @@ import User, { IndicatorWithIsActive } from '@/types/userInterface';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Category, Seriess, SeriessWithIsActive } from '@/types/fredInterface';
 import { addFavorite, deleteFavorite, getFavorite } from '@/backendApi/user';
+import ReactPaginate from 'react-paginate';
+import Footer from '@/components/footer/Footer';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 const DynamicChartModal = dynamic(() => import('@/components/modals/chartModal/ChartModal'), { ssr: false });
@@ -31,6 +33,9 @@ export default function Pages({ interest }: { interest: Category }) {
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 	const [isChartModalOpen, setIsChartModalOpen] = useState(false);
 	const [enhancedCategoryWithIsActive, setEnhancedCategoryWithActive] = useState<SeriessWithIsActive[]>([]);
+	const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태
+	const itemsPerPage = 9;
+
 	const { data: category, isSuccess: isCategoryExist } = useQuery({
 		queryKey: [const_queryKey.category, changeNameToCategoryId(categoryNames[categoryIndex])],
 		queryFn: () => getIndicators(changeNameToCategoryId(categoryNames[categoryIndex]))
@@ -47,8 +52,9 @@ export default function Pages({ interest }: { interest: Category }) {
 		mutationFn: ({ userId, seriesId }: { userId: number; seriesId: string }) => addFavorite(userId, seriesId),
 		onSuccess() {
 			queryClient.invalidateQueries({
-				queryKey: [const_queryKey.favorite, changeNameToCategoryId(categoryNames[categoryIndex])]
+				queryKey: [const_queryKey.favorite]
 			});
+
 			alert('add 성공');
 		},
 		onError(error) {
@@ -60,7 +66,7 @@ export default function Pages({ interest }: { interest: Category }) {
 		mutationFn: ({ userId, seriesId }: { userId: number; seriesId: string }) => deleteFavorite(userId, seriesId),
 		onSuccess() {
 			queryClient.invalidateQueries({
-				queryKey: [const_queryKey.favorite, changeNameToCategoryId(categoryNames[categoryIndex])]
+				queryKey: [const_queryKey.favorite]
 			});
 			alert('delete 성공');
 		},
@@ -78,9 +84,6 @@ export default function Pages({ interest }: { interest: Category }) {
 					const userData: User = response.data[1];
 					sessionStorage.setItem('token', jwt);
 					dispatch(login(userData));
-					router.push({
-						query: {}
-					});
 				})
 				.catch(error => {
 					console.error('Error:', error);
@@ -88,8 +91,7 @@ export default function Pages({ interest }: { interest: Category }) {
 		}
 	};
 
-	const buttonToggle = (userId: number, isActive: boolean, seriesId: string) => {
-		console.log(user);
+	const saveButtonToggle = (userId: number, isActive: boolean, seriesId: string) => {
 		if (isActive) {
 			deleteFavoriteMutation.mutate({ userId: userId, seriesId: seriesId });
 		} else {
@@ -103,7 +105,6 @@ export default function Pages({ interest }: { interest: Category }) {
 	}, [router.query]);
 
 	useEffect(() => {
-		// console.log(enhancedCategoryWithIsActive);
 		if (isCategoryExist && category && isFavoriteExist && favorite) {
 			const categoryWithIsActive = category.map((item: Seriess) => ({
 				...item,
@@ -116,16 +117,9 @@ export default function Pages({ interest }: { interest: Category }) {
 				});
 			});
 
-			// console.log(favorite);
 			setEnhancedCategoryWithActive(categoryWithIsActive);
 		}
-	}, [category]);
-
-	useEffect(() => {
-		getFavorite(user.id, changeNameToCategoryId(categoryNames[categoryIndex])).then(favorites =>
-			console.log(favorites)
-		);
-	}, [enhancedCategoryWithIsActive]);
+	}, [category, currentPage, favorite]);
 
 	return (
 		<>
@@ -139,7 +133,10 @@ export default function Pages({ interest }: { interest: Category }) {
 							<button
 								className={clsx(categoryIndex === idx ? styles.on : '')}
 								key={idx}
-								onClick={() => setCategoryIndex(idx)}>
+								onClick={() => {
+									setCategoryIndex(idx);
+									setCurrentPage(0);
+								}}>
 								{categoryNames[idx]}
 							</button>
 						);
@@ -147,86 +144,105 @@ export default function Pages({ interest }: { interest: Category }) {
 				</div>
 				<figure className={clsx(styles.category)}>
 					{user.isLogin
-						? enhancedCategoryWithIsActive.map((series: SeriessWithIsActive, idx: number) => {
-								let notes;
-								const title = series.title;
-								const seriesId = series.id;
-								const frequecy = series.frequency;
-								const popularity = series.popularity;
-								const observation_start = series.observation_start;
-								const observation_end = series.observation_end;
-								const isActive = series.isActive;
-								if (series.notes) notes = series.notes;
-								return (
-									<IndicatorCard
-										key={idx}
-										title={title}
-										seriesId={seriesId}
-										categoryId={changeNameToCategoryId(categoryNames[categoryIndex])}
-										frequency={frequecy}
-										popularity={popularity}
-										notes={notes ? notes : ''}
-										observation_end={observation_end}
-										observation_start={observation_start}
-										className={styles.IndicatorCard}>
-										<div>
-											{notes ? (
-												<p>{notes}</p>
-											) : (
-												<p>This indicator does not have information about the indicator description.</p>
-											)}
-										</div>
-										<button
-											className={clsx(isActive ? styles.on : '')}
-											onClick={() => {
-												buttonToggle(user.id, isActive, seriesId);
-												setEnhancedCategoryWithActive(prevArray => {
-													return prevArray.map((item, mapIndex) => {
-														return mapIndex === idx ? { ...item, isActive: !item.isActive } : item;
+						? enhancedCategoryWithIsActive
+								.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
+								.map((series: SeriessWithIsActive, idx: number) => {
+									let notes;
+									const title = series.title;
+									const seriesId = series.id;
+									const frequecy = series.frequency;
+									const popularity = series.popularity;
+									const observation_start = series.observation_start;
+									const observation_end = series.observation_end;
+									const isActive = series.isActive;
+									if (series.notes) notes = series.notes;
+									return (
+										<IndicatorCard
+											key={idx}
+											title={title}
+											seriesId={seriesId}
+											categoryId={changeNameToCategoryId(categoryNames[categoryIndex])}
+											frequency={frequecy}
+											popularity={popularity}
+											notes={notes ? notes : ''}
+											observation_end={observation_end}
+											observation_start={observation_start}
+											className={styles.IndicatorCard}>
+											<div>
+												{notes ? (
+													<p>{notes}</p>
+												) : (
+													<p>This indicator does not have information about the indicator description.</p>
+												)}
+											</div>
+											<button
+												className={clsx(isActive ? styles.on : '')}
+												onClick={() => {
+													saveButtonToggle(user.id, isActive, seriesId);
+													setEnhancedCategoryWithActive(prevArray => {
+														return prevArray.map((item, mapIndex) => {
+															return mapIndex === idx ? { ...item, isActive: !item.isActive } : item;
+														});
 													});
-												});
-											}}>
-											save
-										</button>
-									</IndicatorCard>
-								);
-						  })
+												}}>
+												save
+											</button>
+										</IndicatorCard>
+									);
+								})
 						: category &&
-						  category.map((series: Seriess, idx: number) => {
-								let notes;
-								const title = series.title;
-								const seriesId = series.id;
-								const frequecy = series.frequency;
-								const popularity = series.popularity;
-								const observation_start = series.observation_start;
-								const observation_end = series.observation_end;
-								if (series.notes) notes = series.notes;
+						  category
+								.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
+								.map((series: Seriess, idx: number) => {
+									let notes;
+									const title = series.title;
+									const seriesId = series.id;
+									const frequecy = series.frequency;
+									const popularity = series.popularity;
+									const observation_start = series.observation_start;
+									const observation_end = series.observation_end;
+									if (series.notes) notes = series.notes;
 
-								return (
-									<IndicatorCard
-										key={idx}
-										title={title}
-										seriesId={seriesId}
-										categoryId={changeNameToCategoryId(categoryNames[categoryIndex])}
-										frequency={frequecy}
-										popularity={popularity}
-										notes={notes ? notes : ''}
-										observation_end={observation_end}
-										observation_start={observation_start}
-										className={styles.IndicatorCard}>
-										<div>
-											{notes ? (
-												<p>{notes}</p>
-											) : (
-												<p>This indicator does not have information about the indicator description.</p>
-											)}
-										</div>
-										<button onClick={() => setIsAlertModalOpen(true)}>save</button>
-									</IndicatorCard>
-								);
-						  })}
+									return (
+										<IndicatorCard
+											key={idx}
+											title={title}
+											seriesId={seriesId}
+											categoryId={changeNameToCategoryId(categoryNames[categoryIndex])}
+											frequency={frequecy}
+											popularity={popularity}
+											notes={notes ? notes : ''}
+											observation_end={observation_end}
+											observation_start={observation_start}
+											className={styles.IndicatorCard}>
+											<div>
+												{notes ? (
+													<p>{notes}</p>
+												) : (
+													<p>This indicator does not have information about the indicator description.</p>
+												)}
+											</div>
+											<button onClick={() => setIsAlertModalOpen(true)}>save</button>
+										</IndicatorCard>
+									);
+								})}
 				</figure>
+				{category && (
+					<ReactPaginate
+						pageCount={Math.ceil(category.length / itemsPerPage)}
+						previousAriaLabel='이전'
+						previousLabel='Prev'
+						pageRangeDisplayed={5}
+						marginPagesDisplayed={0}
+						onPageChange={event => setCurrentPage(event.selected)}
+						containerClassName={styles.pagination}
+						breakLabel={null}
+						forcePage={currentPage}
+						activeClassName={styles.paginationActive}
+					/>
+				)}
 			</main>
+			<Footer />
 			<DynamicAlertModal
 				isModalOpen={isAlertModalOpen}
 				setIsModalOpen={setIsAlertModalOpen}
