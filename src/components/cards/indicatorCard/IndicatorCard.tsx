@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import styles from './IndicatorCard.module.scss';
 import { cleanString } from '@/utils/cleanString';
+import { useRouter } from 'next/router';
 
 interface IndicatorCardProps {
 	children: React.ReactNode;
@@ -27,9 +28,13 @@ export default function IndicatorCard({
 	observation_start,
 	className
 }: IndicatorCardProps) {
+	const router = useRouter();
+	const localRoutingUrl = 'http://localhost:3000';
+	const routeMorePage = (seriesId: string) => router.push(`${localRoutingUrl}/${seriesId}`);
+
 	return (
 		<div className={clsx(styles.cardWrap)}>
-			<div className={clsx(styles.IndicatorCard, className)}>
+			<div className={clsx(styles.IndicatorCard, className)} onClick={() => routeMorePage(seriesId)}>
 				<div className={styles.header}>
 					<h3>{cleanString(title)}</h3>
 					<div className={clsx(styles.period)}>

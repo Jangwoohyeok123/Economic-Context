@@ -6,6 +6,13 @@ $mobile: 650px;
 	background: #fff;
 	font-family: var(--baseFont);
 	box-shadow: 10px 10px 20px #dedede;
+	transition: 0.3s;
+
+	&:hover {
+		scale: 1.04;
+		cursor: pointer;
+		outline: 1px solid #111;
+	}
 
 	.IndicatorCard {
 		width: 100%;
