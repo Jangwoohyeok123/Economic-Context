@@ -11,11 +11,11 @@ interface IndicatorsProps {
 	setCategoryIndex: Dispatch<SetStateAction<number>>;
 }
 
-export default function Indicators({ Categorys, CategoryIndex, setCategoryIndex }: IndicatorsProps) {
+export default function IndicatorsTab({ Categorys, CategoryIndex, setCategoryIndex }: IndicatorsProps) {
 	const [isOpenConfirmContext, setIsOpenConfirmContext] = useState(false);
 
 	return (
-		<div className={clsx(styles.Indicators)}>
+		<div className={clsx(styles.IndicatorsTab)}>
 			<nav>
 				{Categorys.map((category, idx) => {
 					return (
