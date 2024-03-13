@@ -4,8 +4,8 @@ import clsx from 'clsx';
 import { useState } from 'react';
 import Menu from '@/components/menu/Menu';
 import Dashheader from '@/components/dashheader/DashHeader';
-import Indicators from '@/components/indicators/Indicators';
-import MyContext from '@/components/myContext/MyContext';
+import IndicatorsTab from '@/components/indicatorsTab/IndicatorsTab';
+import MyContextTab from '@/components/myContext/MyContext';
 
 export default function Dashboard() {
 	const [Tabs] = useState(['Indicators', 'MyContext']);
@@ -41,9 +41,9 @@ export default function Dashboard() {
 				<Dashheader Tabs={Tabs} TabsIndex={TabsIndex} />
 
 				{Tabs[TabsIndex] === 'Indicators' ? (
-					<Indicators Categorys={Categorys} CategoryIndex={CategoryIndex} setCategoryIndex={setCategoryIndex} />
+					<IndicatorsTab Categorys={Categorys} CategoryIndex={CategoryIndex} setCategoryIndex={setCategoryIndex} />
 				) : (
-					<MyContext />
+					<MyContextTab />
 				)}
 			</section>
 		</div>

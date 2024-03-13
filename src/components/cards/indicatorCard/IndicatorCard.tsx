@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import styles from './IndicatorCard.module.scss';
-import { discontinueDelete } from '@/utils/deleteDiscontinue';
+import { cleanString } from '@/utils/cleanString';
+import { useEffect, useRef } from 'react';
 
 interface IndicatorCardProps {
 	children: React.ReactNode;
@@ -31,14 +32,13 @@ export default function IndicatorCard({
 		<div className={clsx(styles.cardWrap)}>
 			<div className={clsx(styles.IndicatorCard, className)}>
 				<div className={styles.header}>
-					<h3>{discontinueDelete(title)}</h3>
+					<h3>{cleanString(title)}</h3>
 					<div className={clsx(styles.period)}>
 						<div>
 							Period: {observation_start} ~ {observation_end}
 						</div>
 					</div>
 				</div>
-
 				{children}
 			</div>
 		</div>
