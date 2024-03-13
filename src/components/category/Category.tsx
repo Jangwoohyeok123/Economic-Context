@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import styles from './Category.module.scss';
 import { Seriess_Type } from '@/types/fredInterface';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
-import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
+import BubblePopButton from '../bubblePopButton/BubblePopButton';
 
 interface Category_Intercae {
 	categoryData: Seriess_Type[];
@@ -19,6 +19,11 @@ export default function Category({
 	categoryId,
 	setIsAlertModalOpen
 }: Category_Intercae) {
+	const buttonClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		event.stopPropagation();
+		setIsAlertModalOpen(true);
+	};
+
 	return (
 		<figure className={clsx(styles.Category)}>
 			{categoryData
@@ -46,7 +51,12 @@ export default function Category({
 									<p>This indicator does not have information about the indicator description.</p>
 								)}
 							</div>
-							<button onClick={() => setIsAlertModalOpen(true)}>save</button>
+							<BubblePopButton
+								clickHandler={() => {
+									setIsAlertModalOpen(true);
+								}}>
+								save
+							</BubblePopButton>
 						</IndicatorCard>
 					);
 				})}

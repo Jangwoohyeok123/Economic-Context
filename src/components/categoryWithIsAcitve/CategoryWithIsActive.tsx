@@ -7,6 +7,9 @@ import { addFavorite, deleteFavorite, getFavorite } from '@/backendApi/user';
 import const_queryKey from '@/const/queryKey';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
+import BubblePopButton from '../bubblePopButton/BubblePopButton';
+import { Store } from '@/types/redux';
+import { IndicatorWithIsActive } from '@/types/userInterface';
 
 interface CategoryWithIsActive_Intercae {
 	categoryData: Seriess_Type[];
@@ -109,9 +112,9 @@ export default function CategoryWithIsActive({
 									<p>This indicator does not have information about the indicator description.</p>
 								)}
 							</div>
-							<button
+							<BubblePopButton
 								className={clsx(isActive ? styles.on : '')}
-								onClick={() => {
+								clickHandler={() => {
 									saveButtonToggle(user.id, isActive, seriesId);
 									setCategoryWithActive(prevArray => {
 										return prevArray.map((item, mapIndex) => {
@@ -120,7 +123,7 @@ export default function CategoryWithIsActive({
 									});
 								}}>
 								{isActive ? 'remove' : 'save'}
-							</button>
+							</BubblePopButton>
 						</IndicatorCard>
 					);
 				})}
