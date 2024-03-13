@@ -38,8 +38,7 @@ export const getIndicators = async (categoryId: number) => {
 export const getChartData = async (seriesId: string) => {
 	try {
 		const response = await axios.get(`/api/chartValues?seriesId=${seriesId}`);
-		console.log('chartData');
-		console.log(response);
+		const { realtime_start, realtime_end } = response.data;
 		const dataArray = response.data.observations.map((element: DataItem) => {
 			if (element.value === '.') element.value = 0;
 			return {
@@ -48,14 +47,15 @@ export const getChartData = async (seriesId: string) => {
 			};
 		});
 
-		return dataArray;
+		return { realtime_start, realtime_end, dataArray };
 	} catch (error) {
-		if (axios.isAxiosError(error)) {
-			console.error('Error fetching data: ', error.message);
-		} else {
-			console.error('Unexpected Error', error);
-		}
+		console.error('Error fetching data: ', error);
 
-		return [];
+		return {
+			realtime_start: null,
+			realtime_end: null,
+			dataArray: [],
+			error: 'Error fetching data'
+		};
 	}
 };
