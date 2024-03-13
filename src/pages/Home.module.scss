@@ -39,52 +39,6 @@
 	}
 
 	// dataIndex === buttonIndex(by map)
-	.category {
-		padding-top: 50px;
-		display: grid;
-		width: 100%;
-		grid-template-columns: 30% 30% 30%;
-		justify-content: space-between;
-		row-gap: 50px;
-
-		.IndicatorCard {
-			width: 100%;
-			height: 350px;
-			display: flex;
-			flex-direction: column;
-			justify-content: space-between;
-
-			div {
-				p {
-					padding-top: 10px;
-					display: -webkit-box;
-					-webkit-line-clamp: 4;
-					-webkit-box-orient: vertical;
-					overflow: hidden;
-					text-overflow: ellipsis;
-				}
-			}
-
-			button {
-				width: 100%;
-				height: 50px;
-				border: none;
-				cursor: pointer;
-				transition: 0.2s;
-
-				&:hover {
-					color: #fff;
-					background: #111;
-				}
-
-				&.on {
-					color: #fff;
-					background: #111;
-				}
-			}
-		}
-	}
-
 	.pagination {
 		padding: 50px;
 		display: flex;

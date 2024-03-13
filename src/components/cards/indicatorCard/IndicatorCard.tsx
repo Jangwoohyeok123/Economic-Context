@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 import styles from './IndicatorCard.module.scss';
 import { cleanString } from '@/utils/cleanString';
-import { useEffect, useRef } from 'react';
 
 interface IndicatorCardProps {
 	children: React.ReactNode;

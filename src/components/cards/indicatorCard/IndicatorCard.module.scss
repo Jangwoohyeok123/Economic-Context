@@ -8,6 +8,41 @@ $mobile: 650px;
 	box-shadow: 10px 10px 20px #dedede;
 
 	.IndicatorCard {
+		width: 100%;
+		height: 350px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+
+		div {
+			p {
+				padding-top: 10px;
+				display: -webkit-box;
+				-webkit-line-clamp: 4;
+				-webkit-box-orient: vertical;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+		}
+
+		button {
+			width: 100%;
+			height: 50px;
+			border: none;
+			cursor: pointer;
+			transition: 0.2s;
+
+			&:hover {
+				color: #fff;
+				background: #111;
+			}
+
+			&.on {
+				color: #fff;
+				background: #111;
+			}
+		}
+
 		.header {
 			h3 {
 				margin-bottom: 10px;
