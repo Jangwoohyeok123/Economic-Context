@@ -1,21 +1,21 @@
 // util 타입을 좀 사용해보자 pick ommit
 export type Seriess_Type = {
-	frequency: string;
-	frequency_short: string;
-	group_popularity: number;
+	frequency?: string;
+	frequency_short?: string;
+	group_popularity?: number;
 	id: string;
-	last_updated: string;
+	last_updated?: string;
 	notes?: string;
-	observation_end: string;
-	observation_start: string;
-	popularity: number;
-	realtime_end: string;
-	realtime_start: string;
-	seasonal_adjustment: string;
-	seasonal_adjustment_short: string;
+	observation_end?: string;
+	observation_start?: string;
+	popularity?: number;
+	realtime_end?: string;
+	realtime_start?: string;
+	seasonal_adjustment?: string;
+	seasonal_adjustment_short?: string;
 	title: string;
-	units: string;
-	units_short: string;
+	units?: string;
+	units_short?: string;
 };
 
 export interface SeriessWithIsActive_Interface extends Seriess_Type {
@@ -33,7 +33,7 @@ export type Category_Type = {
 	sort_order: string;
 };
 
-type Observation = {
+export type Observation = {
 	date: string;
 	realtime_end: string;
 	realtime_start: string;
