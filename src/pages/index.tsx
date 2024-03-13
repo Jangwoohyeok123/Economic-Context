@@ -20,6 +20,10 @@ import { addFavorite, deleteFavorite, getFavorite } from '@/backendApi/user';
 import ReactPaginate from 'react-paginate';
 import Footer from '@/components/footer/Footer';
 
+/* 
+	실행부분은 한눈에 보이게 선언부분은 복잡함을 담당하기 => 이 때 쪼개기를 잘 활용할 것
+*/
+
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 const DynamicChartModal = dynamic(() => import('@/components/modals/chartModal/ChartModal'), { ssr: false });
 
@@ -75,6 +79,7 @@ export default function Pages({ interest }: { interest: Category }) {
 		}
 	});
 
+	// login 로직을 줄여보기
 	const setJwtAndUserData = (authCode: string) => {
 		if (authCode) {
 			axios
@@ -186,7 +191,7 @@ export default function Pages({ interest }: { interest: Category }) {
 														});
 													});
 												}}>
-												save
+												{isActive ? 'remove' : 'save'}
 											</button>
 										</IndicatorCard>
 									);
@@ -234,6 +239,9 @@ export default function Pages({ interest }: { interest: Category }) {
 						breakLabel={null}
 						forcePage={currentPage}
 						activeClassName={styles.paginationActive}
+						previousClassName={currentPage === 0 ? styles.disabled : ''}
+						nextClassName={currentPage === Math.ceil(category.length / itemsPerPage) ? styles.disabled : ''}
+						disabledClassName={styles.disabled}
 					/>
 				)}
 			</main>
