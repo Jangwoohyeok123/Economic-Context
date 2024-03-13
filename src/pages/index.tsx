@@ -33,16 +33,18 @@ export default function Pages({ interest }: { interest: Category_Type }) {
 	const [isChartModalOpen, setIsChartModalOpen] = useState(false);
 	const [currentPage, setCurrentPage] = useState(0);
 	const itemsPerPage = 9;
+	const categoryId = changeNameToCategoryId(categoryNames[categoryIndex]);
 
 	const { data: category, isSuccess: isCategorySuccess } = useQuery({
-		queryKey: [const_queryKey.category, changeNameToCategoryId(categoryNames[categoryIndex])],
-		queryFn: () => getIndicators(changeNameToCategoryId(categoryNames[categoryIndex]))
+		queryKey: [const_queryKey.category, categoryId],
+		queryFn: () => getIndicators(categoryId)
 	});
 
 	const setJwtAndUserData = (authCode: string) => {
+		const backendUrl = 'http://localhost:4000';
 		if (authCode) {
 			axios
-				.post('http://localhost:4000/auth/google', { code: authCode })
+				.post(`${backendUrl}/auth/google`, { code: authCode })
 				.then(response => {
 					const jwt = response.data[0];
 					const userData: User = response.data[1];
@@ -82,7 +84,7 @@ export default function Pages({ interest }: { interest: Category_Type }) {
 					})}
 				</div>
 				{user.isLogin
-					? isCategorySuccess && (
+					? category && (
 							<CategoryWithIsActive
 								categoryData={category}
 								currentPage={currentPage}
@@ -90,7 +92,7 @@ export default function Pages({ interest }: { interest: Category_Type }) {
 								categoryId={changeNameToCategoryId(categoryNames[categoryIndex])}
 							/>
 					  )
-					: !isCategorySuccess && (
+					: category && (
 							<Category
 								categoryData={category}
 								currentPage={currentPage}
