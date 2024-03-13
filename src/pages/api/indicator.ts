@@ -1,3 +1,4 @@
+import { Observation } from '@/types/fredType';
 import axios from 'axios';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
