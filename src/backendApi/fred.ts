@@ -38,6 +38,8 @@ export const getIndicators = async (categoryId: number) => {
 export const getChartData = async (seriesId: string) => {
 	try {
 		const response = await axios.get(`/api/chartValues?seriesId=${seriesId}`);
+		console.log('chartData');
+		console.log(response);
 		const dataArray = response.data.observations.map((element: DataItem) => {
 			if (element.value === '.') element.value = 0;
 			return {

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 type ApiResponse = {
@@ -12,11 +13,10 @@ export default async function getIndicator(req: NextApiRequest, res: NextApiResp
 	try {
 		const { seriesId } = req.query;
 
-		const response = await fetch(`${baseUrl}series?series_id=${seriesId}&api_key=${apiKey}&file_type=json`);
-		const json = await response.json();
+		const json = await axios.get(`${baseUrl}series?series_id=${seriesId}&api_key=${apiKey}&file_type=json`);
 
-		res.status(200).json(json);
+		res.status(200).json(json.data);
 	} catch (err: any) {
-		res.status(500).json('error' + err.message);
+		res.status(500).json(err.message);
 	}
 }

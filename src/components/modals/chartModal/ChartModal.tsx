@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import styles from './ChartModal.module.scss';
 import { roboto, poppins } from '@/pages/_app';
 import React, { useEffect, useState } from 'react';
-import { ChartModalProps } from '@/types/modalInterface';
+import { ChartModalProps } from '@/types/modalType';
 import LineChart from '@/components/charts/line/LineChart';
 
 /*

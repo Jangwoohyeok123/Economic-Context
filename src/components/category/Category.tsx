@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import styles from './Category.module.scss';
-import { Seriess_Type } from '@/types/fredInterface';
+import { Seriess_Type } from '@/types/fredType';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
 import BubblePopButton from '../bubblePopButton/BubblePopButton';
 

@@ -1,4 +1,4 @@
-import User from '@/types/userInterface';
+import User from '@/types/userType';
 
 // user
 export const login = (user: User) => {

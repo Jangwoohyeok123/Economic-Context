@@ -4,7 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { roboto, poppins } from '@/pages/_app';
 import checkingModalSizeAndModifyClassName from '@/utils/checkingModalSizeAndModifyClassName';
-import { ModalProps } from '@/types/modalInterface';
+import { ModalProps } from '@/types/modalType';
 
 /* 컴포넌트 설명 
 	1. size prop 을 통해 modal size 제어권 생성 (o)

@@ -32,3 +32,10 @@ export type Category_Type = {
 	seriess: Seriess_Type[];
 	sort_order: string;
 };
+
+type Observation = {
+	date: string;
+	realtime_end: string;
+	realtime_start: string;
+	value: string;
+};

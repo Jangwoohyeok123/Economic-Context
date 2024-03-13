@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import styles from './CategoryWithIsActive.module.scss';
-import { SeriessWithIsActive_Interface, Seriess_Type } from '@/types/fredInterface';
+import { SeriessWithIsActive_Interface, Seriess_Type } from '@/types/fredType';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { addFavorite, deleteFavorite, getFavorite } from '@/backendApi/user';
@@ -8,8 +8,8 @@ import const_queryKey from '@/const/queryKey';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import BubblePopButton from '../bubblePopButton/BubblePopButton';
-import { Store } from '@/types/redux';
-import { IndicatorWithIsActive } from '@/types/userInterface';
+import { Store } from '@/types/reduxType';
+import { IndicatorWithIsActive } from '@/types/userType';
 
 interface CategoryWithIsActive_Intercae {
 	categoryData: Seriess_Type[];
