@@ -19,11 +19,6 @@ export default function Category({
 	categoryId,
 	setIsAlertModalOpen
 }: Category_Intercae) {
-	const buttonClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-		event.stopPropagation();
-		setIsAlertModalOpen(true);
-	};
-
 	return (
 		<figure className={clsx(styles.Category)}>
 			{categoryData
@@ -38,11 +33,11 @@ export default function Category({
 							title={title}
 							seriesId={seriesId}
 							categoryId={categoryId}
-							frequency={frequency}
-							popularity={popularity}
+							frequency={frequency as string}
+							popularity={popularity ? popularity : 0}
 							notes={notes ? notes : ''}
-							observation_end={observation_end}
-							observation_start={observation_start}
+							observation_end={observation_end as string}
+							observation_start={observation_start as string}
 							className={styles.IndicatorCard}>
 							<div>
 								{notes ? (

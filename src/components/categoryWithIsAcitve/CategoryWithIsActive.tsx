@@ -38,7 +38,7 @@ export default function CategoryWithIsActive({
 		mutationFn: ({ userId, seriesId }: { userId: number; seriesId: string }) => addFavorite(userId, seriesId),
 		onSuccess() {
 			queryClient.invalidateQueries({
-				queryKey: [const_queryKey.favorite]
+				queryKey: [const_queryKey.favorite, categoryId]
 			});
 
 			alert('add 성공');
@@ -52,7 +52,7 @@ export default function CategoryWithIsActive({
 		mutationFn: ({ userId, seriesId }: { userId: number; seriesId: string }) => deleteFavorite(userId, seriesId),
 		onSuccess() {
 			queryClient.invalidateQueries({
-				queryKey: [const_queryKey.favorite]
+				queryKey: [const_queryKey.favorite, categoryId]
 			});
 			alert('delete 성공');
 		},
@@ -99,11 +99,11 @@ export default function CategoryWithIsActive({
 							title={title}
 							seriesId={seriesId}
 							categoryId={categoryId}
-							frequency={frequency}
-							popularity={popularity}
+							frequency={frequency as string}
+							popularity={popularity as number}
 							notes={notes}
-							observation_end={observation_end}
-							observation_start={observation_start}
+							observation_end={observation_end as string}
+							observation_start={observation_start as string}
 							className={styles.IndicatorCard}>
 							<div>
 								{notes ? (
