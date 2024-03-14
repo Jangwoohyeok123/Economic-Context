@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import styles from './CategoryId.module.scss';
+import styles from './Morepage.module.scss';
 import dynamic from 'next/dynamic';
 import { Store } from '@/types/reduxType';
 import LineChart from '@/components/charts/line/LineChart';
@@ -22,7 +22,7 @@ interface DataItem {
 	value: number;
 }
 
-export default function IndicatorId() {
+export default function Morepage() {
 	const router = useRouter();
 	const user = useSelector((state: Store) => state.user);
 	const queryClient = useQueryClient();
@@ -148,7 +148,7 @@ export default function IndicatorId() {
 
 	return (
 		<>
-			<main className={clsx(styles.CategoryId, poppins.variable, roboto.variable)}>
+			<main className={clsx(styles.Morepage, poppins.variable, roboto.variable)}>
 				{chartDatas.length && indicators && (
 					<LineChart indicators={indicators} values={chartDatas}>
 						{user.isLogin ? (
