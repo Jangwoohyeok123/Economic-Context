@@ -14,7 +14,7 @@ interface DataItem {
 
 export default function CategoryId() {
 	const router = useRouter();
-	const { id: seriesId, cleandTitle } = router.query;
+	const { id: seriesId, title } = router.query;
 	const [chartDatas, setChartDatas] = useState<DataItem[]>([]);
 	const [indicators, setIndicators] = useState<Seriess_Type>({
 		id: '',
@@ -39,7 +39,7 @@ export default function CategoryId() {
 			setIndicators(prev => ({
 				...prev,
 				seriesId: id,
-				cleandTitle, // Indicator card 가 query parmeter 로 전달한 값입니다.
+				title: title as string,
 				notes: notes ?? '',
 				observation_start,
 				observation_end
