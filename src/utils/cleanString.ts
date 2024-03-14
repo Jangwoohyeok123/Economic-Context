@@ -15,19 +15,19 @@
 const MAX_LENGTH = 30;
 const DISCONTINUED = '(DISCONTINUED)';
 
-const shortenTitle = (title: string, maxLength: number) => {
+export const shortenTitle = (title: string, maxLength: number) => {
 	return title.length > maxLength ? `${title.split(' ').slice(0, 10).join(' ')}` : title;
 };
 
-const removeSuffix = (title: string, suffix: string) => {
+export const removeSuffix = (title: string, suffix: string) => {
 	return title.endsWith(suffix) ? title.slice(0, -suffix.length) : title;
 };
 
-const removeComma = (title: string) => {
+export const removeComma = (title: string) => {
 	return title.endsWith(',') ? `${title.slice(0, -1).trim()}...` : title;
 };
 
-export const cleanString = (title: string) => {
+export const cleanString = (title: string, maxLength?: number, string?: string) => {
 	let cleanedString = title;
 
 	// 다른 사람이 이 파일을 확인할 때 봐야할 부분
