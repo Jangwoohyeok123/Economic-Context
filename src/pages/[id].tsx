@@ -1,11 +1,21 @@
 import clsx from 'clsx';
 import styles from './CategoryId.module.scss';
+import dynamic from 'next/dynamic';
+import { Store } from '@/types/reduxType';
 import LineChart from '@/components/charts/line/LineChart';
+import { Indicator } from '@/types/userType';
 import { useRouter } from 'next/router';
+import const_queryKey from '@/const/queryKey';
+import { useSelector } from 'react-redux';
+import { cleanString } from '@/utils/cleanString';
+import { Seriess_Type } from '@/types/fredType';
+import { poppins, roboto } from './_app';
 import { useEffect, useState } from 'react';
 import { getChartData, getIndicator } from '@/backendApi/fred';
-import { poppins, roboto } from './_app';
-import { Seriess_Type } from '@/types/fredType';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { addFavorite, deleteFavorite, getFavorite } from '@/backendApi/user';
+
+const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
 interface DataItem {
 	date: Date;
@@ -14,7 +24,11 @@ interface DataItem {
 
 export default function IndicatorId() {
 	const router = useRouter();
-	const { id, title } = router.query;
+	const user = useSelector((state: Store) => state.user);
+	const queryClient = useQueryClient();
+	const { id, title, categoryId } = router.query;
+	const [isActive, setIsActive] = useState(false);
+	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 	const [chartDatas, setChartDatas] = useState<DataItem[]>([]);
 	const [indicators, setIndicators] = useState<Seriess_Type>({
 		id: '',
@@ -31,6 +45,57 @@ export default function IndicatorId() {
 		seasonal_adjustment_short: ''
 	});
 
+	const { data: favorite, isSuccess: isFavoriteExist } = useQuery({
+		queryKey: [const_queryKey.favorite, categoryId],
+		queryFn: () => getFavorite(user.id, Number(categoryId))
+	});
+
+	const addFavoriteMutation = useMutation({
+		mutationFn: ({ userId, seriesId }: { userId: number; seriesId: string }) => addFavorite(userId, seriesId),
+		onSuccess() {
+			queryClient.invalidateQueries({
+				queryKey: [const_queryKey.favorite]
+			});
+
+			alert('add 성공');
+		},
+		onError(error) {
+			console.error(error);
+		}
+	});
+
+	const deleteFavoriteMutation = useMutation({
+		mutationFn: ({ userId, seriesId }: { userId: number; seriesId: string }) => deleteFavorite(userId, seriesId),
+		onSuccess() {
+			queryClient.invalidateQueries({
+				queryKey: [const_queryKey.favorite]
+			});
+			alert('delete 성공');
+		},
+		onError(error) {
+			console.error(error);
+		}
+	});
+
+	// 클릭하면 favorite 에 있다면 active 상태로서 delete, 없다면 add
+	const buttonHandler = () => {
+		if (!user.isLogin) {
+			setIsAlertModalOpen(true);
+			return;
+		}
+
+		const isFind = favorite.find((indicator: Indicator) => indicator.seriesId === id);
+
+		if (isFind) {
+			deleteFavoriteMutation.mutate({ userId: user.id, seriesId: id as string });
+			setIsActive(!isActive);
+		} else {
+			addFavoriteMutation.mutate({ userId: user.id, seriesId: id as string });
+			setIsActive(!isActive);
+		}
+	};
+
+	// 화면을 구성하는데 필요한 정보를 get 하는 useEffect
 	useEffect(() => {
 		getChartData(id as string)
 			.then(chartDatas => {
@@ -44,6 +109,7 @@ export default function IndicatorId() {
 		getIndicator(id as string).then((indicator: Seriess_Type) => {
 			const {
 				id,
+				title,
 				notes,
 				observation_start,
 				observation_end,
@@ -58,7 +124,7 @@ export default function IndicatorId() {
 			setIndicators(prev => ({
 				...prev,
 				id,
-				title: title as string, // Indicator 카드 컴포넌트에게서 router.query 를 통해 전달받은 값입니다.
+				title: cleanString(title), // Indicator 카드 컴포넌트에게서 router.query 를 통해 전달받은 값입니다.
 				notes: notes ?? '',
 				observation_start,
 				observation_end,
@@ -71,10 +137,42 @@ export default function IndicatorId() {
 		});
 	}, []);
 
+	// save, delete 상황을 확인하는 useEffect
+	useEffect(() => {
+		if (favorite?.some((el: Indicator) => el.seriesId == id)) {
+			setIsActive(true);
+		} else {
+			setIsActive(false);
+		}
+	}, [favorite]);
+
 	return (
-		<main className={clsx(styles.CategoryId, poppins.variable, roboto.variable)}>
-			{chartDatas.length && indicators && <LineChart indicators={indicators} values={chartDatas} />}
-		</main>
+		<>
+			<main className={clsx(styles.CategoryId, poppins.variable, roboto.variable)}>
+				{chartDatas.length && indicators && (
+					<LineChart indicators={indicators} values={chartDatas}>
+						{user.isLogin ? (
+							<button className={isActive ? clsx(styles.on) : clsx('')} onClick={buttonHandler}>
+								{isActive ? 'delete' : 'save'}
+							</button>
+						) : (
+							<button onClick={buttonHandler}>save</button>
+						)}
+					</LineChart>
+				)}
+			</main>
+			<DynamicAlertModal
+				isModalOpen={isAlertModalOpen}
+				setIsModalOpen={setIsAlertModalOpen}
+				size='small'
+				header='You need to login!'
+				body='Our service is required to login'
+				leftButtonContent='Cancle'
+				leftButtonHandler={() => setIsAlertModalOpen(false)}
+				rightButtonContent='Login'
+				rightButtonHandler={() => (window.location.href = 'http://localhost:3000/login')}
+			/>
+		</>
 	);
 }
 
