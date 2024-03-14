@@ -11,20 +11,21 @@ interface Value {
 
 interface LineChartProps {
 	indicators: Seriess_Type;
+	children: React.ReactElement;
 	values: Value[];
 	className?: string;
 }
-
-// width, height, marginTop, marginRight, marginBottom, marginLeft,
-// 예약어를 안쓰기
 
 /* 
 	Line chart 컴포넌트는 아래의 정보를 담고 있어야 한다. 
 	1. chart 정보 
 	2. chart 에 관련한 텍스트 정보
 	3. 현재 풀스크린만 대비하고 반응형은 나중에 작업한다.
+
+	이슈사항 
+	ButtonComponent 는 favorite 정보와 동기화 시켜야 하기 때문에 categoryId 가 필요하다 
 */
-const LineChart = ({ indicators, values, className }: LineChartProps) => {
+const LineChart = ({ indicators, values, children, className }: LineChartProps) => {
 	const svgRef = useRef<SVGSVGElement>(null);
 	const svgContainerRef = useRef<HTMLDivElement>(null);
 	const compoenetRootDivRef = useRef<HTMLDivElement>(null);
@@ -126,7 +127,7 @@ const LineChart = ({ indicators, values, className }: LineChartProps) => {
 							<span>Period</span> : {indicators.observation_start} ~ {indicators.observation_end}
 						</div>
 					</div>
-					<button>save</button>
+					{children}
 				</div>
 			</div>
 		</div>
