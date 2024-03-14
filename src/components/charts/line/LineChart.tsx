@@ -2,20 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import clsx from 'clsx';
 import styles from './LineChart.module.scss';
-
-/* LineChart 에게 원하는 것 
-	1. prop 으로 value, title 전달하기 (o)
-	2. 비율은 scss 로 처리할 수 있게 만들기 (o)
-	3. 컴포넌트에서 title 표기해주기 (o)
-	4. LineChart의 width, height 제어권을 사용하는 컴포넌트의 scss에게 넘겨주기 (o) => prop 으로 className 부여
-	5. 마우스를 hover 했을 때 date 와 value 가 보이는 tooltip 연동해놓기 (x)
-*/
-
-/* 요구사항 업데이트
-	1.
-	2. 
-	3. 
-*/
+import { Seriess_Type } from '@/types/fredType';
 
 interface Value {
 	date: Date;
@@ -23,17 +10,26 @@ interface Value {
 }
 
 interface LineChartProps {
-	title: string;
+	indicators: Seriess_Type;
 	values: Value[];
 	className?: string;
 }
+
 // width, height, marginTop, marginRight, marginBottom, marginLeft,
 // 예약어를 안쓰기
-const LineChart = ({ title, values, className }: LineChartProps) => {
+
+/* 
+	Line chart 컴포넌트는 아래의 정보를 담고 있어야 한다. 
+	1. chart 정보 
+	2. chart 에 관련한 텍스트 정보
+	3. 현재 풀스크린만 대비하고 반응형은 나중에 작업한다.
+*/
+const LineChart = ({ indicators, values, className }: LineChartProps) => {
 	const svgRef = useRef<SVGSVGElement>(null);
 	const svgContainerRef = useRef<HTMLDivElement>(null);
 	const compoenetRootDivRef = useRef<HTMLDivElement>(null);
 
+	// chart 를 세팅하는 라이브러리 로직입니다.
 	useEffect(() => {
 		const width = svgContainerRef.current?.offsetWidth;
 		const height = svgContainerRef.current?.offsetHeight;
@@ -98,40 +94,43 @@ const LineChart = ({ title, values, className }: LineChartProps) => {
 
 	return (
 		<div className={clsx(styles.LineChart, className)}>
-			<h4 className={clsx(styles.header)}>{title}</h4>
+			<div className={clsx(styles.featuresWrap)}>
+				<h3>{indicators.title}</h3>
+				<div className={clsx(styles.chartFeatures)}>
+					Period: {indicators.observation_start} ~ {indicators.observation_end}
+					{/* <span>기능1</span>
+					<span>기능2</span>
+					<span>기능3</span>
+					<span>기능4</span>
+					<span>기능5</span> */}
+				</div>
+			</div>
 			<div ref={svgContainerRef} className={clsx(styles.chartContainer)}>
-				<svg ref={svgRef} />
+				<div className={clsx(styles.svgWrap)}>
+					<svg ref={svgRef} />
+				</div>
+			</div>
+			<div className={clsx(styles.chartDescription)}>
+				<h3>{indicators.title}</h3>
+				<p className={clsx(styles.notes)}>{indicators.notes}</p>
+				<div className={clsx(styles.additional)}>
+					<div>
+						<div>
+							<span>Frequency</span> : {indicators.frequency ? indicators.frequency : 'hello'}
+						</div>
+						<div>
+							<span>Continued</span> :
+							{indicators.observation_end === indicators.realtime_end ? ' continued' : ' discontinued'}
+						</div>
+						<div>
+							<span>Period</span> : {indicators.observation_start} ~ {indicators.observation_end}
+						</div>
+					</div>
+					<button>save</button>
+				</div>
 			</div>
 		</div>
 	);
 };
 
 export default LineChart;
-
-/* tooltip 적용 
-	=> blueprint 코드
-	=> useEffect 내부에 추가하면 됨
-
-	const tooltip = d3.select(svgContainerRef.current).append('div').attr('class', styles.tooltip).style('opacity', 0);
-
-	// 데이터 포인트에 마우스 이벤트 추가
-	svg
-		.selectAll('.data-point')
-		.data(values)
-		.enter()
-		.append('circle')
-		.attr('class', 'data-point')
-		.attr('cx', d => x(d.date))
-		.attr('cy', d => y(d.value))
-		.attr('r', 5)
-		.on('mouseover', (event, d) => {
-			tooltip.transition().duration(200).style('opacity', 1);
-			tooltip
-				.html(`Date: ${d.date}<br/>Value: ${d.value}`)
-				.style('left', `${event.pageX}px`)
-				.style('top', `${event.pageY}px`);
-		})
-		.on('mouseout', () => {
-			tooltip.transition().duration(500).style('opacity', 0);
-		});
-*/
