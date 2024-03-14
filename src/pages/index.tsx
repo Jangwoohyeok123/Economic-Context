@@ -35,7 +35,7 @@ export default function Pages({ interest }: { interest: Category_Type }) {
 	const itemsPerPage = 9;
 	const categoryId = changeNameToCategoryId(categoryNames[categoryIndex]);
 
-	const { data: category, isSuccess: isCategorySuccess } = useQuery({
+	const { data: category } = useQuery({
 		queryKey: [const_queryKey.category, categoryId],
 		queryFn: () => getIndicators(categoryId)
 	});
@@ -89,7 +89,7 @@ export default function Pages({ interest }: { interest: Category_Type }) {
 								categoryData={category}
 								currentPage={currentPage}
 								itemsPerPage={itemsPerPage}
-								categoryId={changeNameToCategoryId(categoryNames[categoryIndex])}
+								categoryId={categoryId}
 							/>
 					  )
 					: category && (
@@ -97,7 +97,7 @@ export default function Pages({ interest }: { interest: Category_Type }) {
 								categoryData={category}
 								currentPage={currentPage}
 								itemsPerPage={itemsPerPage}
-								categoryId={changeNameToCategoryId(categoryNames[categoryIndex])}
+								categoryId={categoryId}
 								setIsAlertModalOpen={setIsAlertModalOpen}
 							/>
 					  )}
