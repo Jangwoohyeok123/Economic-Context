@@ -12,20 +12,27 @@ interface DataItem {
 	value: number;
 }
 
-export default function CategoryId() {
+export default function IndicatorId() {
 	const router = useRouter();
-	const { id: seriesId, title } = router.query;
+	const { id, title } = router.query;
 	const [chartDatas, setChartDatas] = useState<DataItem[]>([]);
 	const [indicators, setIndicators] = useState<Seriess_Type>({
 		id: '',
 		title: '',
 		notes: '',
 		observation_start: '',
-		observation_end: ''
+		observation_end: '',
+		frequency: '',
+		frequency_short: '',
+		units: '',
+		units_short: '',
+		popularity: 0,
+		seasonal_adjustment: '',
+		seasonal_adjustment_short: ''
 	});
 
 	useEffect(() => {
-		getChartData(seriesId as string)
+		getChartData(id as string)
 			.then(chartDatas => {
 				const { dataArray } = chartDatas;
 				setChartDatas(dataArray);
@@ -34,22 +41,38 @@ export default function CategoryId() {
 				console.error(err.message);
 			});
 
-		getIndicator(seriesId as string).then(indicator => {
-			const { seriesId: id, notes, observation_start, observation_end } = indicator;
+		getIndicator(id as string).then((indicator: Seriess_Type) => {
+			const {
+				id,
+				notes,
+				observation_start,
+				observation_end,
+				frequency,
+				frequency_short,
+				units,
+				units_short,
+				popularity,
+				seasonal_adjustment,
+				seasonal_adjustment_short
+			} = indicator;
 			setIndicators(prev => ({
 				...prev,
-				seriesId: id,
-				title: title as string,
+				id,
+				title: title as string, // Indicator 카드 컴포넌트에게서 router.query 를 통해 전달받은 값입니다.
 				notes: notes ?? '',
 				observation_start,
-				observation_end
+				observation_end,
+				frequency,
+				frequency_short,
+				units,
+				units_short,
+				popularity
 			}));
 		});
-	}, [seriesId]);
+	}, []);
 
 	return (
 		<main className={clsx(styles.CategoryId, poppins.variable, roboto.variable)}>
-			<div>asd</div>
 			{chartDatas.length && indicators && <LineChart indicators={indicators} values={chartDatas} />}
 		</main>
 	);
