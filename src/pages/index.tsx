@@ -21,7 +21,6 @@ import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { useDispatch, useSelector } from 'react-redux';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
-const DynamicChartModal = dynamic(() => import('@/components/modals/chartModal/ChartModal'), { ssr: false });
 
 export default function Pages({ interest }: { interest: Category_Type }) {
 	const user = useSelector((state: Store) => state.user);
@@ -131,7 +130,6 @@ export default function Pages({ interest }: { interest: Category_Type }) {
 				rightButtonContent='Login'
 				rightButtonHandler={() => (window.location.href = 'http://localhost:3000/login')}
 			/>
-			<DynamicChartModal isChartModalOpen={isChartModalOpen} setIsChartModalOpen={setIsChartModalOpen} />
 		</>
 	);
 }

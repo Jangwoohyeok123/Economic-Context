@@ -1,8 +1,7 @@
 import clsx from 'clsx';
-import styles from './Indicators.module.scss';
+import styles from './IndicatorsTab.module.scss';
 import { Dispatch, SetStateAction, useContext, useState } from 'react';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
-import MakeConfirmModal from '../modals/makeConfirmModal/MakeConfirmModal';
 
 interface IndicatorsProps {
 	// Categorys 는 API 가 완성되면 다시 타입 지정한다.
@@ -52,8 +51,6 @@ export default function IndicatorsTab({ Categorys, CategoryIndex, setCategoryInd
 					</button>
 				</div>
 			</footer>
-
-			<MakeConfirmModal isModalOpen={isOpenConfirmContext} setIsModalOpen={setIsOpenConfirmContext} size='big' />
 		</div>
 	);
 }

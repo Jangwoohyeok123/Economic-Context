@@ -10,7 +10,7 @@ export const changeNameToCategoryId = (categoryName: string): number => {
 	return type;
 };
 
-export const changeTypeToName = (categoryType: number): string => {
+export const changeCategoryIdToName = (categoryType: number): string => {
 	let categoryName = 'interest';
 	if (categoryType === const_categoryTypes.interest) return (categoryName = 'interest');
 	if (categoryType === const_categoryTypes.exchange) return (categoryName = 'exchange');
