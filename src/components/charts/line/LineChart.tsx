@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import clsx from 'clsx';
 import styles from './LineChart.module.scss';
+import { Seriess_Type } from '@/types/fredType';
 
 interface Value {
 	date: Date;
@@ -9,17 +10,27 @@ interface Value {
 }
 
 interface LineChartProps {
-	title: string;
+	indicators: Seriess_Type;
+	children: React.ReactElement;
 	values: Value[];
 	className?: string;
 }
-// width, height, marginTop, marginRight, marginBottom, marginLeft,
-// 예약어를 안쓰기
-const LineChart = ({ title, values, className }: LineChartProps) => {
+
+/* 
+	Line chart 컴포넌트는 아래의 정보를 담고 있어야 한다. 
+	1. chart 정보 
+	2. chart 에 관련한 텍스트 정보
+	3. 현재 풀스크린만 대비하고 반응형은 나중에 작업한다.
+
+	이슈사항 
+	ButtonComponent 는 favorite 정보와 동기화 시켜야 하기 때문에 categoryId 가 필요하다 
+*/
+const LineChart = ({ indicators, values, children, className }: LineChartProps) => {
 	const svgRef = useRef<SVGSVGElement>(null);
 	const svgContainerRef = useRef<HTMLDivElement>(null);
 	const compoenetRootDivRef = useRef<HTMLDivElement>(null);
 
+	// chart 를 세팅하는 라이브러리 로직입니다.
 	useEffect(() => {
 		const width = svgContainerRef.current?.offsetWidth;
 		const height = svgContainerRef.current?.offsetHeight;
@@ -84,9 +95,40 @@ const LineChart = ({ title, values, className }: LineChartProps) => {
 
 	return (
 		<div className={clsx(styles.LineChart, className)}>
-			<h4 className={clsx(styles.header)}>{title}</h4>
+			<div className={clsx(styles.featuresWrap)}>
+				<h3>{indicators.title}</h3>
+				<div className={clsx(styles.chartFeatures)}>
+					Period: {indicators.observation_start} ~ {indicators.observation_end}
+					{/* <span>기능1</span>
+					<span>기능2</span>
+					<span>기능3</span>
+					<span>기능4</span>
+					<span>기능5</span> */}
+				</div>
+			</div>
 			<div ref={svgContainerRef} className={clsx(styles.chartContainer)}>
-				<svg ref={svgRef} />
+				<div className={clsx(styles.svgWrap)}>
+					<svg ref={svgRef} />
+				</div>
+			</div>
+			<div className={clsx(styles.chartDescription)}>
+				<h3>{indicators.title}</h3>
+				<p className={clsx(styles.notes)}>{indicators.notes}</p>
+				<div className={clsx(styles.additional)}>
+					<div>
+						<div>
+							<span>Frequency</span> : {indicators.frequency ? indicators.frequency : 'hello'}
+						</div>
+						<div>
+							<span>Continued</span> :
+							{indicators.observation_end === indicators.realtime_end ? ' continued' : ' discontinued'}
+						</div>
+						<div>
+							<span>Period</span> : {indicators.observation_start} ~ {indicators.observation_end}
+						</div>
+					</div>
+					{children}
+				</div>
 			</div>
 		</div>
 	);

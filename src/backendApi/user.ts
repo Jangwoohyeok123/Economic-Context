@@ -14,7 +14,7 @@ export async function getJwtAndUserGoogleData(authCode: string) {
 	}
 }
 
-export const getFavorites = async (userId: string) => {
+export const getFavorites = async (userId: number) => {
 	const backendUrl = 'http://localhost:4000/';
 	try {
 		const response = await axios.get(`${backendUrl}user/favorite/${userId}`);
@@ -26,7 +26,7 @@ export const getFavorites = async (userId: string) => {
 	}
 };
 
-export const getFavorite = async (userId: string, categoryId: number) => {
+export const getFavorite = async (userId: number, categoryId: number) => {
 	const backendUrl = 'http://localhost:4000/';
 	try {
 		const response = await axios.get(`${backendUrl}user/favorite/${userId}/${categoryId}`);
@@ -39,10 +39,12 @@ export const getFavorite = async (userId: string, categoryId: number) => {
 };
 
 // body => { indicatorId: seriesId }
-export const addFavorite = async (userId: string) => {
+export const addFavorite = async (userId: number, seriesId: string) => {
 	const backendUrl = 'http://localhost:4000/';
 	try {
-		await axios.get(`${backendUrl}user/favorite/${userId}`);
+		await axios.post(`${backendUrl}user/favorite/${userId}`, {
+			indicatorId: seriesId
+		});
 	} catch (error) {
 		console.log(error);
 		throw new Error('Failed to add favorite Indicator');
@@ -50,10 +52,14 @@ export const addFavorite = async (userId: string) => {
 };
 
 // body => { indicatorId: seriesId }
-export const deleteFavorite = async (userId: string) => {
+export const deleteFavorite = async (userId: number, seriesId: string) => {
 	const backendUrl = 'http://localhost:4000/';
 	try {
-		const resoponse = await axios.get(`${backendUrl}user/favorite/${userId}`);
+		await axios.delete(`${backendUrl}user/favorite/${userId}`, {
+			data: {
+				indicatorId: seriesId
+			}
+		});
 	} catch (error) {
 		console.log(error);
 		throw new Error('Failed to delete favorite Indicator');

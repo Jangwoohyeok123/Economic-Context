@@ -3,20 +3,20 @@ import styles from './AlertModal.module.scss';
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { roboto, poppins } from '@/pages/_app';
-import { AlertModalProps } from '@/types/modalInterface';
+import { ModalProps } from '@/types/modalType';
 import checkingModalSizeAndModifyClassName from '@/utils/checkingModalSizeAndModifyClassName';
 
 export default function AlertModal({
 	isModalOpen,
 	setIsModalOpen,
-	size,
+	size, // union type
 	header,
 	body,
 	leftButtonContent,
 	leftButtonHandler,
 	rightButtonContent,
 	rightButtonHandler
-}: AlertModalProps) {
+}: ModalProps) {
 	const ModalClassName = checkingModalSizeAndModifyClassName(size);
 
 	return isModalOpen

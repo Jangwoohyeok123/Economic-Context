@@ -1,0 +1,41 @@
+.Footer {
+	font-family: var(--pointFont);
+	width: 100%;
+	color: #fff;
+	background: #333;
+
+	.wrap {
+		padding: 50px 0;
+		margin: 0 auto;
+		width: 80%;
+
+		div:nth-of-type(1) {
+			display: flex;
+			justify-content: space-between;
+			align-content: center;
+
+			h3 {
+				font-size: 1.5rem;
+				font-weight: 500;
+			}
+
+			ul {
+				display: flex;
+				align-items: center;
+				gap: 20px;
+			}
+		}
+
+		.description {
+			padding: 15px 0 25px;
+			opacity: 0.6;
+			border-bottom: 1px solid #ccc;
+		}
+
+		.copyright {
+			text-align: right;
+			padding-top: 35px;
+			opacity: 0.6;
+		}
+	}
+}
