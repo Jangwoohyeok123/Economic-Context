@@ -32,7 +32,7 @@ export default function IndicatorCard({
 	const localRoutingUrl = 'http://localhost:3000';
 	const cleandTitle = cleanString(title);
 	const routeMorePage = (seriesId: string) => {
-		router.push(`${localRoutingUrl}/${seriesId}?title=${cleandTitle}`);
+		router.push(`${localRoutingUrl}/${seriesId}?title=${cleandTitle}&categoryId=${categoryId}`);
 	};
 	return (
 		<div className={clsx(styles.cardWrap)}>
