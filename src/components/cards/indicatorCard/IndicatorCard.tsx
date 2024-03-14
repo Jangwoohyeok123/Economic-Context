@@ -30,13 +30,15 @@ export default function IndicatorCard({
 }: IndicatorCardProps) {
 	const router = useRouter();
 	const localRoutingUrl = 'http://localhost:3000';
-	const routeMorePage = (seriesId: string) => router.push(`${localRoutingUrl}/${seriesId}`);
-
+	const cleandTitle = cleanString(title);
+	const routeMorePage = (seriesId: string) => {
+		router.push(`${localRoutingUrl}/${seriesId}?title=${cleandTitle}`);
+	};
 	return (
 		<div className={clsx(styles.cardWrap)}>
 			<div className={clsx(styles.IndicatorCard, className)} onClick={() => routeMorePage(seriesId)}>
 				<div className={styles.header}>
-					<h3>{cleanString(title)}</h3>
+					<h3>{cleandTitle}</h3>
 					<div className={clsx(styles.period)}>
 						<div>
 							Period: {observation_start} ~ {observation_end}
