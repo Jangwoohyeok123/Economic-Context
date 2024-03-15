@@ -22,6 +22,8 @@ export const poppins = Poppins({
 	variable: '--pointFont'
 });
 
+export const categoryNames = ['Interest', 'Exchange', 'Consume', 'Production'];
+
 // 이 APP 컴포넌트에는 어떤 Props 를 사용할지 정의함
 export default function App({ Component, pageProps }: AppProps) {
 	const router = useRouter();
