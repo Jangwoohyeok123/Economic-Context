@@ -1,44 +1,55 @@
 import clsx from 'clsx';
 import styles from './IndicatorsTab.module.scss';
-import { Dispatch, SetStateAction, useContext, useState } from 'react';
+import { useState } from 'react';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
+import useFavoriteQuery from '@/hooks/useFavoriteQuery';
+import { categoryNames } from '@/pages/_app';
+import useFavoriteMutation from '@/hooks/useFavoriteMutation';
+import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
+import { Indicator } from '@/types/userType';
 
-interface IndicatorsProps {
-	// Categorys 는 API 가 완성되면 다시 타입 지정한다.
-	categorys: any;
-	categoryIndex: number;
-	setCategoryIndex: Dispatch<SetStateAction<number>>;
-}
-
-export default function IndicatorsTab({ categorys, categoryIndex, setCategoryIndex }: IndicatorsProps) {
+/**
+- IndicatorsTab 을 클릭하면 첫 selectedFavorite 이 페칭된다.
+- categoryIndex 가 바뀌면 useFavoriteQuery 에 의해서 페칭이 되는 구조다.
+*/
+export default function IndicatorsTab() {
+	const [categoryIndex, setCategoryIndex] = useState(0);
+	const categoryId = changeNameToCategoryId(categoryNames[categoryIndex]);
 	const [isOpenConfirmContext, setIsOpenConfirmContext] = useState(false);
+	const { selectedFavorites, isSelectedFavoritesExist } = useFavoriteQuery(categoryId);
+	const { addFavoriteMutationAll, deleteFavoriteMutationAll } = useFavoriteMutation();
 
 	return (
 		<div className={clsx(styles.IndicatorsTab)}>
 			<nav>
-				{categorys.map((category, idx) => {
+				{categoryNames.map((name, index) => {
 					return (
-						<button key={idx} onClick={() => setCategoryIndex(idx)} className={categoryIndex === idx ? styles.on : ''}>
-							{category.title}
+						<button
+							key={index}
+							className={index === categoryIndex ? clsx(styles.on) : ''}
+							onClick={() => setCategoryIndex(index)}>
+							{name}
 						</button>
 					);
 				})}
 			</nav>
-			<form>
-				{categorys[categoryIndex].clientCheckedData.map((clientData, idx) => {
+			<section className={clsx(styles.favorites)}>
+				{selectedFavorites?.map((favorite: Indicator, index: number) => {
+					const { title, seriesId, categoryId } = favorite;
 					return (
 						<IndicatorCard
-							key={idx}
-							title={'hello'}
-							leftButtonContent='delete'
-							leftButtonHandler={() => alert('삭제')}
-							rightButtonContent='checking'
-							rightButtonHandler={() => console.log('save')}
-							pageType='dashboard'
-						/>
+							key={index}
+							title={title}
+							seriesId={seriesId}
+							categoryId={categoryId}
+							observation_end=' favorite 요소'
+							observation_start='백엔드 요청사항: favorite 요소'
+							className={clsx(styles.IndicatorCard)}>
+							<div>asd</div>
+						</IndicatorCard>
 					);
 				})}
-			</form>
+			</section>
 			<footer>
 				<span className={clsx(styles.item)}></span>
 				<div className={clsx(styles.pagination, styles.item)}>- 1 -</div>

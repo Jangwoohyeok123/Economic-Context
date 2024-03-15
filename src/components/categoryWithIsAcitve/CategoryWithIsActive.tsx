@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import BubblePopButton from '../bubblePopButton/BubblePopButton';
 import { Store } from '@/types/reduxType';
 import { IndicatorWithIsActive } from '@/types/userType';
+import useFavoriteMutation from '@/hooks/useFavoriteMutation';
 
 interface CategoryWithIsActive_Intercae {
 	categoryData: Seriess_Type[];
@@ -34,38 +35,13 @@ export default function CategoryWithIsActive({
 		queryFn: () => getFavorite(user.id, categoryId)
 	});
 
-	const addFavoriteMutation = useMutation({
-		mutationFn: ({ userId, seriesId }: { userId: number; seriesId: string }) => addFavorite(userId, seriesId),
-		onSuccess() {
-			queryClient.invalidateQueries({
-				queryKey: [const_queryKey.favorite, categoryId]
-			});
-
-			alert('add 성공');
-		},
-		onError(error) {
-			console.error(error);
-		}
-	});
-
-	const deleteFavoriteMutation = useMutation({
-		mutationFn: ({ userId, seriesId }: { userId: number; seriesId: string }) => deleteFavorite(userId, seriesId),
-		onSuccess() {
-			queryClient.invalidateQueries({
-				queryKey: [const_queryKey.favorite, categoryId]
-			});
-			alert('delete 성공');
-		},
-		onError(error) {
-			console.error(error);
-		}
-	});
+	const { addFavoriteMutation, deleteFavoriteMutation } = useFavoriteMutation(categoryId);
 
 	const saveButtonToggle = (userId: number, isActive: boolean, seriesId: string) => {
 		if (isActive) {
-			deleteFavoriteMutation.mutate({ userId, seriesId });
+			deleteFavoriteMutation?.mutate({ userId, seriesId });
 		} else {
-			addFavoriteMutation.mutate({ userId, seriesId });
+			addFavoriteMutation?.mutate({ userId, seriesId });
 		}
 	};
 
