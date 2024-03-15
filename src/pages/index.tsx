@@ -19,6 +19,7 @@ import CategoryWithIsActive from '@/components/categoryWithIsAcitve/CategoryWith
 import { useEffect, useState } from 'react';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { useDispatch, useSelector } from 'react-redux';
+import { categoryNames } from './_app';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
@@ -26,7 +27,6 @@ export default function Pages({ interest }: { interest: Category_Type }) {
 	const user = useSelector((state: Store) => state.user);
 	const router = useRouter();
 	const dispatch = useDispatch();
-	const categoryNames = ['interest', 'exchange', 'production', 'consume'];
 	const [categoryIndex, setCategoryIndex] = useState(0);
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 	const [isChartModalOpen, setIsChartModalOpen] = useState(false);
