@@ -5,27 +5,27 @@ import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
 
 interface IndicatorsProps {
 	// Categorys 는 API 가 완성되면 다시 타입 지정한다.
-	Categorys: any;
-	CategoryIndex: number;
+	categorys: any;
+	categoryIndex: number;
 	setCategoryIndex: Dispatch<SetStateAction<number>>;
 }
 
-export default function IndicatorsTab({ Categorys, CategoryIndex, setCategoryIndex }: IndicatorsProps) {
+export default function IndicatorsTab({ categorys, categoryIndex, setCategoryIndex }: IndicatorsProps) {
 	const [isOpenConfirmContext, setIsOpenConfirmContext] = useState(false);
 
 	return (
 		<div className={clsx(styles.IndicatorsTab)}>
 			<nav>
-				{Categorys.map((category, idx) => {
+				{categorys.map((category, idx) => {
 					return (
-						<button key={idx} onClick={() => setCategoryIndex(idx)} className={CategoryIndex === idx ? styles.on : ''}>
+						<button key={idx} onClick={() => setCategoryIndex(idx)} className={categoryIndex === idx ? styles.on : ''}>
 							{category.title}
 						</button>
 					);
 				})}
 			</nav>
 			<form>
-				{Categorys[CategoryIndex].clientCheckedData.map((clientData, idx) => {
+				{categorys[categoryIndex].clientCheckedData.map((clientData, idx) => {
 					return (
 						<IndicatorCard
 							key={idx}

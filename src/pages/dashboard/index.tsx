@@ -1,18 +1,18 @@
-import { roboto, poppins } from '../_app';
-import styles from './Dashboard.module.scss';
 import clsx from 'clsx';
-import { useState } from 'react';
 import Menu from '@/components/menu/Menu';
+import styles from './Dashboard.module.scss';
 import Dashheader from '@/components/dashheader/DashHeader';
-import IndicatorsTab from '@/components/indicatorsTab/IndicatorsTab';
+import { useState } from 'react';
 import MyContextTab from '@/components/myContext/MyContext';
+import IndicatorsTab from '@/components/indicatorsTab/IndicatorsTab';
+import { roboto, poppins } from '../_app';
 
 export default function Dashboard() {
 	const [Tabs] = useState(['Indicators', 'MyContext']);
 	const [TabsIndex, setSelectedIdx] = useState(0);
 
 	// Categorys 에 필요한 데이터: 사용자가 선택했던 카드데이터들
-	const [Categorys] = useState([
+	const [categorys] = useState([
 		{
 			title: 'Interest',
 			clientCheckedData: ['10년물 국채', '20년물 국채', '30년물 국채', '40년물 국채', '50년물 국채']
@@ -30,7 +30,7 @@ export default function Dashboard() {
 			clientCheckedData: ['10년물 생산', '20년물 생산', '30년물 생산', '40년물 생산', '50년물 생산']
 		}
 	]);
-	const [CategoryIndex, setCategoryIndex] = useState(0);
+	const [categoryIndex, setCategoryIndex] = useState(0);
 
 	return (
 		<div className={clsx(styles.Dashboard, roboto.variable, poppins.variable)}>
@@ -40,14 +40,19 @@ export default function Dashboard() {
 			<section>
 				<Dashheader Tabs={Tabs} TabsIndex={TabsIndex} />
 
-				{Tabs[TabsIndex] === 'Indicators' ? (
-					<IndicatorsTab Categorys={Categorys} CategoryIndex={CategoryIndex} setCategoryIndex={setCategoryIndex} />
-				) : (
-					<MyContextTab />
+				{TabsIndex === 0 && (
+					<IndicatorsTab categorys={categorys} categoryIndex={categoryIndex} setCategoryIndex={setCategoryIndex} />
 				)}
+				{TabsIndex === 1 && <MyContextTab />}
 			</section>
 		</div>
 	);
 }
 // 탭을 이동할 시 clinetCategoryCheckedArr[idx] 의 값을 할당한다.
 //
+
+/*
+	deleteFavorite 을 기능
+	
+	카드를 뭐 할떄마다 지금 
+*/
