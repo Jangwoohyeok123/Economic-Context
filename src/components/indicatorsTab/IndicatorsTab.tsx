@@ -1,12 +1,12 @@
 import clsx from 'clsx';
 import styles from './IndicatorsTab.module.scss';
 import { useState } from 'react';
+import { Indicator } from '@/types/userType';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
 import useFavoriteQuery from '@/hooks/useFavoriteQuery';
 import { categoryNames } from '@/pages/_app';
 import useFavoriteMutation from '@/hooks/useFavoriteMutation';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
-import { Indicator } from '@/types/userType';
 
 /**
 - IndicatorsTab 을 클릭하면 첫 selectedFavorite 이 페칭된다.

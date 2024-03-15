@@ -24,25 +24,20 @@
 		}
 	}
 
-	form {
+	.favorites {
 		display: grid;
-		grid-template-columns: 1fr 1fr 1fr 1fr;
-		grid-template-rows: 1fr 1fr;
-		column-gap: 50px;
-
-		border: 1px solid #ccc;
-		height: 65vh;
-
-		.row {
-			width: 100%;
-		}
+		width: 100%;
+		grid-template-columns: 30% 30% 30%;
+		grid-template-rows: 400px;
+		justify-content: space-between;
+		align-items: center;
 	}
 
 	footer {
 		display: flex;
 		justify-content: space-between;
 		align-items: center; /* 요소들을 수직 방향으로 중앙에 배치 */
-		padding-top: 15px;
+		padding-top: 50px;
 
 		.item {
 			width: 33%;
