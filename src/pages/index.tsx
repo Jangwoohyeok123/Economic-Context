@@ -103,8 +103,10 @@ export default function Pages({ interest }: { interest: Category_Type }) {
 				{category && (
 					<ReactPaginate
 						pageCount={Math.ceil(category.length / itemsPerPage)}
-						previousAriaLabel='이전'
-						previousLabel='Prev'
+						previousAriaLabel='prev page'
+						previousLabel='prev page'
+						nextAriaLabel='next page'
+						nextLabel='next page'
 						pageRangeDisplayed={5}
 						marginPagesDisplayed={0}
 						onPageChange={event => setCurrentPage(event.selected)}

@@ -7,6 +7,7 @@ import useFavoriteQuery from '@/hooks/useFavoriteQuery';
 import { categoryNames } from '@/pages/_app';
 import useFavoriteMutation from '@/hooks/useFavoriteMutation';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
+import ReactPaginate from 'react-paginate';
 
 /**
 - IndicatorsTab 을 클릭하면 첫 selectedFavorite 이 페칭된다.
@@ -18,6 +19,8 @@ export default function IndicatorsTab() {
 	const [isOpenConfirmContext, setIsOpenConfirmContext] = useState(false);
 	const { selectedFavorites, isSelectedFavoritesExist } = useFavoriteQuery(categoryId);
 	const { addFavoriteMutationAll, deleteFavoriteMutationAll } = useFavoriteMutation();
+	const itemsPerPage = 3;
+	const [currentPage, setCurrentPage] = useState(0);
 
 	return (
 		<div className={clsx(styles.IndicatorsTab)}>
@@ -34,25 +37,45 @@ export default function IndicatorsTab() {
 				})}
 			</nav>
 			<section className={clsx(styles.favorites)}>
-				{selectedFavorites?.map((favorite: Indicator, index: number) => {
-					const { title, seriesId, categoryId } = favorite;
-					return (
-						<IndicatorCard
-							key={index}
-							title={title}
-							seriesId={seriesId}
-							categoryId={categoryId}
-							observation_end=' favorite 요소'
-							observation_start='백엔드 요청사항: favorite 요소'
-							className={clsx(styles.IndicatorCard)}>
-							<div>asd</div>
-						</IndicatorCard>
-					);
-				})}
+				{selectedFavorites
+					?.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
+					.map((favorite: Indicator, index: number) => {
+						const { title, seriesId, categoryId } = favorite;
+						return (
+							<IndicatorCard
+								key={index}
+								title={title}
+								seriesId={seriesId}
+								categoryId={categoryId}
+								observation_end=' favorite 요소'
+								observation_start='백엔드 요청사항: favorite 요소'
+								className={clsx(styles.IndicatorCard)}>
+								<div>asd</div>
+							</IndicatorCard>
+						);
+					})}
 			</section>
 			<footer>
 				<span className={clsx(styles.item)}></span>
-				<div className={clsx(styles.pagination, styles.item)}>- 1 -</div>
+				{selectedFavorites && (
+					<ReactPaginate
+						pageCount={Math.ceil(selectedFavorites.length / itemsPerPage)}
+						previousAriaLabel='prev card'
+						nextAriaLabel='next card'
+						previousLabel='Prev'
+						nextLabel='Next'
+						pageRangeDisplayed={5}
+						marginPagesDisplayed={0}
+						onPageChange={event => setCurrentPage(event.selected)}
+						containerClassName={styles.pagination}
+						breakLabel={null}
+						forcePage={currentPage}
+						activeClassName={styles.paginationActive}
+						previousClassName={currentPage === 0 ? styles.disabled : ''}
+						nextClassName={currentPage === Math.ceil(selectedFavorites.length / itemsPerPage) ? styles.disabled : ''}
+						disabledClassName={styles.disabled}
+					/>
+				)}
 				<div className={clsx(styles.item, styles.buttonWrap)}>
 					<button
 						onClick={() => {
