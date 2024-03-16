@@ -45,6 +45,7 @@ export default function CategoryWithIsActive({
 		}
 	};
 
+	/** 현 cateogoryData 에 isActive 속성을 붙이고 backend 에 저장됐던 데이터는 true 처리 */
 	useEffect(() => {
 		if (categoryData && isFavoriteExist && favorite) {
 			const categoryWithIsActive = categoryData.map((item: Seriess_Type) => ({
