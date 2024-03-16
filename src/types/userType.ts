@@ -14,11 +14,24 @@ export interface Indicator {
 	categoryId: number;
 }
 
-export interface IndicatorWithIsActive {
-	title: string;
-	seriesId: string;
-	categoryId: number;
+/**
+	- title: string;
+	- seriesId: string;
+	- categoryId: number;
+	- isActive: boolean;
+ */
+export interface IndicatorWithIsActive extends Indicator {
 	isActive: boolean;
+}
+
+/**
+	- title: string;
+	- seriesId: string;
+	- categoryId: number;
+	- isPick: booelan;
+ */
+export interface IndicatorWithIsPick extends Indicator {
+	isPick: boolean;
 }
 
 export default User;
