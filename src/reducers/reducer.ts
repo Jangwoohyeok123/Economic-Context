@@ -13,7 +13,8 @@ const userInitialState = {
 const userReducer = (state = userInitialState, action: { type: string; payload: any }) => {
 	if (action.type === 'USER_LOGIN') {
 		const userData = action.payload;
-		return { ...state, userData: userData, isLogin: true };
+		const { createAt, email, favorite_indicators, google_id, id, picture_url } = userData;
+		return { ...state, createAt, email, favorite_indicators, google_id, id, picture_url, isLogin: true };
 	} else if (action.type === 'USER_LOGOUT') return { ...state, isLogin: false };
 
 	return state;
