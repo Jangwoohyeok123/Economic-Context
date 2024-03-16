@@ -33,14 +33,18 @@ export default function IndicatorsTab() {
 	const { deleteFavoriteMutationAll } = useFavoriteMutation();
 	const [isMakeOpen, setIsMakeOpen] = useState(false);
 
-	const [favorites, setFavorites] = useState(
-		allFavorites?.map(favorite => {
+	const [favorites, setFavorites] = useState();
+
+	useEffect(() => {
+		const updated = allFavorites?.map(favorite => {
 			return {
 				...favorite,
 				isPick: false
 			};
-		})
-	);
+		});
+
+		setFavorites(updated);
+	}, [allFavorites]);
 	const curFavorites = favorites?.filter(favorite => favorite.categoryId == categoryId);
 
 	return (
