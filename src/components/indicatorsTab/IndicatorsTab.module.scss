@@ -31,6 +31,14 @@
 		grid-template-rows: 400px;
 		justify-content: space-between;
 		align-items: center;
+
+		.indicatorCardByTab {
+			.buttons {
+				display: flex;
+				flex-direction: column;
+				gap: 10px;
+			}
+		}
 	}
 
 	.pagination {
