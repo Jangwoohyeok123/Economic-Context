@@ -8,16 +8,36 @@ interface User {
 	createAt: Date;
 }
 
+/**
+	- title: string;
+	- seriesId: string;
+	- categoryId: number;
+	- notes: string;
+	- frequency: string;
+	- popularity: number;
+	- observation_end: string;
+	- observation_start: string;
+ */
 export interface Indicator {
 	title: string;
 	seriesId: string;
 	categoryId: number;
+	notes: string;
+	frequency: string;
+	popularity: number;
+	observation_end: string;
+	observation_start: string;
 }
 
 /**
 	- title: string;
 	- seriesId: string;
 	- categoryId: number;
+	- notes: string;
+	- frequency: string;
+	- popularity: number;
+	- observation_end: string;
+	- observation_start: string;
 	- isActive: boolean;
  */
 export interface IndicatorWithIsActive extends Indicator {
@@ -28,6 +48,11 @@ export interface IndicatorWithIsActive extends Indicator {
 	- title: string;
 	- seriesId: string;
 	- categoryId: number;
+	- notes: string;
+	- frequency: string;
+	- popularity: number;
+	- observation_end: string;
+	- observation_start: string;
 	- isPick: booelan;
  */
 export interface IndicatorWithIsPick extends Indicator {
