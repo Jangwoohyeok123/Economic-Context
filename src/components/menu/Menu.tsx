@@ -2,29 +2,37 @@ import clsx from 'clsx';
 import styles from './Menu.module.scss';
 import Link from 'next/link';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { deleteContext, getContext, getContextNames } from '@/backendApi/user';
+import { deleteContext, getContext, getContextNamesAndKey } from '@/backendApi/user';
 import { useSelector } from 'react-redux';
 import { Store } from '@/types/reduxType';
 import const_queryKey from '@/const/queryKey';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { ContextNameWithKey } from '@/types/userType';
 
 interface MenuProps {
 	selectedTab: string;
 	setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
+	currentContext: string;
+	setCurrentContext: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function Menu({ selectedTab, setSelectedTab }: MenuProps) {
-	const userId = useSelector((state: Store) => state.user.id);
+export default function Menu({ selectedTab, setSelectedTab, currentContext, setCurrentContext }: MenuProps) {
 	const tabs = ['Indicators', 'MyContext'];
-	const { data: contextNames, isLoading } = useQuery({
+	const userId = useSelector((state: Store) => state.user.id);
+	const { data: contextNamesWithKey, isLoading } = useQuery({
 		queryKey: [const_queryKey.context, 'names'],
-		queryFn: () => getContextNames(userId)
+		queryFn: () => getContextNamesAndKey(userId)
 	});
+	const [contextId, setContextId] = useState<number>(0);
 
-	const [curContextName, setCurContext] = useState<string>();
+	useEffect(() => {
+		const currentContext = contextNamesWithKey?.find((element: ContextNameWithKey) => element.name === selectedTab);
+		setContextId(currentContext?.id);
+	}, [selectedTab]);
+
 	const { data: context } = useQuery({
-		queryKey: [const_queryKey.context, curContextName],
-		queryFn: () => getContext(userId)
+		queryKey: [const_queryKey.context, selectedTab],
+		queryFn: () => getContext(contextId)
 	});
 
 	return (
@@ -43,10 +51,10 @@ export default function Menu({ selectedTab, setSelectedTab }: MenuProps) {
 				})}
 
 				<div className={clsx(styles.contexts)}>
-					{contextNames?.map((name: string, index: number) => {
+					{contextNamesWithKey?.map((context: ContextNameAndKey, index: number) => {
 						return (
-							<span key={index} onClick={() => setCurContext(name)}>
-								{name}
+							<span key={index} onClick={() => setSelectedTab(context.name)}>
+								{context.name}
 							</span>
 						);
 					})}

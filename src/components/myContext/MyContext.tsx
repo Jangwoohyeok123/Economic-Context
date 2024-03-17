@@ -1,8 +1,49 @@
 import clsx from 'clsx';
 import styles from './MyContext.module.scss';
-import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
-import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Store } from '@/types/reduxType';
+import const_queryKey from '@/const/queryKey';
+import { getContext, getContextNamesAndKey as getContextNamesWithKey } from '@/backendApi/user';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { ContextNameWithKey } from '@/types/userType';
 
-export default function MyContextTab() {
-	return <section className={clsx(styles.MyContext)}></section>;
+interface MyContextTabProps {
+	selectedTab: string;
+	setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextTabProps) {
+	const userId = useSelector((state: Store) => state.user.id);
+
+	const { data: contextNamesWithKey, isLoading } = useQuery({
+		queryKey: [const_queryKey.context, 'names'],
+		queryFn: () => getContextNamesWithKey(userId)
+	});
+
+	/* 
+		selectedTab 이 변하면 context 데이터를 페칭한다.
+		selectedTab 이 변하면 contextId 를 찾을 수 있어야한다. 
+		현재, selectedTab 이 변하면 contextNames 가 변한다.
+
+		contextId 는 현재 selectedTab 을 뜻하는 id 다.
+		contextNames 에서 selectedTab 을 find 한다. 
+		그 객체의 id 를 contextId 에게 전달한다.
+
+		getContext 에 contextId 를 전달해야한다. 
+	*/
+
+	const { data: context } = useQuery({
+		queryKey: [const_queryKey.context, selectedTab],
+		queryFn: () => getContext(userId)
+	});
+
+	return (
+		<section className={clsx(styles.MyContext)}>
+			{/* {contextNames.map(({ id, name }, index: number) => {
+				return <div key={index}></div>;
+			})}
+			<div>asdasd</div> */}
+		</section>
+	);
 }
