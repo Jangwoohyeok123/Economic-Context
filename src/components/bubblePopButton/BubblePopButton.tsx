@@ -7,7 +7,7 @@ interface BubblePopButtonProps {
 	clickHandler: () => void;
 }
 
-export default function BubblePopButton({ children, className, clickHandler }: BubblePopButtonProps) {
+export default function BubblePopButton({ children, className, clickHandler: onClick }: BubblePopButtonProps) {
 	const bubblePop = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		event.stopPropagation();
 	};
@@ -17,7 +17,7 @@ export default function BubblePopButton({ children, className, clickHandler }: B
 			className={(clsx(styles.BubblePopButton), className)}
 			onClick={event => {
 				bubblePop(event);
-				clickHandler();
+				onClick();
 			}}>
 			{children}
 		</button>
