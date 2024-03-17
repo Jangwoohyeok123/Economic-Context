@@ -12,6 +12,7 @@ import { categoryNames } from '@/pages/_app';
 import useFavoriteMutation from '@/hooks/useFavoriteMutation';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import MakeContextModal from '../modals/makeContextModal/MakeContextModal';
+import AlertModal from '../modals/alertModal/AlertModal';
 
 /** [key: string] 는 key 를 여러개 갖을 수 있고 값은 Indicator[] 을 갖는다는 의미의 type 이다. */
 type PickIndicators = {
@@ -31,24 +32,16 @@ export default function IndicatorsTab() {
 	const [currentPage, setCurrentPage] = useState(0);
 	const [favorites, setFavorites] = useState();
 	const [isMakeOpen, setIsMakeOpen] = useState(false);
+	const [isValidateModal, setIsValidateModal] = useState(false);
 
 	const { deleteFavoriteMutationAll } = useFavoriteMutation();
 	const categoryId = changeNameToCategoryId(categoryNames[categoryIndex]);
 	const { allFavorites } = useFavoriteQuery();
 
-	// pick 이 어떻게 초기화가 안되게 하지
-	// allFavorites 가 더 적고
-	// favorites 가 더많음
-	// allFavorites 의 개수에 맞는 배열을 만들어야 한다.
 	useEffect(() => {
 		if (favorites) {
-			console.log(allFavorites);
-			console.log(favorites);
 			const updated = allFavorites.map(favorite => {
-				// 새롭게 만들 updated 는 뮤테이션을 통해 바뀐 allFavorites 중
-				// prevFavorites 와 같은 원소라면 isPick 을 그대로 갖고온다.
 				const prev = favorites.find(prevFavorites => prevFavorites.seriesId === favorite.seriesId);
-
 				return prev
 					? {
 							...favorite,
@@ -75,7 +68,7 @@ export default function IndicatorsTab() {
 	}, [allFavorites]);
 
 	const curFavorites = favorites?.filter(favorite => favorite?.categoryId == categoryId);
-	const pagedFavorite = curFavorites.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
+	const pagedFavorite = curFavorites?.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
 	return (
 		<div className={clsx(styles.IndicatorsTab)}>
@@ -92,7 +85,7 @@ export default function IndicatorsTab() {
 				})}
 			</nav>
 			<section className={clsx(styles.favorites)}>
-				{pagedFavorite.map((favorite: IndicatorWithIsPick, index: number) => {
+				{pagedFavorite?.map((favorite: IndicatorWithIsPick, index: number) => {
 					const { title, seriesId, notes, categoryId, observation_end, observation_start, isPick } = favorite;
 					return (
 						<IndicatorCard
@@ -156,13 +149,24 @@ export default function IndicatorsTab() {
 				<div className={clsx(styles.item, styles.buttonWrap)}>
 					<button
 						onClick={() => {
-							setIsMakeOpen(true);
+							if (favorites?.filter(favorite => favorite.isPick).length > 0) setIsMakeOpen(true);
+							else setIsValidateModal(true);
 						}}>
 						Make Context
 					</button>
 				</div>
 			</footer>
-			<MakeContextModal favorites={allFavorites} isModalOpen={isMakeOpen} setIsModalOpen={setIsMakeOpen} />
+			<MakeContextModal favorites={favorites} isModalOpen={isMakeOpen} setIsModalOpen={setIsMakeOpen} />
+			<AlertModal
+				isModalOpen={isValidateModal}
+				setIsModalOpen={setIsValidateModal}
+				body='카드를 골라주세요'
+				header='카드를 골라주세요'
+				size='small'
+				leftButtonContent='close'
+				rightButtonContent='close'
+				leftButtonHandler={() => setIsValidateModal(false)}
+				rightButtonHandler={() => setIsValidateModal(false)}></AlertModal>
 		</div>
 	);
 }
