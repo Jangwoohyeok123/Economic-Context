@@ -2,8 +2,8 @@ import clsx from 'clsx';
 import styles from './CategoryWithIsActive.module.scss';
 import { SeriessWithIsActive_Interface, Seriess_Type } from '@/types/fredType';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { addFavorite, deleteFavorite, getFavorite } from '@/backendApi/user';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { getFavorite } from '@/backendApi/user';
 import const_queryKey from '@/const/queryKey';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
@@ -26,7 +26,6 @@ export default function CategoryWithIsActive({
 	categoryId
 }: CategoryWithIsActive_Intercae) {
 	const user = useSelector((state: Store) => state.user);
-	const queryClient = useQueryClient();
 	const [categoryWithIsActive, setCategoryWithActive] = useState<SeriessWithIsActive_Interface[]>([]);
 
 	// useQuery
@@ -38,11 +37,8 @@ export default function CategoryWithIsActive({
 	const { addFavoriteMutation, deleteFavoriteMutation } = useFavoriteMutation(categoryId);
 
 	const saveButtonToggle = (userId: number, isActive: boolean, seriesId: string) => {
-		if (isActive) {
-			deleteFavoriteMutation?.mutate({ userId, seriesId });
-		} else {
-			addFavoriteMutation?.mutate({ userId, seriesId });
-		}
+		if (isActive) deleteFavoriteMutation?.mutate({ userId, seriesId });
+		else addFavoriteMutation?.mutate({ userId, seriesId });
 	};
 
 	/** 현 cateogoryData 에 isActive 속성을 붙이고 backend 에 저장됐던 데이터는 true 처리 */
@@ -83,11 +79,7 @@ export default function CategoryWithIsActive({
 							observation_start={observation_start as string}
 							className={styles.IndicatorCard}>
 							<div>
-								{notes ? (
-									<p>{notes}</p>
-								) : (
-									<p>This indicator does not have information about the indicator description.</p>
-								)}
+								<p>{notes ? notes : 'This indicator does not have information about the indicator description.'}</p>
 							</div>
 							<BubblePopButton
 								className={clsx(isActive ? styles.on : '')}
