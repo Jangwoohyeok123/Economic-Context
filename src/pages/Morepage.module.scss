@@ -1,0 +1,25 @@
+// 다 풀어쓸것 => 길어도 축약 x
+.Morepage {
+	width: 80%;
+	height: calc(100vh - var(--headerSize));
+
+	button {
+		width: 150px;
+		height: 50px;
+		border: none;
+		color: #111;
+		background: #fff;
+		cursor: pointer;
+		transition: 0.3s;
+
+		&:hover {
+			color: #fff;
+			background: #111;
+		}
+	}
+
+	button.on {
+		background: #111;
+		color: #fff;
+	}
+}

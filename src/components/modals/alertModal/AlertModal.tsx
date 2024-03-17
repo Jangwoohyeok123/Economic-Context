@@ -2,8 +2,8 @@ import clsx from 'clsx';
 import styles from './AlertModal.module.scss';
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { roboto, poppins } from '@/pages';
-import { ModalProps } from '@/types/modalInterface';
+import { roboto, poppins } from '@/pages/_app';
+import { ModalProps } from '@/types/modalType';
 import checkingModalSizeAndModifyClassName from '@/utils/checkingModalSizeAndModifyClassName';
 
 export default function AlertModal({

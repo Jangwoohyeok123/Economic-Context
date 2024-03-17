@@ -43,5 +43,17 @@ $logoBottonMargin: 30px;
 				background: #555;
 			}
 		}
+
+		.contexts {
+			display: flex;
+			flex-direction: column;
+			align-items: right;
+			padding-left: 20%;
+
+			span {
+				padding: 15px 0;
+				width: 100%;
+			}
+		}
 	}
 }

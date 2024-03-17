@@ -1,42 +1,48 @@
 $tablet: 1023px;
 $mobile: 650px;
 
-.IndicatorCardBase {
-	width: 230px;
-	height: 250px;
+.cardWrap {
+	padding: 20px;
+	height: 100%;
 	background: #fff;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
+	font-family: var(--baseFont);
 	box-shadow: 10px 10px 20px #dedede;
+	transition: 0.3s;
 
-	h3 {
-		font-size: 1.1rem;
-		font-weight: 500;
-		text-align: left;
-		padding: 10px;
+	&:hover {
+		scale: 1.04;
+		cursor: pointer;
+		outline: 1px solid #111;
 	}
 
-	.buttons {
+	.IndicatorCard {
+		width: 100%;
+		height: 100%;
 		display: flex;
+		flex-direction: column;
 		justify-content: space-between;
 
+		div {
+			p {
+				padding-top: 10px;
+				display: -webkit-box;
+				-webkit-line-clamp: 4;
+				-webkit-box-orient: vertical;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+		}
+
 		button {
-			width: 50%;
-			height: 40px;
-			background: #fff;
+			width: 100%;
+			height: 50px;
 			border: none;
-			border-top: 1px solid #ccc;
 			cursor: pointer;
-			transition: 0.3s;
+			transition: 0.2s;
 
 			&:hover {
-				color: white;
+				color: #fff;
 				background: #111;
-			}
-
-			&:nth-of-type(2) {
-				border-left: 1px solid #ccc;
 			}
 
 			&.on {
@@ -44,36 +50,23 @@ $mobile: 650px;
 				background: #111;
 			}
 		}
-	}
-}
 
-.IndicatorCardMainPage {
-	@extend .IndicatorCardBase;
+		.header {
+			h3 {
+				margin-bottom: 10px;
+				font-family: var(--pointFont);
+				font-weight: 500;
+				font-size: 1.2rem;
+				line-height: 1.6rem;
+			}
+		}
 
-	@media (max-width: $tablet) {
-		width: 30%;
-		background: #ccc;
-		padding: 15px;
-	}
-
-	@media (max-width: $mobile) {
-		width: 100%;
-		background: gray;
-		padding: 10px;
-	}
-}
-
-.IndicatorCardDashboard {
-	@extend .IndicatorCardBase;
-	height: 30vh;
-
-	@media (max-width: $tablet) {
-		background: blue;
-		padding: 15px;
-	}
-
-	@media (max-width: $mobile) {
-		background: gray;
-		padding: 10px;
+		.period {
+			text-align: left;
+			opacity: 0.8;
+			div {
+				font-size: 0.9rem;
+			}
+		}
 	}
 }

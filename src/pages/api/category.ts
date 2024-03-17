@@ -1,10 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-type Data = {
-	name: string;
-};
-
 interface Observation {
 	date: string;
 	realtime_end: string;
@@ -17,23 +13,19 @@ type ApiResponse = {
 	message?: string;
 };
 
-// 일반적으로 return 문을 사용하지 않음
-// req: 클라이언트 요청 객체
-// res: 서버 응답객체
-
-export default async function getChartData(req: NextApiRequest, res: NextApiResponse<ApiResponse>) {
-	const baseUrl = process.env.NEXT_PUBLIC_FRED_BASEURL; 
+export default async function getCategory(req: NextApiRequest, res: NextApiResponse<ApiResponse>) {
+	const baseUrl = process.env.NEXT_PUBLIC_FRED_BASEURL;
 	const apiKey = process.env.NEXT_PUBLIC_FREDKEY;
 
 	try {
-		const { seriesId } = req.query;
+		const { categoryId } = req.query;
 
 		const response = await fetch(
-			`${baseUrl}series/observations?series_id=${seriesId}&api_key=${apiKey}&file_type=json`
+			`${baseUrl}category/series?category_id=${categoryId}&api_key=${apiKey}&file_type=json`
 		);
 		const json = await response.json();
 
-		res.status(200).json({ observations: json.observations });
+		res.status(200).json(json);
 	} catch (err) {
 		res.status(500).json({ message: 'fetching 실패' });
 	}

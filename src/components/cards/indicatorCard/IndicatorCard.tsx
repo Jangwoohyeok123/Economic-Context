@@ -1,60 +1,62 @@
 import clsx from 'clsx';
 import styles from './IndicatorCard.module.scss';
-import { useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
+import { cleanString } from '@/utils/cleanString';
 
 interface IndicatorCardProps {
+	children: React.ReactNode;
+	notes?: string;
 	title: string;
-	leftButtonContent: string;
-	leftButtonHandler: () => void;
-	rightButtonContent: string;
-	rightButtonHandler: () => void;
-	pageType: string;
+	seriesId: string;
+	categoryId: number;
+	frequency?: string;
+	popularity?: number;
+	observation_end: string;
+	observation_start: string;
+	className?: string;
 }
 
-function checkingPageTypeAndModifyClassName(pageType: string) {
-	let className = 'defaultClassName';
-	if (pageType === 'main') {
-		className = 'IndicatorCardMainPage';
-	} else if (pageType === 'dashboard') {
-		className = 'IndicatorCardDashboard';
-	}
-
-	return className;
-}
-
+/**
+ * - required props
+ * @param title
+ * @param seriesId morepage 로 이동하기 위해 필요하다.
+ * @param categoryId morepage 로 이동하기 위해 필요하다.
+ * @param observation_end
+ * @param observation_start
+ * @returns title, 기간 정보가 담기 card 를 반환한다. className 을 통해 커스텀 가능하다.
+ */
 export default function IndicatorCard({
+	children,
+	notes,
 	title,
-	leftButtonContent,
-	leftButtonHandler,
-	rightButtonContent,
-	rightButtonHandler,
-	pageType
+	seriesId,
+	categoryId,
+	frequency,
+	popularity,
+	observation_end,
+	observation_start,
+	className
 }: IndicatorCardProps) {
-	const refRightBtn = useRef<HTMLButtonElement>(null);
-	const CardClassName = checkingPageTypeAndModifyClassName(pageType);
-	const isLogin = useSelector(state => state.user.isLogin);
+	const router = useRouter();
+	const cleandTitle = title ? cleanString(title) : 'title';
+	const localRoutingUrl = 'http://localhost:3000';
+	const routeMorePage = (seriesId: string) => {
+		router.push(`${localRoutingUrl}/${seriesId}?title=${cleandTitle}&categoryId=${categoryId}`);
+	};
 
 	return (
-		<div className={clsx(styles[CardClassName])}>
-			<h3>{title}</h3>
-			<div className={clsx(styles.buttons)}>
-				<button className={clsx(styles.leftButton)} type='button' onClick={leftButtonHandler}>
-					{leftButtonContent}
-				</button>
-				<button
-					className={clsx(styles.rightButton)}
-					ref={refRightBtn}
-					type='button'
-					onClick={() => {
-						rightButtonHandler();
-						if (isLogin) refRightBtn.current?.classList.toggle(styles.on);
-					}}>
-					{rightButtonContent}
-				</button>
+		<div className={clsx(styles.cardWrap)}>
+			<div className={clsx(styles.IndicatorCard, className)} onClick={() => routeMorePage(seriesId)}>
+				<div className={styles.header}>
+					<h3>{cleandTitle}</h3>
+					<div className={clsx(styles.period)}>
+						<div>
+							Period: {observation_start} ~ {observation_end}
+						</div>
+					</div>
+				</div>
+				{children}
 			</div>
 		</div>
 	);
 }
-
-// , { [styles.on]: isLogin }
