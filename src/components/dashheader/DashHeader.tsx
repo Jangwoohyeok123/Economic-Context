@@ -9,12 +9,12 @@ interface DashboardProp {
 	TabsIndex: number;
 }
 
-export default function Dashheader({ Tabs, TabsIndex }: DashboardProp) {
+export default function DashHeader({ selectedTab }: DashboardProp) {
 	const user = useSelector((state: Store) => state.user);
 	const profileImageUrl = user.picture_url;
 	return (
 		<header className={clsx(styles.DashHeader)}>
-			<h2>{Tabs[TabsIndex]}</h2>
+			<h2>{selectedTab}</h2>
 			<Image
 				className={clsx(styles.userImage)}
 				src={profileImageUrl}

@@ -8,16 +8,18 @@ interface MenuProps {
 	setSelectedIdx: (index: number) => void;
 }
 
-export default function Menu({ Tabs, SelectedIdx, setSelectedIdx }: MenuProps) {
+export default function Menu({ selectedTab, setSelectedTab }: MenuProps) {
+	const tabs = ['Indicators', 'MyContext'];
+
 	return (
 		<aside className={clsx(styles.Menu)}>
 			<nav>
 				<Link href='/' className={clsx(styles.logo)}>
 					EconomicContext
 				</Link>
-				{Tabs.map((name, idx) => {
+				{tabs.map((name, idx) => {
 					return (
-						<span key={idx} onClick={() => setSelectedIdx(idx)} className={SelectedIdx === idx ? styles.on : ''}>
+						<span key={idx} onClick={() => setSelectedTab(name)}>
 							{name}
 						</span>
 					);
