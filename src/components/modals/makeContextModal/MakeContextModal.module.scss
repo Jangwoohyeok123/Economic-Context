@@ -2,7 +2,18 @@ $h5-padddingBottom: 1px;
 $h5-fontWeight: 500;
 $borderColor: #555;
 
-.ModalBase {
+.Overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100vh;
+	background: #111;
+	opacity: 0.3;
+	z-index: 999;
+}
+
+.MakeContextModal {
 	font-family: var(--pointFont);
 	position: fixed;
 	top: 50%;
@@ -13,15 +24,14 @@ $borderColor: #555;
 	color: #fff;
 	padding: 20px 20px;
 	border-radius: 10px;
-	width: 350px;
-	max-width: 500px;
-	max-height: 80%;
+	width: 500px;
+	max-width: 450px;
+	height: 600px;
 	overflow-y: auto;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 
-	// modal 디자인
 	.header {
 		h3 {
 			font-size: 2rem;
@@ -40,9 +50,9 @@ $borderColor: #555;
 		input {
 			width: 100%;
 			padding: 10px 10px;
-			background: #333;
+			background: #ddd;
 			border: 1px solid $borderColor;
-			color: #fff;
+			color: #111;
 
 			&:focus {
 				padding-left: 10px;
@@ -50,20 +60,28 @@ $borderColor: #555;
 			}
 
 			&::placeholder {
-				color: #fff;
+				color: #111;
 				opacity: 0.6;
 			}
 		}
 	}
 
-	.selectedIndicators {
+	.pickedFavorites {
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
+
+		h5 {
+			font-size: 1.1rem;
+			font-weight: 500;
+		}
+
 		ul {
+			background: #ddd;
 			padding: 10px;
 			height: 150px;
 			border: 1px solid $borderColor;
+			color: #111;
 		}
 
 		li {
@@ -91,31 +109,4 @@ $borderColor: #555;
 			background: #fff;
 		}
 	}
-}
-
-.Overlay {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100vh;
-	background: #111;
-	opacity: 0.3;
-	z-index: 999;
-}
-
-// SmallModal에 특화된 스타일
-.SmallModal {
-	@extend .ModalBase;
-	max-width: 300px; // 더 작은 최대 너비
-	height: 300px;
-	// 필요한 경우 여기에 추가적인 스타일을 적용
-}
-
-// BigModal에 특화된 스타일
-.BigModal {
-	@extend .ModalBase;
-	height: 500px;
-	max-width: 800px; // 더 큰 최대 너비
-	// 필요한 경우 여기에 추가적인 스타일을 적용
 }
