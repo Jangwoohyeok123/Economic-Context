@@ -1,111 +1,69 @@
 import clsx from 'clsx';
 import styles from './MakeContextModal.module.scss';
 import ReactDOM from 'react-dom';
-import { Indicator } from '@/types/dbInterface';
-import { addContext } from '@/firebase/context';
-import { useDispatch, useSelector } from 'react-redux';
-import React, { useEffect, useRef, useState } from 'react';
-import { MakeModalProps } from '@/types/modalInterface';
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { roboto, poppins } from '@/pages/_app';
-import { toggleValidationNameModal } from '@/actions/actions';
-import checkingModalSizeAndModifyClassName from '@/utils/checkingModalSizeAndModifyClassName';
-import const_categoryId from '@/const/categoryId';
+import { Indicator, IndicatorWithIsPick } from '@/types/userType';
+import useFavoriteQuery from '@/hooks/useFavoriteQuery';
+import { changeCategoryIdToName, changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
+import { addContext, getContextNames } from '@/backendApi/user';
+import { useSelector } from 'react-redux';
+import { Store } from '@/types/reduxType';
+import { useMutation, useMutationState, useQueryClient } from '@tanstack/react-query';
+import const_queryKey from '@/const/queryKey';
 
-export default function MakeContextModal({
-	isModalOpen,
-	setIsModalOpen,
-	children,
-	size,
-	activeIndicators
-}: MakeModalProps) {
-	const dispatch = useDispatch();
-	const ModalClassName = checkingModalSizeAndModifyClassName(size);
-	const refInputForContextName = useRef<HTMLInputElement>(null);
-	const [contextIndicators, setContextIndicators] = useState<Indicator[]>([]);
-	// const isValidationModalOpen = useSelector(state => state.validateNameReducer.isOpen);
+interface MakeModalProps {
+	isModalOpen: boolean;
+	setIsModalOpen: Dispatch<SetStateAction<boolean>>;
+	children?: React.ReactNode;
+	favorites: IndicatorWithIsPick[];
+}
 
-	const makeContext = async () => {
-		let contextName: string;
-		if (refInputForContextName.current?.value !== '' && refInputForContextName.current?.value) {
-			contextName = refInputForContextName.current?.value;
-		} else {
-			dispatch(toggleValidationNameModal());
-			return;
-		}
+export default function MakeContextModal({ favorites, isModalOpen, setIsModalOpen, children }: MakeModalProps) {
+	const userId = useSelector((state: Store) => state.user.id);
+	const [selectedFavorites, setSelectedFavorites] = useState<IndicatorWithIsPick[]>();
+	const refInput = useRef<HTMLInputElement>(null);
+	const queryClient = useQueryClient();
 
-		const activeIndicatorsKeys = Object.keys(activeIndicators);
-		activeIndicatorsKeys.forEach(categoryName => {
-			activeIndicators[categoryName].forEach(indicator => {
-				if (indicator.isActive) {
-					contextIndicators.push({
-						title: indicator.title,
-						seriesId: indicator.seriesId,
-						categoryId: indicator.categoryId
-					});
-				}
+	const addContextMutation = useMutation({
+		mutationFn: (favoritesForContext: Indicator[]) =>
+			addContext(userId, refInput?.current?.value as string, favoritesForContext as Indicator[]),
+		onSuccess() {
+			queryClient.invalidateQueries({
+				queryKey: [const_queryKey.context]
 			});
-		});
+		}
+	});
 
-		addContext(contextName, contextIndicators);
+	// pick 할 때마다 새로운 selectedFavorites 만들기
+	useEffect(() => {
+		const pickedFavorites = favorites?.filter(favorite => favorite.isPick);
+		setSelectedFavorites(pickedFavorites);
+	}, [favorites]);
+
+	const makeContext = () => {
+		const favoritesForContext = selectedFavorites?.map(({ isPick, ...favorite }) => favorite);
+		if (refInput.current && favoritesForContext) {
+			addContextMutation.mutate(favoritesForContext);
+		}
 	};
 
-	useEffect(() => {
-		const newContextIndicators: Indicator[] = [];
-		console.log(activeIndicators);
-
-		const activeIndicatorsKeys = Object.keys(activeIndicators);
-		activeIndicatorsKeys.forEach(categoryName => {
-			activeIndicators[categoryName].forEach(indicator => {
-				if (indicator.isActive) {
-					newContextIndicators.push({
-						title: indicator.title,
-						seriesId: indicator.seriesId,
-						categoryId: indicator.categoryId
-					});
-				}
-			});
-		});
-
-		setContextIndicators(newContextIndicators);
-	}, [activeIndicators]);
-
-	return isModalOpen && contextIndicators
+	return isModalOpen
 		? ReactDOM.createPortal(
-				<React.Fragment>
+				<>
 					<div className={clsx(styles.Overlay)}></div>
-					<div className={clsx(styles[ModalClassName], roboto.variable, poppins.variable)}>
+					<div className={clsx(styles.MakeContextModal, roboto.variable, poppins.variable)}>
 						<div className={clsx(styles.header)}>
 							<h3>Create Context</h3>
 							<span>Make your custom context</span>
 						</div>
 						<div className={clsx(styles.name)}>
 							<h5>Name</h5>
-							<input type='text' placeholder='Name of your context' ref={refInputForContextName} />
+							<input ref={refInput} type='text' placeholder='Name of your context'></input>
 						</div>
-						<div className={clsx(styles.selectedIndicators)}>
+						<div className={clsx(styles.pickedFavorites)}>
 							<h5>Indicators</h5>
-							<ul className={clsx(styles.selectedIndicators)}>
-								<li>
-									Interest:{' '}
-									{contextIndicators.filter(indicator => indicator.categoryId === const_categoryId.interest).length}{' '}
-									개의 지표들
-								</li>
-								<li>
-									Exchange:{' '}
-									{contextIndicators.filter(indicator => indicator.categoryId === const_categoryId.exchange).length}{' '}
-									개의 지표들
-								</li>
-								<li>
-									Consume:{' '}
-									{contextIndicators.filter(indicator => indicator.categoryId === const_categoryId.consume).length} 개의
-									지표들
-								</li>
-								<li>
-									Production:{' '}
-									{contextIndicators.filter(indicator => indicator.categoryId === const_categoryId.production).length}{' '}
-									개의 지표들
-								</li>
-							</ul>
+							<ul>{selectedFavorites?.length}개의 지표를 선택하셨습니다.</ul>
 						</div>
 						<div className={clsx(styles.buttons)}>
 							<button
@@ -116,11 +74,11 @@ export default function MakeContextModal({
 								Cancel
 							</button>
 							<button className={clsx(styles.rightButton)} onClick={makeContext}>
-								Make
+								Create
 							</button>
 						</div>
 					</div>
-				</React.Fragment>,
+				</>,
 				document.body
 		  )
 		: null;
