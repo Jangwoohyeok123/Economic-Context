@@ -5,8 +5,7 @@ import { useSelector } from 'react-redux';
 import Image from 'next/image';
 
 interface DashboardProp {
-	Tabs: string[];
-	TabsIndex: number;
+	selectedTab: string;
 }
 
 export default function DashHeader({ selectedTab }: DashboardProp) {

@@ -29,9 +29,10 @@ export const removeComma = (title: string) => {
 
 export const cleanString = (title: string, maxLength?: number, string?: string) => {
 	let cleanedString = title;
+	maxLength = MAX_LENGTH;
 
 	// 다른 사람이 이 파일을 확인할 때 봐야할 부분
-	cleanedString = shortenTitle(cleanedString, MAX_LENGTH);
+	cleanedString = shortenTitle(cleanedString, maxLength);
 	cleanedString = removeSuffix(cleanedString, DISCONTINUED);
 	cleanedString = removeComma(cleanedString);
 
