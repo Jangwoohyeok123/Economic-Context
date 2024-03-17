@@ -27,8 +27,11 @@ export default function Dashboard() {
 			<section>
 				<DashHeader selectedTab={selectedTab} />
 
-				{selectedTab === 'Indicators' && <IndicatorsTab />}
-				{selectedTab === 'MyContext' && <MyContextTab selectedTab={selectedTab} setSelectedTab={setSelectedTab} />}
+				{selectedTab === 'Indicators' ? (
+					<IndicatorsTab />
+				) : (
+					<MyContextTab selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+				)}
 			</section>
 		</div>
 	);

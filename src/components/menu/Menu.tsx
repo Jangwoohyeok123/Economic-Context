@@ -12,11 +12,9 @@ import { ContextNameWithKey } from '@/types/userType';
 interface MenuProps {
 	selectedTab: string;
 	setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
-	currentContext: string;
-	setCurrentContext: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function Menu({ selectedTab, setSelectedTab, currentContext, setCurrentContext }: MenuProps) {
+export default function Menu({ selectedTab, setSelectedTab }: MenuProps) {
 	const tabs = ['Indicators', 'MyContext'];
 	const userId = useSelector((state: Store) => state.user.id);
 	const { data: contextNamesWithKey, isLoading } = useQuery({

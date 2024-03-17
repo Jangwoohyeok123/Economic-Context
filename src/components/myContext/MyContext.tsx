@@ -5,7 +5,7 @@ import { Store } from '@/types/reduxType';
 import const_queryKey from '@/const/queryKey';
 import { getContext, getContextNamesAndKey as getContextNamesWithKey } from '@/backendApi/user';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ContextNameWithKey } from '@/types/userType';
 
 interface MyContextTabProps {
@@ -15,6 +15,7 @@ interface MyContextTabProps {
 
 export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextTabProps) {
 	const userId = useSelector((state: Store) => state.user.id);
+	const [contextId, setContextId] = useState<number>(0);
 
 	const { data: contextNamesWithKey, isLoading } = useQuery({
 		queryKey: [const_queryKey.context, 'names'],
@@ -33,6 +34,11 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 		getContext 에 contextId 를 전달해야한다. 
 	*/
 
+	useEffect(() => {
+		const currentContext = contextNamesWithKey.find(context => context.name === selectedTab);
+		setContextId(currentContext.id);
+	}, [selectedTab]);
+
 	const { data: context } = useQuery({
 		queryKey: [const_queryKey.context, selectedTab],
 		queryFn: () => getContext(userId)
@@ -40,10 +46,7 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 
 	return (
 		<section className={clsx(styles.MyContext)}>
-			{/* {contextNames.map(({ id, name }, index: number) => {
-				return <div key={index}></div>;
-			})}
-			<div>asdasd</div> */}
+			{selectedTab === 'MyContext' ? <div>here is myContext</div> : <div>here is otherwise</div>}
 		</section>
 	);
 }
