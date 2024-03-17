@@ -18,7 +18,20 @@ export async function getJwtAndUserGoogleData(authCode: string) {
 
 export const getFavorites = async (userId: number) => {
 	try {
-		const response = await axios.get(`${backendUrl}user/favorite/${userId}`);
+		if (typeof window === 'undefined') {
+			throw new Error('This function can only be used in the client-side');
+		}
+
+		const token = sessionStorage.getItem('token');
+		if (!token) {
+			throw new Error('No token found in sessionStorage');
+		}
+
+		const response = await axios.get(`${backendUrl}user/favorite/${userId}`, {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		});
 		const favorites = response.data;
 		return favorites;
 	} catch (error) {
@@ -29,7 +42,19 @@ export const getFavorites = async (userId: number) => {
 
 export const getFavorite = async (userId: number, categoryId: number) => {
 	try {
-		const response = await axios.get(`${backendUrl}user/favorite/${userId}/${categoryId}`);
+		if (typeof window === 'undefined') {
+			throw new Error('This function can only be used in the client-side');
+		}
+
+		const token = sessionStorage.getItem('token');
+		if (!token) {
+			throw new Error('No token found in sessionStorage');
+		}
+		const response = await axios.get(`${backendUrl}user/favorite/${userId}/${categoryId}`, {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		});
 		const favorite = response.data;
 		return favorite;
 	} catch (error) {
@@ -41,9 +66,25 @@ export const getFavorite = async (userId: number, categoryId: number) => {
 // body => { indicatorId: seriesId }
 export const addFavorite = async (userId: number, seriesId: string) => {
 	try {
-		await axios.post(`${backendUrl}user/favorite/${userId}`, {
-			indicatorId: seriesId
-		});
+		if (typeof window === 'undefined') {
+			throw new Error('This function can only be used in the client-side');
+		}
+
+		const token = sessionStorage.getItem('token');
+		if (!token) {
+			throw new Error('No token found in sessionStorage');
+		}
+		await axios.post(
+			`${backendUrl}user/favorite/${userId}`,
+			{
+				indicatorId: seriesId
+			},
+			{
+				headers: {
+					Authorization: `Bearer ${token}`
+				}
+			}
+		);
 	} catch (error) {
 		console.log(error);
 		throw new Error('Failed to add favorite Indicator');
@@ -53,23 +94,50 @@ export const addFavorite = async (userId: number, seriesId: string) => {
 // body => { indicatorId: seriesId }
 export const deleteFavorite = async (userId: number, seriesId: string) => {
 	try {
+		if (typeof window === 'undefined') {
+			throw new Error('This function can only be used in the client-side');
+		}
+
+		const token = sessionStorage.getItem('token');
+		if (!token) {
+			throw new Error('No token found in sessionStorage');
+		}
 		await axios.delete(`${backendUrl}user/favorite/${userId}`, {
+			headers: {
+				Authorization: `Bearer ${token}`
+			},
 			data: {
 				indicatorId: seriesId
 			}
 		});
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 		throw new Error('Failed to delete favorite Indicator');
 	}
 };
 
 export const addContext = async (userId: number, name: string, customIndicators: Indicator[]) => {
 	try {
-		await axios.post(`${backendUrl}context/${userId}`, {
-			name: name,
-			customIndicators: customIndicators
-		});
+		if (typeof window === 'undefined') {
+			throw new Error('This function can only be used in the client-side');
+		}
+
+		const token = sessionStorage.getItem('token');
+		if (!token) {
+			throw new Error('No token found in sessionStorage');
+		}
+		await axios.post(
+			`${backendUrl}context/${userId}`,
+			{
+				name: name,
+				customIndicators: customIndicators
+			},
+			{
+				headers: {
+					Authorization: `Bearer ${token}`
+				}
+			}
+		);
 	} catch (error: any) {
 		if (error.response) {
 			console.error(`Error: ${error.response.status} - ${error.response.data}`);
@@ -81,9 +149,21 @@ export const addContext = async (userId: number, name: string, customIndicators:
 	}
 };
 
-export const getContext = async (userId: number) => {
+export const getContext = async (contextId: number) => {
 	try {
-		const response = await axios.get(`${backendUrl}context/${userId}`);
+		if (typeof window === 'undefined') {
+			throw new Error('This function can only be used in the client-side');
+		}
+
+		const token = sessionStorage.getItem('token');
+		if (!token) {
+			throw new Error('No token found in sessionStorage');
+		}
+		const response = await axios.get(`${backendUrl}context/${contextId}`, {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		});
 		return response.data;
 	} catch (error: any) {
 		if (error.response) {
@@ -96,9 +176,21 @@ export const getContext = async (userId: number) => {
 	}
 };
 
-export const getContextNames = async (userId: number) => {
+export const getContextNamesAndKey = async (userId: number) => {
 	try {
-		const response = await axios.get(`${backendUrl}context/name/${userId}`);
+		if (typeof window === 'undefined') {
+			throw new Error('This function can only be used in the client-side');
+		}
+
+		const token = sessionStorage.getItem('token');
+		if (!token) {
+			throw new Error('No token found in sessionStorage');
+		}
+		const response = await axios.get(`${backendUrl}context/name/${userId}`, {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		});
 		return response.data;
 	} catch (error: any) {
 		if (error.response) {
@@ -113,7 +205,19 @@ export const getContextNames = async (userId: number) => {
 
 export const deleteContext = async (contextId: number) => {
 	try {
-		await axios.delete(`${backendUrl}context/${contextId}`);
+		if (typeof window === 'undefined') {
+			throw new Error('This function can only be used in the client-side');
+		}
+
+		const token = sessionStorage.getItem('token');
+		if (!token) {
+			throw new Error('No token found in sessionStorage');
+		}
+		await axios.delete(`${backendUrl}context/${contextId}`, {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		});
 	} catch (error: any) {
 		if (error.response) {
 			console.error(`Error: ${error.response.status} - ${error.response.data}`);
