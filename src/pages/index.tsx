@@ -20,6 +20,7 @@ import { useEffect, useState } from 'react';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { useDispatch, useSelector } from 'react-redux';
 import { categoryNames } from './_app';
+import useFavoriteQuery from '@/hooks/useFavoriteQuery';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
@@ -34,7 +35,7 @@ export default function Pages({ interest }: { interest: Category_Type }) {
 	const itemsPerPage = 9;
 	const categoryId = changeNameToCategoryId(categoryNames[categoryIndex]);
 
-	const { data: category } = useQuery({
+	const { data: category, isLoading } = useQuery({
 		queryKey: [const_queryKey.category, categoryId],
 		queryFn: () => getIndicators(categoryId)
 	});
@@ -61,6 +62,10 @@ export default function Pages({ interest }: { interest: Category_Type }) {
 		if (authCode) setJwtAndUserData(authCode as string);
 	}, []);
 
+	if (isLoading) {
+		return <div>loading...</div>;
+	}
+
 	return (
 		<>
 			<main className={clsx(styles.Home, poppins.variable, roboto.variable)}>
@@ -82,43 +87,41 @@ export default function Pages({ interest }: { interest: Category_Type }) {
 						);
 					})}
 				</div>
-				{user.isLogin
-					? category && (
-							<CategoryWithIsActive
-								categoryData={category}
-								currentPage={currentPage}
-								itemsPerPage={itemsPerPage}
-								categoryId={categoryId}
-							/>
-					  )
-					: category && (
-							<Category
-								categoryData={category}
-								currentPage={currentPage}
-								itemsPerPage={itemsPerPage}
-								categoryId={categoryId}
-								setIsAlertModalOpen={setIsAlertModalOpen}
-							/>
-					  )}
-				{category && (
-					<ReactPaginate
-						pageCount={Math.ceil(category.length / itemsPerPage)}
-						previousAriaLabel='prev page'
-						previousLabel='prev page'
-						nextAriaLabel='next page'
-						nextLabel='next page'
-						pageRangeDisplayed={5}
-						marginPagesDisplayed={0}
-						onPageChange={event => setCurrentPage(event.selected)}
-						containerClassName={styles.pagination}
-						breakLabel={null}
-						forcePage={currentPage}
-						activeClassName={styles.paginationActive}
-						previousClassName={currentPage === 0 ? styles.disabled : ''}
-						nextClassName={currentPage === Math.ceil(category.length / itemsPerPage) ? styles.disabled : ''}
-						disabledClassName={styles.disabled}
+				{user.isLogin ? (
+					<CategoryWithIsActive
+						categoryData={category}
+						currentPage={currentPage}
+						itemsPerPage={itemsPerPage}
+						categoryId={categoryId}
+					/>
+				) : (
+					<Category
+						categoryData={category}
+						currentPage={currentPage}
+						itemsPerPage={itemsPerPage}
+						categoryId={categoryId}
+						setIsAlertModalOpen={setIsAlertModalOpen}
 					/>
 				)}
+				(
+				<ReactPaginate
+					pageCount={Math.ceil(category.length / itemsPerPage)}
+					previousAriaLabel='prev page'
+					previousLabel='prev page'
+					nextAriaLabel='next page'
+					nextLabel='next page'
+					pageRangeDisplayed={5}
+					marginPagesDisplayed={0}
+					onPageChange={event => setCurrentPage(event.selected)}
+					containerClassName={styles.pagination}
+					breakLabel={null}
+					forcePage={currentPage}
+					activeClassName={styles.paginationActive}
+					previousClassName={currentPage === 0 ? styles.disabled : ''}
+					nextClassName={currentPage === Math.ceil(category.length / itemsPerPage) ? styles.disabled : ''}
+					disabledClassName={styles.disabled}
+				/>
+				)
 			</main>
 			<Footer />
 			<DynamicAlertModal
