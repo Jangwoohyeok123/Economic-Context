@@ -3,12 +3,13 @@ import styles from './MyContext.module.scss';
 import { useSelector } from 'react-redux';
 import { Store } from '@/types/reduxType';
 import const_queryKey from '@/const/queryKey';
-import { getContext, getContextNamesAndKey as getContextNamesWithKey } from '@/backendApi/user';
+import { getContext, getContextNamesAndKey as getContextNamesWithKey, getContexts } from '@/backendApi/user';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { ContextNameWithKey } from '@/types/userType';
+import { ContextNameWithKey, Indicator } from '@/types/userType';
 import CategoryTab from '../categoryTab/CategoryTab';
 import { categoryNames } from '@/pages/_app';
+import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
 
 interface MyContextTabProps {
 	selectedTab: string;
@@ -17,11 +18,24 @@ interface MyContextTabProps {
 
 export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextTabProps) {
 	const userId = useSelector((state: Store) => state.user.id);
-	const [contextId, setContextId] = useState<number>(0);
 
-	const { data: contextNamesWithKey, isLoading } = useQuery({
+	const { data: contextNamesWithKey, isLoading: isContextNamesWithKeyLoading } = useQuery({
 		queryKey: [const_queryKey.context, 'names'],
 		queryFn: () => getContextNamesWithKey(userId)
+	});
+
+	const [contextId, setContextId] = useState<number>();
+
+	// back 수정시 사용할 쿼리
+	const { data: contexts, isLoading: isContextsLoading } = useQuery({
+		queryKey: [const_queryKey.context],
+		queryFn: () => getContexts(userId)
+	});
+
+	const { data: context, isLoading: isContextLoading } = useQuery({
+		queryKey: [const_queryKey.context, selectedTab],
+		queryFn: () => getContext(contextId as number),
+		enabled: !!contextId
 	});
 
 	/** MyContext 가 아닌 context 라면 fethcing 을 위해 contextId 를 변경한다. */
@@ -31,15 +45,47 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 		setContextId(currentContext.id);
 	}, [selectedTab]);
 
-	const { data: context } = useQuery({
-		queryKey: [const_queryKey.context, selectedTab],
-		queryFn: () => getContext(userId)
-	});
+	if (isContextsLoading) {
+		return <div>loading...</div>;
+	}
+
+	if (isContextNamesWithKeyLoading) {
+		return <div>loading...</div>;
+	}
+
+	if (isContextLoading) {
+		return <div>loading...</div>;
+	}
 
 	return (
 		<section className={clsx(styles.MyContext)}>
-			<CategoryTab categoryNames={categoryNames} />
-			{selectedTab === 'MyContext' ? <div>here is myContext</div> : <div>here is otherwise</div>}
+			{/* <CategoryTab categoryNames={categoryNames} /> */}
+			{selectedTab === 'MyContext' ? (
+				<div>myContext</div> // 나중에
+			) : (
+				<div>
+					{context.customIndicators.map((indicator: Indicator, index: number) => {
+						const { title, seriesId, categoryId, notes, frequency, popularity, observation_end, observation_start } =
+							indicator;
+
+						return (
+							<IndicatorCard
+								key={index}
+								title={title}
+								seriesId={seriesId}
+								categoryId={categoryId}
+								notes={notes}
+								frequency={frequency}
+								popularity={popularity}
+								observation_end={observation_end}
+								observation_start={observation_start}
+								className={clsx(styles.IndicatorCard)}>
+								<div>asd</div>
+							</IndicatorCard>
+						);
+					})}
+				</div>
+			)}
 		</section>
 	);
 }
