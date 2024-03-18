@@ -42,16 +42,22 @@ export default function Menu({ selectedTab, setSelectedTab }: MenuProps) {
 
 				{tabs.map((name, idx) => {
 					return (
-						<span key={idx} onClick={() => setSelectedTab(name)}>
+						<span
+							key={idx}
+							onClick={() => setSelectedTab(name)}
+							className={selectedTab === name ? clsx(styles.on) : ''}>
 							{name}
 						</span>
 					);
 				})}
 
 				<div className={clsx(styles.contexts)}>
-					{contextNamesWithKey?.map((context: ContextNameAndKey, index: number) => {
+					{contextNamesWithKey?.map((context: ContextNameWithKey, index: number) => {
 						return (
-							<span key={index} onClick={() => setSelectedTab(context.name)}>
+							<span
+								key={index}
+								onClick={() => setSelectedTab(context.name)}
+								className={selectedTab === context.name ? clsx(styles.on) : ''}>
 								{context.name}
 							</span>
 						);
