@@ -21,17 +21,6 @@ export default function Menu({ selectedTab, setSelectedTab }: MenuProps) {
 		queryKey: [const_queryKey.context, 'names'],
 		queryFn: () => getContextNamesAndKey(userId)
 	});
-	const [contextId, setContextId] = useState<number>(0);
-
-	useEffect(() => {
-		const currentContext = contextNamesWithKey?.find((element: ContextNameWithKey) => element.name === selectedTab);
-		setContextId(currentContext?.id);
-	}, [selectedTab]);
-
-	const { data: context } = useQuery({
-		queryKey: [const_queryKey.context, selectedTab],
-		queryFn: () => getContext(contextId)
-	});
 
 	return (
 		<aside className={clsx(styles.Menu)}>
