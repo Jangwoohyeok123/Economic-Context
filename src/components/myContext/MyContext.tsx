@@ -58,13 +58,13 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 	}
 
 	return (
-		<section className={clsx(styles.MyContext)}>
+		<div className={clsx(styles.MyContext)}>
 			{/* <CategoryTab categoryNames={categoryNames} /> */}
 			{selectedTab === 'MyContext' ? (
-				<div>myContext</div> // 나중에
+				<section>myContext</section> // 나중에
 			) : (
-				<div>
-					{context.customIndicators.map((indicator: Indicator, index: number) => {
+				<section>
+					{context?.customIndicators.map((indicator: Indicator, index: number) => {
 						const { title, seriesId, categoryId, notes, frequency, popularity, observation_end, observation_start } =
 							indicator;
 
@@ -84,8 +84,8 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 							</IndicatorCard>
 						);
 					})}
-				</div>
+				</section>
 			)}
-		</section>
+		</div>
 	);
 }

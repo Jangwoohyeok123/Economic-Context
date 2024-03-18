@@ -1,11 +1,11 @@
-$paddingLeft: 30px;
-$menuSize: 15%;
-$logoBottonMargin: 30px;
+.MenuBottom {
+	width: 310px;
+}
 
-// menu 와 otherwise 는 15:85 비율임
 .Menu {
-	// width: var(--dashMenuLength);
-	width: $menuSize;
+	position: fixed;
+	top: 0;
+	width: var(--dashMenuLength);
 	min-height: calc(100vh);
 	font-family: var(--baseFont);
 	background: var(--fontColor);
@@ -21,7 +21,7 @@ $logoBottonMargin: 30px;
 			align-items: center;
 			justify-content: center;
 			height: 60px;
-			margin-bottom: $logoBottonMargin;
+			margin-bottom: 30px;
 			font-size: 1.3rem;
 			background: #222;
 		}

@@ -21,7 +21,7 @@ export default function Dashboard() {
 	});
 
 	return (
-		<div className={clsx(styles.Dashboard, roboto.variable, poppins.variable)}>
+		<section className={clsx(styles.Dashboard, roboto.variable, poppins.variable)}>
 			<Menu selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
 
 			<section>
@@ -33,6 +33,6 @@ export default function Dashboard() {
 					<MyContextTab selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
 				)}
 			</section>
-		</div>
+		</section>
 	);
 }

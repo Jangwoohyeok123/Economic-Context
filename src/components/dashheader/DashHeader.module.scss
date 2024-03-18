@@ -1,4 +1,4 @@
-.Box {
+.HeaderBottom {
 	height: 60px;
 }
 
@@ -7,7 +7,7 @@
 	top: 0;
 	right: 0;
 	z-index: 10;
-	width: 85%;
+	width: calc(100% - var(--dashMenuLength));
 	padding: 0 30px;
 	display: flex;
 	justify-content: space-between;
