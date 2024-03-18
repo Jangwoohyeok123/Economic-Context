@@ -9,15 +9,15 @@ import { roboto, poppins } from '../_app';
 import { useSelector } from 'react-redux';
 import { Store } from '@/types/reduxType';
 import { useQuery } from '@tanstack/react-query';
-import { getContextNamesAndKey } from '@/backendApi/user';
+import { getContextNamesWithKey } from '@/backendApi/user';
 import const_queryKey from '@/const/queryKey';
 
 export default function Dashboard() {
 	const [selectedTab, setSelectedTab] = useState<string>('Indicators');
 	const userId = useSelector((state: Store) => state.user.id);
-	const { data: contextNamesAndKey, isLoading } = useQuery({
+	const { data: contextNamesWithKey, isLoading } = useQuery({
 		queryKey: [const_queryKey.context, 'names'],
-		queryFn: () => getContextNamesAndKey(userId)
+		queryFn: () => getContextNamesWithKey(userId)
 	});
 
 	return (

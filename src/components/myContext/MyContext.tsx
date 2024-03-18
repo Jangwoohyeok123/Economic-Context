@@ -5,7 +5,6 @@ import { Store } from '@/types/reduxType';
 import const_queryKey from '@/const/queryKey';
 import { getAllContexts, getContext, getContextNamesWithKey } from '@/backendApi/user';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
 import { ContextNameWithKey, Indicator } from '@/types/userType';
 import CategoryTab from '../categoryTab/CategoryTab';
 import { categoryNames } from '@/pages/_app';
@@ -18,16 +17,14 @@ interface MyContextTabProps {
 
 export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextTabProps) {
 	const userId = useSelector((state: Store) => state.user.id);
-	const [curContext, setCurContext] = useState<string>();
 
 	const { data: contextNamesWithKey, isLoading: isContextNamesWithKeyLoading } = useQuery({
 		queryKey: [const_queryKey.context, 'names'],
 		queryFn: () => getContextNamesWithKey(userId)
 	});
 
-	const [contextId, setContextId] = useState<number>();
+	const currentContext = contextNamesWithKey?.find((context: ContextNameWithKey) => context.name === selectedTab);
 
-	// back 수정시 사용할 쿼리
 	const { data: allContexts, isLoading: isContextsLoading } = useQuery({
 		queryKey: [const_queryKey.context],
 		queryFn: () => getAllContexts(userId)
@@ -35,16 +32,8 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 
 	const { data: context, isLoading: isContextLoading } = useQuery({
 		queryKey: [const_queryKey.context, selectedTab],
-		queryFn: () => getContext(contextId as number),
-		enabled: !!contextId
+		queryFn: () => getContext(currentContext.id as number)
 	});
-
-	/** MyContext 가 아닌 context 라면 fethcing 을 위해 contextId 를 변경한다. */
-	useEffect(() => {
-		if (selectedTab === 'MyContext') return;
-		const currentContext = contextNamesWithKey?.find((context: ContextNameWithKey) => context.name === selectedTab);
-		setContextId(currentContext.id);
-	}, [selectedTab]);
 
 	if (isContextsLoading) {
 		return <div className={clsx(styles.MyContext)}>loading...</div>;
