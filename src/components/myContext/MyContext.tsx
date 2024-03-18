@@ -7,6 +7,8 @@ import { getContext, getContextNamesAndKey as getContextNamesWithKey } from '@/b
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { ContextNameWithKey } from '@/types/userType';
+import CategoryTab from '../categoryTab/CategoryTab';
+import { categoryNames } from '@/pages/_app';
 
 interface MyContextTabProps {
 	selectedTab: string;
@@ -22,20 +24,10 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 		queryFn: () => getContextNamesWithKey(userId)
 	});
 
-	/* 
-		selectedTab 이 변하면 context 데이터를 페칭한다.
-		selectedTab 이 변하면 contextId 를 찾을 수 있어야한다. 
-		현재, selectedTab 이 변하면 contextNames 가 변한다.
-
-		contextId 는 현재 selectedTab 을 뜻하는 id 다.
-		contextNames 에서 selectedTab 을 find 한다. 
-		그 객체의 id 를 contextId 에게 전달한다.
-
-		getContext 에 contextId 를 전달해야한다. 
-	*/
-
+	/** MyContext 가 아닌 context 라면 fethcing 을 위해 contextId 를 변경한다. */
 	useEffect(() => {
-		const currentContext = contextNamesWithKey.find(context => context.name === selectedTab);
+		if (selectedTab === 'MyContext') return;
+		const currentContext = contextNamesWithKey?.find((context: ContextNameWithKey) => context.name === selectedTab);
 		setContextId(currentContext.id);
 	}, [selectedTab]);
 
@@ -46,6 +38,7 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 
 	return (
 		<section className={clsx(styles.MyContext)}>
+			<CategoryTab categoryNames={categoryNames} />
 			{selectedTab === 'MyContext' ? <div>here is myContext</div> : <div>here is otherwise</div>}
 		</section>
 	);
