@@ -176,6 +176,33 @@ export const getContext = async (contextId: number) => {
 	}
 };
 
+export const getContexts = async (userId: number) => {
+	try {
+		if (typeof window === 'undefined') {
+			throw new Error('This function can only be used in the client-side');
+		}
+
+		const token = sessionStorage.getItem('token');
+		if (!token) {
+			throw new Error('No token found in sessionStorage');
+		}
+		const response = await axios.get(`${backendUrl}user/${userId}`, {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		});
+		return response.data;
+	} catch (error: any) {
+		if (error.response) {
+			console.error(`Error: ${error.response.status} - ${error.response.data}`);
+		} else if (error.request) {
+			console.error('Error: No response from server.');
+		} else {
+			console.error('Error: ', error.message);
+		}
+	}
+};
+
 export const getContextNamesAndKey = async (userId: number) => {
 	try {
 		if (typeof window === 'undefined') {
