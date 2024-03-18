@@ -3,7 +3,7 @@ import styles from './MyContext.module.scss';
 import { useSelector } from 'react-redux';
 import { Store } from '@/types/reduxType';
 import const_queryKey from '@/const/queryKey';
-import { getContext, getContextNamesAndKey as getContextNamesWithKey, getContexts } from '@/backendApi/user';
+import { getAllContexts, getContext, getContextNamesWithKey } from '@/backendApi/user';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { ContextNameWithKey, Indicator } from '@/types/userType';
@@ -27,9 +27,9 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 	const [contextId, setContextId] = useState<number>();
 
 	// back 수정시 사용할 쿼리
-	const { data: contexts, isLoading: isContextsLoading } = useQuery({
+	const { data: allContexts, isLoading: isContextsLoading } = useQuery({
 		queryKey: [const_queryKey.context],
-		queryFn: () => getContexts(userId)
+		queryFn: () => getAllContexts(userId)
 	});
 
 	const { data: context, isLoading: isContextLoading } = useQuery({
@@ -61,7 +61,7 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 		<div className={clsx(styles.MyContext)}>
 			{/* <CategoryTab categoryNames={categoryNames} /> */}
 			{selectedTab === 'MyContext' ? (
-				<section>myContext</section> // 나중에
+				<section>myContext</section> // AllContext 를 이용해야하는 공간입니다.
 			) : (
 				<section>
 					{context?.customIndicators.map((indicator: Indicator, index: number) => {
