@@ -176,7 +176,7 @@ export const getContext = async (contextId: number) => {
 	}
 };
 
-export const getContexts = async (userId: number) => {
+export const getAllContexts = async (userId: number) => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
@@ -186,7 +186,7 @@ export const getContexts = async (userId: number) => {
 		if (!token) {
 			throw new Error('No token found in sessionStorage');
 		}
-		const response = await axios.get(`${backendUrl}user/${userId}`, {
+		const response = await axios.get(`${backendUrl}context/user/${userId}`, {
 			headers: {
 				Authorization: `Bearer ${token}`
 			}
@@ -203,7 +203,7 @@ export const getContexts = async (userId: number) => {
 	}
 };
 
-export const getContextNamesAndKey = async (userId: number) => {
+export const getContextNamesWithKey = async (userId: number) => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
