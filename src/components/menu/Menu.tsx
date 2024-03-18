@@ -23,39 +23,36 @@ export default function Menu({ selectedTab, setSelectedTab }: MenuProps) {
 	});
 
 	return (
-		<>
-			<div className={clsx(styles.MenuBottom)}></div>
-			<aside className={clsx(styles.Menu)}>
-				<nav>
-					<Link href='/' className={clsx(styles.logo)}>
-						EconomicContext
-					</Link>
+		<aside className={clsx(styles.Menu)}>
+			<nav>
+				<Link href='/' className={clsx(styles.logo)}>
+					EconomicContext
+				</Link>
 
-					{tabs.map((name, idx) => {
+				{tabs.map((name, idx) => {
+					return (
+						<span
+							key={idx}
+							onClick={() => setSelectedTab(name)}
+							className={selectedTab === name ? clsx(styles.on) : ''}>
+							{name}
+						</span>
+					);
+				})}
+
+				<div className={clsx(styles.contexts)}>
+					{contextNamesWithKey?.map((context: ContextNameWithKey, index: number) => {
 						return (
 							<span
-								key={idx}
-								onClick={() => setSelectedTab(name)}
-								className={selectedTab === name ? clsx(styles.on) : ''}>
-								{name}
+								key={index}
+								onClick={() => setSelectedTab(context.name)}
+								className={selectedTab === context.name ? clsx(styles.on) : ''}>
+								{context.name}
 							</span>
 						);
 					})}
-
-					<div className={clsx(styles.contexts)}>
-						{contextNamesWithKey?.map((context: ContextNameWithKey, index: number) => {
-							return (
-								<span
-									key={index}
-									onClick={() => setSelectedTab(context.name)}
-									className={selectedTab === context.name ? clsx(styles.on) : ''}>
-									{context.name}
-								</span>
-							);
-						})}
-					</div>
-				</nav>
-			</aside>
-		</>
+				</div>
+			</nav>
+		</aside>
 	);
 }

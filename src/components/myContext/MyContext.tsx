@@ -46,15 +46,15 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 	}, [selectedTab]);
 
 	if (isContextsLoading) {
-		return <div>loading...</div>;
+		return <div className={clsx(styles.MyContext)}>loading...</div>;
 	}
 
 	if (isContextNamesWithKeyLoading) {
-		return <div>loading...</div>;
+		return <div className={clsx(styles.MyContext)}>loading...</div>;
 	}
 
 	if (isContextLoading) {
-		return <div>loading...</div>;
+		return <div className={clsx(styles.MyContext)}>loading...</div>;
 	}
 
 	return (

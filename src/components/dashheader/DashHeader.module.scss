@@ -1,13 +1,9 @@
-.HeaderBottom {
-	height: 60px;
-}
-
 .DashHeader {
 	position: fixed;
 	top: 0;
 	right: 0;
 	z-index: 10;
-	width: calc(100% - var(--dashMenuLength));
+	width: calc(100% - var(--dashMenuWidth));
 	padding: 0 30px;
 	display: flex;
 	justify-content: space-between;
