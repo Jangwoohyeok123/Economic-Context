@@ -18,6 +18,7 @@ interface MyContextTabProps {
 
 export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextTabProps) {
 	const userId = useSelector((state: Store) => state.user.id);
+	const [curContext, setCurContext] = useState<string>();
 
 	const { data: contextNamesWithKey, isLoading: isContextNamesWithKeyLoading } = useQuery({
 		queryKey: [const_queryKey.context, 'names'],
@@ -89,3 +90,5 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 		</div>
 	);
 }
+
+// me
