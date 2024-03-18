@@ -8,12 +8,13 @@ import { useRouter } from 'next/router';
 import const_queryKey from '@/const/queryKey';
 import { useSelector } from 'react-redux';
 import { cleanString } from '@/utils/cleanString';
-import { Seriess_Type } from '@/types/fredType';
+import { SeriessType } from '@/types/fredType';
 import { poppins, roboto } from './_app';
 import { useEffect, useState } from 'react';
 import { getChartData, getIndicator } from '@/backendApi/fred';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { addFavorite, deleteFavorite, getFavorite } from '@/backendApi/user';
+import ChartDescription from '@/components/chartDescription/ChartDescription';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
@@ -30,7 +31,7 @@ export default function Morepage() {
 	const [isActive, setIsActive] = useState(false);
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 	const [chartDatas, setChartDatas] = useState<DataItem[]>([]);
-	const [indicators, setIndicators] = useState<Seriess_Type>({
+	const [indicator, setIndicator] = useState<SeriessType>({
 		id: '',
 		title: '',
 		notes: '',
@@ -121,7 +122,7 @@ export default function Morepage() {
 				seasonal_adjustment,
 				seasonal_adjustment_short
 			} = indicator;
-			setIndicators(prev => ({
+			setIndicator(prev => ({
 				...prev,
 				id,
 				title: cleanString(title), // Indicator 카드 컴포넌트에게서 router.query 를 통해 전달받은 값입니다.
@@ -149,16 +150,19 @@ export default function Morepage() {
 	return (
 		<>
 			<main className={clsx(styles.Morepage, poppins.variable, roboto.variable)}>
-				{chartDatas.length && indicators && (
-					<LineChart indicators={indicators} values={chartDatas}>
-						{user.isLogin ? (
-							<button className={isActive ? clsx(styles.on) : clsx('')} onClick={buttonHandler}>
-								{isActive ? 'delete' : 'save'}
-							</button>
-						) : (
-							<button onClick={buttonHandler}>save</button>
-						)}
-					</LineChart>
+				{chartDatas.length && indicator && (
+					<>
+						<LineChart indicator={indicator} values={chartDatas} height={55}></LineChart>
+						<ChartDescription indicator={indicator}>
+							{user.isLogin ? (
+								<button className={isActive ? clsx(styles.on) : clsx('')} onClick={buttonHandler}>
+									{isActive ? 'delete' : 'save'}
+								</button>
+							) : (
+								<button onClick={buttonHandler}>save</button>
+							)}
+						</ChartDescription>
+					</>
 				)}
 			</main>
 			<DynamicAlertModal
