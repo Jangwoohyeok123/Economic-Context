@@ -8,7 +8,8 @@ import { useRouter } from 'next/router';
 import const_queryKey from '@/const/queryKey';
 import { useSelector } from 'react-redux';
 import { cleanString } from '@/utils/cleanString';
-import { Seriess_Type } from '@/types/fredType';
+import { SeriessType } from '@/types/fredType';
+import ChartDescription from '@/components/chartDescription/ChartDescription';
 import { poppins, roboto } from './_app';
 import { useEffect, useState } from 'react';
 import { getChartData, getIndicator } from '@/backendApi/fred';
@@ -106,7 +107,7 @@ export default function Morepage() {
 				console.error(err.message);
 			});
 
-		getIndicator(id as string).then((indicator: Seriess_Type) => {
+		getIndicator(id as string).then((indicator: SeriessType) => {
 			const {
 				id,
 				title,

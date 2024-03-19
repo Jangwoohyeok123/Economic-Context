@@ -14,11 +14,6 @@ import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import MakeContextModal from '../modals/makeContextModal/MakeContextModal';
 import AlertModal from '../modals/alertModal/AlertModal';
 
-/** [key: string] 는 key 를 여러개 갖을 수 있고 값은 Indicator[] 을 갖는다는 의미의 type 이다. */
-type PickIndicators = {
-	[key: string]: Indicator[];
-};
-
 /**
 - IndicatorsTab 을 클릭하면 첫 selectedFavorite 이 페칭된다.
 - categoryIndex 가 바뀌면 useFavoriteQuery 에 의해서 페칭이 되는 구조다.
@@ -28,20 +23,22 @@ const itemsPerPage = 3;
 export default function IndicatorsTab() {
 	const user = useSelector((state: Store) => state.user);
 
-	const [categoryIndex, setCategoryIndex] = useState(0);
-	const [currentPage, setCurrentPage] = useState(0);
-	const [favorites, setFavorites] = useState();
-	const [isMakeOpen, setIsMakeOpen] = useState(false);
-	const [isValidateModal, setIsValidateModal] = useState(false);
+	const [categoryIndex, setCategoryIndex] = useState<number>(0);
+	const [currentPage, setCurrentPage] = useState<number>(0);
+	const [favoritesWithPick, setFavoritesWithPick] = useState<IndicatorWithIsPick[]>([]);
+	const [isMakeOpen, setIsMakeOpen] = useState<boolean>(false);
+	const [isValidateModal, setIsValidateModal] = useState<boolean>(false);
 
 	const { deleteFavoriteMutationAll } = useFavoriteMutation();
 	const categoryId = changeNameToCategoryId(categoryNames[categoryIndex]);
 	const { allFavorites } = useFavoriteQuery();
 
 	useEffect(() => {
-		if (favorites) {
-			const updated = allFavorites.map(favorite => {
-				const prev = favorites.find(prevFavorites => prevFavorites.seriesId === favorite.seriesId);
+		if (favoritesWithPick) {
+			const updated = allFavorites?.map((favorite: IndicatorWithIsPick) => {
+				const prev = favoritesWithPick.find(
+					(prevFavorites: IndicatorWithIsPick) => prevFavorites.seriesId === favorite.seriesId
+				);
 				return prev
 					? {
 							...favorite,
@@ -53,21 +50,21 @@ export default function IndicatorsTab() {
 					  };
 			});
 
-			setFavorites(updated);
+			setFavoritesWithPick(updated);
 			return;
 		}
 
-		const updated = allFavorites?.map(favorite => {
+		const updated = allFavorites?.map((favorite: IndicatorWithIsPick) => {
 			return {
 				...favorite,
 				isPick: false
 			};
 		});
 
-		setFavorites(updated);
+		setFavoritesWithPick(updated);
 	}, [allFavorites]);
 
-	const curFavorites = favorites?.filter(favorite => favorite?.categoryId == categoryId);
+	const curFavorites = favoritesWithPick?.filter((favorite: Indicator) => favorite?.categoryId == categoryId);
 	const pagedFavorite = curFavorites?.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
 	return (
@@ -87,6 +84,7 @@ export default function IndicatorsTab() {
 			<section className={clsx(styles.favorites)}>
 				{pagedFavorite?.map((favorite: IndicatorWithIsPick, index: number) => {
 					const { title, seriesId, notes, categoryId, observation_end, observation_start, isPick } = favorite;
+
 					return (
 						<IndicatorCard
 							key={index}
@@ -105,7 +103,7 @@ export default function IndicatorsTab() {
 								<BubblePopButton
 									className={isPick ? clsx(styles.on) : ''}
 									clickHandler={() => {
-										const updated = favorites.map(favorite => {
+										const updated = favoritesWithPick?.map((favorite: IndicatorWithIsPick) => {
 											if (favorite.seriesId === seriesId) {
 												return {
 													...favorite,
@@ -116,7 +114,7 @@ export default function IndicatorsTab() {
 											return favorite;
 										});
 
-										setFavorites(updated);
+										setFavoritesWithPick(updated);
 									}}>
 									{isPick ? 'unpick' : 'pick'}
 								</BubblePopButton>
@@ -149,14 +147,14 @@ export default function IndicatorsTab() {
 				<div className={clsx(styles.item, styles.buttonWrap)}>
 					<button
 						onClick={() => {
-							if (favorites?.filter(favorite => favorite.isPick).length > 0) setIsMakeOpen(true);
+							if (favoritesWithPick?.filter(favorite => favorite.isPick).length > 0) setIsMakeOpen(true);
 							else setIsValidateModal(true);
 						}}>
 						Make Context
 					</button>
 				</div>
 			</footer>
-			<MakeContextModal favorites={favorites} isModalOpen={isMakeOpen} setIsModalOpen={setIsMakeOpen} />
+			<MakeContextModal favorites={favoritesWithPick} isModalOpen={isMakeOpen} setIsModalOpen={setIsMakeOpen} />
 			<AlertModal
 				isModalOpen={isValidateModal}
 				setIsModalOpen={setIsValidateModal}

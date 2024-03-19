@@ -6,7 +6,7 @@ import { roboto, poppins } from '@/pages/_app';
 import { Indicator, IndicatorWithIsPick } from '@/types/userType';
 import useFavoriteQuery from '@/hooks/useFavoriteQuery';
 import { changeCategoryIdToName, changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
-import { addContext, getContextNamesAndKey } from '@/backendApi/user';
+import { addContext, getContextNamesWithKey } from '@/backendApi/user';
 import { useSelector } from 'react-redux';
 import { Store } from '@/types/reduxType';
 import { useMutation, useMutationState, useQueryClient } from '@tanstack/react-query';
@@ -41,11 +41,14 @@ export default function MakeContextModal({ favorites, isModalOpen, setIsModalOpe
 		setSelectedFavorites(pickedFavorites);
 	}, [favorites]);
 
+	/** favoriteWithIsPick 에서 isPick 을 제거한 후 mutation 한다. */
 	const makeContext = () => {
 		const favoritesForContext = selectedFavorites?.map(({ isPick, ...favorite }) => favorite);
 		if (refInput.current && favoritesForContext) {
 			addContextMutation.mutate(favoritesForContext);
 		}
+
+		setIsModalOpen(false);
 	};
 
 	return isModalOpen
