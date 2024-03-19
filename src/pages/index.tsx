@@ -13,8 +13,8 @@ import ReactPaginate from 'react-paginate';
 import { useRouter } from 'next/router';
 import const_queryKey from '@/const/queryKey';
 import { getIndicators } from '@/backendApi/fred';
-import { Category_Type } from '@/types/fredType';
-import { roboto, poppins } from './_app';
+import { CategoryType } from '@/types/fredType';
+import { roboto, poppins, frontUrl } from './_app';
 import CategoryWithIsActive from '@/components/categoryWithIsAcitve/CategoryWithIsActive';
 import { useEffect, useState } from 'react';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
@@ -24,7 +24,7 @@ import useFavoriteQuery from '@/hooks/useFavoriteQuery';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
-export default function Pages({ interest }: { interest: Category_Type }) {
+export default function Pages({ interest }: { interest: CategoryType }) {
 	const user = useSelector((state: Store) => state.user);
 	const router = useRouter();
 	const dispatch = useDispatch();
@@ -37,7 +37,8 @@ export default function Pages({ interest }: { interest: Category_Type }) {
 
 	const { data: category, isLoading } = useQuery({
 		queryKey: [const_queryKey.category, categoryId],
-		queryFn: () => getIndicators(categoryId)
+		queryFn: () => getIndicators(categoryId),
+		staleTime: 1000 * 60 * 10
 	});
 
 	const setJwtAndUserData = (authCode: string) => {
@@ -103,13 +104,12 @@ export default function Pages({ interest }: { interest: Category_Type }) {
 						setIsAlertModalOpen={setIsAlertModalOpen}
 					/>
 				)}
-				(
 				<ReactPaginate
 					pageCount={Math.ceil(category.length / itemsPerPage)}
-					previousAriaLabel='prev page'
-					previousLabel='prev page'
-					nextAriaLabel='next page'
-					nextLabel='next page'
+					previousAriaLabel='Prev'
+					previousLabel='Prev'
+					nextAriaLabel='Next'
+					nextLabel='Next'
 					pageRangeDisplayed={5}
 					marginPagesDisplayed={0}
 					onPageChange={event => setCurrentPage(event.selected)}
@@ -121,7 +121,6 @@ export default function Pages({ interest }: { interest: Category_Type }) {
 					nextClassName={currentPage === Math.ceil(category.length / itemsPerPage) ? styles.disabled : ''}
 					disabledClassName={styles.disabled}
 				/>
-				)
 			</main>
 			<Footer />
 			<DynamicAlertModal
@@ -133,7 +132,7 @@ export default function Pages({ interest }: { interest: Category_Type }) {
 				leftButtonContent='Cancle'
 				leftButtonHandler={() => setIsAlertModalOpen(false)}
 				rightButtonContent='Login'
-				rightButtonHandler={() => (window.location.href = 'http://localhost:3000/login')}
+				rightButtonHandler={() => router.push(`${frontUrl}/login`)}
 			/>
 		</>
 	);

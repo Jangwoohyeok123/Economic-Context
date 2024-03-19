@@ -24,6 +24,7 @@ export default function Header() {
 	const router = useRouter();
 	const dispatch = useDispatch();
 	const [IsAlertModalOpen, setIsAlertModalOpen] = useState(false);
+	const frontUrl = process.env.NEXT_PUBLIC_FRONT_URL_LOCAL;
 
 	const goToLoginPage = () => {
 		if (!isLogin) setIsAlertModalOpen(true);
@@ -60,7 +61,7 @@ export default function Header() {
 					leftButtonContent='Cancle'
 					leftButtonHandler={() => setIsAlertModalOpen(false)}
 					rightButtonContent='Login'
-					rightButtonHandler={() => (window.location.href = 'http://localhost:3000/login')}
+					rightButtonHandler={() => router.push(`${frontUrl}/login`)}
 				/>
 			</header>
 		</>

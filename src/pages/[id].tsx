@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import { cleanString } from '@/utils/cleanString';
 import { SeriessType } from '@/types/fredType';
 import ChartDescription from '@/components/chartDescription/ChartDescription';
-import { poppins, roboto } from './_app';
+import { frontUrl, poppins, roboto } from './_app';
 import { useEffect, useState } from 'react';
 import { getChartData, getIndicator } from '@/backendApi/fred';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -31,7 +31,7 @@ export default function Morepage() {
 	const [isActive, setIsActive] = useState(false);
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 	const [chartDatas, setChartDatas] = useState<DataItem[]>([]);
-	const [indicators, setIndicators] = useState<Seriess_Type>({
+	const [indicators, setIndicators] = useState<SeriessType>({
 		id: '',
 		title: '',
 		notes: '',
@@ -151,7 +151,7 @@ export default function Morepage() {
 		<>
 			<main className={clsx(styles.Morepage, poppins.variable, roboto.variable)}>
 				{chartDatas.length && indicators && (
-					<LineChart indicators={indicators} values={chartDatas}>
+					<LineChart indicator={indicators} values={chartDatas}>
 						{user.isLogin ? (
 							<button className={isActive ? clsx(styles.on) : clsx('')} onClick={buttonHandler}>
 								{isActive ? 'delete' : 'save'}
@@ -171,7 +171,7 @@ export default function Morepage() {
 				leftButtonContent='Cancle'
 				leftButtonHandler={() => setIsAlertModalOpen(false)}
 				rightButtonContent='Login'
-				rightButtonHandler={() => (window.location.href = 'http://localhost:3000/login')}
+				rightButtonHandler={() => router.push(`${frontUrl}/login`)}
 			/>
 		</>
 	);

@@ -15,7 +15,7 @@ export default function Login() {
 		const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(
 			redirectUrl
 		)}&response_type=code&scope=email profile`;
-		window.location.href = url;
+		router.push(url);
 	};
 
 	return (

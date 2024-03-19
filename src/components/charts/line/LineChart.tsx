@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import clsx from 'clsx';
 import styles from './LineChart.module.scss';
-import { Seriess_Type } from '@/types/fredType';
+import { SeriessType } from '@/types/fredType';
 
 interface Value {
 	date: Date;
@@ -10,7 +10,7 @@ interface Value {
 }
 
 interface LineChartProps {
-	indicators: Seriess_Type;
+	indicator: SeriessType;
 	children: React.ReactElement;
 	values: Value[];
 	className?: string;
@@ -25,7 +25,7 @@ interface LineChartProps {
 	이슈사항 
 	ButtonComponent 는 favorite 정보와 동기화 시켜야 하기 때문에 categoryId 가 필요하다 
 */
-const LineChart = ({ indicators, values, children, className }: LineChartProps) => {
+const LineChart = ({ indicator: indicators, values, children, className }: LineChartProps) => {
 	const svgRef = useRef<SVGSVGElement>(null);
 	const svgContainerRef = useRef<HTMLDivElement>(null);
 	const compoenetRootDivRef = useRef<HTMLDivElement>(null);

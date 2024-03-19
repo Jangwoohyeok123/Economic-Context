@@ -9,6 +9,7 @@ import { ContextNameWithKey, Indicator } from '@/types/userType';
 import CategoryTab from '../categoryTab/CategoryTab';
 import { categoryNames } from '@/pages/_app';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
+import LineChart from '../charts/line/LineChart';
 
 interface MyContextTabProps {
 	selectedTab: string;
@@ -49,6 +50,9 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 
 	return (
 		<div className={clsx(styles.MyContext)}>
+			<LineChart indicator={indicators} values={chartDatas}>
+				<span>test</span>
+			</LineChart>
 			{/* <CategoryTab categoryNames={categoryNames} /> */}
 			{selectedTab === 'MyContext' ? (
 				<section>myContext</section> // AllContext 를 이용해야하는 공간입니다.
@@ -57,7 +61,6 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 					{context?.customIndicators.map((indicator: Indicator, index: number) => {
 						const { title, seriesId, categoryId, notes, frequency, popularity, observation_end, observation_start } =
 							indicator;
-
 						return (
 							<IndicatorCard
 								key={index}

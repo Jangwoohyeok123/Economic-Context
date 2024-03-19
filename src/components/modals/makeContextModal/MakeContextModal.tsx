@@ -3,13 +3,13 @@ import styles from './MakeContextModal.module.scss';
 import ReactDOM from 'react-dom';
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { roboto, poppins } from '@/pages/_app';
-import { Indicator, IndicatorWithIsPick } from '@/types/userType';
+import { ContextNameWithKey, Indicator, IndicatorWithIsPick } from '@/types/userType';
 import useFavoriteQuery from '@/hooks/useFavoriteQuery';
 import { changeCategoryIdToName, changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { addContext, getContextNamesWithKey } from '@/backendApi/user';
 import { useSelector } from 'react-redux';
 import { Store } from '@/types/reduxType';
-import { useMutation, useMutationState, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useMutationState, useQuery, useQueryClient } from '@tanstack/react-query';
 import const_queryKey from '@/const/queryKey';
 
 interface MakeModalProps {
@@ -25,6 +25,12 @@ export default function MakeContextModal({ favorites, isModalOpen, setIsModalOpe
 	const refInput = useRef<HTMLInputElement>(null);
 	const queryClient = useQueryClient();
 
+	// 나중에 훅으로 처리할 부분
+	const { data: contextNamesWithKey, isLoading } = useQuery({
+		queryKey: [const_queryKey.context, 'names'],
+		queryFn: () => getContextNamesWithKey(userId)
+	});
+
 	const addContextMutation = useMutation({
 		mutationFn: (favoritesForContext: Indicator[]) =>
 			addContext(userId, refInput?.current?.value as string, favoritesForContext as Indicator[]),
@@ -32,23 +38,26 @@ export default function MakeContextModal({ favorites, isModalOpen, setIsModalOpe
 			queryClient.invalidateQueries({
 				queryKey: [const_queryKey.context]
 			});
+			setIsModalOpen(false);
 		}
 	});
 
-	// pick 할 때마다 새로운 selectedFavorites 만들기
 	useEffect(() => {
 		const pickedFavorites = favorites?.filter(favorite => favorite.isPick);
 		setSelectedFavorites(pickedFavorites);
 	}, [favorites]);
 
-	/** favoriteWithIsPick 에서 isPick 을 제거한 후 mutation 한다. */
 	const makeContext = () => {
 		const favoritesForContext = selectedFavorites?.map(({ isPick, ...favorite }) => favorite);
-		if (refInput.current && favoritesForContext) {
+		if (
+			refInput.current &&
+			favoritesForContext &&
+			!contextNamesWithKey?.some((context: ContextNameWithKey) => refInput?.current?.value === context.name)
+		) {
 			addContextMutation.mutate(favoritesForContext);
+		} else {
+			alert('title 이 중복됩니다.');
 		}
-
-		setIsModalOpen(false);
 	};
 
 	return isModalOpen

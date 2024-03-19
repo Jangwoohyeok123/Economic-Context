@@ -25,6 +25,7 @@ export default function Menu({ selectedTab, setSelectedTab }: MenuProps) {
 
 	const tabClick = (name: string) => {
 		setSelectedTab(name);
+		if (name === 'Indicators') setIsAccordian(false);
 		if (name === 'MyContext') setIsAccordian(!isAccordian);
 	};
 

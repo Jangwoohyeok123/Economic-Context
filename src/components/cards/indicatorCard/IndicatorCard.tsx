@@ -39,7 +39,7 @@ export default function IndicatorCard({
 }: IndicatorCardProps) {
 	const router = useRouter();
 	const cleandTitle = title ? cleanString(title) : 'title';
-	const localRoutingUrl = 'http://localhost:3000';
+	const localRoutingUrl = process.env.NEXT_PUBLIC_FRONT_URL_LOCAL;
 	const routeMorePage = (seriesId: string) => {
 		router.push(`${localRoutingUrl}/${seriesId}?title=${cleandTitle}&categoryId=${categoryId}`);
 	};
