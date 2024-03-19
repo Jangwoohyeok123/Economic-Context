@@ -19,11 +19,11 @@ export default function Journal({ contextId }: JournalProps) {
 
 	const [journalDataParams, setJournalDataParams] = useState({ title: '', body: '' });
 
-	const handleOpenInput = (e: React.FormEvent<HTMLButtonElement>) => {
+	const ToggleJournalFormButton = (e: React.FormEvent<HTMLButtonElement>) => {
 		e.preventDefault();
 		setIsWrite(prev => !prev);
 	};
-	const handleJournalInputData = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
+	const ChangeJournalInputData = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
 		e.preventDefault();
 		const { name, value } = e.target; // e.target에서 name과 value를 추출
 		const newParams: Journal = {
@@ -75,13 +75,13 @@ export default function Journal({ contextId }: JournalProps) {
 		<div className={clsx(styles.Journal)}>
 			<section className={clsx(styles.JournalHeader)}>
 				<h3>Journal</h3>
-				<button onClick={e => handleOpenInput(e)}>작성</button>
+				<button onClick={e => ToggleJournalFormButton(e)}>작성</button>
 			</section>
 
 			{isWrite && (
 				<form onSubmit={registJournal}>
-					<input type='text' name='title' onChange={e => handleJournalInputData(e)} />
-					<textarea name='body' rows={5} onChange={e => handleJournalInputData(e)} />
+					<input type='text' name='title' onChange={e => ChangeJournalInputData(e)} />
+					<textarea name='body' rows={5} onChange={e => ChangeJournalInputData(e)} />
 					<div>
 						<button>등록</button>
 					</div>
@@ -89,7 +89,7 @@ export default function Journal({ contextId }: JournalProps) {
 			)}
 			<table>
 				<tbody>
-					{journal?.map((item, index) => (
+					{journal?.map((item: Journal, index: number) => (
 						<tr key={index}>
 							{/* 메모 */}
 							<td>
