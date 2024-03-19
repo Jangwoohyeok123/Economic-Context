@@ -59,4 +59,9 @@ export interface IndicatorWithIsPick extends Indicator {
 	isPick: boolean;
 }
 
+export type ContextNameWithKey = {
+	name: string;
+	key: number;
+};
+
 export default User;

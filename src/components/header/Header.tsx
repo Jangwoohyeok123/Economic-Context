@@ -35,32 +35,34 @@ export default function Header() {
 
 	// 나중에 조건부 렌더링 컴포넌트 분리
 	return (
-		<header className={clsx(styles.Header, poppins.variable)}>
-			<nav className={clsx(styles.mainNav)}>
-				<Link href='/'>EconomicContext</Link>
-				{isLogin ? (
-					<div className={clsx(styles.users)}>
-						<Link href='/dashboard'>MyContext</Link>
-						<span onClick={userLogout}>Logout</span>
-					</div>
-				) : (
-					<div className={clsx(styles.users)}>
-						<span onClick={goToLoginPage}>MyContext</span>
-						<Link href='/login'>Login</Link>
-					</div>
-				)}
-			</nav>
-			<AlertModal
-				isModalOpen={IsAlertModalOpen}
-				setIsModalOpen={setIsAlertModalOpen}
-				size='small'
-				header='You need to login!'
-				body='Our service is required to login'
-				leftButtonContent='Cancle'
-				leftButtonHandler={() => setIsAlertModalOpen(false)}
-				rightButtonContent='Login'
-				rightButtonHandler={() => (window.location.href = 'http://localhost:3000/login')}
-			/>
-		</header>
+		<>
+			<header className={clsx(styles.Header, poppins.variable)}>
+				<nav className={clsx(styles.mainNav)}>
+					<Link href='/'>EconomicContext</Link>
+					{isLogin ? (
+						<div className={clsx(styles.users)}>
+							<Link href='/dashboard'>MyContext</Link>
+							<span onClick={userLogout}>Logout</span>
+						</div>
+					) : (
+						<div className={clsx(styles.users)}>
+							<span onClick={goToLoginPage}>MyContext</span>
+							<Link href='/login'>Login</Link>
+						</div>
+					)}
+				</nav>
+				<AlertModal
+					isModalOpen={IsAlertModalOpen}
+					setIsModalOpen={setIsAlertModalOpen}
+					size='small'
+					header='You need to login!'
+					body='Our service is required to login'
+					leftButtonContent='Cancle'
+					leftButtonHandler={() => setIsAlertModalOpen(false)}
+					rightButtonContent='Login'
+					rightButtonHandler={() => (window.location.href = 'http://localhost:3000/login')}
+				/>
+			</header>
+		</>
 	);
 }

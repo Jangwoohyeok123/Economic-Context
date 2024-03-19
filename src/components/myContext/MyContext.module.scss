@@ -1,27 +1,7 @@
+// layout 작업
 .MyContext {
-	padding: 30px;
 	width: 100%;
-
-	nav {
-		display: flex;
-		gap: 20px;
-		padding-bottom: 30px;
-
-		button {
-			border: 1px solid #888;
-			padding: 5px 20px;
-			cursor: pointer;
-			transition: 0.3s;
-
-			&:hover {
-				background: #111;
-				color: #fff;
-			}
-
-			&.on {
-				background: #111;
-				color: #fff;
-			}
-		}
+	padding: 30px;
+	.IndicatorCard {
 	}
 }

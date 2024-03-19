@@ -2,8 +2,10 @@
 	font-family: var(--baseFont);
 	width: 100%;
 	display: flex;
-
-	section {
-		width: 85%;
+	padding-top: var(--headerSize);
+	padding-left: var(--dashMenuWidth);
+	> section {
+		width: 100%;
+		min-height: calc(100vh - var(--headerSize));
 	}
 }

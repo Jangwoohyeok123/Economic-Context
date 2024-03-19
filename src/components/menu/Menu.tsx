@@ -2,11 +2,12 @@ import clsx from 'clsx';
 import styles from './Menu.module.scss';
 import Link from 'next/link';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { deleteContext, getContext, getContextNames } from '@/backendApi/user';
+import { deleteContext, getContext, getContextNamesAndKey } from '@/backendApi/user';
 import { useSelector } from 'react-redux';
 import { Store } from '@/types/reduxType';
 import const_queryKey from '@/const/queryKey';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { ContextNameWithKey } from '@/types/userType';
 
 interface MenuProps {
 	selectedTab: string;
@@ -14,17 +15,11 @@ interface MenuProps {
 }
 
 export default function Menu({ selectedTab, setSelectedTab }: MenuProps) {
-	const userId = useSelector((state: Store) => state.user.id);
 	const tabs = ['Indicators', 'MyContext'];
-	const { data: contextNames, isLoading } = useQuery({
+	const userId = useSelector((state: Store) => state.user.id);
+	const { data: contextNamesWithKey, isLoading } = useQuery({
 		queryKey: [const_queryKey.context, 'names'],
-		queryFn: () => getContextNames(userId)
-	});
-
-	const [curContextName, setCurContext] = useState<string>();
-	const { data: context } = useQuery({
-		queryKey: [const_queryKey.context, curContextName],
-		queryFn: () => getContext(userId)
+		queryFn: () => getContextNamesAndKey(userId)
 	});
 
 	return (
@@ -36,17 +31,23 @@ export default function Menu({ selectedTab, setSelectedTab }: MenuProps) {
 
 				{tabs.map((name, idx) => {
 					return (
-						<span key={idx} onClick={() => setSelectedTab(name)}>
+						<span
+							key={idx}
+							onClick={() => setSelectedTab(name)}
+							className={selectedTab === name ? clsx(styles.on) : ''}>
 							{name}
 						</span>
 					);
 				})}
 
 				<div className={clsx(styles.contexts)}>
-					{contextNames?.map((name: string, index: number) => {
+					{contextNamesWithKey?.map((context: ContextNameWithKey, index: number) => {
 						return (
-							<span key={index} onClick={() => setCurContext(name)}>
-								{name}
+							<span
+								key={index}
+								onClick={() => setSelectedTab(context.name)}
+								className={selectedTab === context.name ? clsx(styles.on) : ''}>
+								{context.name}
 							</span>
 						);
 					})}
