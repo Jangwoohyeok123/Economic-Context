@@ -3,15 +3,20 @@ import * as d3 from 'd3';
 import clsx from 'clsx';
 import styles from './LineChart.module.scss';
 import { SeriessType } from '@/types/fredType';
+import ChartDescription from '@/components/chartDescription/ChartDescription';
 
-interface Value {
+/**
+ * @param date - Date
+ * @param value - number
+ */
+export interface Value {
 	date: Date;
 	value: number;
 }
 
-interface LineChartProps {
+export interface LineChartProps {
 	indicator: SeriessType;
-	children: React.ReactElement;
+	children?: React.ReactElement;
 	values: Value[];
 	className?: string;
 }
@@ -26,6 +31,7 @@ interface LineChartProps {
 	ButtonComponent 는 favorite 정보와 동기화 시켜야 하기 때문에 categoryId 가 필요하다 
 */
 const LineChart = ({ indicator: indicators, values, children, className }: LineChartProps) => {
+	console.log(values);
 	const svgRef = useRef<SVGSVGElement>(null);
 	const svgContainerRef = useRef<HTMLDivElement>(null);
 	const compoenetRootDivRef = useRef<HTMLDivElement>(null);
@@ -99,11 +105,6 @@ const LineChart = ({ indicator: indicators, values, children, className }: LineC
 				<h3>{indicators.title}</h3>
 				<div className={clsx(styles.chartFeatures)}>
 					Period: {indicators.observation_start} ~ {indicators.observation_end}
-					{/* <span>기능1</span>
-					<span>기능2</span>
-					<span>기능3</span>
-					<span>기능4</span>
-					<span>기능5</span> */}
 				</div>
 			</div>
 			<div ref={svgContainerRef} className={clsx(styles.chartContainer)}>
@@ -111,7 +112,8 @@ const LineChart = ({ indicator: indicators, values, children, className }: LineC
 					<svg ref={svgRef} />
 				</div>
 			</div>
-			<div className={clsx(styles.chartDescription)}>
+			{/* <ChartDescription /> */}
+			{/* <div className={clsx(styles.chartDescription)}>
 				<h3>{indicators.title}</h3>
 				<p className={clsx(styles.notes)}>{indicators.notes}</p>
 				<div className={clsx(styles.additional)}>
@@ -129,7 +131,7 @@ const LineChart = ({ indicator: indicators, values, children, className }: LineC
 					</div>
 					{children}
 				</div>
-			</div>
+			</div> */}
 		</div>
 	);
 };

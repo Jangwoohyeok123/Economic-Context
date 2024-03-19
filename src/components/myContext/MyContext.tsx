@@ -4,21 +4,36 @@ import { useSelector } from 'react-redux';
 import { Store } from '@/types/reduxType';
 import const_queryKey from '@/const/queryKey';
 import { getAllContexts, getContext, getContextNamesWithKey } from '@/backendApi/user';
-import { useQuery } from '@tanstack/react-query';
+import { useQueries, useQuery } from '@tanstack/react-query';
 import { ContextNameWithKey, Indicator } from '@/types/userType';
 import CategoryTab from '../categoryTab/CategoryTab';
 import { categoryNames } from '@/pages/_app';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
 import LineChart from '../charts/line/LineChart';
+import { useEffect, useState } from 'react';
+import { getChartData, getIndicator } from '@/backendApi/fred';
+import { SeriessType } from '@/types/fredType';
+import { cleanString } from '@/utils/cleanString';
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+// Import Swiper styles
+import 'swiper/css';
+import getChartValues from '@/pages/api/chartValues';
+import ChartSwiper from '../chartSwiper/ChartSwiper';
 
 interface MyContextTabProps {
 	selectedTab: string;
 	setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
+interface DataItem {
+	date: Date;
+	value: number;
+}
+
 export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextTabProps) {
 	const userId = useSelector((state: Store) => state.user.id);
-
+	const [chartDatasForSwiper, setChartDatasForSwiper] = useState([]);
 	const { data: contextNamesWithKey, isLoading: isContextNamesWithKeyLoading } = useQuery({
 		queryKey: [const_queryKey.context, 'names'],
 		queryFn: () => getContextNamesWithKey(userId)
@@ -33,26 +48,30 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 
 	const { data: context, isLoading: isContextLoading } = useQuery({
 		queryKey: [const_queryKey.context, selectedTab],
-		queryFn: () => getContext(currentContext.id as number)
+		queryFn: () => getContext(currentContext.id)
 	});
 
-	if (isContextsLoading) {
-		return <div className={clsx(styles.MyContext)}>loading...</div>;
-	}
+	const seriesIds = context?.customIndicators?.map((indicator: Indicator) => {
+		return indicator.seriesId;
+	});
 
-	if (isContextNamesWithKeyLoading) {
-		return <div className={clsx(styles.MyContext)}>loading...</div>;
-	}
+	const isLoadings = isContextsLoading || isContextNamesWithKeyLoading || isContextsLoading;
 
-	if (isContextLoading) {
-		return <div className={clsx(styles.MyContext)}>loading...</div>;
-	}
+	if (isLoadings) return <div className={clsx(styles.MyContext)}>loading...</div>;
 
 	return (
 		<div className={clsx(styles.MyContext)}>
-			<LineChart indicator={indicators} values={chartDatas}>
-				<span>test</span>
-			</LineChart>
+			{context ? (
+				<ChartSwiper
+					chartDatasForSwiper={chartDatasForSwiper}
+					setChartDatasForSwiper={setChartDatasForSwiper}
+					seriesIds={seriesIds ? seriesIds : []}
+					context={context}
+				/>
+			) : (
+				''
+			)}
+
 			{/* <CategoryTab categoryNames={categoryNames} /> */}
 			{selectedTab === 'MyContext' ? (
 				<section>myContext</section> // AllContext 를 이용해야하는 공간입니다.
