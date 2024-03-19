@@ -1,15 +1,21 @@
 import clsx from 'clsx';
 import styles from './Journal.module.scss';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Journal } from '@/types/userType';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import const_queryKey from '@/const/queryKey';
+import { addJournal, getJournal } from '@/backendApi/user';
+import { useSelector } from 'react-redux';
+import { Store } from '@/types/reduxType';
 
 interface JournalProps {
 	contextId: number;
 }
 
 export default function Journal({ contextId }: JournalProps) {
-	const [journal, setJournal] = useState([]);
+	const userId = useSelector((state: Store) => state.user.id);
 	const [isWrite, setIsWrite] = useState(false);
+	const queryClient = useQueryClient();
 
 	const [journalDataParams, setJournalDataParams] = useState({ title: '', body: '' });
 
@@ -28,11 +34,43 @@ export default function Journal({ contextId }: JournalProps) {
 	};
 	const registJournal = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		console.log('journalDataParams: ', journalDataParams);
+		makeJournal();
+	};
+	const addJournalMutation = useMutation({
+		mutationFn: ({
+			userId,
+			contextId,
+			journalDataParams
+		}: {
+			userId: number;
+			contextId: number;
+			journalDataParams: Journal;
+		}) => addJournal(userId, contextId, journalDataParams),
+		onSuccess() {
+			queryClient.invalidateQueries({
+				queryKey: [const_queryKey.journal]
+			});
+
+			alert('add 성공');
+		},
+		onError(error) {
+			console.error(error);
+		}
+	});
+	const makeJournal = () => {
+		if (journalDataParams.body) {
+			addJournalMutation.mutate({ userId, contextId, journalDataParams });
+		} else {
+			alert('모두 작성해주세요.');
+		}
+
+		setIsWrite(false);
 	};
 
-	useEffect(() => {}, []);
-
+	const { data: journal, isLoading: isJournalLoading } = useQuery({
+		queryKey: [const_queryKey.journal],
+		queryFn: () => getJournal(contextId as number)
+	});
 	return (
 		<div className={clsx(styles.Journal)}>
 			<section className={clsx(styles.JournalHeader)}>
