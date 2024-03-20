@@ -30,16 +30,15 @@ export interface LineChartProps {
 	이슈사항 
 	ButtonComponent 는 favorite 정보와 동기화 시켜야 하기 때문에 categoryId 가 필요하다 
 */
-const LineChart = ({ indicator: indicators, values, children, className }: LineChartProps) => {
-	console.log(values);
+const LineChart = ({ indicator, values, children, className }: LineChartProps) => {
 	const svgRef = useRef<SVGSVGElement>(null);
 	const svgContainerRef = useRef<HTMLDivElement>(null);
 	const compoenetRootDivRef = useRef<HTMLDivElement>(null);
 
 	// chart 를 세팅하는 라이브러리 로직입니다.
 	useEffect(() => {
-		const width = svgContainerRef.current?.offsetWidth;
-		const height = svgContainerRef.current?.offsetHeight;
+		const width = svgContainerRef.current?.offsetWidth as number;
+		const height = svgContainerRef.current?.offsetHeight as number;
 		const marginTop = 20;
 		const marginRight = 40;
 		const marginBottom = 40;
@@ -102,9 +101,9 @@ const LineChart = ({ indicator: indicators, values, children, className }: LineC
 	return (
 		<div className={clsx(styles.LineChart, className)}>
 			<div className={clsx(styles.featuresWrap)}>
-				<h3>{indicators.title}</h3>
+				<h3>{indicator.title}</h3>
 				<div className={clsx(styles.chartFeatures)}>
-					Period: {indicators.observation_start} ~ {indicators.observation_end}
+					Period: {indicator.observation_start} ~ {indicator.observation_end}
 				</div>
 			</div>
 			<div ref={svgContainerRef} className={clsx(styles.chartContainer)}>
@@ -112,26 +111,6 @@ const LineChart = ({ indicator: indicators, values, children, className }: LineC
 					<svg ref={svgRef} />
 				</div>
 			</div>
-			{/* <ChartDescription /> */}
-			{/* <div className={clsx(styles.chartDescription)}>
-				<h3>{indicators.title}</h3>
-				<p className={clsx(styles.notes)}>{indicators.notes}</p>
-				<div className={clsx(styles.additional)}>
-					<div>
-						<div>
-							<span>Frequency</span> : {indicators.frequency ? indicators.frequency : 'hello'}
-						</div>
-						<div>
-							<span>Continued</span> :
-							{indicators.observation_end === indicators.realtime_end ? ' continued' : ' discontinued'}
-						</div>
-						<div>
-							<span>Period</span> : {indicators.observation_start} ~ {indicators.observation_end}
-						</div>
-					</div>
-					{children}
-				</div>
-			</div> */}
 		</div>
 	);
 };
