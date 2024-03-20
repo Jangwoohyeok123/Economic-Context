@@ -7,6 +7,8 @@ import const_queryKey from '@/const/queryKey';
 import { addJournal, getJournal } from '@/backendApi/user';
 import { useSelector } from 'react-redux';
 import { Store } from '@/types/reduxType';
+import { HiMiniPencilSquare } from 'react-icons/hi2';
+import { CgCloseR } from 'react-icons/cg';
 
 interface JournalProps {
 	contextId: number;
@@ -19,7 +21,7 @@ export default function Journal({ contextId }: JournalProps) {
 
 	const [journalDataParams, setJournalDataParams] = useState({ title: '', body: '' });
 
-	const ToggleJournalFormButton = (e: React.FormEvent<HTMLButtonElement>) => {
+	const ToggleJournalFormButton = (e: React.FormEvent<HTMLSpanElement>) => {
 		e.preventDefault();
 		setIsWrite(prev => !prev);
 	};
@@ -75,7 +77,9 @@ export default function Journal({ contextId }: JournalProps) {
 		<div className={clsx(styles.Journal)}>
 			<section className={clsx(styles.JournalHeader)}>
 				<h3>Journal</h3>
-				<button onClick={e => ToggleJournalFormButton(e)}>작성</button>
+				<span className={clsx(styles.JournalFormIcon)} onClick={e => ToggleJournalFormButton(e)}>
+					{isWrite ? <CgCloseR /> : <HiMiniPencilSquare />}
+				</span>
 			</section>
 
 			{isWrite && (
@@ -87,24 +91,26 @@ export default function Journal({ contextId }: JournalProps) {
 					</div>
 				</form>
 			)}
-			<table>
-				<tbody>
-					{journal?.map((item: JournalResponseData, index: number) => (
-						<tr key={item.id + index}>
-							{/* 메모 */}
-							<td>
-								<div>
-									<span>{item.title}</span>
-								</div>
-								<div>
-									<em>{item.createdAt}</em>
-									<span>{item.body}</span>
-								</div>
-							</td>
-						</tr>
-					))}
-				</tbody>
-			</table>
+			<div className={clsx(styles.JournalTable)}>
+				<table>
+					<tbody>
+						{journal?.map((item: JournalResponseData, index: number) => (
+							<tr key={item.id + index}>
+								{/* 메모 */}
+								<td>
+									<div>
+										<span>{item.title}</span>
+									</div>
+									<div className={clsx(styles.description)}>
+										<span>{item.body}</span>
+										<em>{item.createdAt}</em>
+									</div>
+								</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
 		</div>
 	);
 }
