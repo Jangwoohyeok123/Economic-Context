@@ -3,12 +3,6 @@ import * as d3 from 'd3';
 import clsx from 'clsx';
 import styles from './LineChart.module.scss';
 import { SeriessType, Value } from '@/types/fredType';
-import ChartDescription from '@/components/chartDescription/ChartDescription';
-
-/**
- * @param date - Date
- * @param value - number
- */
 
 export interface LineChartProps {
 	indicator: SeriessType;
@@ -17,6 +11,10 @@ export interface LineChartProps {
 	className?: string;
 }
 
+/**
+ * @indicator SeriessType
+ * @values Value[]
+ */
 const LineChart = ({ indicator, values, children, className }: LineChartProps) => {
 	const svgRef = useRef<SVGSVGElement>(null);
 	const svgContainerRef = useRef<HTMLDivElement>(null);
