@@ -1,3 +1,5 @@
+import { Indicator } from './userType';
+
 // util 타입을 좀 사용해보자 pick ommit
 export type SeriessType = {
 	id: string;
