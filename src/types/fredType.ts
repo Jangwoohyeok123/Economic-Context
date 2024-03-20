@@ -44,3 +44,8 @@ export type Value = {
 	date: Date;
 	value: number;
 };
+
+export type ChartDataForSwiper = {
+	indicator: SeriessType;
+	values: Value[];
+};

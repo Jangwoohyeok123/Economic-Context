@@ -4,16 +4,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { useQueries } from '@tanstack/react-query';
 import { getChartData, getIndicator } from '@/backendApi/fred';
 import const_queryKey from '@/const/queryKey';
-import { useEffect, useState } from 'react';
-
 import LineChart from '../charts/line/LineChart';
-import { SeriessType, Value } from '@/types/fredType';
-import { ContextType } from '@/types/userType';
-
-type chartDataForSwiper = {
-	indicator: SeriessType;
-	values: Value[];
-};
+import { ChartDataForSwiper } from '@/types/fredType';
 
 interface ChartSwiperProps {
 	seriesIds: string[];
@@ -50,7 +42,7 @@ export default function ChartSwiper({ seriesIds }: ChartSwiperProps) {
 
 	if (isLoading) return <div>Loading...</div>;
 
-	const chartDatasForSwiper = queryChartValues.valuesArrays.map((values, index: number) => {
+	const chartDatasForSwiper = queryChartValues.valuesArrays.map<ChartDataForSwiper>((values, index: number) => {
 		return {
 			indicator: queryIndicators.data[index],
 			values: values
