@@ -5,14 +5,14 @@ import { Store } from '@/types/reduxType';
 import const_queryKey from '@/const/queryKey';
 import { getAllContexts, getContext, getContextNamesWithKey } from '@/backendApi/user';
 import { useQueries, useQuery } from '@tanstack/react-query';
-import { ContextNameWithKey, Indicator } from '@/types/userType';
+import { ContextNameWithKey } from '@/types/userType';
 import CategoryTab from '../categoryTab/CategoryTab';
 import { categoryNames } from '@/pages/_app';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
 import LineChart from '../charts/line/LineChart';
 import { useEffect, useState } from 'react';
 import { getChartData, getIndicator } from '@/backendApi/fred';
-import { SeriessType } from '@/types/fredType';
+import { SeriessType as Indicator } from '@/types/fredType';
 import { cleanString } from '@/utils/cleanString';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -20,6 +20,20 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import getChartValues from '@/pages/api/chartValues';
 import ChartSwiper from '../chartSwiper/ChartSwiper';
+
+type Journal = {
+	title: string;
+	body: string;
+};
+
+type ContextType = {
+	createdAt: Date;
+	customIndicators: Indicator[];
+	id: number;
+	journal: Journal[];
+	name: string;
+	updatedAt: Date;
+};
 
 interface MyContextTabProps {
 	selectedTab: string;
@@ -34,47 +48,33 @@ interface DataItem {
 export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextTabProps) {
 	const userId = useSelector((state: Store) => state.user.id);
 	const [chartDatasForSwiper, setChartDatasForSwiper] = useState([]);
+
 	const { data: contextNamesWithKey, isLoading: isContextNamesWithKeyLoading } = useQuery({
 		queryKey: [const_queryKey.context, 'names'],
 		queryFn: () => getContextNamesWithKey(userId)
 	});
-
-	const currentContext = contextNamesWithKey?.find((context: ContextNameWithKey) => context.name === selectedTab);
-
-	const { data: allContexts, isLoading: isContextsLoading } = useQuery({
-		queryKey: [const_queryKey.context],
+	const { data: allContexts, isLoading: isContextsLoading } = useQuery<ContextType[]>({
+		queryKey: [const_queryKey.context, 'myContext'],
 		queryFn: () => getAllContexts(userId)
 	});
-
-	const { data: context, isLoading: isContextLoading } = useQuery({
+	const { data: context, isLoading: isContextLoading } = useQuery<ContextType>({
 		queryKey: [const_queryKey.context, selectedTab],
 		queryFn: () => getContext(currentContext.id)
 	});
 
-	const seriesIds = context?.customIndicators?.map((indicator: Indicator) => {
-		return indicator.seriesId;
-	});
+	const currentContext = contextNamesWithKey?.find((context: ContextNameWithKey) => context.name === selectedTab);
+	const seriesIds =
+		context?.customIndicators?.map((indicator: Indicator) => {
+			return indicator.seriesId;
+		}) || [];
 
 	const isLoadings = isContextsLoading || isContextNamesWithKeyLoading || isContextsLoading;
-
 	if (isLoadings) return <div className={clsx(styles.MyContext)}>loading...</div>;
 
 	return (
 		<div className={clsx(styles.MyContext)}>
-			{context ? (
-				<ChartSwiper
-					chartDatasForSwiper={chartDatasForSwiper}
-					setChartDatasForSwiper={setChartDatasForSwiper}
-					seriesIds={seriesIds ? seriesIds : []}
-					context={context}
-				/>
-			) : (
-				''
-			)}
-
-			{/* <CategoryTab categoryNames={categoryNames} /> */}
 			{selectedTab === 'MyContext' ? (
-				<section>myContext</section> // AllContext 를 이용해야하는 공간입니다.
+				<section>myContext</section>
 			) : (
 				<section>
 					{context?.customIndicators.map((indicator: Indicator, index: number) => {
@@ -101,5 +101,3 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 		</div>
 	);
 }
-
-// me
