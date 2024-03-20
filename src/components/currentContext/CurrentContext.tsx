@@ -12,12 +12,17 @@ interface CurrentContextProps {
 }
 
 export default function CurrentContext({ currentContextId }: CurrentContextProps) {
-	const { data: context, isLoading } = useQuery<ContextType>({
+	const { data: currentContext, isLoading } = useQuery<ContextType>({
 		queryKey: [const_queryKey.context, currentContextId],
 		queryFn: () => getContext(currentContextId)
 	});
 
 	if (isLoading) return <div>Loading...</div>;
 
-	return <section className={clsx(styles.CurrentContext)}></section>;
+	return (
+		<section className={clsx(styles.CurrentContext)}>
+			<div>Chart공간</div>
+			<div>journal 공간</div>
+		</section>
+	);
 }
