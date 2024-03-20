@@ -2,12 +2,12 @@ import clsx from 'clsx';
 import styles from './Menu.module.scss';
 import Link from 'next/link';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { deleteContext, getContext, getContextNamesWithKey } from '@/backendApi/user';
+import { deleteContext, getContext, getContextIdsWithNames } from '@/backendApi/user';
 import { useSelector } from 'react-redux';
 import { Store } from '@/types/reduxType';
 import const_queryKey from '@/const/queryKey';
 import { useEffect, useState } from 'react';
-import { ContextNameWithKey } from '@/types/userType';
+import { ContextIdWithName } from '@/types/userType';
 
 interface MenuProps {
 	selectedTab: string;
@@ -20,7 +20,7 @@ export default function Menu({ selectedTab, setSelectedTab }: MenuProps) {
 	const userId = useSelector((state: Store) => state.user.id);
 	const { data: contextNamesWithKey, isLoading } = useQuery({
 		queryKey: [const_queryKey.context, 'names'],
-		queryFn: () => getContextNamesWithKey(userId)
+		queryFn: () => getContextIdsWithNames(userId)
 	});
 
 	const tabClick = (name: string) => {
@@ -46,7 +46,7 @@ export default function Menu({ selectedTab, setSelectedTab }: MenuProps) {
 
 				<div className={clsx(styles.contexts)}>
 					{isAccordian &&
-						contextNamesWithKey?.map((context: ContextNameWithKey, index: number) => {
+						contextNamesWithKey?.map((context: ContextIdWithName, index: number) => {
 							return (
 								<span
 									key={index}
