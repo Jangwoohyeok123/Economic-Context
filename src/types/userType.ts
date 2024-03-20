@@ -59,9 +59,18 @@ export interface IndicatorWithIsPick extends Indicator {
 	isPick: boolean;
 }
 
-export type ContextNameWithKey = {
+export type ContextIdWithName = {
+	id: number;
 	name: string;
-	key: number;
+};
+
+export type ContextType = {
+	createdAt: Date;
+	customIndicators: Indicator[];
+	id: number;
+	journal: Journal[];
+	name: string;
+	updatedAt: Date;
 };
 
 export type Journal = {
