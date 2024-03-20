@@ -39,3 +39,8 @@ export type Observation = {
 	realtime_start: string;
 	value: string;
 };
+
+export type Value = {
+	date: Date;
+	value: number;
+};
