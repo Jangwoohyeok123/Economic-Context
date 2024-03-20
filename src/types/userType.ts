@@ -64,4 +64,9 @@ export type ContextNameWithKey = {
 	key: number;
 };
 
+export type Journal = {
+	title: string;
+	body: string;
+};
+
 export default User;

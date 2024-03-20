@@ -1,4 +1,4 @@
-import { Indicator } from '@/types/userType';
+import { Indicator, Journal } from '@/types/userType';
 import axios from 'axios';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL_LOCAL;
@@ -245,6 +245,59 @@ export const deleteContext = async (contextId: number) => {
 				Authorization: `Bearer ${token}`
 			}
 		});
+	} catch (error: any) {
+		if (error.response) {
+			console.error(`Error: ${error.response.status} - ${error.response.data}`);
+		} else if (error.request) {
+			console.error('Error: No response from server.');
+		} else {
+			console.error('Error: ', error.message);
+		}
+	}
+};
+
+export const addJournal = async (userId: number, contextId: number, journalDataParams: Journal) => {
+	try {
+		if (typeof window === 'undefined') {
+			throw new Error('This function can only be used in the client-side');
+		}
+
+		const token = sessionStorage.getItem('token');
+		if (!token) {
+			throw new Error('No token found in sessionStorage');
+		}
+		await axios.post(`${backendUrl}journal/${userId}/${contextId}`, journalDataParams, {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		});
+	} catch (error: any) {
+		if (error.response) {
+			console.error(`Error: ${error.response.status} - ${error.response.data}`);
+		} else if (error.request) {
+			console.error('Error: No response from server.');
+		} else {
+			console.error('Error: ', error.message);
+		}
+	}
+};
+
+export const getJournal = async (contextId: number) => {
+	try {
+		if (typeof window === 'undefined') {
+			throw new Error('This function can only be used in the client-side');
+		}
+
+		const token = sessionStorage.getItem('token');
+		if (!token) {
+			throw new Error('No token found in sessionStorage');
+		}
+		const response = await axios.get(`${backendUrl}journal/${contextId}`, {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		});
+		return response.data;
 	} catch (error: any) {
 		if (error.response) {
 			console.error(`Error: ${error.response.status} - ${error.response.data}`);
