@@ -3,10 +3,10 @@ import styles from './MakeContextModal.module.scss';
 import ReactDOM from 'react-dom';
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { roboto, poppins } from '@/pages/_app';
-import { ContextNameWithKey, Indicator, IndicatorWithIsPick } from '@/types/userType';
+import { ContextIdWithName, Indicator, IndicatorWithIsPick } from '@/types/userType';
 import useFavoriteQuery from '@/hooks/useFavoriteQuery';
 import { changeCategoryIdToName, changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
-import { addContext, getContextNamesWithKey } from '@/backendApi/user';
+import { addContext, getContextIdsWithNames } from '@/backendApi/user';
 import { useSelector } from 'react-redux';
 import { Store } from '@/types/reduxType';
 import { useMutation, useMutationState, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -28,7 +28,7 @@ export default function MakeContextModal({ favorites, isModalOpen, setIsModalOpe
 	// 나중에 훅으로 처리할 부분
 	const { data: contextNamesWithKey, isLoading } = useQuery({
 		queryKey: [const_queryKey.context, 'names'],
-		queryFn: () => getContextNamesWithKey(userId)
+		queryFn: () => getContextIdsWithNames(userId)
 	});
 
 	const addContextMutation = useMutation({
@@ -52,7 +52,7 @@ export default function MakeContextModal({ favorites, isModalOpen, setIsModalOpe
 		if (
 			refInput.current &&
 			favoritesForContext &&
-			!contextNamesWithKey?.some((context: ContextNameWithKey) => refInput?.current?.value === context.name)
+			!contextNamesWithKey?.some((context: ContextIdWithName) => refInput?.current?.value === context.name)
 		) {
 			addContextMutation.mutate(favoritesForContext);
 		} else {
