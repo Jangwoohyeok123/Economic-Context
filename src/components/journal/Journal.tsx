@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import styles from './Journal.module.scss';
 import { useState } from 'react';
-import { Journal } from '@/types/userType';
+import { Journal, JournalResponseData } from '@/types/userType';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import const_queryKey from '@/const/queryKey';
 import { addJournal, getJournal } from '@/backendApi/user';
@@ -89,14 +89,15 @@ export default function Journal({ contextId }: JournalProps) {
 			)}
 			<table>
 				<tbody>
-					{journal?.map((item: Journal, index: number) => (
-						<tr key={index}>
+					{journal?.map((item: JournalResponseData, index: number) => (
+						<tr key={item.id + index}>
 							{/* 메모 */}
 							<td>
 								<div>
 									<span>{item.title}</span>
 								</div>
 								<div>
+									<em>{item.createdAt}</em>
 									<span>{item.body}</span>
 								</div>
 							</td>
