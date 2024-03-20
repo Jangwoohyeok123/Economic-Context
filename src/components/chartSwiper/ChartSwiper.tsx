@@ -2,31 +2,41 @@ import clsx from 'clsx';
 import styles from './ChartSwiper.module.scss';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useQueries } from '@tanstack/react-query';
-import { getChartData } from '@/backendApi/fred';
+import { getChartData, getIndicator } from '@/backendApi/fred';
 import const_queryKey from '@/const/queryKey';
 import { useEffect, useState } from 'react';
 
-import LineChart, { Value } from '../charts/line/LineChart';
-import { SeriessType } from '@/types/fredType';
+import LineChart from '../charts/line/LineChart';
+import { SeriessType, Value } from '@/types/fredType';
+import { ContextType } from '@/types/userType';
 
 type chartDataForSwiper = {
 	indicator: SeriessType;
 	values: Value[];
 };
 
-interface ChartSwiper {
+interface ChartSwiperProps {
 	seriesIds: string[];
-	context: any;
-	chartDatasForSwiper: chartDataForSwiper[];
-	setChartDatasForSwiper: React.Dispatch<React.SetStateAction<chartDataForSwiper[]>>;
 }
 
 /** context data 가 넘어왔을 때 */
-export default function ChartSwiper({ chartDatasForSwiper, setChartDatasForSwiper, seriesIds, context }: ChartSwiper) {
-	const queryChartDatas = useQueries({
+export default function ChartSwiper({ seriesIds }: ChartSwiperProps) {
+	const queryChartValues = useQueries({
 		queries: seriesIds.map(seriesId => ({
 			queryKey: [const_queryKey.context, seriesId],
 			queryFn: () => getChartData(seriesId)
+		})),
+		combine: results => {
+			return {
+				valuesArrays: results.map(result => result.data?.dataArray)
+			};
+		}
+	});
+
+	const queryIndicators = useQueries({
+		queries: seriesIds.map(seriesId => ({
+			queryKey: [const_queryKey.indicator, seriesId],
+			queryFn: () => getIndicator(seriesId)
 		})),
 		combine: results => {
 			return {
@@ -35,23 +45,17 @@ export default function ChartSwiper({ chartDatasForSwiper, setChartDatasForSwipe
 		}
 	});
 
-	useEffect(() => {
-		const temp = queryChartDatas?.data.map((chartData, index: number) => {
-			const values = chartData?.dataArray || [{ date: 'a', value: 3 }];
-			const indicator = context.customIndicators[index];
+	const isLoading =
+		queryChartValues.valuesArrays.some(el => el === undefined) || queryIndicators.data.some(el => el === undefined);
 
-			return {
-				indicator: indicator,
-				values: values
-			};
-		});
-		setChartDatasForSwiper(temp);
-	}, [queryChartDatas.data]);
+	if (isLoading) return <div>Loading...</div>;
 
-	if (chartDatasForSwiper) {
-		console.log();
-	} else {
-	}
+	const chartDatasForSwiper = queryChartValues.valuesArrays.map((values, index: number) => {
+		return {
+			indicator: queryIndicators.data[index],
+			values: values
+		};
+	});
 
 	return (
 		<div className={clsx(styles.ChartSwiper)}>
