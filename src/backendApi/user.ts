@@ -203,7 +203,7 @@ export const getAllContexts = async (userId: number) => {
 	}
 };
 
-export const getContextNamesWithKey = async (userId: number) => {
+export const getContextIdsWithNames = async (userId: number) => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
