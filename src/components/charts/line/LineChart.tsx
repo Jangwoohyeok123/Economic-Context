@@ -2,34 +2,21 @@ import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import clsx from 'clsx';
 import styles from './LineChart.module.scss';
-import { SeriessType } from '@/types/fredType';
+import { SeriessType, Value } from '@/types/fredType';
 import ChartDescription from '@/components/chartDescription/ChartDescription';
 
 /**
  * @param date - Date
  * @param value - number
  */
-export interface Value {
-	date: Date;
-	value: number;
-}
 
 export interface LineChartProps {
 	indicator: SeriessType;
 	children?: React.ReactElement;
-	values: Value[];
+	values: Value[] | [undefined, undefined];
 	className?: string;
 }
 
-/* 
-	Line chart 컴포넌트는 아래의 정보를 담고 있어야 한다. 
-	1. chart 정보 
-	2. chart 에 관련한 텍스트 정보
-	3. 현재 풀스크린만 대비하고 반응형은 나중에 작업한다.
-
-	이슈사항 
-	ButtonComponent 는 favorite 정보와 동기화 시켜야 하기 때문에 categoryId 가 필요하다 
-*/
 const LineChart = ({ indicator, values, children, className }: LineChartProps) => {
 	const svgRef = useRef<SVGSVGElement>(null);
 	const svgContainerRef = useRef<HTMLDivElement>(null);
@@ -37,22 +24,21 @@ const LineChart = ({ indicator, values, children, className }: LineChartProps) =
 
 	// chart 를 세팅하는 라이브러리 로직입니다.
 	useEffect(() => {
-		const width = svgContainerRef.current?.offsetWidth as number;
-		const height = svgContainerRef.current?.offsetHeight as number;
+		const width = svgContainerRef.current?.offsetWidth || 0;
+		const height = svgContainerRef.current?.offsetHeight || 0;
 		const marginTop = 20;
 		const marginRight = 40;
 		const marginBottom = 40;
 		const marginLeft = 40;
-		const x = d3.scaleUtc(
-			d3.extent(values, value => value.date),
-			[marginLeft, width - marginRight]
-		);
-
-		const maxValue = d3.max(values, value => value.value);
+		const x = d3.scaleUtc(d3.extent(values as Value[], (value: Value) => value.date) as unknown as [Date, Date], [
+			marginLeft,
+			width - marginRight
+		]);
+		const maxValue = d3.max(values as Value[], (value: Value) => value.value) || 0;
 		const y = d3.scaleLinear([0, maxValue * 1.3], [height - marginBottom, marginTop]);
 
 		const line = d3
-			.line()
+			.line<Value>()
 			.x(d => x(d.date))
 			.y(d => y(d.value));
 
@@ -95,7 +81,7 @@ const LineChart = ({ indicator, values, children, className }: LineChartProps) =
 			.attr('fill', 'none')
 			.attr('stroke', 'steelblue')
 			.attr('stroke-width', 1.5)
-			.attr('d', line(values));
+			.attr('d', line(values as Value[]));
 	}, [svgContainerRef]);
 
 	return (
