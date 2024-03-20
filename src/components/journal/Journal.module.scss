@@ -4,6 +4,7 @@
 	.JournalHeader {
 		display: flex;
 		justify-content: space-between;
+		align-items: center;
 		padding: 30px 0;
 		h3 {
 			font-size: 2rem;
@@ -33,26 +34,61 @@
 			text-align: right;
 		}
 	}
+	.JournalFormIcon {
+		color: #111;
+		border: none;
+		cursor: pointer;
+		> svg {
+			font-size: 1.4rem;
+		}
+	}
 	button {
 		padding: 8px 10px;
 		font-size: 0.8rem;
 		color: #fff;
 		background: #111;
 		border: none;
+		cursor: pointer;
 	}
-	table {
+	.JournalTable {
 		width: 100%;
-		tbody {
-			tr {
-				display: block;
-				margin-bottom: 10px;
-				background: #fff;
-				box-shadow: 5px 5px 20px #dedede;
-				td {
-					> div {
-						border-bottom: 1px solid #eee;
-						&:last-child {
-							border: none;
+		margin-bottom: 10px;
+		background: #fff;
+		box-shadow: 5px 5px 20px #dedede;
+		table {
+			width: 100%;
+			table-layout: fixed;
+			tbody {
+				tr {
+					td {
+						word-wrap: break-word;
+						> div,
+						.description {
+							width: 100%;
+							padding: 10px;
+							border-bottom: 1px solid #dedede;
+							&:last-child {
+								border: none;
+							}
+						}
+						.description {
+							display: flex;
+							flex-wrap: nowrap;
+							align-items: flex-end;
+							justify-content: flex-start;
+							span {
+								flex-grow: 1; /* 사용 가능한 공간을 채우도록 설정 */
+								flex-basis: 0; /* 초기 크기 설정 없음 */
+								flex-shrink: 1; /* 필요에 따라 축소 가능 */
+								max-width: 80%; /* 최대 너비를 80%로 제한 */
+							}
+
+							em {
+								flex-grow: 0; /* 추가 공간을 채우지 않음 */
+								flex-basis: 10%; /* 기본 크기를 부모의 10%로 설정 */
+								flex-shrink: 0; /* 축소하지 않음 */
+								font-size: 0.8rem;
+							}
 						}
 					}
 				}

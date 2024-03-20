@@ -73,9 +73,14 @@ export type ContextType = {
 	updatedAt: Date;
 };
 
-export type Journal = {
+export interface Journal {
 	title: string;
 	body: string;
-};
+}
+
+export interface JournalResponseData extends Journal {
+	id: number;
+	createdAt: string;
+}
 
 export default User;

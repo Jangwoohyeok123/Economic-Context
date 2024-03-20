@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { useQuery } from '@tanstack/react-query';
 import { ContextType, Indicator } from '@/types/userType';
 import ChartSwiper from '../chartSwiper/ChartSwiper';
-
+import Journal from '../journal/Journal';
 interface CurrentContextProps {
 	currentContextId: number;
 }
@@ -27,7 +27,7 @@ export default function CurrentContext({ currentContextId }: CurrentContextProps
 	return (
 		<section className={clsx(styles.CurrentContext)}>
 			{seriesIds && <ChartSwiper seriesIds={seriesIds} />}
-			<div>journal 공간</div>
+			{currentContext && <Journal contextId={currentContext.id} />}
 		</section>
 	);
 }
