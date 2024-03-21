@@ -151,7 +151,7 @@ export default function Morepage() {
 		<>
 			<main className={clsx(styles.Morepage, poppins.variable, roboto.variable)}>
 				{chartDatas.length && indicators && (
-					<LineChart indicator={indicators} values={chartDatas}>
+					<LineChart indicator={indicators} values={chartDatas} width={100} height={100}>
 						{user.isLogin ? (
 							<button className={isActive ? clsx(styles.on) : clsx('')} onClick={buttonHandler}>
 								{isActive ? 'delete' : 'save'}
@@ -161,6 +161,7 @@ export default function Morepage() {
 						)}
 					</LineChart>
 				)}
+				{/* <ChartDescription /> */}
 			</main>
 			<DynamicAlertModal
 				isModalOpen={isAlertModalOpen}
