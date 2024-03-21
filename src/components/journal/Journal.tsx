@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { Store } from '@/types/reduxType';
 import { HiMiniPencilSquare } from 'react-icons/hi2';
 import { CgCloseR } from 'react-icons/cg';
+import { changeDate } from '@/utils/cleanString';
 
 interface JournalProps {
 	contextId: number;
@@ -126,9 +127,9 @@ export default function Journal({ contextId }: JournalProps) {
 										<div>
 											<span>{item.title}</span>
 										</div>
-										<div className={clsx(styles.description)}>
+										<div className={clsx(styles.body)}>
 											<span>{item.body}</span>
-											<em>{item.createdAt}</em>
+											<em>{changeDate(item.createdAt)}</em>
 										</div>
 									</td>
 								</tr>
