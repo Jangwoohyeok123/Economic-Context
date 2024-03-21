@@ -5,7 +5,7 @@ import { getContext, getContextIdsWithNames } from '@/backendApi/user';
 import { useQuery } from '@tanstack/react-query';
 import { ContextType, Indicator } from '@/types/userType';
 import ChartSwiper from '../chartSwiper/ChartSwiper';
-import Journal from '../journal/Journal';
+import Journal from '../journalsSection/JournalsSection';
 import ChartList from '../chartList/ChartList';
 interface CurrentContextProps {
 	currentContextId: number;

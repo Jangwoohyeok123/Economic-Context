@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import styles from './Journal.module.scss';
+import styles from './JournalsSection.module.scss';
 import { useEffect, useState } from 'react';
 import { Journal, JournalResponseData } from '@/types/userType';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
