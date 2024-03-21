@@ -2,12 +2,11 @@ import clsx from 'clsx';
 import styles from './CurrentContext.module.scss';
 import const_queryKey from '@/const/queryKey';
 import { getContext, getContextIdsWithNames } from '@/backendApi/user';
-import { Store } from '@/types/reduxType';
-import { useSelector } from 'react-redux';
 import { useQuery } from '@tanstack/react-query';
 import { ContextType, Indicator } from '@/types/userType';
 import ChartSwiper from '../chartSwiper/ChartSwiper';
 import Journal from '../journal/Journal';
+import ChartList from '../chartList/ChartList';
 interface CurrentContextProps {
 	currentContextId: number;
 }
@@ -26,7 +25,10 @@ export default function CurrentContext({ currentContextId }: CurrentContextProps
 
 	return (
 		<section className={clsx(styles.CurrentContext)}>
-			{seriesIds && <ChartSwiper seriesIds={seriesIds} />}
+			<h2>Context Chart List</h2>
+			{/* {seriesIds && <ChartSwiper seriesIds={seriesIds} />} */}
+			{seriesIds && <ChartList seriesIds={seriesIds} />}
+
 			{currentContext && <Journal contextId={currentContext.id} />}
 		</section>
 	);
