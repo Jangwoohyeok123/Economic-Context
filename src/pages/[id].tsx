@@ -31,7 +31,7 @@ export default function Morepage() {
 	const [isActive, setIsActive] = useState(false);
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 	const [chartDatas, setChartDatas] = useState<DataItem[]>([]);
-	const [indicators, setIndicators] = useState<SeriessType>({
+	const [indicator, setIndicators] = useState<SeriessType>({
 		id: '',
 		title: '',
 		notes: '',
@@ -150,8 +150,8 @@ export default function Morepage() {
 	return (
 		<>
 			<main className={clsx(styles.Morepage, poppins.variable, roboto.variable)}>
-				{chartDatas.length && indicators && (
-					<LineChart indicator={indicators} values={chartDatas} width={100} height={100}>
+				{chartDatas.length && indicator && (
+					<LineChart indicator={indicator} values={chartDatas} width={100} height={50}>
 						{user.isLogin ? (
 							<button className={isActive ? clsx(styles.on) : clsx('')} onClick={buttonHandler}>
 								{isActive ? 'delete' : 'save'}
@@ -161,7 +161,7 @@ export default function Morepage() {
 						)}
 					</LineChart>
 				)}
-				{/* <ChartDescription /> */}
+				<ChartDescription indicator={indicator} />
 			</main>
 			<DynamicAlertModal
 				isModalOpen={isAlertModalOpen}

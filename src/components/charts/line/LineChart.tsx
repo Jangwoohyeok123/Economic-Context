@@ -16,15 +16,17 @@ export interface LineChartProps {
 /**
  * @indicator SeriessType
  * @values Value[]
- * @height [x]%
+ * @height [x]vh
  * @width [y]%
  */
 const LineChart = ({ indicator, values, width, height, children, className }: LineChartProps) => {
 	const svgRef = useRef<SVGSVGElement>(null);
 	const svgContainerRef = useRef<HTMLDivElement>(null);
-	const style = {
-		height: `${height}%`,
+	const widthStyle = {
 		width: `${width}%`
+	};
+	const heightStyle = {
+		height: `${height}vh`
 	};
 
 	// chart 를 세팅하는 라이브러리 로직입니다.
@@ -90,14 +92,14 @@ const LineChart = ({ indicator, values, width, height, children, className }: Li
 	}, [svgContainerRef]);
 
 	return (
-		<div className={clsx(styles.LineChart, className)} style={style}>
+		<div className={clsx(styles.LineChart, className)} style={widthStyle}>
 			<div className={clsx(styles.featuresWrap)}>
 				<h3>{indicator.title}</h3>
 				<div className={clsx(styles.chartFeatures)}>
 					Period: {indicator.observation_start} ~ {indicator.observation_end}
 				</div>
 			</div>
-			<div ref={svgContainerRef} className={clsx(styles.chartContainer)}>
+			<div ref={svgContainerRef} className={clsx(styles.chartContainer)} style={heightStyle}>
 				<div className={clsx(styles.svgWrap)}>
 					<svg ref={svgRef} />
 				</div>
