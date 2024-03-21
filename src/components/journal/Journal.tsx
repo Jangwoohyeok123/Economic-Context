@@ -50,7 +50,7 @@ export default function Journal({ contextId }: JournalProps) {
 		}) => addJournal(userId, contextId, journalDataParams),
 		onSuccess() {
 			queryClient.invalidateQueries({
-				queryKey: [const_queryKey.journal]
+				queryKey: [const_queryKey.journal, contextId]
 			});
 
 			alert('add 성공');
@@ -70,7 +70,7 @@ export default function Journal({ contextId }: JournalProps) {
 	};
 
 	const { data: journal, isLoading: isJournalLoading } = useQuery({
-		queryKey: [const_queryKey.journal],
+		queryKey: [const_queryKey.journal, contextId],
 		queryFn: () => getJournal(contextId as number)
 	});
 	return (
