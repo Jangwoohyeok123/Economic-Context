@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react';
 import { getChartData, getIndicator } from '@/backendApi/fred';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { addFavorite, deleteFavorite, getFavorite } from '@/backendApi/user';
+import BubblePopButton from '@/components/bubblePopButton/BubblePopButton';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
@@ -27,7 +28,7 @@ export default function Morepage() {
 	const router = useRouter();
 	const user = useSelector((state: Store) => state.user);
 	const queryClient = useQueryClient();
-	const { id, title, categoryId } = router.query;
+	const { id: seriesId, title, categoryId } = router.query;
 	const [isActive, setIsActive] = useState(false);
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 	const [chartDatas, setChartDatas] = useState<DataItem[]>([]);
@@ -85,20 +86,20 @@ export default function Morepage() {
 			return;
 		}
 
-		const isFind = favorite.find((indicator: Indicator) => indicator.seriesId === id);
+		const isFind = favorite.find((indicator: Indicator) => indicator.seriesId === seriesId);
 
 		if (isFind) {
-			deleteFavoriteMutation.mutate({ userId: user.id, seriesId: id as string });
+			deleteFavoriteMutation.mutate({ userId: user.id, seriesId: seriesId as string });
 			setIsActive(!isActive);
 		} else {
-			addFavoriteMutation.mutate({ userId: user.id, seriesId: id as string });
+			addFavoriteMutation.mutate({ userId: user.id, seriesId: seriesId as string });
 			setIsActive(!isActive);
 		}
 	};
 
 	// 화면을 구성하는데 필요한 정보를 get 하는 useEffect
 	useEffect(() => {
-		getChartData(id as string)
+		getChartData(seriesId as string)
 			.then(chartDatas => {
 				const { dataArray } = chartDatas;
 				setChartDatas(dataArray);
@@ -107,7 +108,7 @@ export default function Morepage() {
 				console.error(err.message);
 			});
 
-		getIndicator(id as string).then((indicator: SeriessType) => {
+		getIndicator(seriesId as string).then((indicator: SeriessType) => {
 			const {
 				id,
 				title,
@@ -140,7 +141,7 @@ export default function Morepage() {
 
 	// save, delete 상황을 확인하는 useEffect
 	useEffect(() => {
-		if (favorite?.some((el: Indicator) => el.seriesId == id)) {
+		if (favorite?.some((el: Indicator) => el.seriesId === seriesId)) {
 			setIsActive(true);
 		} else {
 			setIsActive(false);
@@ -161,7 +162,11 @@ export default function Morepage() {
 						)}
 					</LineChart>
 				)}
-				<ChartDescription indicator={indicator} />
+				<ChartDescription indicator={indicator}>
+					<BubblePopButton clickHandler={buttonHandler} className={isActive ? clsx(styles.on) : ''}>
+						{isActive ? 'remove' : 'save'}
+					</BubblePopButton>
+				</ChartDescription>
 			</main>
 			<DynamicAlertModal
 				isModalOpen={isAlertModalOpen}
