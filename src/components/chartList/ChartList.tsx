@@ -56,7 +56,7 @@ export default function ChartList({ seriesIds }: ChartSwiperProps) {
 
 					return (
 						<div key={index} className={clsx(styles.Chart)}>
-							<LineChart indicator={indicator} values={values} width={100} height={30} />
+							<LineChart indicator={indicator} values={values} width={100} height={30} className={'ChartList'} />
 						</div>
 					);
 				})}
