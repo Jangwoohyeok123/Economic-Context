@@ -7,7 +7,9 @@
 		align-items: center;
 		padding: 30px 0;
 		h3 {
-			font-size: 2rem;
+			font-size: 1.8rem;
+			font-weight: normal;
+			margin-bottom: 20px;
 		}
 	}
 	form {
@@ -23,12 +25,27 @@
 			box-shadow: 5px 5px 20px #dedede;
 			border: none;
 			padding: 5px;
+			&::placeholder {
+				padding: 10px;
+				font-size: 0.8rem;
+				color: #aaa;
+				font-family: var(--baseFont);
+			}
+		}
+		label {
+			display: block;
+			font-size: 1.1rem;
+			font-weight: 500;
+			color: #333;
+			padding: 0 10px 5px;
 		}
 		input {
 			height: 30px;
+			margin-bottom: 30px;
 		}
 		textarea {
 			height: 200px;
+			margin-bottom: 50px;
 		}
 		> div {
 			text-align: right;
@@ -53,25 +70,27 @@
 	.JournalTable {
 		width: 100%;
 		margin-bottom: 10px;
-		background: #fff;
-		box-shadow: 5px 5px 20px #dedede;
 		table {
 			width: 100%;
 			table-layout: fixed;
 			tbody {
 				tr {
+					box-sizing: border-box;
 					td {
+						padding: 10px 0;
 						word-wrap: break-word;
 						> div,
-						.description {
+						.body {
 							width: 100%;
 							padding: 10px;
+							background: #fff;
 							border-bottom: 1px solid #dedede;
+							box-shadow: 5px 5px 20px #dedede;
 							&:last-child {
 								border: none;
 							}
 						}
-						.description {
+						.body {
 							display: flex;
 							flex-wrap: nowrap;
 							align-items: flex-end;
@@ -85,10 +104,40 @@
 
 							em {
 								flex-grow: 0; /* 추가 공간을 채우지 않음 */
-								flex-basis: 10%; /* 기본 크기를 부모의 10%로 설정 */
+								flex-basis: 20%; /* 기본 크기를 부모의 10%로 설정 */
 								flex-shrink: 0; /* 축소하지 않음 */
 								font-size: 0.8rem;
+								text-align: right;
 							}
+						}
+					}
+				}
+				.noData {
+					width: 100%;
+					padding: 16px 20px;
+					background: #fff;
+					border-bottom: 1px solid #dedede;
+					box-shadow: 5px 5px 20px #dedede;
+					font-size: 0.8rem;
+					color: #014f97;
+					animation: shake 1s cubic-bezier(1, 0, 0, 1);
+					@keyframes shake {
+						0%,
+						100% {
+							transform: translateY(0);
+						}
+						10%,
+						30%,
+						50%,
+						70%,
+						90% {
+							transform: translateY(-0.5px);
+						}
+						20%,
+						40%,
+						60%,
+						80% {
+							transform: translateY(0.5px);
 						}
 					}
 				}
