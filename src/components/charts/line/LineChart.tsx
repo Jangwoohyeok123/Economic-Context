@@ -11,6 +11,7 @@ export interface LineChartProps {
 	width?: number;
 	values: Value[] | [undefined, undefined];
 	className?: string;
+	seriesId?: string;
 }
 
 /**
@@ -19,7 +20,7 @@ export interface LineChartProps {
  * @height [x]vh
  * @width [y]%
  */
-const LineChart = ({ indicator, values, width, height, children, className }: LineChartProps) => {
+const LineChart = ({ indicator, values, width, height, children, className, seriesId }: LineChartProps) => {
 	const svgRef = useRef<SVGSVGElement>(null);
 	const svgContainerRef = useRef<HTMLDivElement>(null);
 	const widthStyle = {

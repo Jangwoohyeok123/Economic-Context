@@ -95,7 +95,7 @@ export default function IndicatorsTab() {
 							observation_start={observation_start}
 							notes={notes}
 							className={clsx(styles.indicatorCardByTab)}>
-							<p>{notes ? notes.slice(300) : 'This Indicator is not have notes'}</p>
+							<p>{notes ? notes.slice(0, 300) : 'This Indicator is not have description.'}</p>
 							<div className={styles.buttons}>
 								<BubblePopButton clickHandler={() => deleteFavoriteMutationAll?.mutate({ userId: user.id, seriesId })}>
 									delete
