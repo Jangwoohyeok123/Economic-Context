@@ -119,7 +119,9 @@ export default function Journal({ contextId }: JournalProps) {
 				<table>
 					<tbody>
 						{isJournalLoading ? (
-							<div>Loading...</div> // 로딩 중임을 알리는 메시지
+							<tr>
+								<td>Loading...</td>
+							</tr> // 로딩 중임을 알리는 메시지
 						) : journal && journal.length > 0 ? (
 							journal.map((item: JournalResponseData, index: number) => (
 								<tr key={item.id + index}>
@@ -135,9 +137,9 @@ export default function Journal({ contextId }: JournalProps) {
 								</tr>
 							))
 						) : (
-							<div className={clsx(styles.noData)}>
-								작성된 Journal이 없습니다. 위의 칸을 채워 Journal을 등록 해보세요!
-							</div> // 데이터가 없음을 알리는 메시지
+							<tr className={clsx(styles.noData)}>
+								<td>작성된 Journal이 없습니다. 위의 칸을 채워 Journal을 등록 해보세요!</td>
+							</tr> // 데이터가 없음을 알리는 메시지
 						)}
 					</tbody>
 				</table>
