@@ -1,2 +1,59 @@
 .AllContexts {
+	.header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 40px;
+		> h2 {
+			font-size: 1.8rem;
+			font-weight: normal;
+		}
+		> span {
+			display: block;
+			text-align: center;
+			background-color: #111;
+			color: #fff;
+			width: 30px;
+			height: 30px;
+			line-height: 36px;
+			border-radius: 15px;
+			cursor: pointer;
+		}
+	}
+
+	.contextCardList {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 30px 0;
+		cursor: pointer;
+		.contextCard {
+			width: 25%;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			.cover {
+				width: 200px;
+				height: 200px;
+				background-color: #fefefe;
+				border-radius: 14px;
+				margin-bottom: 10px;
+				&:hover {
+					background-color: #f5f5f5;
+				}
+			}
+			.name,
+			.date {
+				display: block;
+				width: 100%;
+				text-align: left;
+				padding-left: 10%;
+				font-size: 1.4rem;
+				font-weight: 500;
+			}
+			.date {
+				font-size: 0.8rem;
+				font-weight: 300;
+			}
+		}
+	}
 }
