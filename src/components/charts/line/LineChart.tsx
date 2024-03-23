@@ -93,7 +93,7 @@ const LineChart = ({ indicator, values, width, height, children, className, seri
 	}, [svgContainerRef]);
 
 	return (
-		<div className={clsx(styles.LineChart, className)} style={widthStyle}>
+		<div className={clsx(styles.LineChart, className && styles[className])} style={widthStyle}>
 			<div className={clsx(styles.featuresWrap)}>
 				<h3>{indicator.title}</h3>
 				<div className={clsx(styles.chartFeatures)}>

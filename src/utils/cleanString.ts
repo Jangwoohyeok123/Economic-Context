@@ -26,6 +26,9 @@ export const removeSuffix = (title: string, suffix: string) => {
 export const removeComma = (title: string) => {
 	return title.endsWith(',') ? `${title.slice(0, -1).trim()}...` : title;
 };
+export const addEllipsis = (title: string, maxLength: number) => {
+	return title.length > maxLength ? `${title.slice(0, maxLength)}...` : title;
+};
 export const changeDate = (date: string) => {
 	return date.replace('T', ' ').slice(0, -5);
 };

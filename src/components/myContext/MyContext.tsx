@@ -35,6 +35,7 @@ interface DataItem {
 export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextTabProps) {
 	const userId = useSelector((state: Store) => state.user.id);
 	const [currentContextId, setCurrentContextId] = useState<number | undefined>();
+	const [selectedContext, setSelectedContext] = useState<string>('');
 
 	const { data: contextIdsWithNames, isLoading } = useQuery<ContextIdWithName[]>({
 		queryKey: [const_queryKey.context, 'names'],
@@ -52,12 +53,27 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 		}
 	}, [selectedTab, contextIdsWithNames]);
 
-	if (isLoading) return <div className={clsx(styles.MyContext)}>loading...</div>;
+	useEffect(() => {
+		console.log('selectedContext', selectedContext);
+		if (selectedContext === 'Indicators') {
+			setSelectedTab('Indicators');
+		} else if (contextIdsWithNames) {
+			const currentContextIdWithName = contextIdsWithNames?.find(
+				contextIdWithName => contextIdWithName.name === selectedContext
+			);
 
+			if (currentContextIdWithName) {
+				setCurrentContextId(currentContextIdWithName.id);
+				setSelectedTab(currentContextIdWithName.name);
+			}
+		}
+	}, [selectedContext, contextIdsWithNames]);
+
+	if (isLoading) return <div className={clsx(styles.MyContext)}>loading...</div>;
 	return (
 		<div className={clsx(styles.MyContext)}>
 			{selectedTab === 'MyContext' ? (
-				<AllContexts />
+				<AllContexts selectedContext={selectedContext} setSelectedContext={setSelectedContext} />
 			) : (
 				currentContextId && <CurrentContext currentContextId={currentContextId} />
 			)}
