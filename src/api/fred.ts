@@ -1,3 +1,4 @@
+import { Observation_Type, ObservationResult_Type, OriginSeriess_Type } from '@/types/fredType';
 import axios from 'axios';
 
 interface DataItem {
@@ -5,7 +6,7 @@ interface DataItem {
 	value: number | string;
 }
 
-export const getIndicator = async (seriesId: string) => {
+export const getIndicator = async (seriesId: string): Promise<OriginSeriess_Type> => {
 	try {
 		const response = await axios.get(`/api/indicator?seriesId=${seriesId}`);
 		const data = response.data.seriess[0];
@@ -17,10 +18,11 @@ export const getIndicator = async (seriesId: string) => {
 		} else {
 			console.error('Unexpected Error', error);
 		}
+		throw error;
 	}
 };
 
-export const getIndicators = async (categoryId: number) => {
+export const getIndicators = async (categoryId: number): Promise<OriginSeriess_Type[]> => {
 	try {
 		const response = await axios.get(`/api/category?categoryId=${categoryId}`);
 		return response.data.seriess;
@@ -30,12 +32,12 @@ export const getIndicators = async (categoryId: number) => {
 		} else {
 			console.error('Unexpected Error', error);
 		}
-
-		return [];
+		throw error;
+		// return [];
 	}
 };
 
-export const getChartData = async (seriesId: string) => {
+export const getChartData = async (seriesId: string): Promise<ObservationResult_Type> => {
 	try {
 		const response = await axios.get(`/api/chartValues?seriesId=${seriesId}`);
 		const { realtime_start, realtime_end } = response.data;
@@ -50,12 +52,11 @@ export const getChartData = async (seriesId: string) => {
 		return { realtime_start, realtime_end, dataArray };
 	} catch (error) {
 		console.error('Error fetching data: ', error);
-
-		return {
-			realtime_start: null,
-			realtime_end: null,
-			dataArray: [],
-			error: 'Error fetching data'
-		};
+		throw error;
+		// return {
+		// 	realtime_start: '',
+		// 	realtime_end: '',
+		// 	dataArray: [],
+		// };
 	}
 };

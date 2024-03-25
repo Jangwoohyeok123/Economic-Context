@@ -2,14 +2,14 @@ import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import clsx from 'clsx';
 import styles from './LineChart.module.scss';
-import { OriginSeriess_Type, Value_Type } from '@/types/fredType';
+import { OriginSeriess_Type, DateValue_Type } from '@/types/fredType';
 
 export interface LineChartProps {
 	indicator: OriginSeriess_Type;
 	children?: React.ReactElement;
 	height?: number;
 	width?: number;
-	values: Value_Type[] | [undefined, undefined];
+	values: DateValue_Type[] | [undefined, undefined];
 	className?: string;
 	seriesId?: string;
 }
@@ -39,14 +39,14 @@ const LineChart = ({ indicator, values, width, height, children, className, seri
 		const marginBottom = 40;
 		const marginLeft = 40;
 		const x = d3.scaleUtc(
-			d3.extent(values as Value_Type[], (value: Value_Type) => value.date) as unknown as [Date, Date],
+			d3.extent(values as DateValue_Type[], (value: DateValue_Type) => value.date) as unknown as [Date, Date],
 			[marginLeft, width - marginRight]
 		);
-		const maxValue = d3.max(values as Value_Type[], (value: Value_Type) => value.value) || 0;
+		const maxValue = d3.max(values as DateValue_Type[], (value: DateValue_Type) => value.value) || 0;
 		const y = d3.scaleLinear([0, maxValue * 1.3], [height - marginBottom, marginTop]);
 
 		const line = d3
-			.line<Value_Type>()
+			.line<DateValue_Type>()
 			.x(d => x(d.date))
 			.y(d => y(d.value));
 
@@ -89,11 +89,11 @@ const LineChart = ({ indicator, values, width, height, children, className, seri
 			.attr('fill', 'none')
 			.attr('stroke', 'steelblue')
 			.attr('stroke-width', 1.5)
-			.attr('d', line(values as Value_Type[]));
+			.attr('d', line(values as DateValue_Type[]));
 	}, [svgContainerRef]);
 
 	return (
-		<div className={clsx(styles.LineChart, className)} style={widthStyle}>
+		<div className={clsx(styles.LineChart, className && styles[className])} style={widthStyle}>
 			<div className={clsx(styles.featuresWrap)}>
 				<h3>{indicator.title}</h3>
 				<div className={clsx(styles.chartFeatures)}>

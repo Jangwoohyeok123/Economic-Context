@@ -18,9 +18,28 @@ export type OriginSeriess_Type = {
 	units_short: string;
 };
 
-export type SeriessWithIsActive_Type = OriginSeriess_Type & {
-	isActive: boolean;
+export type OriginSeriess_Type = {
+	id: string;
+	realtime_start: string;
+	realtime_end: string;
+	title: string;
+	observation_start: string;
+	observation_end: string;
+	frequency: string;
+	frequency_short: string;
+	units: string;
+	units_short: string;
+	seasonal_adjustment: string;
+	seasonal_adjustment_short: string;
+	last_updated: string;
+	popularity: number;
+	group_popularity: number;
+	notes?: string;
 };
+
+export interface SeriessWithIsActiveInterface extends SeriessType {
+	isActive: boolean;
+}
 
 export type Category_Type = {
 	count: number;
@@ -40,12 +59,18 @@ export type Observation_Type = {
 	value: string;
 };
 
-export type Value_Type = {
+export type DateValue_Type = {
 	date: Date;
 	value: number;
 };
 
+export type ObservationResult_Type = {
+	realtime_start: string;
+	realtime_end: string;
+	dataArray: DateValue_Type[];
+};
+
 export type ChartDataForSwiper_Type = {
-	indicator: OriginSeriess_Type;
-	values: Value_Type[];
+	indicator: SeriessType;
+	values: DateValue_Type[];
 };

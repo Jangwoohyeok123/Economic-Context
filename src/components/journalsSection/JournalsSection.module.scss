@@ -113,14 +113,17 @@
 					}
 				}
 				.noData {
+					display: block;
 					width: 100%;
-					padding: 16px 20px;
 					background: #fff;
 					border-bottom: 1px solid #dedede;
 					box-shadow: 5px 5px 20px #dedede;
-					font-size: 0.8rem;
-					color: #014f97;
 					animation: shake 1s cubic-bezier(1, 0, 0, 1);
+					td {
+						padding: 16px 20px;
+						font-size: 0.8rem;
+						color: #014f97;
+					}
 					@keyframes shake {
 						0%,
 						100% {
