@@ -2,9 +2,9 @@ import clsx from 'clsx';
 import styles from './IndicatorCard.module.scss';
 import { useRouter } from 'next/router';
 import { cleanString } from '@/utils/cleanString';
-import { Indicator_Type } from '@/types/userType';
+import { Favorite_Type } from '@/types/backendType';
 
-interface IndicatorCardProps extends Indicator_Type {
+interface IndicatorCard_Props extends Favorite_Type {
 	children: React.ReactNode;
 	className?: string;
 }
@@ -28,7 +28,7 @@ export default function IndicatorCard({
 	observation_end,
 	observation_start,
 	className
-}: IndicatorCardProps) {
+}: IndicatorCard_Props) {
 	const router = useRouter();
 	const cleandTitle = title ? cleanString(title) : 'title';
 	const localRoutingUrl = process.env.NEXT_PUBLIC_FRONT_URL_LOCAL;

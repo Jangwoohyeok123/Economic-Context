@@ -3,7 +3,6 @@ import styles from './Morepage.module.scss';
 import dynamic from 'next/dynamic';
 import { Store_Type } from '@/types/reduxType';
 import LineChart from '@/components/charts/line/LineChart';
-import { Indicator_Type } from '@/types/userType';
 import { useRouter } from 'next/router';
 import const_queryKey from '@/const/queryKey';
 import { useSelector } from 'react-redux';
@@ -16,6 +15,7 @@ import { getChartData, getIndicator } from '@/api/fred';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { addFavorite, deleteFavorite, getFavorite } from '@/api/backend';
 import BubblePopButton from '@/components/bubblePopButton/BubblePopButton';
+import { Favorite_Type } from '@/types/backendType';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
@@ -34,6 +34,8 @@ export default function Morepage() {
 	const [chartDatas, setChartDatas] = useState<DataItem[]>([]);
 	const [indicator, setIndicators] = useState<OriginSeriess_Type>({
 		id: '',
+		realtime_start: '',
+		realtime_end: '',
 		title: '',
 		notes: '',
 		observation_start: '',
@@ -86,7 +88,7 @@ export default function Morepage() {
 			return;
 		}
 
-		const isFind = favorite.find((indicator: Indicator_Type) => indicator.seriesId === seriesId);
+		const isFind = favorite?.find((indicator: Favorite_Type) => indicator.seriesId === seriesId);
 
 		if (isFind) {
 			deleteFavoriteMutation.mutate({ userId: user.id, seriesId: seriesId as string });
@@ -141,7 +143,7 @@ export default function Morepage() {
 
 	// save, delete 상황을 확인하는 useEffect
 	useEffect(() => {
-		if (favorite?.some((el: Indicator_Type) => el.seriesId === seriesId)) {
+		if (favorite?.some((el: Favorite_Type) => el.seriesId === seriesId)) {
 			setIsActive(true);
 		} else {
 			setIsActive(false);
