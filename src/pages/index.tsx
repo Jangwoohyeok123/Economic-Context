@@ -13,7 +13,7 @@ import ReactPaginate from 'react-paginate';
 import { useRouter } from 'next/router';
 import const_queryKey from '@/const/queryKey';
 import { getIndicators } from '@/backendApi/fred';
-import { CategoryType } from '@/types/fredType';
+import { Category_Type } from '@/types/fredType';
 import { roboto, poppins, frontUrl } from './_app';
 import CategoryWithIsActive from '@/components/categoryWithIsAcitve/CategoryWithIsActive';
 import { useEffect, useState } from 'react';
@@ -24,7 +24,7 @@ import useFavoriteQuery from '@/hooks/useFavoriteQuery';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
-export default function Pages({ interest }: { interest: CategoryType }) {
+export default function Pages({ interest }: { interest: Category_Type }) {
 	const user = useSelector((state: Store) => state.user);
 	const router = useRouter();
 	const dispatch = useDispatch();
