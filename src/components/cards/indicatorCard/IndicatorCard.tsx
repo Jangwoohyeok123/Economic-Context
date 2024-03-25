@@ -2,20 +2,12 @@ import clsx from 'clsx';
 import styles from './IndicatorCard.module.scss';
 import { useRouter } from 'next/router';
 import { cleanString } from '@/utils/cleanString';
+import { Indicator } from '@/types/userType';
 
-interface IndicatorCardProps {
+interface IndicatorCardProps extends Indicator {
 	children: React.ReactNode;
-	notes?: string;
-	title: string;
-	seriesId: string;
-	categoryId: number;
-	frequency?: string;
-	popularity?: number;
-	observation_end: string;
-	observation_start: string;
 	className?: string;
 }
-
 /**
  * - required props
  * @param title

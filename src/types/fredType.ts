@@ -1,5 +1,3 @@
-import { Indicator } from './userType';
-
 // util 타입을 좀 사용해보자 pick ommit
 export type SeriessType = {
 	id: string;
@@ -19,6 +17,31 @@ export type SeriessType = {
 	units?: string;
 	units_short?: string;
 };
+
+type Indicator = Omit<
+	SeriessType,
+	| 'frequency_short'
+	| 'group_popularity'
+	| 'last_updated'
+	| 'realtime_start'
+	| 'realtime_end'
+	| 'seasonal_adjustment'
+	| 'seasonal_adjustment_short'
+	| 'units'
+	| 'units_short'
+> & {
+	categoryId: number;
+};
+/**
+  id: string;
+	title: string;
+	notes: string;
+	observation_start: string;
+	observation_end: string;
+	frequency: string;
+	popularity: number;
+	categoryId: number;
+*/
 
 export interface SeriessWithIsActiveInterface extends SeriessType {
 	isActive: boolean;

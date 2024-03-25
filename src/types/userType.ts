@@ -1,3 +1,22 @@
+import { SeriessType } from './fredType';
+
+export type Indicator = Omit<
+	SeriessType,
+	| 'id'
+	| 'frequency_short'
+	| 'group_popularity'
+	| 'last_updated'
+	| 'realtime_start'
+	| 'realtime_end'
+	| 'seasonal_adjustment'
+	| 'seasonal_adjustment_short'
+	| 'units'
+	| 'units_short'
+> & {
+	seriesId: string;
+	categoryId: number;
+};
+
 interface User {
 	isLogin: boolean;
 	id: number;
@@ -18,16 +37,16 @@ interface User {
 	- observation_end: string;
 	- observation_start: string;
  */
-export interface Indicator {
-	title: string;
-	seriesId: string;
-	categoryId: number;
-	notes: string;
-	frequency: string;
-	popularity: number;
-	observation_end: string;
-	observation_start: string;
-}
+// export interface Indicator {
+// 	title: string;
+// 	seriesId: string;
+// 	categoryId: number;
+// 	notes: string;
+// 	frequency: string;
+// 	popularity: number;
+// 	observation_end: string;
+// 	observation_start: string;
+// }
 
 /**
 	- title: string;

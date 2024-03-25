@@ -39,13 +39,7 @@ export default function Category({
 							observation_end={observation_end as string}
 							observation_start={observation_start as string}
 							className={styles.IndicatorCard}>
-							<div>
-								{notes ? (
-									<p>{notes}</p>
-								) : (
-									<p>This indicator does not have information about the indicator description.</p>
-								)}
-							</div>
+							<p>{notes ? notes : 'This indicator does not have information about the indicator description.'}</p>
 							<BubblePopButton
 								clickHandler={() => {
 									setIsAlertModalOpen(true);
