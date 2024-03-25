@@ -1,14 +1,14 @@
 import clsx from 'clsx';
 import styles from './Morepage.module.scss';
 import dynamic from 'next/dynamic';
-import { Store } from '@/types/reduxType';
+import { Store_Type } from '@/types/reduxType';
 import LineChart from '@/components/charts/line/LineChart';
-import { Indicator } from '@/types/userType';
+import { Indicator_Type } from '@/types/userType';
 import { useRouter } from 'next/router';
 import const_queryKey from '@/const/queryKey';
 import { useSelector } from 'react-redux';
 import { cleanString } from '@/utils/cleanString';
-import { SeriessType } from '@/types/fredType';
+import { OriginSeriess_Type } from '@/types/fredType';
 import ChartDescription from '@/components/chartDescription/ChartDescription';
 import { frontUrl, poppins, roboto } from './_app';
 import { useEffect, useState } from 'react';
@@ -26,13 +26,13 @@ interface DataItem {
 
 export default function Morepage() {
 	const router = useRouter();
-	const user = useSelector((state: Store) => state.user);
+	const user = useSelector((state: Store_Type) => state.user);
 	const queryClient = useQueryClient();
 	const { id: seriesId, title, categoryId } = router.query;
 	const [isActive, setIsActive] = useState(false);
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 	const [chartDatas, setChartDatas] = useState<DataItem[]>([]);
-	const [indicator, setIndicators] = useState<SeriessType>({
+	const [indicator, setIndicators] = useState<OriginSeriess_Type>({
 		id: '',
 		title: '',
 		notes: '',
@@ -86,7 +86,7 @@ export default function Morepage() {
 			return;
 		}
 
-		const isFind = favorite.find((indicator: Indicator) => indicator.seriesId === seriesId);
+		const isFind = favorite.find((indicator: Indicator_Type) => indicator.seriesId === seriesId);
 
 		if (isFind) {
 			deleteFavoriteMutation.mutate({ userId: user.id, seriesId: seriesId as string });
@@ -108,7 +108,7 @@ export default function Morepage() {
 				console.error(err.message);
 			});
 
-		getIndicator(seriesId as string).then((indicator: SeriessType) => {
+		getIndicator(seriesId as string).then((indicator: OriginSeriess_Type) => {
 			const {
 				id,
 				title,
@@ -141,7 +141,7 @@ export default function Morepage() {
 
 	// save, delete 상황을 확인하는 useEffect
 	useEffect(() => {
-		if (favorite?.some((el: Indicator) => el.seriesId === seriesId)) {
+		if (favorite?.some((el: Indicator_Type) => el.seriesId === seriesId)) {
 			setIsActive(true);
 		} else {
 			setIsActive(false);

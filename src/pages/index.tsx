@@ -1,35 +1,35 @@
 import clsx from 'clsx';
-import User from '@/types/userType';
+import { User_Type } from '@/types/userType';
 import Image from 'next/image';
 import axios from 'axios';
 import styles from './Home.module.scss';
 import Footer from '@/components/footer/Footer';
 import dynamic from 'next/dynamic';
 import Category from '@/components/category/Category';
-import { Store } from '@/types/reduxType';
+import { Store_Type } from '@/types/reduxType';
 import { login } from '@/actions/actions';
 import { useQuery } from '@tanstack/react-query';
 import ReactPaginate from 'react-paginate';
 import { useRouter } from 'next/router';
 import const_queryKey from '@/const/queryKey';
 import { getIndicators } from '@/api/fred';
-import { CategoryType } from '@/types/fredType';
-import { roboto, poppins, frontUrl } from './_app';
+import { Category_Type } from '@/types/fredType';
 import CategoryWithIsActive from '@/components/categoryWithIsAcitve/CategoryWithIsActive';
 import { useEffect, useState } from 'react';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { useDispatch, useSelector } from 'react-redux';
+import { roboto, poppins, frontUrl } from './_app';
 import { categoryNames } from './_app';
 import useFavoriteQuery from '@/hooks/useFavoriteQuery';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
 interface HomeProps {
-	interest: CategoryType;
+	interest: Category_Type;
 }
 
-export default function Home({ interest }: { interest: CategoryType }) {
-	const user = useSelector((state: Store) => state.user);
+export default function Home({ interest }: { interest: Category_Type }) {
+	const user = useSelector((state: Store_Type) => state.user);
 	const router = useRouter();
 	const dispatch = useDispatch();
 	const [categoryIndex, setCategoryIndex] = useState(0);
@@ -53,7 +53,7 @@ export default function Home({ interest }: { interest: CategoryType }) {
 				.post(`${backendUrl}/auth/google`, { code: authCode })
 				.then(response => {
 					const jwt = response.data[0];
-					const userData: User = response.data[1];
+					const userData: User_Type = response.data[1];
 					sessionStorage.setItem('token', jwt);
 					dispatch(login(userData));
 				})

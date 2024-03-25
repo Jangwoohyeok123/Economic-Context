@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { deleteContext, getContext, getContextIdsWithNames } from '@/api/backend';
 import { useSelector } from 'react-redux';
-import { Store } from '@/types/reduxType';
+import { Store_Type } from '@/types/reduxType';
 import const_queryKey from '@/const/queryKey';
 import { useEffect, useState } from 'react';
-import { ContextIdWithName } from '@/types/userType';
+import { ContextIdWithName_Type } from '@/types/userType';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 
 interface MenuProps {
@@ -19,8 +19,8 @@ export default function Menu({ selectedTab, setSelectedTab }: MenuProps) {
 	const tabs = ['Indicators', 'MyContext'];
 	const queryClient = useQueryClient();
 	const [isAccordianOpen, setIsAccordianOpen] = useState(false);
-	const userId = useSelector((state: Store) => state.user.id);
-	const { data: contextIdsWithNames, isLoading } = useQuery<ContextIdWithName[]>({
+	const userId = useSelector((state: Store_Type) => state.user.id);
+	const { data: contextIdsWithNames, isLoading } = useQuery<ContextIdWithName_Type[]>({
 		queryKey: [const_queryKey.context, 'names'],
 		queryFn: () => getContextIdsWithNames(userId)
 	});
@@ -39,7 +39,7 @@ export default function Menu({ selectedTab, setSelectedTab }: MenuProps) {
 			// }
 			if (contextIdsWithNames) {
 				const newContextIdsWithNames = contextIdsWithNames.filter(
-					(context: ContextIdWithName) => context.name !== selectedTab
+					(context: ContextIdWithName_Type) => context.name !== selectedTab
 				);
 				queryClient.setQueryData([const_queryKey.context, 'names'], newContextIdsWithNames); // 내일 정리하기
 				queryClient.invalidateQueries({
@@ -48,7 +48,7 @@ export default function Menu({ selectedTab, setSelectedTab }: MenuProps) {
 
 				if (contextIdsWithNames.length >= 2) {
 					// 왜 -1 ?
-					const currentIndex = contextIdsWithNames.findIndex((context: ContextIdWithName) => {
+					const currentIndex = contextIdsWithNames.findIndex((context: ContextIdWithName_Type) => {
 						return context.name.trim() === selectedTab.trim();
 					});
 
@@ -93,7 +93,7 @@ export default function Menu({ selectedTab, setSelectedTab }: MenuProps) {
 
 				<div className={clsx(styles.contexts)}>
 					{isAccordianOpen &&
-						contextIdsWithNames?.map((context: ContextIdWithName, index: number) => {
+						contextIdsWithNames?.map((context: ContextIdWithName_Type, index: number) => {
 							const { id: contextId, name } = context;
 
 							return (

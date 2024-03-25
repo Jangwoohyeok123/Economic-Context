@@ -2,9 +2,9 @@ import clsx from 'clsx';
 import styles from './IndicatorCard.module.scss';
 import { useRouter } from 'next/router';
 import { cleanString } from '@/utils/cleanString';
-import { Indicator } from '@/types/userType';
+import { Indicator_Type } from '@/types/userType';
 
-interface IndicatorCardProps extends Indicator {
+interface IndicatorCardProps extends Indicator_Type {
 	children: React.ReactNode;
 	className?: string;
 }

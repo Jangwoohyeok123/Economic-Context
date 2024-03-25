@@ -2,14 +2,14 @@ import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import clsx from 'clsx';
 import styles from './LineChart.module.scss';
-import { SeriessType, ValueType } from '@/types/fredType';
+import { OriginSeriess_Type, Value_Type } from '@/types/fredType';
 
 export interface LineChartProps {
-	indicator: SeriessType;
+	indicator: OriginSeriess_Type;
 	children?: React.ReactElement;
 	height?: number;
 	width?: number;
-	values: ValueType[] | [undefined, undefined];
+	values: Value_Type[] | [undefined, undefined];
 	className?: string;
 	seriesId?: string;
 }
@@ -39,14 +39,14 @@ const LineChart = ({ indicator, values, width, height, children, className, seri
 		const marginBottom = 40;
 		const marginLeft = 40;
 		const x = d3.scaleUtc(
-			d3.extent(values as ValueType[], (value: ValueType) => value.date) as unknown as [Date, Date],
+			d3.extent(values as Value_Type[], (value: Value_Type) => value.date) as unknown as [Date, Date],
 			[marginLeft, width - marginRight]
 		);
-		const maxValue = d3.max(values as ValueType[], (value: ValueType) => value.value) || 0;
+		const maxValue = d3.max(values as Value_Type[], (value: Value_Type) => value.value) || 0;
 		const y = d3.scaleLinear([0, maxValue * 1.3], [height - marginBottom, marginTop]);
 
 		const line = d3
-			.line<ValueType>()
+			.line<Value_Type>()
 			.x(d => x(d.date))
 			.y(d => y(d.value));
 
@@ -89,7 +89,7 @@ const LineChart = ({ indicator, values, width, height, children, className, seri
 			.attr('fill', 'none')
 			.attr('stroke', 'steelblue')
 			.attr('stroke-width', 1.5)
-			.attr('d', line(values as ValueType[]));
+			.attr('d', line(values as Value_Type[]));
 	}, [svgContainerRef]);
 
 	return (

@@ -1,22 +1,22 @@
 import clsx from 'clsx';
 import styles from './JournalsSection.module.scss';
 import { useEffect, useState } from 'react';
-import { Journal, JournalResponseData } from '@/types/userType';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import const_queryKey from '@/const/queryKey';
-import { addJournal, getJournal } from '@/api/backend';
+import { addJournal, getContextJournals } from '@/api/backend';
 import { useSelector } from 'react-redux';
-import { Store } from '@/types/reduxType';
+import { Store_Type } from '@/types/reduxType';
 import { HiMiniPencilSquare } from 'react-icons/hi2';
 import { CgCloseR } from 'react-icons/cg';
 import { changeDate } from '@/utils/cleanString';
+import { Journal_Type } from '@/types/backendType';
 
 interface JournalProps {
 	contextId: number;
 }
 
 export default function Journal({ contextId }: JournalProps) {
-	const userId = useSelector((state: Store) => state.user.id);
+	const userId = useSelector((state: Store_Type) => state.user.id);
 	const [isWrite, setIsWrite] = useState(false);
 	const [journalDataParams, setJournalDataParams] = useState({ title: '', body: '' });
 	const queryClient = useQueryClient();
@@ -29,7 +29,7 @@ export default function Journal({ contextId }: JournalProps) {
 		}: {
 			userId: number;
 			contextId: number;
-			journalDataParams: Journal;
+			journalDataParams: Journal_Type;
 		}) => addJournal(userId, contextId, journalDataParams),
 		onSuccess() {
 			queryClient.invalidateQueries({
@@ -52,9 +52,9 @@ export default function Journal({ contextId }: JournalProps) {
 		setIsWrite(false);
 	};
 
-	const { data: journal, isLoading: isJournalLoading } = useQuery({
+	const { data: contextJournals, isLoading: isContextJournalsLoading } = useQuery({
 		queryKey: [const_queryKey.journal, contextId],
-		queryFn: () => getJournal(contextId as number)
+		queryFn: () => getContextJournals(contextId as number)
 	});
 
 	const toggleJournalFormButton = (e: React.FormEvent<HTMLSpanElement>) => {
@@ -65,7 +65,7 @@ export default function Journal({ contextId }: JournalProps) {
 	const changeJournalInputData = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
 		e.preventDefault();
 		const { name, value } = e.target; // e.target에서 name과 value를 추출
-		const newParams: Journal = {
+		const newParams: Pick<Journal_Type, 'title' | 'body'> = {
 			...journalDataParams,
 			[name]: value
 		};
@@ -78,12 +78,12 @@ export default function Journal({ contextId }: JournalProps) {
 	};
 	useEffect(() => {
 		// journal 데이터가 있고 항목이 하나 이상 있는 경우 isOpen을 true로 설정
-		if (journal && journal.length > 0) {
+		if (contextJournals && contextJournals.length > 0) {
 			setIsWrite(false);
 		} else {
 			setIsWrite(true); // 그렇지 않으면 false로 설정
 		}
-	}, [journal]);
+	}, [contextJournals]);
 
 	return (
 		<div className={clsx(styles.Journal)}>
@@ -118,10 +118,10 @@ export default function Journal({ contextId }: JournalProps) {
 			<div className={clsx(styles.JournalTable)}>
 				<table>
 					<tbody>
-						{isJournalLoading ? (
+						{isContextJournalsLoading ? (
 							<div>Loading...</div> // 로딩 중임을 알리는 메시지
-						) : journal && journal.length > 0 ? (
-							journal.map((item: JournalResponseData, index: number) => (
+						) : contextJournals && contextJournals.length > 0 ? (
+							contextJournals.map((item: Journal_Type, index: number) => (
 								<tr key={item.id + index}>
 									<td>
 										<div>

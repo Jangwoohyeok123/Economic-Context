@@ -1,9 +1,9 @@
-import { ObservationType } from '@/types/fredType';
+import { Observation_Type } from '@/types/fredType';
 import axios from 'axios';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 interface ApiResponse {
-	observations?: ObservationType[];
+	observations?: Observation_Type[];
 	message?: string;
 }
 

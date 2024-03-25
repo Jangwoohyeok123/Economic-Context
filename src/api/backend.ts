@@ -1,9 +1,10 @@
-import { Indicator, Journal } from '@/types/userType';
+import { ContextNameWithKey_Type, Favorite_Type, Journal_Type, JwtAndGoogleUserData_Type } from '@/types/backendType';
+import { Context_Type, Indicator_Type } from '@/types/userType';
 import axios from 'axios';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL_LOCAL;
 
-export async function getJwtAndUserGoogleData(authCode: string) {
+export async function getJwtAndGoogleUserData(authCode: string): Promise<JwtAndGoogleUserData_Type> {
 	try {
 		const response = await axios.post(`${backendUrl}auth/google`, { code: authCode });
 		const jwt = response.data[0];
@@ -16,7 +17,7 @@ export async function getJwtAndUserGoogleData(authCode: string) {
 	}
 }
 
-export const getFavorites = async (userId: number) => {
+export const getFavorites = async (userId: number): Promise<Favorite_Type[]> => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
@@ -40,7 +41,7 @@ export const getFavorites = async (userId: number) => {
 	}
 };
 
-export const getFavorite = async (userId: number, categoryId: number) => {
+export const getFavorite = async (userId: number, categoryId: number): Promise<Favorite_Type> => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
@@ -116,7 +117,7 @@ export const deleteFavorite = async (userId: number, seriesId: string) => {
 	}
 };
 
-export const addContext = async (userId: number, name: string, customIndicators: Indicator[]) => {
+export const addContext = async (userId: number, name: string, customIndicators: Indicator_Type[]) => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
@@ -149,7 +150,7 @@ export const addContext = async (userId: number, name: string, customIndicators:
 	}
 };
 
-export const getContext = async (contextId: number) => {
+export const getContext = async (contextId: number): Promise<Context_Type> => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
@@ -173,10 +174,12 @@ export const getContext = async (contextId: number) => {
 		} else {
 			console.error('Error: ', error.message);
 		}
+
+		throw new Error("Failed to get user's context");
 	}
 };
 
-export const getAllContexts = async (userId: number) => {
+export const getAllContexts = async (userId: number): Promise<Context_Type[]> => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
@@ -200,10 +203,12 @@ export const getAllContexts = async (userId: number) => {
 		} else {
 			console.error('Error: ', error.message);
 		}
+
+		throw new Error("Failed to get user's contexts");
 	}
 };
 
-export const getContextIdsWithNames = async (userId: number) => {
+export const getContextIdsWithNames = async (userId: number): Promise<ContextNameWithKey_Type[]> => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
@@ -227,6 +232,8 @@ export const getContextIdsWithNames = async (userId: number) => {
 		} else {
 			console.error('Error: ', error.message);
 		}
+
+		throw new Error('Failed to fetch');
 	}
 };
 
@@ -256,7 +263,7 @@ export const deleteContext = async (contextId: number) => {
 	}
 };
 
-export const getJournal = async (contextId: number) => {
+export const getContextJournals = async (contextId: number): Promise<Journal_Type[]> => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
@@ -280,6 +287,8 @@ export const getJournal = async (contextId: number) => {
 		} else {
 			console.error('Error: ', error.message);
 		}
+
+		throw new Error('Failed to fetch');
 	}
 };
 
