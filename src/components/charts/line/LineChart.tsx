@@ -2,10 +2,10 @@ import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import clsx from 'clsx';
 import styles from './LineChart.module.scss';
-import { SeriessType, DateValue_Type } from '@/types/fredType';
+import { OriginSeriess_Type, DateValue_Type } from '@/types/fredType';
 
 export interface LineChartProps {
-	indicator: SeriessType;
+	indicator: OriginSeriess_Type;
 	children?: React.ReactElement;
 	height?: number;
 	width?: number;

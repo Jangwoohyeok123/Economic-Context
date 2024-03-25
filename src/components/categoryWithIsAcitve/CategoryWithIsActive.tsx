@@ -1,19 +1,19 @@
 import clsx from 'clsx';
 import styles from './CategoryWithIsActive.module.scss';
-import { SeriessWithIsActiveInterface, SeriessType } from '@/types/fredType';
+import { SeriessWithIsActive_Type, OriginSeriess_Type } from '@/types/fredType';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { getFavorite } from '@/backendApi/user';
+import { getFavorite } from '@/api/backend';
 import const_queryKey from '@/const/queryKey';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import BubblePopButton from '../bubblePopButton/BubblePopButton';
-import { Store } from '@/types/reduxType';
-import { IndicatorWithIsActive } from '@/types/userType';
+import { Store_Type } from '@/types/reduxType';
+import { IndicatorWithIsActive_Type } from '@/types/userType';
 import useFavoriteMutation from '@/hooks/useFavoriteMutation';
 
 interface CategoryWithIsActive_Intercae {
-	categoryData: SeriessType[];
+	categoryData: OriginSeriess_Type[];
 	currentPage: number;
 	itemsPerPage: number;
 	categoryId: number;
@@ -25,8 +25,8 @@ export default function CategoryWithIsActive({
 	itemsPerPage,
 	categoryId
 }: CategoryWithIsActive_Intercae) {
-	const user = useSelector((state: Store) => state.user);
-	const [categoryWithIsActive, setCategoryWithActive] = useState<SeriessWithIsActiveInterface[]>([]);
+	const user = useSelector((state: Store_Type) => state.user);
+	const [categoryWithIsActive, setCategoryWithActive] = useState<SeriessWithIsActive_Type[]>([]);
 
 	// useQuery
 	const { data: favorite, isSuccess: isFavoriteExist } = useQuery({
@@ -44,13 +44,13 @@ export default function CategoryWithIsActive({
 	/** 현 cateogoryData 에 isActive 속성을 붙이고 backend 에 저장됐던 데이터는 true 처리 */
 	useEffect(() => {
 		if (categoryData && isFavoriteExist && favorite) {
-			const categoryWithIsActive = categoryData.map((item: SeriessType) => ({
+			const categoryWithIsActive = categoryData.map((item: OriginSeriess_Type) => ({
 				...item,
 				isActive: false
 			}));
 
-			favorite.forEach((favoriteIndicator: IndicatorWithIsActive) => {
-				categoryWithIsActive.forEach((categoryIndicator: SeriessWithIsActiveInterface) => {
+			favorite.forEach((favoriteIndicator: IndicatorWithIsActive_Type) => {
+				categoryWithIsActive.forEach((categoryIndicator: SeriessWithIsActive_Type) => {
 					if (favoriteIndicator.seriesId === categoryIndicator.id) categoryIndicator.isActive = true;
 				});
 			});
@@ -63,7 +63,7 @@ export default function CategoryWithIsActive({
 		<figure className={clsx(styles.CategoryWithIsActive)}>
 			{categoryWithIsActive
 				.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
-				.map((series: SeriessWithIsActiveInterface, idx: number) => {
+				.map((series: SeriessWithIsActive_Type, idx: number) => {
 					const { title, id: seriesId, frequency, popularity, observation_start, observation_end, isActive } = series;
 					const notes = series.notes ?? '';
 					return (

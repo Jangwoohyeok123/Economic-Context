@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 import styles from './CurrentContext.module.scss';
 import const_queryKey from '@/const/queryKey';
-import { getContext, getContextIdsWithNames } from '@/backendApi/user';
+import { getContext, getContextIdsWithNames } from '@/api/backend';
 import { useQuery } from '@tanstack/react-query';
-import { ContextType, Indicator } from '@/types/userType';
+import { Context_Type, Indicator_Type } from '@/types/userType';
 import ChartSwiper from '../chartSwiper/ChartSwiper';
 import Journal from '../journalsSection/JournalsSection';
 import ChartList from '../chartList/ChartList';
@@ -12,14 +12,14 @@ interface CurrentContextProps {
 }
 
 export default function CurrentContext({ currentContextId }: CurrentContextProps) {
-	const { data: currentContext, isLoading } = useQuery<ContextType>({
+	const { data: currentContext, isLoading } = useQuery<Context_Type>({
 		queryKey: [const_queryKey.context, currentContextId],
 		queryFn: () => getContext(currentContextId)
 	});
 
 	if (isLoading) return <div>Loading...</div>;
 
-	const seriesIds = currentContext?.customIndicators.map((indicator: Indicator) => {
+	const seriesIds = currentContext?.customIndicators.map((indicator: Indicator_Type) => {
 		return indicator.seriesId;
 	});
 

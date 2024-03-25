@@ -1,6 +1,6 @@
-import { getFavorite, getFavorites } from '@/backendApi/user';
+import { getFavorite, getFavorites } from '@/api/backend';
 import const_queryKey from '@/const/queryKey';
-import { Store } from '@/types/reduxType';
+import { Store_Type } from '@/types/reduxType';
 import { useQuery } from '@tanstack/react-query';
 import { useSelector } from 'react-redux';
 
@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
  * @returns favorite 배열
  */
 export default function useFavoriteQuery(categoryId?: number) {
-	const user = useSelector((state: Store) => state.user);
+	const user = useSelector((state: Store_Type) => state.user);
 
 	const { data: allFavorites, isSuccess: isAllFavoritesExist } = useQuery({
 		queryKey: [const_queryKey.favorite],

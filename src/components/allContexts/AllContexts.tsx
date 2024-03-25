@@ -2,10 +2,10 @@ import clsx from 'clsx';
 import styles from './AllContexts.module.scss';
 import { useQuery } from '@tanstack/react-query';
 import const_queryKey from '@/const/queryKey';
-import { getAllContexts, getContextIdsWithNames } from '@/backendApi/user';
-import { ContextIdWithName, ContextType } from '@/types/userType';
+import { getAllContexts } from '@/api/backend';
+import { ContextIdWithName_Type, Context_Type } from '@/types/userType';
 import { useSelector } from 'react-redux';
-import { Store } from '@/types/reduxType';
+import { Store_Type } from '@/types/reduxType';
 import { useEffect } from 'react';
 import { addEllipsis, changeDate } from '@/utils/cleanString';
 import { FaPlus } from 'react-icons/fa6';
@@ -15,8 +15,8 @@ interface AllContexts {
 	setSelectedContext: React.Dispatch<React.SetStateAction<string>>;
 }
 export default function AllContexts({ selectedContext, setSelectedContext }: AllContexts) {
-	const userId = useSelector((store: Store) => store.user.id);
-	const { data: allContexts, isLoading: isAllContextsLoading } = useQuery<ContextType[]>({
+	const userId = useSelector((store: Store_Type) => store.user.id);
+	const { data: allContexts, isLoading: isAllContextsLoading } = useQuery<Context_Type[]>({
 		queryKey: [const_queryKey.context, 'all'],
 		queryFn: () => getAllContexts(userId)
 	});
@@ -42,7 +42,7 @@ export default function AllContexts({ selectedContext, setSelectedContext }: All
 				{/*TODO :: 클릭하면 indicators로 이동*/}
 			</div>
 			<div className={clsx(styles.contextCardList)}>
-				{allContexts?.map((context: ContextType, index: number) => {
+				{allContexts?.map((context: Context_Type, index: number) => {
 					const { id: contextId, name, createdAt } = context;
 
 					return (

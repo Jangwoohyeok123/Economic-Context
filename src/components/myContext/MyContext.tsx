@@ -1,24 +1,15 @@
 import clsx from 'clsx';
 import styles from './MyContext.module.scss';
 import { useSelector } from 'react-redux';
-import { Store } from '@/types/reduxType';
+import { Store_Type } from '@/types/reduxType';
 import const_queryKey from '@/const/queryKey';
-import { getAllContexts, getContext, getContextIdsWithNames } from '@/backendApi/user';
+import { getContextIdsWithNames } from '@/api/backend';
 import { useQueries, useQuery } from '@tanstack/react-query';
-import { ContextIdWithName, Journal, ContextType } from '@/types/userType';
-import CategoryTab from '../categoryTab/CategoryTab';
-import { categoryNames } from '@/pages/_app';
-import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
-import LineChart from '../charts/line/LineChart';
+import { ContextIdWithName_Type, Context_Type } from '@/types/userType';
 import { useEffect, useState } from 'react';
-import { getChartData, getIndicator } from '@/backendApi/fred';
-import { Indicator } from '@/types/userType';
-import { cleanString } from '@/utils/cleanString';
-import { Swiper, SwiperSlide } from 'swiper/react';
 
 // Import Swiper styles
 import 'swiper/css';
-import ChartSwiper from '../chartSwiper/ChartSwiper';
 import AllContexts from '../allContexts/AllContexts';
 import CurrentContext from '../currentContext/CurrentContext';
 
@@ -27,17 +18,12 @@ interface MyContextTabProps {
 	setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
-interface DataItem {
-	date: Date;
-	value: number;
-}
-
 export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextTabProps) {
-	const userId = useSelector((state: Store) => state.user.id);
+	const userId = useSelector((state: Store_Type) => state.user.id);
 	const [currentContextId, setCurrentContextId] = useState<number | undefined>();
 	const [selectedContext, setSelectedContext] = useState<string>('');
 
-	const { data: contextIdsWithNames, isLoading } = useQuery<ContextIdWithName[]>({
+	const { data: contextIdsWithNames, isLoading } = useQuery<ContextIdWithName_Type[]>({
 		queryKey: [const_queryKey.context, 'names'],
 		queryFn: () => getContextIdsWithNames(userId)
 	});
@@ -80,40 +66,3 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 		</div>
 	);
 }
-
-// <section>
-// 	{context?.customIndicators.map((indicator: Indicator, index: number) => {
-// 		const { title, seriesId, categoryId, notes, frequency, popularity, observation_end, observation_start } =
-// 			indicator;
-// 		return (
-// 			<IndicatorCard
-// 				key={index}
-// 				title={title}
-// 				seriesId={seriesId}
-// 				categoryId={categoryId}
-// 				notes={notes}
-// 				frequency={frequency}
-// 				popularity={popularity}
-// 				observation_end={observation_end}
-// 				observation_start={observation_start}
-// 				className={clsx(styles.IndicatorCard)}>
-// 				<div>asd</div>
-// 			</IndicatorCard>
-// 		);
-// 	})}
-// </section>
-
-// 서버데이터 중 일부를 state 처리하려면 어떻게 해야하지?
-
-// const { data: context, isLoading: isContextLoading } = useQuery<ContextType>({
-// 	queryKey: [const_queryKey.context, selectedTab],
-// 	queryFn: () => getContext(currentContext.id)
-// });
-
-// const currentContext = contextNamesWithKey?.find((context: ContextNameWithKey) => context.name === selectedTab);
-// const seriesIds =
-// 	context?.customIndicators?.map((indicator: Indicator) => {
-// 		return indicator.seriesId;
-// 	}) || [];
-
-// currentContext 는 현재 contextKey 를 전달받아야함

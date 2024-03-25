@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { addFavorite, deleteFavorite } from '@/backendApi/user';
+import { addFavorite, deleteFavorite } from '@/api/backend';
 import const_queryKey from '@/const/queryKey';
 
 /** 

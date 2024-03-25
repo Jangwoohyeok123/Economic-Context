@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import styles from './ChartSwiper.module.scss';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useQueries } from '@tanstack/react-query';
-import { getChartData, getIndicator } from '@/backendApi/fred';
+import { getChartData, getIndicator } from '@/api/fred';
 import const_queryKey from '@/const/queryKey';
 import LineChart from '../charts/line/LineChart';
 import { ChartDataForSwiper_Type, SeriessType, DateValue_Type } from '@/types/fredType';
@@ -33,7 +33,7 @@ export default function ChartSwiper({ seriesIds }: ChartSwiperProps) {
 		})),
 		combine: results => {
 			return {
-				data: results.map<SeriessType>(result => result.data)
+				data: results.map<OriginSeriess_Type>(result => result.data)
 			};
 		}
 	});

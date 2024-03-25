@@ -1,86 +1,50 @@
-interface User {
+import { Journal_Type } from './backendType';
+import { OriginSeriess_Type } from './fredType';
+
+export type Indicator_Type = Pick<
+	OriginSeriess_Type,
+	'title' | 'notes' | 'observation_start' | 'observation_end' | 'frequency' | 'popularity'
+> & {
+	seriesId: string;
+	categoryId: number;
+};
+
+export type Favorite_Type = Pick<
+	OriginSeriess_Type,
+	'frequency' | 'notes' | 'observation_end' | 'observation_start' | 'popularity' | 'title'
+> & {
+	seriesId: string;
+	categoryId: number;
+};
+
+export type User_Type = {
 	isLogin: boolean;
 	id: number;
 	google_id: string;
 	email: string;
 	picture_url: string;
 	favorite_indicators: string[];
-	createAt: Date;
-}
+	createAt: string;
+};
 
-/**
-	- title: string;
-	- seriesId: string;
-	- categoryId: number;
-	- notes: string;
-	- frequency: string;
-	- popularity: number;
-	- observation_end: string;
-	- observation_start: string;
- */
-export interface Indicator {
-	title: string;
-	seriesId: string;
-	categoryId: number;
-	notes: string;
-	frequency: string;
-	popularity: number;
-	observation_end: string;
-	observation_start: string;
-}
-
-/**
-	- title: string;
-	- seriesId: string;
-	- categoryId: number;
-	- notes: string;
-	- frequency: string;
-	- popularity: number;
-	- observation_end: string;
-	- observation_start: string;
-	- isActive: boolean;
- */
-export interface IndicatorWithIsActive extends Indicator {
+export type IndicatorWithIsActive_Type = Indicator_Type & {
 	isActive: boolean;
-}
+};
 
-/**
-	- title: string;
-	- seriesId: string;
-	- categoryId: number;
-	- notes: string;
-	- frequency: string;
-	- popularity: number;
-	- observation_end: string;
-	- observation_start: string;
-	- isPick: booelan;
- */
-export interface IndicatorWithIsPick extends Indicator {
+export type IndicatorWithIsPick_Type = Indicator_Type & {
 	isPick: boolean;
-}
+};
 
-export type ContextIdWithName = {
+export type ContextIdWithName_Type = {
 	id: number;
 	name: string;
 };
 
-export type ContextType = {
-	createdAt: Date;
-	customIndicators: Indicator[];
-	id: number;
-	journal: Journal[];
-	name: string;
-	updatedAt: Date;
-};
-
-export interface Journal {
-	title: string;
-	body: string;
-}
-
-export interface JournalResponseData extends Journal {
-	id: number;
+export type Context_Type = {
 	createdAt: string;
-}
-
-export default User;
+	customIndicators: Indicator_Type[];
+	id: number;
+	journal: Journal_Type[];
+	name: string;
+	updatedAt: string;
+};
