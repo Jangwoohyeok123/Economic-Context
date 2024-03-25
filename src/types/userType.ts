@@ -1,7 +1,7 @@
-import { SeriessType } from './fredType';
+import { Seriess } from './fredType';
 
 export type Indicator = Omit<
-	SeriessType,
+	Seriess,
 	| 'id'
 	| 'frequency_short'
 	| 'group_popularity'
@@ -27,53 +27,10 @@ interface User {
 	createAt: Date;
 }
 
-/**
-	- title: string;
-	- seriesId: string;
-	- categoryId: number;
-	- notes: string;
-	- frequency: string;
-	- popularity: number;
-	- observation_end: string;
-	- observation_start: string;
- */
-// export interface Indicator {
-// 	title: string;
-// 	seriesId: string;
-// 	categoryId: number;
-// 	notes: string;
-// 	frequency: string;
-// 	popularity: number;
-// 	observation_end: string;
-// 	observation_start: string;
-// }
-
-/**
-	- title: string;
-	- seriesId: string;
-	- categoryId: number;
-	- notes: string;
-	- frequency: string;
-	- popularity: number;
-	- observation_end: string;
-	- observation_start: string;
-	- isActive: boolean;
- */
 export interface IndicatorWithIsActive extends Indicator {
 	isActive: boolean;
 }
 
-/**
-	- title: string;
-	- seriesId: string;
-	- categoryId: number;
-	- notes: string;
-	- frequency: string;
-	- popularity: number;
-	- observation_end: string;
-	- observation_start: string;
-	- isPick: booelan;
- */
 export interface IndicatorWithIsPick extends Indicator {
 	isPick: boolean;
 }

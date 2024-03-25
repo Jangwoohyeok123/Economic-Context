@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import styles from './CategoryWithIsActive.module.scss';
-import { SeriessWithIsActiveInterface, SeriessType } from '@/types/fredType';
+import { SeriessWithIsActiveType, Seriess } from '@/types/fredType';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getFavorite } from '@/backendApi/user';
@@ -13,7 +13,7 @@ import { IndicatorWithIsActive } from '@/types/userType';
 import useFavoriteMutation from '@/hooks/useFavoriteMutation';
 
 interface CategoryWithIsActive_Intercae {
-	categoryData: SeriessType[];
+	categoryData: Seriess[];
 	currentPage: number;
 	itemsPerPage: number;
 	categoryId: number;
@@ -26,7 +26,7 @@ export default function CategoryWithIsActive({
 	categoryId
 }: CategoryWithIsActive_Intercae) {
 	const user = useSelector((state: Store) => state.user);
-	const [categoryWithIsActive, setCategoryWithActive] = useState<SeriessWithIsActiveInterface[]>([]);
+	const [categoryWithIsActive, setCategoryWithActive] = useState<SeriessWithIsActiveType[]>([]);
 
 	// useQuery
 	const { data: favorite, isSuccess: isFavoriteExist } = useQuery({
@@ -44,13 +44,13 @@ export default function CategoryWithIsActive({
 	/** 현 cateogoryData 에 isActive 속성을 붙이고 backend 에 저장됐던 데이터는 true 처리 */
 	useEffect(() => {
 		if (categoryData && isFavoriteExist && favorite) {
-			const categoryWithIsActive = categoryData.map((item: SeriessType) => ({
+			const categoryWithIsActive = categoryData.map((item: Seriess) => ({
 				...item,
 				isActive: false
 			}));
 
 			favorite.forEach((favoriteIndicator: IndicatorWithIsActive) => {
-				categoryWithIsActive.forEach((categoryIndicator: SeriessWithIsActiveInterface) => {
+				categoryWithIsActive.forEach((categoryIndicator: SeriessWithIsActiveType) => {
 					if (favoriteIndicator.seriesId === categoryIndicator.id) categoryIndicator.isActive = true;
 				});
 			});
@@ -63,7 +63,7 @@ export default function CategoryWithIsActive({
 		<figure className={clsx(styles.CategoryWithIsActive)}>
 			{categoryWithIsActive
 				.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
-				.map((series: SeriessWithIsActiveInterface, idx: number) => {
+				.map((series: SeriessWithIsActiveType, idx: number) => {
 					const { title, id: seriesId, frequency, popularity, observation_start, observation_end, isActive } = series;
 					const notes = series.notes ?? '';
 					return (
