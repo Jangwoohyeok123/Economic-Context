@@ -292,7 +292,7 @@ export const getContextJournals = async (contextId: number): Promise<Journal_Typ
 	}
 };
 
-export const addJournal = async (userId: number, contextId: number, journalDataParams: Journal) => {
+export const addJournal = async (userId: number, contextId: number, journalDataParams: Journal_Type) => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
