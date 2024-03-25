@@ -1,5 +1,5 @@
 // util 타입을 좀 사용해보자 pick ommit
-export type Seriess = {
+export type SeriessType = {
 	id: string;
 	title: string;
 	notes?: string;
@@ -18,34 +18,34 @@ export type Seriess = {
 	units_short?: string;
 };
 
-export type SeriessWithIsActiveType = Seriess & {
+export type SeriessWithIsActiveType = SeriessType & {
 	isActive: boolean;
 };
 
-export type Category = {
+export type CategoryType = {
 	count: number;
 	limit: number;
 	offset: number;
 	order_by: string;
 	realtime_end: string;
 	realtime_start: string;
-	seriess: Seriess[];
+	seriess: SeriessType[];
 	sort_order: string;
 };
 
-export type Observation = {
+export type ObservationType = {
 	date: string;
 	realtime_end: string;
 	realtime_start: string;
 	value: string;
 };
 
-export type Value = {
+export type ValueType = {
 	date: Date;
 	value: number;
 };
 
-export type ChartDataForSwiper = {
-	indicator: Seriess;
-	values: Value[];
+export type ChartDataForSwiperType = {
+	indicator: SeriessType;
+	values: ValueType[];
 };

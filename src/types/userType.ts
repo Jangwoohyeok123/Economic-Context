@@ -1,7 +1,7 @@
-import { Seriess } from './fredType';
+import { SeriessType } from './fredType';
 
 export type Indicator = Omit<
-	Seriess,
+	SeriessType,
 	| 'id'
 	| 'frequency_short'
 	| 'group_popularity'

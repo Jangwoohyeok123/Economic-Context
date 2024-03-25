@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import styles from './CategoryWithIsActive.module.scss';
-import { SeriessWithIsActiveType, Seriess } from '@/types/fredType';
+import { SeriessWithIsActiveType, SeriessType } from '@/types/fredType';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getFavorite } from '@/backendApi/user';
@@ -13,7 +13,7 @@ import { IndicatorWithIsActive } from '@/types/userType';
 import useFavoriteMutation from '@/hooks/useFavoriteMutation';
 
 interface CategoryWithIsActive_Intercae {
-	categoryData: Seriess[];
+	categoryData: SeriessType[];
 	currentPage: number;
 	itemsPerPage: number;
 	categoryId: number;
@@ -44,7 +44,7 @@ export default function CategoryWithIsActive({
 	/** 현 cateogoryData 에 isActive 속성을 붙이고 backend 에 저장됐던 데이터는 true 처리 */
 	useEffect(() => {
 		if (categoryData && isFavoriteExist && favorite) {
-			const categoryWithIsActive = categoryData.map((item: Seriess) => ({
+			const categoryWithIsActive = categoryData.map((item: SeriessType) => ({
 				...item,
 				isActive: false
 			}));

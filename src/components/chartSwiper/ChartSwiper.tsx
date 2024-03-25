@@ -5,7 +5,7 @@ import { useQueries } from '@tanstack/react-query';
 import { getChartData, getIndicator } from '@/backendApi/fred';
 import const_queryKey from '@/const/queryKey';
 import LineChart from '../charts/line/LineChart';
-import { ChartDataForSwiper, Seriess, Value } from '@/types/fredType';
+import { ChartDataForSwiperType, SeriessType, ValueType } from '@/types/fredType';
 import { Indicator } from '@/types/userType';
 
 interface ChartSwiperProps {
@@ -21,7 +21,7 @@ export default function ChartSwiper({ seriesIds }: ChartSwiperProps) {
 		})),
 		combine: results => {
 			return {
-				valuesArrays: results.map<Value[]>(result => result.data?.dataArray)
+				valuesArrays: results.map<ValueType[]>(result => result.data?.dataArray)
 			};
 		}
 	});
@@ -33,7 +33,7 @@ export default function ChartSwiper({ seriesIds }: ChartSwiperProps) {
 		})),
 		combine: results => {
 			return {
-				data: results.map<Seriess>(result => result.data)
+				data: results.map<SeriessType>(result => result.data)
 			};
 		}
 	});

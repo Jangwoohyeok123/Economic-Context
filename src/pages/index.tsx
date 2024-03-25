@@ -13,7 +13,7 @@ import ReactPaginate from 'react-paginate';
 import { useRouter } from 'next/router';
 import const_queryKey from '@/const/queryKey';
 import { getIndicators } from '@/backendApi/fred';
-import { Category } from '@/types/fredType';
+import { CategoryType } from '@/types/fredType';
 import { roboto, poppins, frontUrl } from './_app';
 import CategoryWithIsActive from '@/components/categoryWithIsAcitve/CategoryWithIsActive';
 import { useEffect, useState } from 'react';
@@ -24,7 +24,11 @@ import useFavoriteQuery from '@/hooks/useFavoriteQuery';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
-export default function Pages({ interest }: { interest: Category }) {
+interface HomeProps {
+	interest: CategoryType;
+}
+
+export default function Home({ interest }: { interest: CategoryType }) {
 	const user = useSelector((state: Store) => state.user);
 	const router = useRouter();
 	const dispatch = useDispatch();
@@ -38,7 +42,8 @@ export default function Pages({ interest }: { interest: Category }) {
 	const { data: category, isLoading } = useQuery({
 		queryKey: [const_queryKey.category, categoryId],
 		queryFn: () => getIndicators(categoryId),
-		staleTime: 1000 * 60 * 10
+		staleTime: 1000 * 60 * 10,
+		initialData: interest
 	});
 
 	const setJwtAndUserData = (authCode: string) => {

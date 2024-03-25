@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 import styles from './ChartDescription.module.scss';
-import { Seriess } from '@/types/fredType';
+import { SeriessType } from '@/types/fredType';
 
 interface ChartDescriptionProps {
-	indicator: Seriess;
+	indicator: SeriessType;
 	children?: React.ReactNode;
 }
 

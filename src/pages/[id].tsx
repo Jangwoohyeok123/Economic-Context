@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import const_queryKey from '@/const/queryKey';
 import { useSelector } from 'react-redux';
 import { cleanString } from '@/utils/cleanString';
-import { Seriess } from '@/types/fredType';
+import { SeriessType } from '@/types/fredType';
 import ChartDescription from '@/components/chartDescription/ChartDescription';
 import { frontUrl, poppins, roboto } from './_app';
 import { useEffect, useState } from 'react';
@@ -32,7 +32,7 @@ export default function Morepage() {
 	const [isActive, setIsActive] = useState(false);
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 	const [chartDatas, setChartDatas] = useState<DataItem[]>([]);
-	const [indicator, setIndicators] = useState<Seriess>({
+	const [indicator, setIndicators] = useState<SeriessType>({
 		id: '',
 		title: '',
 		notes: '',
@@ -108,7 +108,7 @@ export default function Morepage() {
 				console.error(err.message);
 			});
 
-		getIndicator(seriesId as string).then((indicator: Seriess) => {
+		getIndicator(seriesId as string).then((indicator: SeriessType) => {
 			const {
 				id,
 				title,
