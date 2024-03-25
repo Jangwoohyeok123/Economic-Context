@@ -1,4 +1,4 @@
-<div align='center' style="font-size: 24px;">경제지표 관리 서비스</div>
+<h1 align='center' style="font-size: 24px;">경제지표 관리 서비스</h1>
 
 **경제지표를 더 쉽게 관리하자!**
 
