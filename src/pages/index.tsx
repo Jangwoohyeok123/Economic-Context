@@ -42,8 +42,8 @@ export default function Home({ interest }: { interest: CategoryType }) {
 	const { data: category, isLoading } = useQuery({
 		queryKey: [const_queryKey.category, categoryId],
 		queryFn: () => getIndicators(categoryId),
-		staleTime: 1000 * 60 * 10,
-		initialData: interest
+		staleTime: 1000 * 60 * 10
+		// initialData: interest
 	});
 
 	const setJwtAndUserData = (authCode: string) => {
