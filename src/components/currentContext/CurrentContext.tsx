@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import styles from './CurrentContext.module.scss';
 import const_queryKey from '@/const/queryKey';
-import { getContext, getContextIdsWithNames } from '@/backendApi/user';
+import { getContext, getContextIdsWithNames } from '@/api/backend';
 import { useQuery } from '@tanstack/react-query';
 import { ContextType, Indicator } from '@/types/userType';
 import ChartSwiper from '../chartSwiper/ChartSwiper';

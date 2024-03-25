@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import styles from './ChartList.module.scss';
 import { useQueries } from '@tanstack/react-query';
-import { getChartData, getIndicator } from '@/backendApi/fred';
+import { getChartData, getIndicator } from '@/api/fred';
 import const_queryKey from '@/const/queryKey';
 import LineChart from '../charts/line/LineChart';
 import { SeriessType, ValueType } from '@/types/fredType';

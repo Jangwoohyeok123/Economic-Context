@@ -12,7 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import ReactPaginate from 'react-paginate';
 import { useRouter } from 'next/router';
 import const_queryKey from '@/const/queryKey';
-import { getIndicators } from '@/backendApi/fred';
+import { getIndicators } from '@/api/fred';
 import { CategoryType } from '@/types/fredType';
 import { roboto, poppins, frontUrl } from './_app';
 import CategoryWithIsActive from '@/components/categoryWithIsAcitve/CategoryWithIsActive';

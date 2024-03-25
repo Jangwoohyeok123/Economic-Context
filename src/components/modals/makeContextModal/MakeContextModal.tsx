@@ -6,7 +6,7 @@ import { roboto, poppins } from '@/pages/_app';
 import { ContextIdWithName, Indicator, IndicatorWithIsPick } from '@/types/userType';
 import useFavoriteQuery from '@/hooks/useFavoriteQuery';
 import { changeCategoryIdToName, changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
-import { addContext, getContextIdsWithNames } from '@/backendApi/user';
+import { addContext, getContextIdsWithNames } from '@/api/backend';
 import { useSelector } from 'react-redux';
 import { Store } from '@/types/reduxType';
 import { useMutation, useMutationState, useQuery, useQueryClient } from '@tanstack/react-query';

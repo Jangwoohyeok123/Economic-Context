@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import styles from './Menu.module.scss';
 import Link from 'next/link';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { deleteContext, getContext, getContextIdsWithNames } from '@/backendApi/user';
+import { deleteContext, getContext, getContextIdsWithNames } from '@/api/backend';
 import { useSelector } from 'react-redux';
 import { Store } from '@/types/reduxType';
 import const_queryKey from '@/const/queryKey';

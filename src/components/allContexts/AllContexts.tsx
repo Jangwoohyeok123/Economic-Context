@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import styles from './AllContexts.module.scss';
 import { useQuery } from '@tanstack/react-query';
 import const_queryKey from '@/const/queryKey';
-import { getAllContexts } from '@/backendApi/user';
+import { getAllContexts } from '@/api/backend';
 import { ContextType } from '@/types/userType';
 import { useSelector } from 'react-redux';
 import { Store } from '@/types/reduxType';

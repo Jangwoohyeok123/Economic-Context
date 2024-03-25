@@ -3,7 +3,7 @@ import styles from './CategoryWithIsActive.module.scss';
 import { SeriessWithIsActiveType, SeriessType } from '@/types/fredType';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { getFavorite } from '@/backendApi/user';
+import { getFavorite } from '@/api/backend';
 import const_queryKey from '@/const/queryKey';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';

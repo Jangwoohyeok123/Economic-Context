@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Journal, JournalResponseData } from '@/types/userType';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import const_queryKey from '@/const/queryKey';
-import { addJournal, getJournal } from '@/backendApi/user';
+import { addJournal, getJournal } from '@/api/backend';
 import { useSelector } from 'react-redux';
 import { Store } from '@/types/reduxType';
 import { HiMiniPencilSquare } from 'react-icons/hi2';

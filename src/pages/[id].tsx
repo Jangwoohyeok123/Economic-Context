@@ -12,9 +12,9 @@ import { SeriessType } from '@/types/fredType';
 import ChartDescription from '@/components/chartDescription/ChartDescription';
 import { frontUrl, poppins, roboto } from './_app';
 import { useEffect, useState } from 'react';
-import { getChartData, getIndicator } from '@/backendApi/fred';
+import { getChartData, getIndicator } from '@/api/fred';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { addFavorite, deleteFavorite, getFavorite } from '@/backendApi/user';
+import { addFavorite, deleteFavorite, getFavorite } from '@/api/backend';
 import BubblePopButton from '@/components/bubblePopButton/BubblePopButton';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });

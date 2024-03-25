@@ -9,7 +9,7 @@ import { roboto, poppins } from '../_app';
 import { useSelector } from 'react-redux';
 import { Store } from '@/types/reduxType';
 import { useQuery } from '@tanstack/react-query';
-import { getContextIdsWithNames } from '@/backendApi/user';
+import { getContextIdsWithNames } from '@/api/backend';
 import const_queryKey from '@/const/queryKey';
 
 export default function Dashboard() {
