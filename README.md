@@ -1,3 +1,8 @@
-# Economic-Context
+# 경제지표 관리 서비스
 
-A website where you can track economic indicators and create your own investment diary, building your personal economic context.
+### 프로젝트가 제공하는 서비스는 아래와 같습니다. 
+1. 필요한 경제지표를 검색하는 기능을 제공합니다.
+2. 사용자 목적에 맞게 경제지표를 묶어서 관리할 수 있습니다.
+3. 개인 대시보드가 제공되며 지표를 시각화 하여 제공합니다.
+
+
