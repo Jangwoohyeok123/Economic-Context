@@ -2,20 +2,12 @@ import clsx from 'clsx';
 import styles from './IndicatorCard.module.scss';
 import { useRouter } from 'next/router';
 import { cleanString } from '@/utils/cleanString';
+import { Favorite_Type } from '@/types/backendType';
 
-interface IndicatorCardProps {
+interface IndicatorCard_Props extends Favorite_Type {
 	children: React.ReactNode;
-	notes?: string;
-	title: string;
-	seriesId: string;
-	categoryId: number;
-	frequency?: string;
-	popularity?: number;
-	observation_end: string;
-	observation_start: string;
 	className?: string;
 }
-
 /**
  * - required props
  * @param title
@@ -36,10 +28,10 @@ export default function IndicatorCard({
 	observation_end,
 	observation_start,
 	className
-}: IndicatorCardProps) {
+}: IndicatorCard_Props) {
 	const router = useRouter();
 	const cleandTitle = title ? cleanString(title) : 'title';
-	const localRoutingUrl = 'http://localhost:3000';
+	const localRoutingUrl = process.env.NEXT_PUBLIC_FRONT_URL_LOCAL;
 	const routeMorePage = (seriesId: string) => {
 		router.push(`${localRoutingUrl}/${seriesId}?title=${cleandTitle}&categoryId=${categoryId}`);
 	};

@@ -1,9 +1,15 @@
-import { Indicator } from '@/types/userType';
+import {
+	ContextNameWithKey_Type,
+	Favorite_Type,
+	JournalData_Type,
+	JwtAndGoogleUserData_Type
+} from '@/types/backendType';
+import { Context_Type } from '@/types/userType';
 import axios from 'axios';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL_LOCAL;
 
-export async function getJwtAndUserGoogleData(authCode: string) {
+export async function getJwtAndGoogleUserData(authCode: string): Promise<JwtAndGoogleUserData_Type> {
 	try {
 		const response = await axios.post(`${backendUrl}auth/google`, { code: authCode });
 		const jwt = response.data[0];
@@ -16,7 +22,7 @@ export async function getJwtAndUserGoogleData(authCode: string) {
 	}
 }
 
-export const getFavorites = async (userId: number) => {
+export const getFavorites = async (userId: number): Promise<Favorite_Type[]> => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
@@ -40,7 +46,7 @@ export const getFavorites = async (userId: number) => {
 	}
 };
 
-export const getFavorite = async (userId: number, categoryId: number) => {
+export const getFavorite = async (userId: number, categoryId: number): Promise<Favorite_Type[]> => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
@@ -116,7 +122,7 @@ export const deleteFavorite = async (userId: number, seriesId: string) => {
 	}
 };
 
-export const addContext = async (userId: number, name: string, customIndicators: Indicator[]) => {
+export const addContext = async (userId: number, name: string, customIndicators: Favorite_Type[]) => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
@@ -149,7 +155,7 @@ export const addContext = async (userId: number, name: string, customIndicators:
 	}
 };
 
-export const getContext = async (contextId: number) => {
+export const getContext = async (contextId: number): Promise<Context_Type> => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
@@ -173,10 +179,12 @@ export const getContext = async (contextId: number) => {
 		} else {
 			console.error('Error: ', error.message);
 		}
+
+		throw new Error("Failed to get user's context");
 	}
 };
 
-export const getAllContexts = async (userId: number) => {
+export const getAllContexts = async (userId: number): Promise<Context_Type[]> => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
@@ -200,10 +208,12 @@ export const getAllContexts = async (userId: number) => {
 		} else {
 			console.error('Error: ', error.message);
 		}
+
+		throw new Error("Failed to get user's contexts");
 	}
 };
 
-export const getContextNamesWithKey = async (userId: number) => {
+export const getContextIdsWithNames = async (userId: number): Promise<ContextNameWithKey_Type[]> => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
@@ -227,6 +237,8 @@ export const getContextNamesWithKey = async (userId: number) => {
 		} else {
 			console.error('Error: ', error.message);
 		}
+
+		throw new Error('Failed to fetch');
 	}
 };
 
@@ -245,6 +257,146 @@ export const deleteContext = async (contextId: number) => {
 				Authorization: `Bearer ${token}`
 			}
 		});
+	} catch (error: any) {
+		if (error.response) {
+			console.error(`Error: ${error.response.status} - ${error.response.data}`);
+		} else if (error.request) {
+			console.error('Error: No response from server.');
+		} else {
+			console.error('Error: ', error.message);
+		}
+	}
+};
+
+export const getContextJournals = async (contextId: number): Promise<JournalData_Type[]> => {
+	try {
+		if (typeof window === 'undefined') {
+			throw new Error('This function can only be used in the client-side');
+		}
+
+		const token = sessionStorage.getItem('token');
+		if (!token) {
+			throw new Error('No token found in sessionStorage');
+		}
+		const response = await axios.get(`${backendUrl}journal/${contextId}`, {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		});
+		return response.data;
+	} catch (error: any) {
+		if (error.response) {
+			console.error(`Error: ${error.response.status} - ${error.response.data}`);
+		} else if (error.request) {
+			console.error('Error: No response from server.');
+		} else {
+			console.error('Error: ', error.message);
+		}
+
+		throw new Error('Failed to fetch');
+	}
+};
+
+export const addJournal = async (userId: number, contextId: number, journalDataParams: JournalParams_Type) => {
+	try {
+		if (typeof window === 'undefined') {
+			throw new Error('This function can only be used in the client-side');
+		}
+
+		const token = sessionStorage.getItem('token');
+		if (!token) {
+			throw new Error('No token found in sessionStorage');
+		}
+		await axios.post(`${backendUrl}journal/${userId}/${contextId}`, journalDataParams, {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		});
+	} catch (error: any) {
+		if (error.response) {
+			console.error(`Error: ${error.response.status} - ${error.response.data}`);
+		} else if (error.request) {
+			console.error('Error: No response from server.');
+		} else {
+			console.error('Error: ', error.message);
+		}
+	}
+};
+
+export const deleteJournal = async (journalId: number) => {
+	try {
+		if (typeof window === 'undefined') {
+			throw new Error('This function can only be used in the client-side');
+		}
+
+		const token = sessionStorage.getItem('token');
+		if (!token) {
+			throw new Error('No token found in sessionStorage');
+		}
+		await axios.delete(`${backendUrl}journal/${journalId}`, {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		});
+	} catch (error: any) {
+		if (error.response) {
+			console.error(`Error: ${error.response.status} - ${error.response.data}`);
+		} else if (error.request) {
+			console.error('Error: No response from server.');
+		} else {
+			console.error('Error: ', error.message);
+		}
+	}
+};
+
+export const deleteJournals = async (contextId: number) => {
+	try {
+		if (typeof window === 'undefined') {
+			throw new Error('This function can only be used in the client-side');
+		}
+
+		const token = sessionStorage.getItem('token');
+		if (!token) {
+			throw new Error('No token found in sessionStorage');
+		}
+		await axios.delete(`${backendUrl}journal/${contextId}`, {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		});
+	} catch (error: any) {
+		if (error.response) {
+			console.error(`Error: ${error.response.status} - ${error.response.data}`);
+		} else if (error.request) {
+			console.error('Error: No response from server.');
+		} else {
+			console.error('Error: ', error.message);
+		}
+	}
+};
+
+export const modifyJournal = async (journalId: number, title: string, body: string) => {
+	try {
+		if (typeof window === 'undefined') {
+			throw new Error('This function can only be used in the client-side');
+		}
+
+		const token = sessionStorage.getItem('token');
+		if (!token) {
+			throw new Error('No token found in sessionStorage');
+		}
+		await axios.put(
+			`${backendUrl}journal/${journalId}`,
+			{
+				title: title,
+				body: body
+			},
+			{
+				headers: {
+					Authorization: `Bearer ${token}`
+				}
+			}
+		);
 	} catch (error: any) {
 		if (error.response) {
 			console.error(`Error: ${error.response.status} - ${error.response.data}`);

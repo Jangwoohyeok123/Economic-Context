@@ -1,5 +1,5 @@
-import User from './userType';
+import { User_Type } from './userType';
 
-export type Store = {
-	user: User;
+export type Store_Type = {
+	user: User_Type;
 };

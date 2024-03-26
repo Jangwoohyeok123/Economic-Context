@@ -1,67 +1,34 @@
-interface User {
+import { Favorite_Type, JournalData_Type } from './backendType';
+import { OriginSeriess_Type } from './fredType';
+
+export type User_Type = {
 	isLogin: boolean;
 	id: number;
 	google_id: string;
 	email: string;
 	picture_url: string;
 	favorite_indicators: string[];
-	createAt: Date;
-}
-
-/**
-	- title: string;
-	- seriesId: string;
-	- categoryId: number;
-	- notes: string;
-	- frequency: string;
-	- popularity: number;
-	- observation_end: string;
-	- observation_start: string;
- */
-export interface Indicator {
-	title: string;
-	seriesId: string;
-	categoryId: number;
-	notes: string;
-	frequency: string;
-	popularity: number;
-	observation_end: string;
-	observation_start: string;
-}
-
-/**
-	- title: string;
-	- seriesId: string;
-	- categoryId: number;
-	- notes: string;
-	- frequency: string;
-	- popularity: number;
-	- observation_end: string;
-	- observation_start: string;
-	- isActive: boolean;
- */
-export interface IndicatorWithIsActive extends Indicator {
-	isActive: boolean;
-}
-
-/**
-	- title: string;
-	- seriesId: string;
-	- categoryId: number;
-	- notes: string;
-	- frequency: string;
-	- popularity: number;
-	- observation_end: string;
-	- observation_start: string;
-	- isPick: booelan;
- */
-export interface IndicatorWithIsPick extends Indicator {
-	isPick: boolean;
-}
-
-export type ContextNameWithKey = {
-	name: string;
-	key: number;
+	createAt: string;
 };
 
-export default User;
+export type IndicatorWithIsActive_Type = Favorite_Type & {
+	isActive: boolean;
+};
+
+export type IndicatorWithIsPick_Type = Favorite_Type & {
+	isPick: boolean;
+};
+
+export type ContextIdWithName_Type = {
+	id: number;
+	name: string;
+};
+
+export type Context_Type = {
+	createdAt: string;
+	customIndicators: Favorite_Type[];
+	id: number;
+	journal: JournalData_Type[];
+	name: string;
+	updatedAt: string;
+};

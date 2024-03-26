@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '@/actions/actions';
 import AlertModal from '../modals/alertModal/AlertModal';
-import { Store } from '@/types/reduxType';
+import { Store_Type } from '@/types/reduxType';
 
 interface HeaderProps {
 	children: React.ReactNode;
@@ -20,10 +20,11 @@ const poppins = Poppins({
 });
 
 export default function Header() {
-	const isLogin = useSelector((state: Store) => state.user.isLogin);
+	const isLogin = useSelector((state: Store_Type) => state.user.isLogin);
 	const router = useRouter();
 	const dispatch = useDispatch();
 	const [IsAlertModalOpen, setIsAlertModalOpen] = useState(false);
+	const frontUrl = process.env.NEXT_PUBLIC_FRONT_URL_LOCAL;
 
 	const goToLoginPage = () => {
 		if (!isLogin) setIsAlertModalOpen(true);
@@ -57,10 +58,10 @@ export default function Header() {
 					size='small'
 					header='You need to login!'
 					body='Our service is required to login'
-					leftButtonContent='Cancle'
+					leftButtonContent='Cancel'
 					leftButtonHandler={() => setIsAlertModalOpen(false)}
 					rightButtonContent='Login'
-					rightButtonHandler={() => (window.location.href = 'http://localhost:3000/login')}
+					rightButtonHandler={() => router.push(`${frontUrl}/login`)}
 				/>
 			</header>
 		</>

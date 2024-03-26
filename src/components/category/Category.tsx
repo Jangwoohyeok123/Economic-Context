@@ -1,11 +1,11 @@
 import clsx from 'clsx';
 import styles from './Category.module.scss';
-import { Seriess_Type } from '@/types/fredType';
+import { OriginSeriess_Type } from '@/types/fredType';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
 import BubblePopButton from '../bubblePopButton/BubblePopButton';
 
-interface Category_Intercae {
-	categoryData: Seriess_Type[];
+interface CategoryInterface {
+	categoryData: OriginSeriess_Type[];
 	currentPage: number;
 	itemsPerPage: number;
 	categoryId: number;
@@ -18,12 +18,12 @@ export default function Category({
 	itemsPerPage,
 	categoryId,
 	setIsAlertModalOpen
-}: Category_Intercae) {
+}: CategoryInterface) {
 	return (
 		<figure className={clsx(styles.Category)}>
 			{categoryData
 				.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
-				.map((series: Seriess_Type, idx: number) => {
+				.map((series: OriginSeriess_Type, idx: number) => {
 					const { title, id: seriesId, frequency, popularity, observation_start, observation_end } = series;
 					const notes = series.notes ?? '';
 
@@ -39,13 +39,7 @@ export default function Category({
 							observation_end={observation_end as string}
 							observation_start={observation_start as string}
 							className={styles.IndicatorCard}>
-							<div>
-								{notes ? (
-									<p>{notes}</p>
-								) : (
-									<p>This indicator does not have information about the indicator description.</p>
-								)}
-							</div>
+							<p>{notes ? notes : 'This indicator does not have information about the indicator description.'}</p>
 							<BubblePopButton
 								clickHandler={() => {
 									setIsAlertModalOpen(true);

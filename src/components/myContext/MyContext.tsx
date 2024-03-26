@@ -1,83 +1,68 @@
 import clsx from 'clsx';
 import styles from './MyContext.module.scss';
 import { useSelector } from 'react-redux';
-import { Store } from '@/types/reduxType';
+import { Store_Type } from '@/types/reduxType';
 import const_queryKey from '@/const/queryKey';
-import { getAllContexts, getContext, getContextNamesWithKey } from '@/backendApi/user';
-import { useQuery } from '@tanstack/react-query';
-import { ContextNameWithKey, Indicator } from '@/types/userType';
-import CategoryTab from '../categoryTab/CategoryTab';
-import { categoryNames } from '@/pages/_app';
-import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
+import { getContextIdsWithNames } from '@/api/backend';
+import { useQueries, useQuery } from '@tanstack/react-query';
+import { ContextIdWithName_Type, Context_Type } from '@/types/userType';
+import { useEffect, useState } from 'react';
 
-interface MyContextTabProps {
+// Import Swiper styles
+import 'swiper/css';
+import AllContexts from '../allContexts/AllContexts';
+import CurrentContext from '../currentContext/CurrentContext';
+
+interface MyContextTab_Props {
 	selectedTab: string;
 	setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextTabProps) {
-	const userId = useSelector((state: Store) => state.user.id);
+export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextTab_Props) {
+	const userId = useSelector((state: Store_Type) => state.user.id);
+	const [currentContextId, setCurrentContextId] = useState<number | undefined>();
+	const [selectedContext, setSelectedContext] = useState<string>('');
 
-	const { data: contextNamesWithKey, isLoading: isContextNamesWithKeyLoading } = useQuery({
+	const { data: contextIdsWithNames, isLoading } = useQuery<ContextIdWithName_Type[]>({
 		queryKey: [const_queryKey.context, 'names'],
-		queryFn: () => getContextNamesWithKey(userId)
+		queryFn: () => getContextIdsWithNames(userId)
 	});
 
-	const currentContext = contextNamesWithKey?.find((context: ContextNameWithKey) => context.name === selectedTab);
+	// selectedTab 이 변경될 때마다 currentContextId 를 찾아서 CurrentContext 로 전달
+	useEffect(() => {
+		if (contextIdsWithNames) {
+			const currentContextIdWithName = contextIdsWithNames?.find(
+				contextIdWithName => contextIdWithName.name === selectedTab
+			);
 
-	const { data: allContexts, isLoading: isContextsLoading } = useQuery({
-		queryKey: [const_queryKey.context],
-		queryFn: () => getAllContexts(userId)
-	});
+			if (currentContextIdWithName) setCurrentContextId(currentContextIdWithName.id);
+		}
+	}, [selectedTab, contextIdsWithNames]);
 
-	const { data: context, isLoading: isContextLoading } = useQuery({
-		queryKey: [const_queryKey.context, selectedTab],
-		queryFn: () => getContext(currentContext.id as number)
-	});
+	useEffect(() => {
+		console.log('selectedContext', selectedContext);
+		if (selectedContext === 'Indicators') {
+			setSelectedTab('Indicators');
+		} else if (contextIdsWithNames) {
+			const currentContextIdWithName = contextIdsWithNames?.find(
+				contextIdWithName => contextIdWithName.name === selectedContext
+			);
 
-	if (isContextsLoading) {
-		return <div className={clsx(styles.MyContext)}>loading...</div>;
-	}
+			if (currentContextIdWithName) {
+				setCurrentContextId(currentContextIdWithName.id);
+				setSelectedTab(currentContextIdWithName.name);
+			}
+		}
+	}, [selectedContext, contextIdsWithNames]);
 
-	if (isContextNamesWithKeyLoading) {
-		return <div className={clsx(styles.MyContext)}>loading...</div>;
-	}
-
-	if (isContextLoading) {
-		return <div className={clsx(styles.MyContext)}>loading...</div>;
-	}
-
+	if (isLoading) return <div className={clsx(styles.MyContext)}>loading...</div>;
 	return (
 		<div className={clsx(styles.MyContext)}>
-			{/* <CategoryTab categoryNames={categoryNames} /> */}
 			{selectedTab === 'MyContext' ? (
-				<section>myContext</section> // AllContext 를 이용해야하는 공간입니다.
+				<AllContexts selectedContext={selectedContext} setSelectedContext={setSelectedContext} />
 			) : (
-				<section>
-					{context?.customIndicators.map((indicator: Indicator, index: number) => {
-						const { title, seriesId, categoryId, notes, frequency, popularity, observation_end, observation_start } =
-							indicator;
-
-						return (
-							<IndicatorCard
-								key={index}
-								title={title}
-								seriesId={seriesId}
-								categoryId={categoryId}
-								notes={notes}
-								frequency={frequency}
-								popularity={popularity}
-								observation_end={observation_end}
-								observation_start={observation_start}
-								className={clsx(styles.IndicatorCard)}>
-								<div>asd</div>
-							</IndicatorCard>
-						);
-					})}
-				</section>
+				currentContextId && <CurrentContext currentContextId={currentContextId} />
 			)}
 		</div>
 	);
 }
-
-// me
