@@ -1,13 +1,13 @@
 import clsx from 'clsx';
 import styles from './CurrentContext.module.scss';
 import const_queryKey from '@/const/queryKey';
-import { getContext, getContextIdsWithNames } from '@/api/backend';
 import { useQuery } from '@tanstack/react-query';
-import { Context_Type } from '@/types/userType';
 import ChartSwiper from '../chartSwiper/ChartSwiper';
 import Journal from '../journalsSection/JournalsSection';
 import ChartList from '../chartList/ChartList';
-import { Favorite_Type } from '@/types/backendType';
+import { Context_Type } from '@/types/context';
+import { getContext } from '@/api/context';
+import { FavoriteIndicator_Type } from '@/types/favorite';
 
 interface CurrentContextProps {
 	currentContextId: number;
@@ -21,7 +21,7 @@ export default function CurrentContext({ currentContextId }: CurrentContextProps
 
 	if (isLoading) return <div>Loading...</div>;
 
-	const seriesIds = currentContext?.customIndicators.map((indicator: Favorite_Type) => {
+	const seriesIds = currentContext?.customIndicators.map((indicator: FavoriteIndicator_Type) => {
 		return indicator.seriesId;
 	});
 

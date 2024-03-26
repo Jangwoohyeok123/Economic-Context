@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import styles from './DashHeader.module.scss';
-import { Store_Type } from '@/types/reduxType';
+import { Store_Type } from '@/types/redux';
 import { useSelector } from 'react-redux';
 import Image from 'next/image';
 

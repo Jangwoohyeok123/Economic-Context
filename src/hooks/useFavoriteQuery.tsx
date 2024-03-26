@@ -1,6 +1,6 @@
 import { getFavorite, getFavorites } from '@/api/backend';
 import const_queryKey from '@/const/queryKey';
-import { Store_Type } from '@/types/reduxType';
+import { Store_Type } from '@/types/redux';
 import { useQuery } from '@tanstack/react-query';
 import { useSelector } from 'react-redux';
 

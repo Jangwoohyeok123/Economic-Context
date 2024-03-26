@@ -1,28 +1,23 @@
 import clsx from 'clsx';
 import styles from './Morepage.module.scss';
 import dynamic from 'next/dynamic';
-import { Store_Type } from '@/types/reduxType';
+import { Store_Type } from '@/types/redux';
 import LineChart from '@/components/charts/line/LineChart';
 import { useRouter } from 'next/router';
 import const_queryKey from '@/const/queryKey';
 import { useSelector } from 'react-redux';
 import { cleanString } from '@/utils/cleanString';
-import { OriginSeriess_Type } from '@/types/fredType';
+import { DateValue_Type, Indicator_Type } from '@/types/fred';
 import ChartDescription from '@/components/chartDescription/ChartDescription';
 import { frontUrl, poppins, roboto } from './_app';
 import { useEffect, useState } from 'react';
 import { getChartData, getIndicator } from '@/api/fred';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { addFavorite, deleteFavorite, getFavorite } from '@/api/backend';
 import BubblePopButton from '@/components/bubblePopButton/BubblePopButton';
-import { Favorite_Type } from '@/types/backendType';
+import { addFavorite, deleteFavorite, getFavoriteCateogry_List } from '@/api/favorite';
+import { FavoriteIndicator_Type } from '@/types/favorite';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
-
-interface DataItem {
-	date: Date;
-	value: number;
-}
 
 export default function Morepage() {
 	const router = useRouter();
@@ -31,8 +26,8 @@ export default function Morepage() {
 	const { id: seriesId, title, categoryId } = router.query;
 	const [isActive, setIsActive] = useState(false);
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
-	const [chartDatas, setChartDatas] = useState<DataItem[]>([]);
-	const [indicator, setIndicators] = useState<OriginSeriess_Type>({
+	const [chartDatas, setChartDatas] = useState<DateValue_Type[]>([]);
+	const [indicator, setIndicators] = useState<Indicator_Type>({
 		id: '',
 		realtime_start: '',
 		realtime_end: '',
@@ -46,12 +41,14 @@ export default function Morepage() {
 		units_short: '',
 		popularity: 0,
 		seasonal_adjustment: '',
-		seasonal_adjustment_short: ''
+		seasonal_adjustment_short: '',
+		group_popularity: 0,
+		last_updated: ''
 	});
 
-	const { data: favorite, isSuccess: isFavoriteExist } = useQuery({
+	const { data: favoriteCateogry_List, isSuccess: isFavoriteCategoryExist } = useQuery({
 		queryKey: [const_queryKey.favorite, categoryId],
-		queryFn: () => getFavorite(user.id, Number(categoryId))
+		queryFn: () => getFavoriteCateogry_List(user.id, Number(categoryId))
 	});
 
 	const addFavoriteMutation = useMutation({
@@ -88,7 +85,7 @@ export default function Morepage() {
 			return;
 		}
 
-		const isFind = favorite?.find((indicator: Favorite_Type) => indicator.seriesId === seriesId);
+		const isFind = favoriteCateogry_List?.find((indicator: FavoriteIndicator_Type) => indicator.seriesId === seriesId);
 
 		if (isFind) {
 			deleteFavoriteMutation.mutate({ userId: user.id, seriesId: seriesId as string });
@@ -110,7 +107,7 @@ export default function Morepage() {
 				console.error(err.message);
 			});
 
-		getIndicator(seriesId as string).then((indicator: OriginSeriess_Type) => {
+		getIndicator(seriesId as string).then((indicator: Indicator_Type) => {
 			const {
 				id,
 				title,
@@ -143,12 +140,12 @@ export default function Morepage() {
 
 	// save, delete 상황을 확인하는 useEffect
 	useEffect(() => {
-		if (favorite?.some((el: Favorite_Type) => el.seriesId === seriesId)) {
+		if (favoriteCateogry_List?.some((el: FavoriteIndicator_Type) => el.seriesId === seriesId)) {
 			setIsActive(true);
 		} else {
 			setIsActive(false);
 		}
-	}, [favorite]);
+	}, [favoriteCateogry_List]);
 
 	return (
 		<>

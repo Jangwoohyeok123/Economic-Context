@@ -1,7 +1,6 @@
-import { JournalData_Type, JournalParams_Type } from '@/types/backendType';
+import { backendUrl } from '@/pages/_app';
+import { JournalData_Type, JournalParams_Type } from '@/types/journal';
 import axios from 'axios';
-
-const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL_LOCAL;
 
 export const getContextJournals = async (contextId: number): Promise<JournalData_Type[]> => {
 	try {
@@ -84,7 +83,7 @@ export const deleteJournal = async (journalId: number) => {
 	}
 };
 
-export const deleteJournals = async (contextId: number) => {
+export const deleteJournal_List = async (contextId: number) => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');

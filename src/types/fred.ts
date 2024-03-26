@@ -1,24 +1,4 @@
-// util 타입을 좀 사용해보자 pick ommit
-export type OriginSeriess_Type = {
-	id: string;
-	title: string;
-	notes?: string;
-	observation_start: string;
-	observation_end: string;
-	frequency: string;
-	frequency_short: string;
-	group_popularity?: number;
-	popularity: number;
-	last_updated?: string;
-	realtime_start: string;
-	realtime_end: string;
-	seasonal_adjustment: string;
-	seasonal_adjustment_short: string;
-	units: string;
-	units_short: string;
-};
-
-export type OriginSeriess_Type = {
+export type Indicator_Type = {
 	id: string;
 	realtime_start: string;
 	realtime_end: string;
@@ -37,7 +17,7 @@ export type OriginSeriess_Type = {
 	notes?: string;
 };
 
-export interface SeriessWithIsActiveInterface extends SeriessType {
+export interface SeriessWithIsActiveInterface extends Indicator_Type {
 	isActive: boolean;
 }
 
@@ -48,7 +28,7 @@ export type Category_Type = {
 	order_by: string;
 	realtime_end: string;
 	realtime_start: string;
-	seriess: OriginSeriess_Type[];
+	seriess: Indicator_Type[];
 	sort_order: string;
 };
 
@@ -61,7 +41,7 @@ export type Observation_Type = {
 
 export type DateValue_Type = {
 	date: Date;
-	value: number;
+	value: number | string;
 };
 
 export type ObservationResult_Type = {
@@ -71,6 +51,6 @@ export type ObservationResult_Type = {
 };
 
 export type ChartDataForSwiper_Type = {
-	indicator: SeriessType;
+	indicator: Indicator_Type;
 	values: DateValue_Type[];
 };

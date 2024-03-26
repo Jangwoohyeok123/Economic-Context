@@ -1,12 +1,7 @@
-import { Observation_Type, ObservationResult_Type, OriginSeriess_Type } from '@/types/fredType';
+import { DateValue_Type, Observation_Type, ObservationResult_Type, Indicator_Type } from '@/types/fred';
 import axios from 'axios';
 
-interface DataItem {
-	date: string;
-	value: number | string;
-}
-
-export const getIndicator = async (seriesId: string): Promise<OriginSeriess_Type> => {
+export const getIndicator = async (seriesId: string): Promise<Indicator_Type> => {
 	try {
 		const response = await axios.get(`/api/indicator?seriesId=${seriesId}`);
 		const data = response.data.seriess[0];
@@ -22,7 +17,7 @@ export const getIndicator = async (seriesId: string): Promise<OriginSeriess_Type
 	}
 };
 
-export const getIndicators = async (categoryId: number): Promise<OriginSeriess_Type[]> => {
+export const getCategory_List = async (categoryId: number): Promise<Indicator_Type[]> => {
 	try {
 		const response = await axios.get(`/api/category?categoryId=${categoryId}`);
 		return response.data.seriess;
@@ -33,7 +28,7 @@ export const getIndicators = async (categoryId: number): Promise<OriginSeriess_T
 			console.error('Unexpected Error', error);
 		}
 		throw error;
-		// return [];
+		return [];
 	}
 };
 
@@ -41,7 +36,7 @@ export const getChartData = async (seriesId: string): Promise<ObservationResult_
 	try {
 		const response = await axios.get(`/api/chartValues?seriesId=${seriesId}`);
 		const { realtime_start, realtime_end } = response.data;
-		const dataArray = response.data.observations.map((element: DataItem) => {
+		const dataArray = response.data.observations.map((element: DateValue_Type) => {
 			if (element.value === '.') element.value = 0;
 			return {
 				date: new Date(element.date),

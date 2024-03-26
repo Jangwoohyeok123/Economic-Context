@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import styles from './IndicatorsTab.module.scss';
-import { Store_Type } from '@/types/reduxType';
+import { Store_Type } from '@/types/redux';
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
@@ -12,8 +12,8 @@ import useFavoriteMutation from '@/hooks/useFavoriteMutation';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import MakeContextModal from '../modals/makeContextModal/MakeContextModal';
 import AlertModal from '../modals/alertModal/AlertModal';
-import { FavoriteWithIsPick_Type, Favorite_Type } from '@/types/backendType';
 import { addEllipsis } from '@/utils/cleanString';
+import { FavoriteIndicatorWithIsPick_Type, FavoriteIndicator_Type } from '@/types/favorite';
 
 /**
 - IndicatorsTab 을 클릭하면 첫 selectedFavorite 이 페칭된다.
@@ -26,7 +26,7 @@ export default function IndicatorsTab() {
 
 	const [categoryIndex, setCategoryIndex] = useState<number>(0);
 	const [currentPage, setCurrentPage] = useState<number>(0);
-	const [favoritesWithPick, setFavoritesWithPick] = useState<FavoriteWithIsPick_Type[]>([]);
+	const [favoritesWithPick, setFavoritesWithPick] = useState<FavoriteIndicatorWithIsPick_Type[]>([]);
 	const [isMakeOpen, setIsMakeOpen] = useState<boolean>(false);
 	const [isValidateModal, setIsValidateModal] = useState<boolean>(false);
 
@@ -35,10 +35,10 @@ export default function IndicatorsTab() {
 	const { allFavorites } = useFavoriteQuery();
 
 	useEffect(() => {
-		if (favoritesWithPick) {
-			const updated = allFavorites?.map((favorite: Favorite_Type) => {
+		if (favoritesWithPick.length) {
+			const updated = allFavorites?.map((favorite: FavoriteIndicator_Type) => {
 				const prev = favoritesWithPick.find(
-					(prevFavorites: FavoriteWithIsPick_Type) => prevFavorites.seriesId === favorite.seriesId
+					(prevFavorites: FavoriteIndicatorWithIsPick_Type) => prevFavorites.seriesId === favorite.seriesId
 				);
 				return prev
 					? {
@@ -53,7 +53,7 @@ export default function IndicatorsTab() {
 			updated && setFavoritesWithPick(updated);
 			return;
 		}
-		const updated = allFavorites?.map((favorite: Favorite_Type) => {
+		const updated = allFavorites?.map((favorite: FavoriteIndicator_Type) => {
 			return {
 				...favorite,
 				isPick: false
@@ -62,7 +62,9 @@ export default function IndicatorsTab() {
 
 		updated && setFavoritesWithPick(updated);
 	}, [allFavorites]);
-	const curFavorites = favoritesWithPick?.filter((favorite: Favorite_Type) => favorite?.categoryId == categoryId);
+	const curFavorites = favoritesWithPick?.filter(
+		(favorite: FavoriteIndicator_Type) => favorite?.categoryId == categoryId
+	);
 	const pagedFavorite = curFavorites?.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
 	return (
@@ -80,7 +82,7 @@ export default function IndicatorsTab() {
 				})}
 			</nav>
 			<section className={clsx(styles.favorites)}>
-				{pagedFavorite?.map((favorite: FavoriteWithIsPick_Type, index: number) => {
+				{pagedFavorite?.map((favorite: FavoriteIndicatorWithIsPick_Type, index: number) => {
 					const {
 						title,
 						seriesId,
@@ -113,7 +115,7 @@ export default function IndicatorsTab() {
 								<BubblePopButton
 									className={isPick ? clsx(styles.on) : ''}
 									clickHandler={() => {
-										const updated = favoritesWithPick?.map((favorite: FavoriteWithIsPick_Type) => {
+										const updated = favoritesWithPick?.map((favorite: FavoriteIndicatorWithIsPick_Type) => {
 											if (favorite.seriesId === seriesId) {
 												return {
 													...favorite,

@@ -2,9 +2,9 @@ import clsx from 'clsx';
 import styles from './IndicatorCard.module.scss';
 import { useRouter } from 'next/router';
 import { cleanString } from '@/utils/cleanString';
-import { Favorite_Type } from '@/types/backendType';
+import { FavoriteIndicator_Type } from '@/types/favorite';
 
-interface IndicatorCard_Props extends Favorite_Type {
+interface IndicatorCard_Props extends FavoriteIndicator_Type {
 	children: React.ReactNode;
 	className?: string;
 }
