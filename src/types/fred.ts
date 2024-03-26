@@ -39,7 +39,7 @@ export type Observation_Type = {
 	value: string;
 };
 
-export type DateValue_Type = {
+export type DateAndValue_Type = {
 	date: Date;
 	value: number | string;
 };
@@ -47,10 +47,10 @@ export type DateValue_Type = {
 export type ObservationResult_Type = {
 	realtime_start: string;
 	realtime_end: string;
-	dataArray: DateValue_Type[];
+	dataArray: DateAndValue_Type[];
 };
 
 export type ChartDataForSwiper_Type = {
 	indicator: Indicator_Type;
-	values: DateValue_Type[];
+	values: DateAndValue_Type[];
 };

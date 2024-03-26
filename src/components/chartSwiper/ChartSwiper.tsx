@@ -5,8 +5,7 @@ import { useQueries } from '@tanstack/react-query';
 import { getChartData, getIndicator } from '@/api/fred';
 import const_queryKey from '@/const/queryKey';
 import LineChart from '../charts/line/LineChart';
-import { ChartDataForSwiper_Type, SeriessType, DateValue_Type } from '@/types/fred';
-import { Indicator } from '@/types/userType';
+import { DateAndValue_Type, Indicator_Type } from '@/types/fred';
 
 interface ChartSwiper_Props {
 	seriesIds: string[];
@@ -20,8 +19,11 @@ export default function ChartSwiper({ seriesIds }: ChartSwiper_Props) {
 			queryFn: () => getChartData(seriesId)
 		})),
 		combine: results => {
+			// value 로 이뤄진 Array 를 담은 Array (2 차원 배열)
+			const valuesArrays = results.map<DateAndValue_Type[]>(result => result.data?.dataArray || []);
+
 			return {
-				valuesArrays: results.map<DateValue_Type[]>(result => result.data?.dataArray)
+				valuesArrays
 			};
 		}
 	});
@@ -33,7 +35,9 @@ export default function ChartSwiper({ seriesIds }: ChartSwiper_Props) {
 		})),
 		combine: results => {
 			return {
-				data: results.map<OriginSeriess_Type>(result => result.data)
+				data: results
+					.filter(result => result.data !== undefined)
+					.map<Indicator_Type>(result => result.data as Indicator_Type)
 			};
 		}
 	});

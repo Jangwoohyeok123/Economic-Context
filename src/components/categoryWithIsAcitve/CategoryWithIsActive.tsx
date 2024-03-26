@@ -2,14 +2,12 @@ import clsx from 'clsx';
 import styles from './CategoryWithIsActive.module.scss';
 import { Indicator_Type } from '@/types/fred';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-
+import { useQuery } from '@tanstack/react-query';
 import const_queryKey from '@/const/queryKey';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import BubblePopButton from '../bubblePopButton/BubblePopButton';
 import { Store_Type } from '@/types/redux';
-
 import useFavoriteMutation from '@/hooks/useFavoriteMutation';
 import { getFavoriteCateogry_List } from '@/api/favorite';
 import { FavoriteIndicatorWithIsActive_Type, FavoriteIndicator_Type } from '@/types/favorite';
