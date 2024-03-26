@@ -9,11 +9,11 @@ import { Context_Type } from '@/types/context';
 import { getContext } from '@/api/context';
 import { FavoriteIndicator_Type } from '@/types/favorite';
 
-interface CurrentContextProps {
+interface CurrentContext_Props {
 	currentContextId: number;
 }
 
-export default function CurrentContext({ currentContextId }: CurrentContextProps) {
+export default function CurrentContext({ currentContextId }: CurrentContext_Props) {
 	const { data: currentContext, isLoading } = useQuery<Context_Type>({
 		queryKey: [const_queryKey.context, currentContextId],
 		queryFn: () => getContext(currentContextId)

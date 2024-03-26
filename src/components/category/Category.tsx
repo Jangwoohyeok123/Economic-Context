@@ -4,7 +4,7 @@ import { Indicator_Type } from '@/types/fred';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
 import BubblePopButton from '../bubblePopButton/BubblePopButton';
 
-interface CategoryInterface {
+interface Category_Props {
 	categoryData: Indicator_Type[];
 	currentPage: number;
 	itemsPerPage: number;
@@ -18,7 +18,7 @@ export default function Category({
 	itemsPerPage,
 	categoryId,
 	setIsAlertModalOpen
-}: CategoryInterface) {
+}: Category_Props) {
 	return (
 		<figure className={clsx(styles.Category)}>
 			{categoryData

@@ -3,38 +3,36 @@ import styles from './MakeContextModal.module.scss';
 import ReactDOM from 'react-dom';
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { roboto, poppins } from '@/pages/_app';
-import { ContextIdWithName_Type, IndicatorWithIsPick_Type } from '@/types/userType';
-import useFavoriteQuery from '@/hooks/useFavoriteQuery';
-import { changeCategoryIdToName, changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
-import { addContext, getContextIdsWithNames } from '@/api/backend';
 import { useSelector } from 'react-redux';
 import { Store_Type } from '@/types/redux';
 import { useMutation, useMutationState, useQuery, useQueryClient } from '@tanstack/react-query';
 import const_queryKey from '@/const/queryKey';
-import { Favorite_Type } from '@/types/backendType';
+import { FavoriteIndicatorWithIsPick_Type, FavoriteIndicator_Type } from '@/types/favorite';
+import { addContext, getContextNameWithKey_List } from '@/api/context';
+import { ContextNameWithKey_Type } from '@/types/context';
 
 interface MakeModalProps {
 	isModalOpen: boolean;
 	setIsModalOpen: Dispatch<SetStateAction<boolean>>;
 	children?: React.ReactNode;
-	favorites: IndicatorWithIsPick_Type[];
+	favorites: FavoriteIndicatorWithIsPick_Type[];
 }
 
 export default function MakeContextModal({ favorites, isModalOpen, setIsModalOpen, children }: MakeModalProps) {
 	const userId = useSelector((state: Store_Type) => state.user.id);
-	const [selectedFavorites, setSelectedFavorites] = useState<IndicatorWithIsPick_Type[]>();
+	const [selectedFavorites, setSelectedFavorites] = useState<FavoriteIndicatorWithIsPick_Type[]>();
 	const refInput = useRef<HTMLInputElement>(null);
 	const queryClient = useQueryClient();
 
 	// 나중에 훅으로 처리할 부분
 	const { data: contextNamesWithKey, isLoading } = useQuery({
 		queryKey: [const_queryKey.context, 'names'],
-		queryFn: () => getContextIdsWithNames(userId)
+		queryFn: () => getContextNameWithKey_List(userId)
 	});
 
 	const addContextMutation = useMutation({
-		mutationFn: (favoritesForContext: Favorite_Type[]) =>
-			addContext(userId, refInput?.current?.value as string, favoritesForContext as Favorite_Type[]),
+		mutationFn: (favoritesForContext: FavoriteIndicator_Type[]) =>
+			addContext(userId, refInput?.current?.value as string, favoritesForContext as FavoriteIndicator_Type[]),
 		onSuccess() {
 			queryClient.invalidateQueries({
 				queryKey: [const_queryKey.context]
@@ -53,7 +51,7 @@ export default function MakeContextModal({ favorites, isModalOpen, setIsModalOpe
 		if (
 			refInput.current &&
 			favoritesForContext &&
-			!contextNamesWithKey?.some((context: ContextIdWithName_Type) => refInput?.current?.value === context.name)
+			!contextNamesWithKey?.some((context: ContextNameWithKey_Type) => refInput?.current?.value === context.name)
 		) {
 			addContextMutation.mutate(favoritesForContext);
 		} else {

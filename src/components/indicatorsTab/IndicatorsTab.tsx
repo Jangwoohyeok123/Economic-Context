@@ -32,11 +32,11 @@ export default function IndicatorsTab() {
 
 	const { deleteFavoriteMutationAll } = useFavoriteMutation();
 	const categoryId = changeNameToCategoryId(categoryNames[categoryIndex]);
-	const { allFavorites } = useFavoriteQuery();
-
+	const { allFavorites_List } = useFavoriteQuery();
+	//allFavorite_List
 	useEffect(() => {
 		if (favoritesWithPick.length) {
-			const updated = allFavorites?.map((favorite: FavoriteIndicator_Type) => {
+			const updated = allFavorites_List?.map((favorite: FavoriteIndicator_Type) => {
 				const prev = favoritesWithPick.find(
 					(prevFavorites: FavoriteIndicatorWithIsPick_Type) => prevFavorites.seriesId === favorite.seriesId
 				);
@@ -53,7 +53,7 @@ export default function IndicatorsTab() {
 			updated && setFavoritesWithPick(updated);
 			return;
 		}
-		const updated = allFavorites?.map((favorite: FavoriteIndicator_Type) => {
+		const updated = allFavorites_List?.map((favorite: FavoriteIndicator_Type) => {
 			return {
 				...favorite,
 				isPick: false
@@ -61,7 +61,7 @@ export default function IndicatorsTab() {
 		});
 
 		updated && setFavoritesWithPick(updated);
-	}, [allFavorites]);
+	}, [allFavorites_List]);
 	const curFavorites = favoritesWithPick?.filter(
 		(favorite: FavoriteIndicator_Type) => favorite?.categoryId == categoryId
 	);
