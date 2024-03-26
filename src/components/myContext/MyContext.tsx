@@ -13,12 +13,12 @@ import 'swiper/css';
 import AllContexts from '../allContexts/AllContexts';
 import CurrentContext from '../currentContext/CurrentContext';
 
-interface MyContextTabProps {
+interface MyContextTab_Props {
 	selectedTab: string;
 	setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextTabProps) {
+export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextTab_Props) {
 	const userId = useSelector((state: Store_Type) => state.user.id);
 	const [currentContextId, setCurrentContextId] = useState<number | undefined>();
 	const [selectedContext, setSelectedContext] = useState<string>('');

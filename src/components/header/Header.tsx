@@ -58,7 +58,7 @@ export default function Header() {
 					size='small'
 					header='You need to login!'
 					body='Our service is required to login'
-					leftButtonContent='Cancle'
+					leftButtonContent='Cancel'
 					leftButtonHandler={() => setIsAlertModalOpen(false)}
 					rightButtonContent='Login'
 					rightButtonHandler={() => router.push(`${frontUrl}/login`)}

@@ -10,12 +10,12 @@ import { useEffect, useState } from 'react';
 import { ContextIdWithName_Type } from '@/types/userType';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 
-interface MenuProps {
+interface Menu_Props {
 	selectedTab: string;
 	setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function Menu({ selectedTab, setSelectedTab }: MenuProps) {
+export default function Menu({ selectedTab, setSelectedTab }: Menu_Props) {
 	const tabs = ['Indicators', 'MyContext'];
 	const queryClient = useQueryClient();
 	const [isAccordianOpen, setIsAccordianOpen] = useState(false);

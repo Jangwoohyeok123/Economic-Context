@@ -18,8 +18,14 @@ export type Favorite_Type = Pick<
 	seriesId: string;
 	categoryId: number;
 };
-
-export type Journal_Type = {
+export type FavoriteWithIsPick_Type = Favorite_Type & {
+	isPick: boolean;
+};
+export type JournalParams_Type = {
+	title: string;
+	body: string;
+};
+export type JournalData_Type = {
 	id: number;
 	title: string;
 	body: string;
@@ -36,7 +42,7 @@ export type Context_Type = {
 	id: number;
 	name: string;
 	customIndicators: Favorite_Type[];
-	journals: Journal_Type[];
+	journals: JournalData_Type[];
 	createdAt: Date;
 	updatedAt: Date;
 };

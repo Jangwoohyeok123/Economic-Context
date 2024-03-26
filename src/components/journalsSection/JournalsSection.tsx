@@ -9,13 +9,13 @@ import { Store_Type } from '@/types/reduxType';
 import { HiMiniPencilSquare } from 'react-icons/hi2';
 import { CgCloseR } from 'react-icons/cg';
 import { changeDate } from '@/utils/cleanString';
-import { Journal_Type } from '@/types/backendType';
+import { JournalData_Type, JournalParams_Type } from '@/types/backendType';
 
-interface JournalProps {
+interface Journal_Props {
 	contextId: number;
 }
 
-export default function Journal({ contextId }: JournalProps) {
+export default function Journal({ contextId }: Journal_Props) {
 	const userId = useSelector((state: Store_Type) => state.user.id);
 	const [isWrite, setIsWrite] = useState(false);
 	const [journalDataParams, setJournalDataParams] = useState({ title: '', body: '' });
@@ -29,7 +29,7 @@ export default function Journal({ contextId }: JournalProps) {
 		}: {
 			userId: number;
 			contextId: number;
-			journalDataParams: Journal_Type;
+			journalDataParams: JournalParams_Type;
 		}) => addJournal(userId, contextId, journalDataParams),
 		onSuccess() {
 			queryClient.invalidateQueries({
@@ -65,7 +65,7 @@ export default function Journal({ contextId }: JournalProps) {
 	const changeJournalInputData = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
 		e.preventDefault();
 		const { name, value } = e.target; // e.target에서 name과 value를 추출
-		const newParams: Pick<Journal_Type, 'title' | 'body'> = {
+		const newParams: JournalParams_Type = {
 			...journalDataParams,
 			[name]: value
 		};
@@ -123,7 +123,7 @@ export default function Journal({ contextId }: JournalProps) {
 								<td>Loading...</td>
 							</tr> // 로딩 중임을 알리는 메시지
 						) : contextJournals && contextJournals.length > 0 ? (
-							contextJournals.map((item: Journal_Type, index: number) => (
+							contextJournals.map((item: JournalData_Type, index: number) => (
 								<tr key={item.id + index}>
 									<td>
 										<div>

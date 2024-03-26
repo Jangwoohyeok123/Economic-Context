@@ -1,5 +1,10 @@
-import { ContextNameWithKey_Type, Favorite_Type, Journal_Type, JwtAndGoogleUserData_Type } from '@/types/backendType';
-import { Context_Type, Indicator_Type } from '@/types/userType';
+import {
+	ContextNameWithKey_Type,
+	Favorite_Type,
+	JournalData_Type,
+	JwtAndGoogleUserData_Type
+} from '@/types/backendType';
+import { Context_Type } from '@/types/userType';
 import axios from 'axios';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL_LOCAL;
@@ -41,7 +46,7 @@ export const getFavorites = async (userId: number): Promise<Favorite_Type[]> => 
 	}
 };
 
-export const getFavorite = async (userId: number, categoryId: number): Promise<Favorite_Type> => {
+export const getFavorite = async (userId: number, categoryId: number): Promise<Favorite_Type[]> => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
@@ -117,7 +122,7 @@ export const deleteFavorite = async (userId: number, seriesId: string) => {
 	}
 };
 
-export const addContext = async (userId: number, name: string, customIndicators: Indicator_Type[]) => {
+export const addContext = async (userId: number, name: string, customIndicators: Favorite_Type[]) => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
@@ -263,7 +268,7 @@ export const deleteContext = async (contextId: number) => {
 	}
 };
 
-export const getContextJournals = async (contextId: number): Promise<Journal_Type[]> => {
+export const getContextJournals = async (contextId: number): Promise<JournalData_Type[]> => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
@@ -292,7 +297,7 @@ export const getContextJournals = async (contextId: number): Promise<Journal_Typ
 	}
 };
 
-export const addJournal = async (userId: number, contextId: number, journalDataParams: Journal_Type) => {
+export const addJournal = async (userId: number, contextId: number, journalDataParams: JournalParams_Type) => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
