@@ -2,13 +2,12 @@ import clsx from 'clsx';
 import styles from './AllContexts.module.scss';
 import { useQuery } from '@tanstack/react-query';
 import const_queryKey from '@/const/queryKey';
-import { getAllContexts } from '@/api/backend';
-import { ContextIdWithName_Type, Context_Type } from '@/types/userType';
 import { useSelector } from 'react-redux';
-import { Store_Type } from '@/types/reduxType';
-import { useEffect } from 'react';
+import { Store_Type } from '@/types/redux';
 import { addEllipsis, changeDate } from '@/utils/cleanString';
 import { FaPlus } from 'react-icons/fa6';
+import { Context_Type } from '@/types/context';
+import { getAllContext_List } from '@/api/context';
 
 interface AllContexts {
 	selectedContext: string;
@@ -18,20 +17,13 @@ export default function AllContexts({ selectedContext, setSelectedContext }: All
 	const userId = useSelector((store: Store_Type) => store.user.id);
 	const { data: allContexts, isLoading: isAllContextsLoading } = useQuery<Context_Type[]>({
 		queryKey: [const_queryKey.context, 'all'],
-		queryFn: () => getAllContexts(userId)
+		queryFn: () => getAllContext_List(userId)
 	});
-
-	// const { data: contextIdsWithNames, isLoading: isContextNamesLoading } = useQuery<ContextIdWithName[]>({
-	// 	queryKey: [const_queryKey.context, 'names'],
-	// 	queryFn: () => getContextIdsWithNames(userId)
-	// });
 
 	if (isAllContextsLoading) {
 		<div>Loading...</div>;
 	}
-	// useEffect(() => {
-	// 	console.log('11111', allContexts);
-	// }, []);
+
 	return (
 		<section className={clsx(styles.AllContexts)}>
 			<div className={clsx(styles.header)}>

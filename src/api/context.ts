@@ -1,7 +1,9 @@
-import { Favorite_Type } from '@/types/backendType';
+import { backendUrl } from '@/pages/_app';
+import { ContextNameWithKey_Type, Context_Type } from '@/types/context';
+import { FavoriteIndicator_Type } from '@/types/favorite';
 import axios from 'axios';
 
-export const addContext = async (userId: number, name: string, customIndicators: Favorite_Type[]) => {
+export const addContext = async (userId: number, name: string, customIndicators: FavoriteIndicator_Type[]) => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
@@ -63,7 +65,7 @@ export const getContext = async (contextId: number): Promise<Context_Type> => {
 	}
 };
 
-export const getAllContexts = async (userId: number): Promise<Context_Type[]> => {
+export const getAllContext_List = async (userId: number): Promise<Context_Type[]> => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
@@ -92,7 +94,7 @@ export const getAllContexts = async (userId: number): Promise<Context_Type[]> =>
 	}
 };
 
-export const getContextIdsWithNames = async (userId: number): Promise<ContextNameWithKey_Type[]> => {
+export const getContextNameWithKey_List = async (userId: number): Promise<ContextNameWithKey_Type[]> => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');

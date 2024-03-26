@@ -1,11 +1,11 @@
 import clsx from 'clsx';
 import styles from './Category.module.scss';
-import { OriginSeriess_Type } from '@/types/fredType';
+import { Indicator_Type } from '@/types/fred';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
 import BubblePopButton from '../bubblePopButton/BubblePopButton';
 
 interface CategoryInterface {
-	categoryData: OriginSeriess_Type[];
+	categoryData: Indicator_Type[];
 	currentPage: number;
 	itemsPerPage: number;
 	categoryId: number;
@@ -23,7 +23,7 @@ export default function Category({
 		<figure className={clsx(styles.Category)}>
 			{categoryData
 				.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
-				.map((series: OriginSeriess_Type, idx: number) => {
+				.map((series: Indicator_Type, idx: number) => {
 					const { title, id: seriesId, frequency, popularity, observation_start, observation_end } = series;
 					const notes = series.notes ?? '';
 

@@ -3,13 +3,13 @@ import styles from './JournalsSection.module.scss';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import const_queryKey from '@/const/queryKey';
-import { addJournal, getContextJournals } from '@/api/backend';
 import { useSelector } from 'react-redux';
-import { Store_Type } from '@/types/reduxType';
+import { Store_Type } from '@/types/redux';
 import { HiMiniPencilSquare } from 'react-icons/hi2';
 import { CgCloseR } from 'react-icons/cg';
 import { changeDate } from '@/utils/cleanString';
-import { JournalData_Type, JournalParams_Type } from '@/types/backendType';
+import { JournalData_Type, JournalParams_Type } from '@/types/journal';
+import { addJournal, getContextJournals } from '@/api/journal';
 
 interface Journal_Props {
 	contextId: number;

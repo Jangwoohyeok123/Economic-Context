@@ -1,4 +1,4 @@
-import { IndicatorWithIsActive_Type } from './userType';
+import { FavoriteIndicatorWithIsActive_Type } from './favorite';
 
 export interface FreeModalProps {
 	className: string;
@@ -12,7 +12,7 @@ export interface MakeModalProps {
 	setIsModalOpen: (isModalOpen: boolean) => void;
 	children?: React.ReactNode;
 	size: string;
-	activeIndicators: IndicatorWithIsActive_Type[];
+	activeIndicators: FavoriteIndicatorWithIsActive_Type[];
 }
 
 export interface AlertModalProps {

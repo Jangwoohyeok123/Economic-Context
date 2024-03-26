@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '@/actions/actions';
 import AlertModal from '../modals/alertModal/AlertModal';
-import { Store_Type } from '@/types/reduxType';
+import { Store_Type } from '@/types/redux';
 
 interface HeaderProps {
 	children: React.ReactNode;

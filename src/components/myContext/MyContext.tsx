@@ -1,17 +1,17 @@
 import clsx from 'clsx';
 import styles from './MyContext.module.scss';
 import { useSelector } from 'react-redux';
-import { Store_Type } from '@/types/reduxType';
+import { Store_Type } from '@/types/redux';
 import const_queryKey from '@/const/queryKey';
-import { getContextIdsWithNames } from '@/api/backend';
 import { useQueries, useQuery } from '@tanstack/react-query';
-import { ContextIdWithName_Type, Context_Type } from '@/types/userType';
 import { useEffect, useState } from 'react';
 
 // Import Swiper styles
 import 'swiper/css';
 import AllContexts from '../allContexts/AllContexts';
 import CurrentContext from '../currentContext/CurrentContext';
+import { ContextNameWithKey_Type } from '@/types/context';
+import { getContextNameWithKey_List } from '@/api/context';
 
 interface MyContextTab_Props {
 	selectedTab: string;
@@ -23,9 +23,9 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 	const [currentContextId, setCurrentContextId] = useState<number | undefined>();
 	const [selectedContext, setSelectedContext] = useState<string>('');
 
-	const { data: contextIdsWithNames, isLoading } = useQuery<ContextIdWithName_Type[]>({
+	const { data: contextIdsWithNames, isLoading } = useQuery<ContextNameWithKey_Type[]>({
 		queryKey: [const_queryKey.context, 'names'],
-		queryFn: () => getContextIdsWithNames(userId)
+		queryFn: () => getContextNameWithKey_List(userId)
 	});
 
 	// selectedTab 이 변경될 때마다 currentContextId 를 찾아서 CurrentContext 로 전달

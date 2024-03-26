@@ -8,7 +8,7 @@ import useFavoriteQuery from '@/hooks/useFavoriteQuery';
 import { changeCategoryIdToName, changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { addContext, getContextIdsWithNames } from '@/api/backend';
 import { useSelector } from 'react-redux';
-import { Store_Type } from '@/types/reduxType';
+import { Store_Type } from '@/types/redux';
 import { useMutation, useMutationState, useQuery, useQueryClient } from '@tanstack/react-query';
 import const_queryKey from '@/const/queryKey';
 import { Favorite_Type } from '@/types/backendType';
