@@ -2,12 +2,12 @@ import clsx from 'clsx';
 import styles from './ChartDescription.module.scss';
 import { Indicator_Type } from '@/types/fred';
 
-interface ChartDescriptionProps {
+interface ChartDescription_Props {
 	indicator: Indicator_Type;
 	children?: React.ReactNode;
 }
 
-export default function ChartDescription({ indicator, children }: ChartDescriptionProps) {
+export default function ChartDescription({ indicator, children }: ChartDescription_Props) {
 	return (
 		<div className={clsx(styles.ChartDescription)}>
 			<h3>{indicator.title}</h3>

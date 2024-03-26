@@ -7,17 +7,17 @@ import { Store_Type } from '@/types/redux';
 import { addEllipsis, changeDate } from '@/utils/cleanString';
 import { FaPlus } from 'react-icons/fa6';
 import { Context_Type } from '@/types/context';
-import { getAllContext_List } from '@/api/context';
+import { getAllContexts_List } from '@/api/context';
 
-interface AllContexts {
+interface AllContexts_Props {
 	selectedContext: string;
 	setSelectedContext: React.Dispatch<React.SetStateAction<string>>;
 }
-export default function AllContexts({ selectedContext, setSelectedContext }: AllContexts) {
+export default function AllContexts({ selectedContext, setSelectedContext }: AllContexts_Props) {
 	const userId = useSelector((store: Store_Type) => store.user.id);
 	const { data: allContexts, isLoading: isAllContextsLoading } = useQuery<Context_Type[]>({
 		queryKey: [const_queryKey.context, 'all'],
-		queryFn: () => getAllContext_List(userId)
+		queryFn: () => getAllContexts_List(userId)
 	});
 
 	if (isAllContextsLoading) {

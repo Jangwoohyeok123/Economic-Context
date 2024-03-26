@@ -9,10 +9,6 @@ import { logout } from '@/actions/actions';
 import AlertModal from '../modals/alertModal/AlertModal';
 import { Store_Type } from '@/types/redux';
 
-interface HeaderProps {
-	children: React.ReactNode;
-}
-
 const poppins = Poppins({
 	subsets: ['latin'],
 	weight: ['300', '400', '500'],

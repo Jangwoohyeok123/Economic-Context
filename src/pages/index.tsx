@@ -19,7 +19,6 @@ import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { useDispatch, useSelector } from 'react-redux';
 import { roboto, poppins, frontUrl } from './_app';
 import { categoryNames } from './_app';
-import useFavoriteQuery from '@/hooks/useFavoriteQuery';
 import { User_Type } from '@/types/user';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });

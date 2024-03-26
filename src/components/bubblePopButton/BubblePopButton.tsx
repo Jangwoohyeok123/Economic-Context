@@ -1,13 +1,13 @@
 import clsx from 'clsx';
 import styles from './BubblePopButton.module.scss';
 
-interface BubblePopButtonProps {
+interface BubblePopButton_Props {
 	children?: React.ReactNode;
 	className?: string;
 	clickHandler: () => void;
 }
 
-export default function BubblePopButton({ children, className, clickHandler: onClick }: BubblePopButtonProps) {
+export default function BubblePopButton({ children, className, clickHandler: onClick }: BubblePopButton_Props) {
 	const bubblePop = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		event.stopPropagation();
 	};

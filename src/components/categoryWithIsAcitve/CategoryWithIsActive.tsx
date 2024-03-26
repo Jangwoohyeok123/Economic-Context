@@ -14,7 +14,7 @@ import useFavoriteMutation from '@/hooks/useFavoriteMutation';
 import { getFavoriteCateogry_List } from '@/api/favorite';
 import { FavoriteIndicatorWithIsActive_Type, FavoriteIndicator_Type } from '@/types/favorite';
 
-interface CategoryWithIsActive_Intercae {
+interface CategoryWithIsActive_Props {
 	categoryData: Indicator_Type[];
 	currentPage: number;
 	itemsPerPage: number;
@@ -26,7 +26,7 @@ export default function CategoryWithIsActive({
 	currentPage,
 	itemsPerPage,
 	categoryId
-}: CategoryWithIsActive_Intercae) {
+}: CategoryWithIsActive_Props) {
 	const user = useSelector((state: Store_Type) => state.user);
 	const [categoryWithIsActive, setCategoryWithActive] = useState<FavoriteIndicatorWithIsActive_Type[]>([]);
 

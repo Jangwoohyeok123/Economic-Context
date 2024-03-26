@@ -6,12 +6,12 @@ import const_queryKey from '@/const/queryKey';
 import LineChart from '../charts/line/LineChart';
 import { DateValue_Type, Indicator_Type } from '@/types/fred';
 
-interface ChartSwiperProps {
+interface ChartSwiper_Props {
 	seriesIds: string[];
 }
 
 /** context data 가 넘어왔을 때 */
-export default function ChartList({ seriesIds }: ChartSwiperProps) {
+export default function ChartList({ seriesIds }: ChartSwiper_Props) {
 	const queryChartValues = useQueries({
 		queries: seriesIds.map(seriesId => ({
 			queryKey: [const_queryKey.context, seriesId],
@@ -19,7 +19,7 @@ export default function ChartList({ seriesIds }: ChartSwiperProps) {
 		})),
 		combine: results => {
 			return {
-				valuesArrays: results.map<DateValue_Type[]>(result => result.data.dataArray)
+				valuesArrays: results.map<DateValue_Type[]>(result => result.data?.dataArray || [])
 			};
 		}
 	});

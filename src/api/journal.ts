@@ -2,7 +2,7 @@ import { backendUrl } from '@/pages/_app';
 import { JournalData_Type, JournalParams_Type } from '@/types/journal';
 import axios from 'axios';
 
-export const getContextJournals = async (contextId: number): Promise<JournalData_Type[]> => {
+export const getContextJournal_List = async (contextId: number): Promise<JournalData_Type[]> => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');

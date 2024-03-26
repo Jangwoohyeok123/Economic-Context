@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import styles from './LineChart.module.scss';
 import { Indicator_Type, DateValue_Type } from '@/types/fred';
 
-export interface LineChartProps {
+export interface LineChart_Props {
 	indicator: Indicator_Type;
 	children?: React.ReactElement;
 	height?: number;
@@ -20,7 +20,7 @@ export interface LineChartProps {
  * @height [x]vh
  * @width [y]%
  */
-const LineChart = ({ indicator, values, width, height, children, className, seriesId }: LineChartProps) => {
+const LineChart = ({ indicator, values, width, height, children, className, seriesId }: LineChart_Props) => {
 	const svgRef = useRef<SVGSVGElement>(null);
 	const svgContainerRef = useRef<HTMLDivElement>(null);
 	const widthStyle = {

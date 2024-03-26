@@ -8,12 +8,12 @@ import LineChart from '../charts/line/LineChart';
 import { ChartDataForSwiper_Type, SeriessType, DateValue_Type } from '@/types/fred';
 import { Indicator } from '@/types/userType';
 
-interface ChartSwiperProps {
+interface ChartSwiper_Props {
 	seriesIds: string[];
 }
 
 /** context data 가 넘어왔을 때 */
-export default function ChartSwiper({ seriesIds }: ChartSwiperProps) {
+export default function ChartSwiper({ seriesIds }: ChartSwiper_Props) {
 	const queryChartValues = useQueries({
 		queries: seriesIds.map(seriesId => ({
 			queryKey: [const_queryKey.context, seriesId],

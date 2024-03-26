@@ -35,7 +35,7 @@ export const addContext = async (userId: number, name: string, customIndicators:
 		}
 	}
 };
-
+//하나의 context에 대한 데이터.
 export const getContext = async (contextId: number): Promise<Context_Type> => {
 	try {
 		if (typeof window === 'undefined') {
@@ -64,8 +64,8 @@ export const getContext = async (contextId: number): Promise<Context_Type> => {
 		throw new Error("Failed to get user's context");
 	}
 };
-
-export const getAllContext_List = async (userId: number): Promise<Context_Type[]> => {
+//MyContext Tab 페이지에서 전체 context 목록을 보여주기 위한 데이터.
+export const getAllContexts_List = async (userId: number): Promise<Context_Type[]> => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
@@ -93,7 +93,7 @@ export const getAllContext_List = async (userId: number): Promise<Context_Type[]
 		throw new Error("Failed to get user's contexts");
 	}
 };
-
+//전체 Context에 대한 각 context의 id, name가 객체로 담긴 배열 형태의 데이터.
 export const getContextNameWithKey_List = async (userId: number): Promise<ContextNameWithKey_Type[]> => {
 	try {
 		if (typeof window === 'undefined') {
