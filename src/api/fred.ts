@@ -1,4 +1,4 @@
-import { DateValue_Type, Observation_Type, ObservationResult_Type, Indicator_Type } from '@/types/fred';
+import { DateAndValue_Type, Observation_Type, ObservationResult_Type, Indicator_Type } from '@/types/fred';
 import axios from 'axios';
 //하나의 지표를 만들기 위한 데이터 요청.
 export const getIndicator = async (seriesId: string): Promise<Indicator_Type> => {
@@ -37,7 +37,7 @@ export const getChartData = async (seriesId: string): Promise<ObservationResult_
 	try {
 		const response = await axios.get(`/api/chartValues?seriesId=${seriesId}`);
 		const { realtime_start, realtime_end } = response.data;
-		const dataArray = response.data.observations.map((element: DateValue_Type) => {
+		const dataArray = response.data.observations.map((element: DateAndValue_Type) => {
 			if (element.value === '.') element.value = 0;
 			return {
 				date: new Date(element.date),

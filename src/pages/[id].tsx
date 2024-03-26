@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import const_queryKey from '@/const/queryKey';
 import { useSelector } from 'react-redux';
 import { cleanString } from '@/utils/cleanString';
-import { DateValue_Type, Indicator_Type } from '@/types/fred';
+import { DateAndValue_Type, Indicator_Type } from '@/types/fred';
 import ChartDescription from '@/components/chartDescription/ChartDescription';
 import { frontUrl, poppins, roboto } from './_app';
 import { useEffect, useState } from 'react';
@@ -26,7 +26,7 @@ export default function Morepage() {
 	const { id: seriesId, title, categoryId } = router.query;
 	const [isActive, setIsActive] = useState(false);
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
-	const [chartDatas, setChartDatas] = useState<DateValue_Type[]>([]);
+	const [chartDatas, setChartDatas] = useState<DateAndValue_Type[]>([]);
 	const [indicator, setIndicators] = useState<Indicator_Type>({
 		id: '',
 		realtime_start: '',
