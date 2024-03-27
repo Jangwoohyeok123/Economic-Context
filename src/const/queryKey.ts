@@ -1,10 +1,12 @@
 const const_queryKey = {
-	category: 'category',
-	indicator: 'indicator',
-	user: 'user',
-	favorite: 'favorite',
 	context: 'context',
-	journal: 'journal'
+	favorite: 'favorite',
+	fred: 'fred',
+	journal: 'journal',
+	user: 'user',
+	// 아래는 deprecated
+	category: 'category',
+	indicator: 'indicator'
 };
 
 export default const_queryKey;
