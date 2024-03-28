@@ -44,18 +44,29 @@ export default function CategoryWithIsActive({
 	/** 현 cateogoryData 에 isActive 속성을 붙이고 backend 에 저장됐던 데이터는 true 처리 */
 	useEffect(() => {
 		if (categoryData && isFavoriteExist && favorite) {
-			const favoriteCategoryWithIsActive = categoryData.map((item: Indicator_Type) => ({
-				...item,
-				isActive: false
-			}));
+			const favoriteCategoryWithIsActive = categoryData.map((indicator: Indicator_Type) => {
+				const { frequency, notes, observation_end, observation_start, popularity, title } = indicator;
+				return {
+					frequency,
+					notes,
+					observation_end,
+					observation_start,
+					popularity,
+					title,
+					seriesId: '',
+					categoryId: categoryId,
+					isActive: false
+				};
+			});
 
 			favorite.forEach((favoriteIndicator: FavoriteIndicator_Type) => {
-				favoriteCategoryWithIsActive.forEach((favoriteCategoryIndicator: FavoriteIndicatorWithIsActive_Type | any) => {
-					if (favoriteIndicator.seriesId === favoriteCategoryIndicator.id) favoriteCategoryIndicator.isActive = true;
+				favoriteCategoryWithIsActive.forEach((favoriteCategoryIndicator: FavoriteIndicatorWithIsActive_Type) => {
+					if (favoriteIndicator.seriesId === favoriteCategoryIndicator.seriesId)
+						favoriteCategoryIndicator.isActive = true;
 				});
 			});
 
-			setCategoryWithActive(favoriteCategoryWithIsActive as any);
+			setCategoryWithActive(favoriteCategoryWithIsActive);
 		}
 	}, [currentPage, favorite, categoryData]);
 
