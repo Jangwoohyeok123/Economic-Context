@@ -7,7 +7,8 @@ import { useRouter } from 'next/router';
 export default function Login() {
 	const router = useRouter();
 	const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-	const redirectUrl = 'http://localhost:3000';
+	const redirectUrl =
+		process.env.NEXT_PUBLIC_FRONT_URL || 'https://economic-context-4ctf6crzn-jwhs-projects.vercel.app/';
 
 	const moveToHomepage = () => router.push('/');
 
