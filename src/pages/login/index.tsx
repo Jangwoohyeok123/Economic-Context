@@ -7,7 +7,8 @@ import { useRouter } from 'next/router';
 export default function Login() {
 	const router = useRouter();
 	const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-	const redirectUrl = process.env.NEXT_PUBLIC_FRONT_URL || 'https://dev-economic-context.vercel.app/';
+	const redirectUrl =
+		process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URL || 'https://dev-economic-context.vercel.app/google-callback';
 
 	const moveToHomepage = () => router.push('/');
 
