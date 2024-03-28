@@ -50,12 +50,12 @@ export default function CategoryWithIsActive({
 			}));
 
 			favorite.forEach((favoriteIndicator: FavoriteIndicator_Type) => {
-				favoriteCategoryWithIsActive.forEach((favoriteCategoryIndicator: FavoriteIndicatorWithIsActive_Type) => {
+				favoriteCategoryWithIsActive.forEach((favoriteCategoryIndicator: FavoriteIndicatorWithIsActive_Type | any) => {
 					if (favoriteIndicator.seriesId === favoriteCategoryIndicator.id) favoriteCategoryIndicator.isActive = true;
 				});
 			});
 
-			setCategoryWithActive(favoriteCategoryWithIsActive);
+			setCategoryWithActive(favoriteCategoryWithIsActive as any);
 		}
 	}, [currentPage, favorite, categoryData]);
 
