@@ -17,7 +17,7 @@ import CategoryWithIsActive from '@/components/categoryWithIsAcitve/CategoryWith
 import { useEffect, useState } from 'react';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { useDispatch, useSelector } from 'react-redux';
-import { roboto, poppins, frontUrl } from './_app';
+import { roboto, poppins, frontUrl, backendUrl } from './_app';
 import { categoryNames } from './_app';
 import { User_Type } from '@/types/user';
 
@@ -46,7 +46,6 @@ export default function Home({ interest }: { interest: Category_Type }) {
 	});
 
 	const setJwtAndUserData = (authCode: string) => {
-		const backendUrl = 'http://localhost:4000';
 		if (authCode) {
 			axios
 				.post(`${backendUrl}/auth/google`, { code: authCode })

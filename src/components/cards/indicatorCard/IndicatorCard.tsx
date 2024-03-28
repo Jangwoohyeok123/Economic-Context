@@ -32,9 +32,8 @@ export default function IndicatorCard({
 }: IndicatorCard_Props) {
 	const router = useRouter();
 	const cleandTitle = title ? cleanString(title) : 'title';
-	const localRoutingUrl = frontUrl;
 	const routeMorePage = (seriesId: string) => {
-		router.push(`${localRoutingUrl}/${seriesId}?title=${cleandTitle}&categoryId=${categoryId}`);
+		router.push(`${frontUrl}${seriesId}?title=${cleandTitle}&categoryId=${categoryId}`);
 	};
 
 	return (
