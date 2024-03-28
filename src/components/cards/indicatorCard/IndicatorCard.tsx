@@ -3,6 +3,7 @@ import styles from './IndicatorCard.module.scss';
 import { useRouter } from 'next/router';
 import { cleanString } from '@/utils/cleanString';
 import { FavoriteIndicator_Type } from '@/types/favorite';
+import { frontUrl } from '@/pages/_app';
 
 interface IndicatorCard_Props extends FavoriteIndicator_Type {
 	children: React.ReactNode;
@@ -31,7 +32,7 @@ export default function IndicatorCard({
 }: IndicatorCard_Props) {
 	const router = useRouter();
 	const cleandTitle = title ? cleanString(title) : 'title';
-	const localRoutingUrl = process.env.NEXT_PUBLIC_FRONT_URL_LOCAL;
+	const localRoutingUrl = frontUrl;
 	const routeMorePage = (seriesId: string) => {
 		router.push(`${localRoutingUrl}/${seriesId}?title=${cleandTitle}&categoryId=${categoryId}`);
 	};

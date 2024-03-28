@@ -67,8 +67,8 @@ export default function CategoryWithIsActive({
 		<figure className={clsx(styles.CategoryWithIsActive)}>
 			{categoryWithIsActive
 				.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
-				.map((series: SeriessWithIsActive_Type, idx: number) => {
-					const { title, id: seriesId, frequency, popularity, observation_start, observation_end, isActive } = series;
+				.map((series: FavoriteIndicatorWithIsActive_Type, idx: number) => {
+					const { title, seriesId, frequency, popularity, observation_start, observation_end, isActive } = series;
 					const notes = series.notes ?? '';
 					return (
 						<IndicatorCard

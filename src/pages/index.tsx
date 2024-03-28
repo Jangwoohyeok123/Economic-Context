@@ -55,6 +55,7 @@ export default function Home({ interest }: { interest: Category_Type }) {
 					const userData: User_Type = response.data[1];
 					sessionStorage.setItem('token', jwt);
 					dispatch(login(userData));
+					router.replace('/');
 				})
 				.catch(error => {
 					console.error('Error:', error);
@@ -144,7 +145,7 @@ export default function Home({ interest }: { interest: Category_Type }) {
 	);
 }
 
-// 초기 애플리케이션 실행시에만 서버사이드 렌더링을 진행
+// CDN 제공
 export async function getServerSideProps() {
 	const baseUrl = 'https://api.stlouisfed.org/fred/';
 	const fetchInterestCategory = await fetch(
