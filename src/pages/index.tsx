@@ -42,7 +42,7 @@ export default function Home({ interest }: { interest: Category_Type }) {
 		queryKey: [const_queryKey.category, categoryId],
 		queryFn: () => getCategory_List(categoryId),
 		staleTime: 1000 * 60 * 10
-		// initialData: interest
+		// initialData: interest => 여기 나중에 고쳥
 	});
 
 	const setJwtAndUserData = (authCode: string) => {
