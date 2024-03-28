@@ -6,24 +6,33 @@ import { useState } from 'react';
 import MyContextTab from '@/components/myContext/MyContext';
 import IndicatorsTab from '@/components/indicatorsTab/IndicatorsTab';
 import { roboto, poppins } from '../_app';
+import { useSelector } from 'react-redux';
+import { Store_Type } from '@/types/redux';
+import { useQuery } from '@tanstack/react-query';
+import const_queryKey from '@/const/queryKey';
+import { getContextNameWithKey_List } from '@/api/context';
 
 export default function Dashboard() {
 	const [selectedTab, setSelectedTab] = useState<string>('Indicators');
+	const userId = useSelector((state: Store_Type) => state.user.id);
+	const { data: contextNamesWithKey, isLoading } = useQuery({
+		queryKey: [const_queryKey.context, 'names'],
+		queryFn: () => getContextNameWithKey_List(userId)
+	});
 
 	return (
-		<div className={clsx(styles.Dashboard, roboto.variable, poppins.variable)}>
-			{/* menu 는 contextNames 가 표현돼야 한다. */}
+		<section className={clsx(styles.Dashboard, roboto.variable, poppins.variable)}>
 			<Menu selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
 
 			<section>
 				<DashHeader selectedTab={selectedTab} />
 
-				{selectedTab === 'Indicators' && <IndicatorsTab />}
-				{selectedTab === 'MyContext' && <MyContextTab />}
+				{selectedTab === 'Indicators' ? (
+					<IndicatorsTab />
+				) : (
+					<MyContextTab selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+				)}
 			</section>
-		</div>
+		</section>
 	);
 }
-// dashboard 에서 contextNames 와, context 쿼리를열어둔다.
-// Menu 는 contextNames 만 있어도 된다.
-// MyContextTab 에는 쿼리가 필요하다.

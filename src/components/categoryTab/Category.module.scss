@@ -1,0 +1,23 @@
+.CategoryTab {
+	width: 100%;
+	text-align: center;
+	display: flex;
+	gap: 20px;
+
+	button {
+		border: 1px solid #ccc;
+		padding: 10px 20px;
+		cursor: pointer;
+		transition: 0.3s;
+
+		&:hover {
+			color: #fff;
+			background: #111;
+		}
+
+		&.on {
+			color: #fff;
+			background: #111;
+		}
+	}
+}

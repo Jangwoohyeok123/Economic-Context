@@ -7,11 +7,8 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '@/actions/actions';
 import AlertModal from '../modals/alertModal/AlertModal';
-import { Store } from '@/types/reduxType';
-
-interface HeaderProps {
-	children: React.ReactNode;
-}
+import { Store_Type } from '@/types/redux';
+import { frontUrl } from '@/pages/_app';
 
 const poppins = Poppins({
 	subsets: ['latin'],
@@ -20,7 +17,7 @@ const poppins = Poppins({
 });
 
 export default function Header() {
-	const isLogin = useSelector((state: Store) => state.user.isLogin);
+	const isLogin = useSelector((state: Store_Type) => state.user.isLogin);
 	const router = useRouter();
 	const dispatch = useDispatch();
 	const [IsAlertModalOpen, setIsAlertModalOpen] = useState(false);
@@ -35,32 +32,34 @@ export default function Header() {
 
 	// 나중에 조건부 렌더링 컴포넌트 분리
 	return (
-		<header className={clsx(styles.Header, poppins.variable)}>
-			<nav className={clsx(styles.mainNav)}>
-				<Link href='/'>EconomicContext</Link>
-				{isLogin ? (
-					<div className={clsx(styles.users)}>
-						<Link href='/dashboard'>MyContext</Link>
-						<span onClick={userLogout}>Logout</span>
-					</div>
-				) : (
-					<div className={clsx(styles.users)}>
-						<span onClick={goToLoginPage}>MyContext</span>
-						<Link href='/login'>Login</Link>
-					</div>
-				)}
-			</nav>
-			<AlertModal
-				isModalOpen={IsAlertModalOpen}
-				setIsModalOpen={setIsAlertModalOpen}
-				size='small'
-				header='You need to login!'
-				body='Our service is required to login'
-				leftButtonContent='Cancle'
-				leftButtonHandler={() => setIsAlertModalOpen(false)}
-				rightButtonContent='Login'
-				rightButtonHandler={() => (window.location.href = 'http://localhost:3000/login')}
-			/>
-		</header>
+		<>
+			<header className={clsx(styles.Header, poppins.variable)}>
+				<nav className={clsx(styles.mainNav)}>
+					<Link href='/'>EconomicContext</Link>
+					{isLogin ? (
+						<div className={clsx(styles.users)}>
+							<Link href='/dashboard'>MyContext</Link>
+							<span onClick={userLogout}>Logout</span>
+						</div>
+					) : (
+						<div className={clsx(styles.users)}>
+							<span onClick={goToLoginPage}>MyContext</span>
+							<Link href='/login'>Login</Link>
+						</div>
+					)}
+				</nav>
+				<AlertModal
+					isModalOpen={IsAlertModalOpen}
+					setIsModalOpen={setIsAlertModalOpen}
+					size='small'
+					header='You need to login!'
+					body='Our service is required to login'
+					leftButtonContent='Cancel'
+					leftButtonHandler={() => setIsAlertModalOpen(false)}
+					rightButtonContent='Login'
+					rightButtonHandler={() => router.push(`${frontUrl}/login`)}
+				/>
+			</header>
+		</>
 	);
 }

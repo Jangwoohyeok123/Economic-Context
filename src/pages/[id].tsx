@@ -1,37 +1,36 @@
 import clsx from 'clsx';
 import styles from './Morepage.module.scss';
 import dynamic from 'next/dynamic';
-import { Store } from '@/types/reduxType';
+import { Store_Type } from '@/types/redux';
 import LineChart from '@/components/charts/line/LineChart';
-import { Indicator } from '@/types/userType';
 import { useRouter } from 'next/router';
 import const_queryKey from '@/const/queryKey';
 import { useSelector } from 'react-redux';
 import { cleanString } from '@/utils/cleanString';
-import { Seriess_Type } from '@/types/fredType';
-import { poppins, roboto } from './_app';
+import { DateAndValue_Type, Indicator_Type } from '@/types/fred';
+import ChartDescription from '@/components/chartDescription/ChartDescription';
+import { frontUrl, poppins, roboto } from './_app';
 import { useEffect, useState } from 'react';
-import { getChartData, getIndicator } from '@/backendApi/fred';
+import { getChartData, getIndicator } from '@/api/fred';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { addFavorite, deleteFavorite, getFavorite } from '@/backendApi/user';
+import BubblePopButton from '@/components/bubblePopButton/BubblePopButton';
+import { addFavorite, deleteFavorite, getFavoriteCateogry_List } from '@/api/favorite';
+import { FavoriteIndicator_Type } from '@/types/favorite';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
-interface DataItem {
-	date: Date;
-	value: number;
-}
-
 export default function Morepage() {
 	const router = useRouter();
-	const user = useSelector((state: Store) => state.user);
+	const user = useSelector((state: Store_Type) => state.user);
 	const queryClient = useQueryClient();
-	const { id, title, categoryId } = router.query;
+	const { id: seriesId, title, categoryId } = router.query;
 	const [isActive, setIsActive] = useState(false);
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
-	const [chartDatas, setChartDatas] = useState<DataItem[]>([]);
-	const [indicators, setIndicators] = useState<Seriess_Type>({
+	const [chartDatas, setChartDatas] = useState<DateAndValue_Type[]>([]);
+	const [indicator, setIndicators] = useState<Indicator_Type>({
 		id: '',
+		realtime_start: '',
+		realtime_end: '',
 		title: '',
 		notes: '',
 		observation_start: '',
@@ -42,12 +41,14 @@ export default function Morepage() {
 		units_short: '',
 		popularity: 0,
 		seasonal_adjustment: '',
-		seasonal_adjustment_short: ''
+		seasonal_adjustment_short: '',
+		group_popularity: 0,
+		last_updated: ''
 	});
 
-	const { data: favorite, isSuccess: isFavoriteExist } = useQuery({
+	const { data: favoriteCateogry_List, isSuccess: isFavoriteCategoryExist } = useQuery({
 		queryKey: [const_queryKey.favorite, categoryId],
-		queryFn: () => getFavorite(user.id, Number(categoryId))
+		queryFn: () => getFavoriteCateogry_List(user.id, Number(categoryId))
 	});
 
 	const addFavoriteMutation = useMutation({
@@ -84,20 +85,20 @@ export default function Morepage() {
 			return;
 		}
 
-		const isFind = favorite.find((indicator: Indicator) => indicator.seriesId === id);
+		const isFind = favoriteCateogry_List?.find((indicator: FavoriteIndicator_Type) => indicator.seriesId === seriesId);
 
 		if (isFind) {
-			deleteFavoriteMutation.mutate({ userId: user.id, seriesId: id as string });
+			deleteFavoriteMutation.mutate({ userId: user.id, seriesId: seriesId as string });
 			setIsActive(!isActive);
 		} else {
-			addFavoriteMutation.mutate({ userId: user.id, seriesId: id as string });
+			addFavoriteMutation.mutate({ userId: user.id, seriesId: seriesId as string });
 			setIsActive(!isActive);
 		}
 	};
 
 	// 화면을 구성하는데 필요한 정보를 get 하는 useEffect
 	useEffect(() => {
-		getChartData(id as string)
+		getChartData(seriesId as string)
 			.then(chartDatas => {
 				const { dataArray } = chartDatas;
 				setChartDatas(dataArray);
@@ -106,7 +107,7 @@ export default function Morepage() {
 				console.error(err.message);
 			});
 
-		getIndicator(id as string).then((indicator: Seriess_Type) => {
+		getIndicator(seriesId as string).then((indicator: Indicator_Type) => {
 			const {
 				id,
 				title,
@@ -139,18 +140,18 @@ export default function Morepage() {
 
 	// save, delete 상황을 확인하는 useEffect
 	useEffect(() => {
-		if (favorite?.some((el: Indicator) => el.seriesId == id)) {
+		if (favoriteCateogry_List?.some((el: FavoriteIndicator_Type) => el.seriesId === seriesId)) {
 			setIsActive(true);
 		} else {
 			setIsActive(false);
 		}
-	}, [favorite]);
+	}, [favoriteCateogry_List]);
 
 	return (
 		<>
 			<main className={clsx(styles.Morepage, poppins.variable, roboto.variable)}>
-				{chartDatas.length && indicators && (
-					<LineChart indicators={indicators} values={chartDatas}>
+				{chartDatas.length && indicator && (
+					<LineChart indicator={indicator} values={chartDatas} width={100} height={50}>
 						{user.isLogin ? (
 							<button className={isActive ? clsx(styles.on) : clsx('')} onClick={buttonHandler}>
 								{isActive ? 'delete' : 'save'}
@@ -160,6 +161,11 @@ export default function Morepage() {
 						)}
 					</LineChart>
 				)}
+				<ChartDescription indicator={indicator}>
+					<BubblePopButton clickHandler={buttonHandler} className={isActive ? clsx(styles.on) : ''}>
+						{isActive ? 'remove' : 'save'}
+					</BubblePopButton>
+				</ChartDescription>
 			</main>
 			<DynamicAlertModal
 				isModalOpen={isAlertModalOpen}
@@ -170,7 +176,7 @@ export default function Morepage() {
 				leftButtonContent='Cancle'
 				leftButtonHandler={() => setIsAlertModalOpen(false)}
 				rightButtonContent='Login'
-				rightButtonHandler={() => (window.location.href = 'http://localhost:3000/login')}
+				rightButtonHandler={() => router.push(`${frontUrl}/login`)}
 			/>
 		</>
 	);

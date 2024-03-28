@@ -1,3 +1,4 @@
+import { frontUrl } from '@/pages/_app';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
@@ -11,7 +12,7 @@ export default function Callback() {
 		if (authCode) {
 			// 1. 인가코드 전달
 			try {
-				fetch('http://localhost:3000/api/auth', {
+				fetch(`${frontUrl}api/auth`, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'
@@ -31,10 +32,10 @@ export default function Callback() {
 			}
 
 			// 2. mainpage 로 리다이렉트
-			window.location.href = 'http://localhost:3000';
+			router.push('/');
 		}
 	}, [router.query]);
 
 	// 인가 코드를 기다리는 동안 사용자에게 보여줄 UI
-	return <main>Loading</main>;
+	return <main>Loading...</main>;
 }

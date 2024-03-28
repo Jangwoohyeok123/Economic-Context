@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { addFavorite, deleteFavorite } from '@/backendApi/user';
 import const_queryKey from '@/const/queryKey';
+import { addFavorite, deleteFavorite } from '@/api/favorite';
 
 /** 
 - categoryId 가 있다면 favorite 일부가 초기화

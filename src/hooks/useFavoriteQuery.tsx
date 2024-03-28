@@ -1,6 +1,6 @@
-import { getFavorite, getFavorites } from '@/backendApi/user';
+import { getAllFavorites_List, getFavoriteCateogry_List } from '@/api/favorite';
 import const_queryKey from '@/const/queryKey';
-import { Store } from '@/types/reduxType';
+import { Store_Type } from '@/types/redux';
 import { useQuery } from '@tanstack/react-query';
 import { useSelector } from 'react-redux';
 
@@ -10,20 +10,20 @@ import { useSelector } from 'react-redux';
  * @returns favorite 배열
  */
 export default function useFavoriteQuery(categoryId?: number) {
-	const user = useSelector((state: Store) => state.user);
+	const user = useSelector((state: Store_Type) => state.user);
 
-	const { data: allFavorites, isSuccess: isAllFavoritesExist } = useQuery({
+	const { data: allFavorites_List, isSuccess: isAllFavoritesExist } = useQuery({
 		queryKey: [const_queryKey.favorite],
-		queryFn: () => getFavorites(user.id)
+		queryFn: () => getAllFavorites_List(user.id)
 	});
 
 	const { data: selectedFavorites, isSuccess: isSelectedFavoritesExist } = useQuery({
 		queryKey: [const_queryKey.favorite, categoryId],
-		queryFn: () => getFavorite(user.id, categoryId ?? 0),
+		queryFn: () => getFavoriteCateogry_List(user.id, categoryId ?? 0),
 		enabled: !!categoryId
 	});
 
-	return !!categoryId ? { selectedFavorites, isSelectedFavoritesExist } : { allFavorites, isAllFavoritesExist };
+	return !!categoryId ? { selectedFavorites, isSelectedFavoritesExist } : { allFavorites_List, isAllFavoritesExist };
 }
 
 /* 

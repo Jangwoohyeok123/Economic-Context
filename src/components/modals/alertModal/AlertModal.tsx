@@ -3,7 +3,7 @@ import styles from './AlertModal.module.scss';
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { roboto, poppins } from '@/pages/_app';
-import { ModalProps } from '@/types/modalType';
+import { ModalProps } from '@/types/modal';
 import checkingModalSizeAndModifyClassName from '@/utils/checkingModalSizeAndModifyClassName';
 
 export default function AlertModal({

@@ -1,15 +1,15 @@
 import clsx from 'clsx';
 import styles from './DashHeader.module.scss';
-import { Store } from '@/types/reduxType';
+import { Store_Type } from '@/types/redux';
 import { useSelector } from 'react-redux';
 import Image from 'next/image';
 
-interface DashboardProp {
+interface Dashboard_Prop {
 	selectedTab: string;
 }
 
-export default function DashHeader({ selectedTab }: DashboardProp) {
-	const user = useSelector((state: Store) => state.user);
+export default function DashHeader({ selectedTab }: Dashboard_Prop) {
+	const user = useSelector((state: Store_Type) => state.user);
 	const profileImageUrl = user.picture_url;
 	return (
 		<header className={clsx(styles.DashHeader)}>
