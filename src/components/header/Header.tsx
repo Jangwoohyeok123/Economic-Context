@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '@/actions/actions';
 import AlertModal from '../modals/alertModal/AlertModal';
 import { Store_Type } from '@/types/redux';
+import { frontUrl } from '@/pages/_app';
 
 const poppins = Poppins({
 	subsets: ['latin'],
@@ -20,7 +21,6 @@ export default function Header() {
 	const router = useRouter();
 	const dispatch = useDispatch();
 	const [IsAlertModalOpen, setIsAlertModalOpen] = useState(false);
-	const frontUrl = process.env.NEXT_PUBLIC_FRONT_URL_LOCAL;
 
 	const goToLoginPage = () => {
 		if (!isLogin) setIsAlertModalOpen(true);

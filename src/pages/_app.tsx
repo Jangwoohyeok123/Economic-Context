@@ -24,8 +24,8 @@ export const poppins = Poppins({
 
 export const categoryNames = ['Interest', 'Exchange', 'Consume', 'Production'];
 
-export const frontUrl = process.env.NEXT_PUBLIC_FRONT_URL_LOCAL;
-export const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL_LOCAL;
+export const frontUrl = process.env.NEXT_PUBLIC_FRONT_URL;
+export const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 // 이 APP 컴포넌트에는 어떤 Props 를 사용할지 정의함
 export default function App({ Component, pageProps }: AppProps) {
