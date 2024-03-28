@@ -1,7 +1,7 @@
-import User from '@/types/userType';
+import { User_Type } from '@/types/user';
 
 // user
-export const login = (user: User) => {
+export const login = (user: User_Type) => {
 	return { type: 'USER_LOGIN', payload: user };
 };
 
