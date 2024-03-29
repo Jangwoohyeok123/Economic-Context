@@ -14,7 +14,7 @@ export const addContext = async (userId: number, name: string, customIndicators:
 			throw new Error('No token found in sessionStorage');
 		}
 		await axios.post(
-			`${backendUrl}context/${userId}`,
+			`${backendUrl}/context/${userId}`,
 			{
 				name: name,
 				customIndicators: customIndicators
@@ -46,7 +46,7 @@ export const getContext = async (contextId: number): Promise<Context_Type> => {
 		if (!token) {
 			throw new Error('No token found in sessionStorage');
 		}
-		const response = await axios.get(`${backendUrl}context/${contextId}`, {
+		const response = await axios.get(`${backendUrl}/context/${contextId}`, {
 			headers: {
 				Authorization: `Bearer ${token}`
 			}
@@ -75,7 +75,7 @@ export const getAllContexts_List = async (userId: number): Promise<Context_Type[
 		if (!token) {
 			throw new Error('No token found in sessionStorage');
 		}
-		const response = await axios.get(`${backendUrl}context/user/${userId}`, {
+		const response = await axios.get(`${backendUrl}/context/user/${userId}`, {
 			headers: {
 				Authorization: `Bearer ${token}`
 			}
@@ -104,7 +104,7 @@ export const getContextNameWithKey_List = async (userId: number): Promise<Contex
 		if (!token) {
 			throw new Error('No token found in sessionStorage');
 		}
-		const response = await axios.get(`${backendUrl}context/name/${userId}`, {
+		const response = await axios.get(`${backendUrl}/context/name/${userId}`, {
 			headers: {
 				Authorization: `Bearer ${token}`
 			}
@@ -133,7 +133,7 @@ export const deleteContext = async (contextId: number) => {
 		if (!token) {
 			throw new Error('No token found in sessionStorage');
 		}
-		await axios.delete(`${backendUrl}context/${contextId}`, {
+		await axios.delete(`${backendUrl}/context/${contextId}`, {
 			headers: {
 				Authorization: `Bearer ${token}`
 			}
