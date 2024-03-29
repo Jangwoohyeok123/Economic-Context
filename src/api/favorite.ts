@@ -25,7 +25,7 @@ export const getAllFavorites_List = async (userId: number): Promise<FavoriteIndi
 		throw new Error("Failed to get user's favorites");
 	}
 };
-//각 categoryId에서 save한 지표 리스트
+//각 categoryId에서 save한 지표 리스트들
 //categoryId값은 categoryName(['Interest', 'Exchange', 'Consume', 'Production'])이 갖는 id.
 export const getFavoriteCateogry_List = async (
 	userId: number,
