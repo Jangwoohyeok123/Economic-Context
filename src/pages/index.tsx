@@ -1,12 +1,10 @@
 import clsx from 'clsx';
 import Image from 'next/image';
-import axios from 'axios';
 import styles from './Home.module.scss';
 import Footer from '@/components/footer/Footer';
 import dynamic from 'next/dynamic';
 import Category from '@/components/category/Category';
 import { Store_Type } from '@/types/redux';
-import { login } from '@/actions/actions';
 import { useQuery } from '@tanstack/react-query';
 import ReactPaginate from 'react-paginate';
 import { useRouter } from 'next/router';
@@ -14,26 +12,19 @@ import const_queryKey from '@/const/queryKey';
 import { getCategory_List } from '@/api/fred';
 import { Category_Type } from '@/types/fred';
 import CategoryWithIsActive from '@/components/categoryWithIsAcitve/CategoryWithIsActive';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
-import { useDispatch, useSelector } from 'react-redux';
-import { roboto, poppins, frontUrl, backendUrl } from './_app';
+import { useSelector } from 'react-redux';
+import { roboto, poppins, frontUrl } from './_app';
 import { categoryNames } from './_app';
-import { User_Type } from '@/types/user';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
-
-interface HomeProps {
-	interest: Category_Type;
-}
 
 export default function Home({ interest }: { interest: Category_Type }) {
 	const user = useSelector((state: Store_Type) => state.user);
 	const router = useRouter();
-	const dispatch = useDispatch();
 	const [categoryIndex, setCategoryIndex] = useState(0);
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
-	const [isChartModalOpen, setIsChartModalOpen] = useState(false);
 	const [currentPage, setCurrentPage] = useState(0);
 	const itemsPerPage = 9;
 	const categoryId = changeNameToCategoryId(categoryNames[categoryIndex]);
@@ -44,28 +35,6 @@ export default function Home({ interest }: { interest: Category_Type }) {
 		staleTime: 1000 * 60 * 10
 		// initialData: interest => 여기 나중에 고쳥
 	});
-
-	const setJwtAndUserData = (authCode: string) => {
-		if (authCode) {
-			axios
-				.post(`${backendUrl}/auth/google`, { code: authCode })
-				.then(response => {
-					const jwt = response.data[0];
-					const userData: User_Type = response.data[1];
-					sessionStorage.setItem('token', jwt);
-					dispatch(login(userData));
-					router.replace('/');
-				})
-				.catch(error => {
-					console.error('Error:', error);
-				});
-		}
-	};
-
-	useEffect(() => {
-		const authCode = router.query.code;
-		if (authCode) setJwtAndUserData(authCode as string);
-	}, []);
 
 	if (isLoading) {
 		return <div>loading...</div>;
