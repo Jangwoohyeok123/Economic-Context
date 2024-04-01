@@ -26,7 +26,7 @@ export default function Home({ interest }: { interest: Category_Type }) {
 	const [categoryIndex, setCategoryIndex] = useState(0);
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 	const [currentPage, setCurrentPage] = useState(0);
-	const itemsPerPage = 9;
+	const itemsPerPage = 12;
 	const categoryId = changeNameToCategoryId(categoryNames[categoryIndex]);
 
 	const { data: category, isLoading } = useQuery({
@@ -42,10 +42,10 @@ export default function Home({ interest }: { interest: Category_Type }) {
 
 	return (
 		<>
+			<div className={clsx(styles.mainImage)}>
+				<Image src='/mainImage.jpg' alt='mainImage' layout='fill' objectFit='cover' />
+			</div>
 			<main className={clsx(styles.Home, poppins.variable, roboto.variable)}>
-				<div className={clsx(styles.mainImage)}>
-					<Image src='/mainImage.jpg' alt='mainImage' layout='fill' objectFit='cover' />
-				</div>
 				<div className={clsx(styles.categoryNames)}>
 					{categoryNames.map((_, idx) => {
 						return (

@@ -6,7 +6,7 @@ export default function Footer() {
 	return (
 		<footer className={clsx(styles.Footer, poppins.variable, roboto.variable)}>
 			<div className={clsx(styles.wrap)}>
-				<div>
+				<div className={styles.heading}>
 					<h3>EconomicContext</h3>
 					<ul>
 						<li>PRODUCTS</li>

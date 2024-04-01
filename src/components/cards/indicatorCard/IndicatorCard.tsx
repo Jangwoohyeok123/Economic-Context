@@ -47,6 +47,7 @@ export default function IndicatorCard({
 						</div>
 					</div>
 				</div>
+				<p>{notes ? notes : 'This indicator does not have information about the indicator description.'}</p>
 				{children}
 			</div>
 		</div>

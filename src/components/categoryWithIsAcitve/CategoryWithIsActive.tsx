@@ -71,7 +71,7 @@ export default function CategoryWithIsActive({
 	}, [currentPage, favorite, categoryData]);
 
 	if (!isFavoriteExist) {
-		return <>loading ui</>;
+		return <div>loading ui</div>;
 	}
 
 	return (
@@ -93,9 +93,6 @@ export default function CategoryWithIsActive({
 							observation_end={observation_end as string}
 							observation_start={observation_start as string}
 							className={styles.IndicatorCard}>
-							<div>
-								<p>{notes ? notes : 'This indicator does not have information about the indicator description.'}</p>
-							</div>
 							<BubblePopButton
 								className={clsx(isActive ? styles.on : '')}
 								clickHandler={() => {

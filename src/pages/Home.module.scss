@@ -1,28 +1,25 @@
+@use '../styles/Variable.scss' as var;
+
 .Home {
+	position: relative;
 	font-family: var(--baseFont);
-	width: 70%;
+	width: 100%;
+	padding: 0 15%;
 	min-height: 1300px;
 	margin: 0 auto;
-
-	.mainImage {
-		width: 100vw;
-		position: relative;
-		z-index: 0;
-		height: 220px;
-		margin-left: -15vw;
-	}
 
 	.categoryNames {
 		width: 100%;
 		padding-top: 50px;
 		text-align: center;
 		display: flex;
+		flex-wrap: wrap;
 		justify-content: center;
 		gap: 20px;
 
 		button {
 			border: 1px solid #ccc;
-			padding: 10px 20px;
+			padding: 10px 20px; // button 크기가 늘어나면 화면이 커짐
 			cursor: pointer;
 			transition: 0.3s;
 
@@ -38,7 +35,7 @@
 		}
 	}
 
-	// dataIndex === buttonIndex(by map)
+	// // dataIndex === buttonIndex(by map)
 	.pagination {
 		padding: 50px;
 		display: flex;
@@ -75,5 +72,38 @@
 				opacity: 0.65;
 			}
 		}
+	}
+}
+
+.mainImage {
+	position: relative;
+	padding: 0;
+	z-index: 0;
+	height: 180px;
+	width: 100vw;
+}
+
+@media screen and (max-width: var.$tablet) {
+	.Home {
+		width: 100%;
+
+		.categoryNames {
+			flex-direction: row;
+
+			button {
+				width: 40%;
+			}
+		}
+	}
+
+	.mainImage {
+		margin: 0;
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: var.$mobile) {
+	.Home {
+		padding: 0 0%;
 	}
 }

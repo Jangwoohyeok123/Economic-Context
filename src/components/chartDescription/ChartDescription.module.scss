@@ -1,3 +1,5 @@
+@use '../../styles/Variable.scss' as var;
+
 .ChartDescription {
 	padding: 10px;
 	background-color: var(--prime-color);
@@ -13,9 +15,6 @@
 		font-size: 1.5rem;
 	}
 
-	.notes {
-	}
-
 	.additional {
 		padding-top: 20px;
 		display: flex;
@@ -27,5 +26,17 @@
 				font-weight: 500;
 			}
 		}
+	}
+}
+
+@media screen and (max-width: var.$tablet) {
+	.additional {
+		display: block;
+	}
+}
+
+@media screen and (max-width: var.$mobile) {
+	.additional {
+		display: block;
 	}
 }
