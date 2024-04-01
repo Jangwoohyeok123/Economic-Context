@@ -12,7 +12,6 @@ import useFavoriteMutation from '@/hooks/useFavoriteMutation';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import MakeContextModal from '../modals/makeContextModal/MakeContextModal';
 import AlertModal from '../modals/alertModal/AlertModal';
-import { addEllipsis } from '@/utils/cleanString';
 import { FavoriteIndicatorWithIsPick_Type, FavoriteIndicator_Type } from '@/types/favorite';
 
 /**
@@ -107,7 +106,6 @@ export default function IndicatorsTab() {
 							className={clsx(styles.indicatorCardByTab)}
 							frequency={frequency}
 							popularity={popularity}>
-							<p>{notes ? addEllipsis(notes, 300) : 'This Indicator is not have description.'}</p>
 							<div className={styles.buttons}>
 								<BubblePopButton clickHandler={() => deleteFavoriteMutationAll?.mutate({ userId: user.id, seriesId })}>
 									delete

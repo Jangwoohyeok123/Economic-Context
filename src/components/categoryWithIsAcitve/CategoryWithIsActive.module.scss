@@ -1,11 +1,7 @@
+@import '../category/Category.module.scss';
+
 .CategoryWithIsActive {
-	padding-top: 50px;
-	display: grid;
-	width: 100%;
-	grid-template-columns: 30% 30% 30%;
-	grid-template-rows: repeat(3, 400px);
-	justify-content: space-between;
-	row-gap: 50px;
+	@extend .Category;
 
 	button {
 		width: 100%;

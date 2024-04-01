@@ -71,7 +71,7 @@ export default function CategoryWithIsActive({
 	}, [currentPage, favorite, categoryData]);
 
 	if (!isFavoriteExist) {
-		return <>loading ui</>;
+		return <div>loading ui</div>;
 	}
 
 	return (
