@@ -11,8 +11,7 @@
 	justify-content: space-between;
 	align-items: center;
 	height: 60px;
-	background: rgba(var(--fontColor-code), 0.1);
-	box-shadow: 10px 10px 20px 0.3;
+	background: var(--bgColor2);
 	transition: 0.3s;
 
 	h2 {

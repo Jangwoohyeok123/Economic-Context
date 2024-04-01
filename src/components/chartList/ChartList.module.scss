@@ -10,7 +10,7 @@
 		width: 32%;
 		height: fit-content;
 		> div {
-			box-shadow: 5px 5px 20px #dedede;
+			box-shadow: 5px 5px 20px rgba(var(--fontColor-code), 0.1);
 		}
 	}
 }
@@ -21,7 +21,7 @@
 			width: 49%;
 			height: fit-content;
 			> div {
-				box-shadow: 5px 5px 20px #dedede;
+				box-shadow: 5px 5px 20px rgba(var(--fontColor-code), 0.1);
 			}
 		}
 	}

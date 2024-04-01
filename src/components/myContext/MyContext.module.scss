@@ -1,7 +1,6 @@
+@use '../../styles/Variable' as var;
 // layout 작업
 .MyContext {
 	width: 100%;
-	padding: 30px;
-	.IndicatorCard {
-	}
+	padding: var.$tabPagePadding;
 }
