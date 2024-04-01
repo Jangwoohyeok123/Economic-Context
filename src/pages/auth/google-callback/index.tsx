@@ -10,7 +10,6 @@ import { useSearchParams } from 'next/navigation';
 /*
   인가코드를 파싱한다.
 */
-
 export default function GoogleCallback() {
 	const router = useRouter();
 	const searchParams = useSearchParams();

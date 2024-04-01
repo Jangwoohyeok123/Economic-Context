@@ -33,7 +33,7 @@ export default function IndicatorCard({
 	const router = useRouter();
 	const cleandTitle = title ? cleanString(title) : 'title';
 	const routeMorePage = (seriesId: string) => {
-		router.push(`${frontUrl}${seriesId}?title=${cleandTitle}&categoryId=${categoryId}`);
+		router.push(`${frontUrl}/${seriesId}?title=${cleandTitle}&categoryId=${categoryId}`);
 	};
 
 	return (
