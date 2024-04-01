@@ -1,5 +1,3 @@
-$chartColor: #c9d0d2;
-
 .LineChart {
 	width: 100%;
 	height: 100%;
@@ -9,7 +7,7 @@ $chartColor: #c9d0d2;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		background-color: #c9d0d2;
+		background-color: var(--chartColor);
 		padding: 0 20px;
 
 		h3 {
@@ -25,14 +23,14 @@ $chartColor: #c9d0d2;
 			display: flex;
 			gap: 10px;
 			align-items: center;
-			outline: 1px solid $chartColor;
+			outline: 1px solid var(--chartColor);
 		}
 	}
 
 	.chartContainer {
 		width: 100%;
 		height: 70%;
-		outline: 1px solid $chartColor;
+		outline: 1px solid var(--chartColor);
 
 		.svgWrap {
 			width: 100%;
@@ -41,7 +39,7 @@ $chartColor: #c9d0d2;
 
 			svg {
 				width: 100%;
-				background: #efefef;
+				background: var(--bgColor-light);
 				padding: 10px;
 			}
 		}
@@ -49,8 +47,8 @@ $chartColor: #c9d0d2;
 
 	.chartDescription {
 		padding: 10px;
-		background-color: $chartColor;
-		border: 1px solid $chartColor;
+		background-color: var(--chartColor);
+		border: 1px solid var(--chartColor);
 		width: 100%;
 		display: flex;
 		flex-direction: column;

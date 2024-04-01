@@ -21,14 +21,14 @@
 			resize: none;
 			outline: 0;
 			margin-bottom: 10px;
-			background: #fff;
-			box-shadow: 5px 5px 20px #dedede;
+			background: var(--bgColor-light);
+			box-shadow: 5px 5px 20px rgba(var(--fontColor-code), 0.1);
 			border: none;
 			padding: 5px;
 			&::placeholder {
 				padding: 10px;
 				font-size: 0.8rem;
-				color: #aaa;
+				color: rgba(var(--fontColor-code), 0.4);
 				font-family: var(--baseFont);
 			}
 		}
@@ -36,7 +36,7 @@
 			display: block;
 			font-size: 1.1rem;
 			font-weight: 500;
-			color: #333;
+			color: var(--fontColor);
 			padding: 0 10px 5px;
 		}
 		input {
@@ -52,7 +52,7 @@
 		}
 	}
 	.JournalFormIcon {
-		color: #111;
+		color: var(--fontColor);
 		border: none;
 		cursor: pointer;
 		> svg {
@@ -62,8 +62,8 @@
 	button {
 		padding: 8px 10px;
 		font-size: 0.8rem;
-		color: #fff;
-		background: #111;
+		color: var(--bgColor);
+		background: var(--fontColor);
 		border: none;
 		cursor: pointer;
 	}
@@ -83,9 +83,9 @@
 						.body {
 							width: 100%;
 							padding: 10px;
-							background: #fff;
-							border-bottom: 1px solid #dedede;
-							box-shadow: 5px 5px 20px #dedede;
+							background: var(--bgColor-light);
+							border-bottom: 1px solid rgba(var(--fontColor-code), 0.1);
+							box-shadow: 5px 5px 20px rgba(var(--fontColor-code), 0.1);
 							&:last-child {
 								border: none;
 							}
@@ -115,14 +115,14 @@
 				.noData {
 					display: block;
 					width: 100%;
-					background: #fff;
-					border-bottom: 1px solid #dedede;
-					box-shadow: 5px 5px 20px #dedede;
+					background: var(--bgColor-light);
+					border-bottom: 1px solid var(--bgColor2);
+					box-shadow: 5px 5px 20px var(--bgColor2);
 					animation: shake 1s cubic-bezier(1, 0, 0, 1);
 					td {
 						padding: 16px 20px;
 						font-size: 0.8rem;
-						color: #014f97;
+						color: var(--pointColor2);
 					}
 					@keyframes shake {
 						0%,

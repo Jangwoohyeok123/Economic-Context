@@ -1,14 +1,10 @@
-$h5-padddingBottom: 1px;
-$h5-fontWeight: 500;
-$borderColor: #555;
-
 .Overlay {
 	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100vh;
-	background: #111;
+	background: var(--bgColor-dark);
 	opacity: 0.3;
 	z-index: 999;
 }
@@ -20,8 +16,8 @@ $borderColor: #555;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	z-index: 1000;
-	background-color: #333;
-	color: #fff;
+	background-color: var(--fontColor);
+	color: var(--bgColor);
 	padding: 20px 20px;
 	border-radius: 10px;
 	width: 500px;
@@ -44,23 +40,23 @@ $borderColor: #555;
 
 	.name {
 		h5 {
-			padding-bottom: $h5-padddingBottom;
-			font-weight: $h5-fontWeight;
+			padding-bottom: 1px;
+			font-weight: 500;
 		}
 		input {
 			width: 100%;
 			padding: 10px 10px;
-			background: #ddd;
-			border: 1px solid $borderColor;
-			color: #111;
+			background: var(--bgColor);
+			border: 1px solid rgba(var(--fontColor-code), 0.3);
+			color: var(--fontColor);
 
 			&:focus {
 				padding-left: 10px;
-				border: 1px solid #ccc;
+				outline: 0;
 			}
 
 			&::placeholder {
-				color: #111;
+				color: rgba(var(--fontColor-code), 0.7);
 				opacity: 0.6;
 			}
 		}
@@ -77,14 +73,11 @@ $borderColor: #555;
 		}
 
 		ul {
-			background: #ddd;
+			background: var(--bgColor);
 			padding: 10px;
 			height: 150px;
-			border: 1px solid $borderColor;
-			color: #111;
-		}
-
-		li {
+			border: 1px solid rgba(var(--fontColor-code), 0.3);
+			color: var(--fontColor);
 		}
 	}
 
@@ -92,21 +85,18 @@ $borderColor: #555;
 		display: flex;
 		justify-content: space-between;
 		button {
+			border: none;
 			padding: 10px 20px;
-
-			&:hover {
-				cursor: pointer;
-			}
+			cursor: pointer;
 		}
 
 		.leftButton {
-			background: #333;
-			border: 1px solid $borderColor;
-			color: #fff;
+			background: var(--bgColor-dark);
+			color: var(--bgColor);
 		}
 
 		.rightButton {
-			background: #fff;
+			background: var(--bgColor);
 		}
 	}
 }

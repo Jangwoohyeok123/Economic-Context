@@ -11,8 +11,8 @@
 	justify-content: space-between;
 	align-items: center;
 	height: 60px;
-	background: #ddd;
-	box-shadow: 10px 10px 20px 0.3;
+	background: var(--bgColor2);
+	transition: 0.3s;
 
 	h2 {
 		font-size: 1.4rem;
@@ -26,5 +26,10 @@
 		width: 40px;
 		height: 40px;
 		border-radius: 50%;
+	}
+}
+@media screen and (max-width: var.$mobile) {
+	.DashHeader {
+		width: calc(100% - var.$dashMenuWidth-mobile);
 	}
 }

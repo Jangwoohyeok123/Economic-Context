@@ -1,3 +1,4 @@
+@use '../../styles/Variable' as var;
 .ChartList {
 	width: 100%;
 	display: flex;
@@ -10,19 +11,24 @@
 		width: 32%;
 		height: fit-content;
 		> div {
-			box-shadow: 5px 5px 20px #dedede;
+			box-shadow: 5px 5px 20px rgba(var(--fontColor-code), 0.1);
 		}
 	}
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: var.$tablet) {
 	.ChartList {
 		gap: 0 2%;
 		.Chart {
 			width: 49%;
 			height: fit-content;
-			> div {
-				box-shadow: 5px 5px 20px #dedede;
-			}
+		}
+	}
+}
+@media screen and (max-width: var.$mobile) {
+	.ChartList {
+		gap: 0%;
+		.Chart {
+			width: 100%;
 		}
 	}
 }

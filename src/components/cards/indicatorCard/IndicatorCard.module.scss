@@ -1,15 +1,15 @@
 .cardWrap {
 	padding: 20px;
 	height: 100%;
-	background: #fff;
+	background: var(--bgColor-light);
 	font-family: var(--baseFont);
-	box-shadow: 10px 10px 20px #dedede;
+	box-shadow: 10px 10px 20px rgba(var(--fontColor-code), 0.1);
 	transition: 0.3s;
 
 	&:hover {
 		scale: 1.04;
 		cursor: pointer;
-		outline: 1px solid #111;
+		outline: 1px solid var(--bgColor-dark);
 	}
 
 	.IndicatorCard {
@@ -35,14 +35,10 @@
 			cursor: pointer;
 			transition: 0.2s;
 
-			&:hover {
-				color: #fff;
-				background: #111;
-			}
-
+			&:hover,
 			&.on {
-				color: #fff;
-				background: #111;
+				background: var(--bgColor-dark);
+				color: var(--bgColor);
 			}
 		}
 
