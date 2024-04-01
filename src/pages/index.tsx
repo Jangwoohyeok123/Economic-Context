@@ -42,10 +42,10 @@ export default function Home({ interest }: { interest: Category_Type }) {
 
 	return (
 		<>
+			<div className={clsx(styles.mainImage)}>
+				<Image src='/mainImage.jpg' alt='mainImage' layout='fill' objectFit='cover' />
+			</div>
 			<main className={clsx(styles.Home, poppins.variable, roboto.variable)}>
-				<div className={clsx(styles.mainImage)}>
-					<Image src='/mainImage.jpg' alt='mainImage' layout='fill' objectFit='cover' />
-				</div>
 				<div className={clsx(styles.categoryNames)}>
 					{categoryNames.map((_, idx) => {
 						return (

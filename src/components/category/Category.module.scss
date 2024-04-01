@@ -1,3 +1,5 @@
+@use '../../styles/Variable.scss' as var;
+
 .Category {
 	padding-top: 50px;
 	display: grid;
@@ -7,7 +9,7 @@
 	row-gap: 50px;
 }
 
-@media screen and (max-width: $tablet) {
+@media screen and (max-width: var.$tablet) {
 	.Category {
 		width: 90%;
 		margin: 0 auto;
@@ -15,8 +17,7 @@
 		grid-auto-rows: 400px;
 	}
 }
-
-@media screen and (max-width: $mobile) {
+@media screen and (max-width: var.$mobile) {
 	.Category {
 		width: 80%;
 		margin: 0 auto;

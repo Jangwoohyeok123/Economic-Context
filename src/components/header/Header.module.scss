@@ -1,7 +1,4 @@
-.Fixed {
-	height: 60px;
-	width: 100%;
-}
+@use '../../styles/Variable.scss' as var;
 
 .Header {
 	font-family: var(--pointFont);
@@ -39,6 +36,14 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
+		}
+	}
+}
+
+@media screen and (max-width: var.$mobile) {
+	.Header {
+		.mainNav {
+			width: 95%;
 		}
 	}
 }
