@@ -22,15 +22,13 @@ $mobile: 650px;
 		flex-direction: column;
 		justify-content: space-between;
 
-		div {
-			p {
-				padding-top: 10px;
-				display: -webkit-box;
-				-webkit-line-clamp: 4;
-				-webkit-box-orient: vertical;
-				overflow: hidden;
-				text-overflow: ellipsis;
-			}
+		p {
+			padding-top: 10px;
+			display: -webkit-box;
+			-webkit-line-clamp: 4;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 
 		button {
