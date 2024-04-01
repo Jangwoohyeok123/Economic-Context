@@ -10,3 +10,9 @@
 		min-height: calc(100vh - var.$headerSize);
 	}
 }
+
+@media screen and (max-width: var.$mobile) {
+	.Dashboard {
+		padding-left: var.$dashMenuWidth-mobile;
+	}
+}
