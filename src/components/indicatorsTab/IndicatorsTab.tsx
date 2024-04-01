@@ -19,7 +19,7 @@ import { FavoriteIndicatorWithIsPick_Type, FavoriteIndicator_Type } from '@/type
 - IndicatorsTab 을 클릭하면 첫 selectedFavorite 이 페칭된다.
 - categoryIndex 가 바뀌면 useFavoriteQuery 에 의해서 페칭이 되는 구조다.
 */
-const itemsPerPage = 3;
+const itemsPerPage = 6;
 
 export default function IndicatorsTab() {
 	const user = useSelector((state: Store_Type) => state.user);

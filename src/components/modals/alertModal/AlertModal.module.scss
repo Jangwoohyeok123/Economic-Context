@@ -1,6 +1,3 @@
-$h5-padddingBottom: 1px;
-$h5-fontWeight: 500;
-$borderColor: #555;
 .ModalBase {
 	font-family: var(--pointFont);
 	position: fixed;
@@ -8,8 +5,8 @@ $borderColor: #555;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	z-index: 1000;
-	background-color: #fff;
-	color: #111;
+	background-color: var(--bgColor-light);
+	color: var(--bgColor-dark);
 
 	.modalWrap {
 		display: flex;
@@ -42,8 +39,8 @@ $borderColor: #555;
 		}
 		.buttons {
 			.rightButton {
-				background: #111;
-				color: #fff;
+				background: var(--bgColor-dark);
+				color: var(--bgColor-light);
 			}
 		}
 	}
@@ -55,7 +52,7 @@ $borderColor: #555;
 	left: 0;
 	width: 100%;
 	height: 100vh;
-	background: #111;
+	background: var(--bgColor-dark);
 	opacity: 0.3;
 	z-index: 999;
 }

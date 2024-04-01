@@ -29,6 +29,8 @@
 		grid-template-rows: 70vh;
 		justify-content: space-between;
 		align-items: center;
+		row-gap: 20px;
+		transition: 0.3s;
 
 		.indicatorCardByTab {
 			.buttons {
@@ -118,6 +120,24 @@
 					cursor: pointer;
 				}
 			}
+		}
+	}
+}
+
+@media screen and (max-width: var.$tablet) {
+	.IndicatorsTab {
+		.favorites {
+			grid-template-columns: 48% 48%;
+			grid-template-rows: 60vh;
+		}
+	}
+}
+
+@media screen and (max-width: var.$mobile) {
+	.IndicatorsTab {
+		.favorites {
+			grid-template-columns: 100%;
+			grid-template-rows: 50vh;
 		}
 	}
 }

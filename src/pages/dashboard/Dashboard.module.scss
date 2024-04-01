@@ -1,7 +1,6 @@
 @use '../../styles/Variable' as var;
 .Dashboard {
 	font-family: var(--baseFont);
-	width: 100%;
 	display: flex;
 	padding-top: var.$headerSize;
 	padding-left: var.$dashMenuWidth;
