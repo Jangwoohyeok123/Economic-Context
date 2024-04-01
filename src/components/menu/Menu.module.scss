@@ -1,12 +1,14 @@
+@use '../../styles/Variable' as var;
+
 // .MenuBottom {
-// 	width: var(--dashMenuWidth);
+// 	width: var.$dashMenuWidth;
 // }
 
 .Menu {
 	position: fixed;
 	top: 0;
 	left: 0;
-	width: var(--dashMenuWidth);
+	width: var.$dashMenuWidth;
 	min-height: calc(100vh);
 	font-family: var(--baseFont);
 	background: var(--fontColor);
