@@ -12,7 +12,7 @@ export const getContextJournal_List = async (contextId: number): Promise<Journal
 		if (!token) {
 			throw new Error('No token found in sessionStorage');
 		}
-		const response = await axios.get(`${backendUrl}journal/${contextId}`, {
+		const response = await axios.get(`${backendUrl}/journal/${contextId}`, {
 			headers: {
 				Authorization: `Bearer ${token}`
 			}
@@ -41,7 +41,7 @@ export const addJournal = async (userId: number, contextId: number, journalDataP
 		if (!token) {
 			throw new Error('No token found in sessionStorage');
 		}
-		await axios.post(`${backendUrl}journal/${userId}/${contextId}`, journalDataParams, {
+		await axios.post(`${backendUrl}/journal/${userId}/${contextId}`, journalDataParams, {
 			headers: {
 				Authorization: `Bearer ${token}`
 			}
@@ -67,7 +67,7 @@ export const deleteJournal = async (journalId: number) => {
 		if (!token) {
 			throw new Error('No token found in sessionStorage');
 		}
-		await axios.delete(`${backendUrl}journal/${journalId}`, {
+		await axios.delete(`${backendUrl}/journal/${journalId}`, {
 			headers: {
 				Authorization: `Bearer ${token}`
 			}
@@ -93,7 +93,7 @@ export const deleteJournal_List = async (contextId: number) => {
 		if (!token) {
 			throw new Error('No token found in sessionStorage');
 		}
-		await axios.delete(`${backendUrl}journal/${contextId}`, {
+		await axios.delete(`${backendUrl}/journal/${contextId}`, {
 			headers: {
 				Authorization: `Bearer ${token}`
 			}
@@ -120,7 +120,7 @@ export const modifyJournal = async (journalId: number, title: string, body: stri
 			throw new Error('No token found in sessionStorage');
 		}
 		await axios.put(
-			`${backendUrl}journal/${journalId}`,
+			`${backendUrl}/journal/${journalId}`,
 			{
 				title: title,
 				body: body

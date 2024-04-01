@@ -13,7 +13,7 @@ export const getAllFavorites_List = async (userId: number): Promise<FavoriteIndi
 			throw new Error('No token found in sessionStorage');
 		}
 
-		const response = await axios.get(`${backendUrl}user/favorite/${userId}`, {
+		const response = await axios.get(`${backendUrl}/user/favorite/${userId}`, {
 			headers: {
 				Authorization: `Bearer ${token}`
 			}
@@ -40,7 +40,7 @@ export const getFavoriteCateogry_List = async (
 		if (!token) {
 			throw new Error('No token found in sessionStorage');
 		}
-		const response = await axios.get(`${backendUrl}user/favorite/${userId}/${categoryId}`, {
+		const response = await axios.get(`${backendUrl}/user/favorite/${userId}/${categoryId}`, {
 			headers: {
 				Authorization: `Bearer ${token}`
 			}
@@ -66,7 +66,7 @@ export const addFavorite = async (userId: number, seriesId: string) => {
 			throw new Error('No token found in sessionStorage');
 		}
 		await axios.post(
-			`${backendUrl}user/favorite/${userId}`,
+			`${backendUrl}/user/favorite/${userId}`,
 			{
 				indicatorId: seriesId
 			},
@@ -93,7 +93,7 @@ export const deleteFavorite = async (userId: number, seriesId: string) => {
 		if (!token) {
 			throw new Error('No token found in sessionStorage');
 		}
-		await axios.delete(`${backendUrl}user/favorite/${userId}`, {
+		await axios.delete(`${backendUrl}/user/favorite/${userId}`, {
 			headers: {
 				Authorization: `Bearer ${token}`
 			},
