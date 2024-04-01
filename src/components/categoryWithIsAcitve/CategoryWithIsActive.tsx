@@ -45,7 +45,7 @@ export default function CategoryWithIsActive({
 	useEffect(() => {
 		if (categoryData && isFavoriteExist && favorite) {
 			const favoriteCategoryWithIsActive = categoryData.map((indicator: Indicator_Type) => {
-				const { frequency, notes, observation_end, observation_start, popularity, title } = indicator;
+				const { id: seriesId, frequency, notes, observation_end, observation_start, popularity, title } = indicator;
 				return {
 					frequency,
 					notes,
@@ -53,7 +53,7 @@ export default function CategoryWithIsActive({
 					observation_start,
 					popularity,
 					title,
-					seriesId: '',
+					seriesId,
 					categoryId: categoryId,
 					isActive: false
 				};
