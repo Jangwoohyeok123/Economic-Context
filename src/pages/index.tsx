@@ -1,26 +1,28 @@
 import clsx from 'clsx';
+import Head from 'next/head';
 import Image from 'next/image';
+import axios from 'axios';
 import styles from './Home.module.scss';
 import Footer from '@/components/footer/Footer';
 import dynamic from 'next/dynamic';
 import Category from '@/components/category/Category';
+import mainImage from '../../public/mainImage.jpg';
+import { useState } from 'react';
+import ReactPaginate from 'react-paginate';
+import { useRouter } from 'next/router';
 import { Store_Type } from '@/types/redux';
 import { useQueries } from '@tanstack/react-query';
-import { useRouter } from 'next/router';
 import const_queryKey from '@/const/queryKey';
 import { getCategory_List } from '@/api/fred';
+import { useSelector } from 'react-redux';
+import const_categoryId from '@/const/categoryId';
+import { categoryNames } from './_app';
 import { Indicator_Type } from '@/types/fred';
 import CategoryWithIsActive from '@/components/categoryWithIsAcitve/CategoryWithIsActive';
-import { useState } from 'react';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
-import { useSelector } from 'react-redux';
 import { roboto, poppins, frontUrl } from './_app';
-import { categoryNames } from './_app';
-import axios from 'axios';
-import const_categoryId from '@/const/categoryId';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
-const DynamicReactPaginate = dynamic(() => import('react-paginate'), { ssr: false });
 
 interface Home_Props {
 	interest: Indicator_Type[];
@@ -38,23 +40,36 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
 	const initialStates = [interest, exchange, production, consume];
-	const itemsPerPage = 12;
+	const indicatorsPerPage = 12;
 	const categoryId = changeNameToCategoryId(categoryNames[categoryIndex]);
 
 	const categoryQueries = useQueries({
 		queries: categoryNames.map((_, idx) => ({
-			queryKey: [const_queryKey.category, changeNameToCategoryId(categoryNames[idx])],
+			queryKey: [const_queryKey.category, 'getCategory', changeNameToCategoryId(categoryNames[idx])],
 			queryFn: () => getCategory_List(changeNameToCategoryId(categoryNames[idx])),
 			staleTime: 1000 * 60 * 10,
 			initialData: initialStates[idx]
 		}))
 	});
-	const category = categoryQueries[categoryIndex].data?.seriess as Indicator_Type[];
+	const category = categoryQueries[categoryIndex].data;
 
 	return (
 		<>
+			<Head>
+				<title>Economic-context</title>
+			</Head>
+
 			<div className={clsx(styles.mainImage)}>
-				<Image src='/mainImage.jpg' alt='mainImage' layout='fill' objectFit='cover' quality={80} />
+				<Image
+					src={mainImage}
+					alt='mainImage'
+					aria-label='mainImage'
+					placeholder='blur'
+					objectFit='cover'
+					quality={80}
+					fill
+					priority
+				/>
 			</div>
 			<main className={clsx(styles.Home, poppins.variable, roboto.variable)}>
 				<div className={clsx(styles.categoryNames)}>
@@ -76,21 +91,21 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 					<CategoryWithIsActive
 						categoryData={category || []}
 						currentPage={currentPage}
-						itemsPerPage={itemsPerPage}
+						itemsPerPage={indicatorsPerPage}
 						categoryId={categoryId}
 					/>
 				) : (
 					<Category
 						categoryData={category || []}
 						currentPage={currentPage}
-						itemsPerPage={itemsPerPage}
+						itemsPerPage={indicatorsPerPage}
 						categoryId={categoryId}
 						setIsAlertModalOpen={setIsAlertModalOpen}
 					/>
 				)}
 				{category && (
-					<DynamicReactPaginate
-						pageCount={Math.ceil(category.length / itemsPerPage)}
+					<ReactPaginate
+						pageCount={Math.ceil(category.length / indicatorsPerPage)}
 						previousAriaLabel='Prev'
 						previousLabel='Prev'
 						nextAriaLabel='Next'
@@ -103,7 +118,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 						forcePage={currentPage}
 						activeClassName={styles.paginationActive}
 						previousClassName={currentPage === 0 ? styles.disabled : ''}
-						nextClassName={currentPage === Math.ceil(category.length / itemsPerPage) ? styles.disabled : ''}
+						nextClassName={currentPage === Math.ceil(category.length / indicatorsPerPage) ? styles.disabled : ''}
 						disabledClassName={styles.disabled}
 					/>
 				)}
@@ -118,13 +133,13 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 				leftButtonContent='Cancle'
 				leftButtonHandler={() => setIsAlertModalOpen(false)}
 				rightButtonContent='Login'
-				rightButtonHandler={() => router.push(`${frontUrl}/login`)}
+				rightButtonHandler={() => router.push(`${frontUrl}/login`)} // link
 			/>
 		</>
 	);
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
 	const baseUrl = 'https://api.stlouisfed.org/fred/';
 
 	const requests = [
@@ -147,10 +162,10 @@ export async function getServerSideProps() {
 
 		return {
 			props: {
-				interest: interest.data,
-				exchange: exchange.data,
-				production: production.data,
-				consume: consume.data
+				interest: interest.data.seriess,
+				exchange: exchange.data.seriess,
+				production: production.data.seriess,
+				consume: consume.data.seriess
 			}
 		};
 	} catch (error) {
