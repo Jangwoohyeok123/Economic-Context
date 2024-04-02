@@ -28,11 +28,11 @@ export default function GoogleCallback() {
 
 	useEffect(() => {
 		const authCode = router.query.code;
-
+		console.log(authCode);
 		if (typeof authCode === 'string') {
 			setJwtAndUserData(authCode);
 		}
-	}, [router.query.code]);
+	}, [router.query]);
 
 	return <div className={clsx(styles.GoogleCallback)}></div>;
 }
