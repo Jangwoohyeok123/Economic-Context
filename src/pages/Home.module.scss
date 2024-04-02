@@ -1,7 +1,6 @@
 @use '../styles/Variable.scss' as var;
 
 .Home {
-	position: relative;
 	font-family: var(--baseFont);
 	width: 100%;
 	padding: 0 15%;
@@ -77,9 +76,8 @@
 
 .mainImage {
 	position: relative;
-	padding: 0;
 	z-index: 0;
-	height: 180px;
+	height: 220px;
 	width: 100vw;
 }
 

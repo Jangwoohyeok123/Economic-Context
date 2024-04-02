@@ -75,7 +75,7 @@ export default function CategoryWithIsActive({
 	}
 
 	return (
-		<figure className={clsx(styles.CategoryWithIsActive)}>
+		<section className={clsx(styles.CategoryWithIsActive)}>
 			{categoryWithIsActive
 				.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
 				.map((series: FavoriteIndicatorWithIsActive_Type, idx: number) => {
@@ -108,6 +108,6 @@ export default function CategoryWithIsActive({
 						</IndicatorCard>
 					);
 				})}
-		</figure>
+		</section>
 	);
 }

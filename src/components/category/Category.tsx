@@ -20,7 +20,7 @@ export default function Category({
 	setIsAlertModalOpen
 }: Category_Props) {
 	return (
-		<figure className={clsx(styles.Category)}>
+		<section className={clsx(styles.Category)}>
 			{categoryData
 				.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
 				.map((series: Indicator_Type, idx: number) => {
@@ -48,6 +48,6 @@ export default function Category({
 						</IndicatorCard>
 					);
 				})}
-		</figure>
+		</section>
 	);
 }
