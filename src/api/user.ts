@@ -4,6 +4,7 @@ import axios from 'axios';
 
 export async function getJwtAndGoogleUserData(authCode: string): Promise<JwtAndGoogleUserData_Type> {
 	try {
+		console.log('authCode in getJwt: ', authCode);
 		const response = await axios.post(`${backendUrl}/auth/google`, { code: authCode });
 		const jwt = response.data[0];
 		const userData = response.data[1];
@@ -11,6 +12,7 @@ export async function getJwtAndGoogleUserData(authCode: string): Promise<JwtAndG
 		return { jwt, userData };
 	} catch (error) {
 		console.error(error);
-		throw new Error('Failed to SNS login');
+		console.log('authCode in getJwt: ', authCode);
+		throw new Error('Failed to getJwtAndGoogleUserData');
 	}
 }

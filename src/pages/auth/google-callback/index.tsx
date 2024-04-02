@@ -5,36 +5,35 @@ import { useRouter } from 'next/router';
 import { getJwtAndGoogleUserData } from '@/api/user';
 import { useDispatch } from 'react-redux';
 import { login } from '@/actions/actions';
-import { useSearchParams } from 'next/navigation';
 
-/*
-  인가코드를 파싱한다.
-*/
 export default function GoogleCallback() {
 	const router = useRouter();
-	const searchParams = useSearchParams();
 	const dispatch = useDispatch();
 
 	const setJwtAndUserData = async (authCode: string) => {
+		console.log('authCode in setJwt', authCode);
 		if (authCode) {
 			try {
-				getJwtAndGoogleUserData(authCode).then(result => {
-					console.log('getJwtAndGoogleUserData', '실행');
-					const { jwt, userData } = result;
-					sessionStorage.setItem('token', jwt);
-					dispatch(login(userData));
-					router.push('/');
-				});
-			} catch (error: any) {
-				console.error('인가코드이용한 로그인 과정에 문제가 있습니다. auth/google-callback');
+				const result = await getJwtAndGoogleUserData(authCode);
+				console.log('getJwtAndGoogleUserData', '실행');
+				const { jwt, userData } = result;
+				sessionStorage.setItem('token', jwt);
+				dispatch(login(userData));
+				router.push('/');
+			} catch (error) {
+				console.error('인가코드 이용한 로그인 과정에 문제가 있습니다. auth/google-callback', error);
 			}
 		}
 	};
 
 	useEffect(() => {
-		const authCode = searchParams.get('code');
-		if (authCode) setJwtAndUserData(authCode);
-	}, [searchParams.get('code')]); //
+		console.log('useEffect 실행');
+		const authCode = router.query.code;
+		console.log('authCode in useEffect', authCode);
+		if (typeof authCode === 'string') {
+			setJwtAndUserData(authCode);
+		}
+	}, [router.isReady]);
 
 	return <div className={clsx(styles.GoogleCallback)}></div>;
 }
