@@ -42,7 +42,6 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 	const initialStates = [interest, exchange, production, consume];
 	const indicatorsPerPage = 12;
 	const categoryId = changeNameToCategoryId(categoryNames[categoryIndex]);
-	console.log('home test');
 
 	const categoryQueries = useQueries({
 		queries: categoryNames.map((_, idx) => ({

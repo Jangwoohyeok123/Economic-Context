@@ -11,11 +11,9 @@ export default function GoogleCallback() {
 	const dispatch = useDispatch();
 
 	const setJwtAndUserData = async (authCode: string) => {
-		console.log('authCode in setJwt', authCode);
 		if (authCode) {
 			try {
 				const result = await getJwtAndGoogleUserData(authCode);
-				console.log('getJwtAndGoogleUserData', '실행');
 				const { jwt, userData } = result;
 				sessionStorage.setItem('token', jwt);
 				dispatch(login(userData));
@@ -27,13 +25,12 @@ export default function GoogleCallback() {
 	};
 
 	useEffect(() => {
-		console.log('useEffect 실행');
 		const authCode = router.query.code;
-		console.log('authCode in useEffect', authCode);
+		alert('google-callback 페이지 들어옴');
 		if (typeof authCode === 'string') {
 			setJwtAndUserData(authCode);
 		}
-	}, [router.isReady]);
+	}, []);
 
 	return <div className={clsx(styles.GoogleCallback)}></div>;
 }
