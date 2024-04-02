@@ -11,7 +11,7 @@ export default function GoogleCallback() {
 	const dispatch = useDispatch();
 
 	const setJwtAndUserData = async (authCode: string) => {
-		console.log(authCode);
+		console.log('authCode in setJwt', authCode);
 		if (authCode) {
 			try {
 				const result = await getJwtAndGoogleUserData(authCode);
@@ -27,12 +27,13 @@ export default function GoogleCallback() {
 	};
 
 	useEffect(() => {
+		console.log('useEffect 실행');
 		const authCode = router.query.code;
-		console.log(authCode);
+		console.log('authCode in useEffect', authCode);
 		if (typeof authCode === 'string') {
 			setJwtAndUserData(authCode);
 		}
-	});
+	}, [router.isReady]);
 
 	return <div className={clsx(styles.GoogleCallback)}></div>;
 }
