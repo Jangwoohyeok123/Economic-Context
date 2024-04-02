@@ -10,6 +10,7 @@ export default function GoogleCallback() {
 	const router = useRouter();
 	const dispatch = useDispatch();
 
+	//
 	const setJwtAndUserData = async (authCode: string) => {
 		console.log('authCode in setJwt', authCode);
 		if (authCode) {
