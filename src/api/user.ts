@@ -3,7 +3,6 @@ import { JwtAndGoogleUserData_Type } from '@/types/user';
 import axios from 'axios';
 
 export async function getJwtAndGoogleUserData(authCode: string): Promise<JwtAndGoogleUserData_Type> {
-	console.log(authCode);
 	try {
 		const response = await axios.post(`${backendUrl}/auth/google`, { code: authCode });
 		const jwt = response.data[0];
