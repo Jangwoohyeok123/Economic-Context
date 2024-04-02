@@ -34,7 +34,7 @@ export default function GoogleCallback() {
 	useEffect(() => {
 		const authCode = searchParams.get('code');
 		if (authCode) setJwtAndUserData(authCode);
-	}, [searchParams.get('code')]);
+	}, [searchParams.get('code')]); //
 
 	return <div className={clsx(styles.GoogleCallback)}></div>;
 }
