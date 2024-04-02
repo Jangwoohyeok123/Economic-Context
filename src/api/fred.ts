@@ -20,7 +20,6 @@ export const getIndicator = async (seriesId: string): Promise<Indicator_Type> =>
 export const getCategory_List = async (categoryId: number): Promise<Indicator_Type[]> => {
 	try {
 		const response = await axios.get(`/api/category?categoryId=${categoryId}`);
-		console.log('response.data.seriess: ', response.data.seriess);
 		return response.data.seriess;
 	} catch (error) {
 		if (axios.isAxiosError(error)) {
