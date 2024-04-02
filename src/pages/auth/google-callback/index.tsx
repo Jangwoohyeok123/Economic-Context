@@ -32,7 +32,7 @@ export default function GoogleCallback() {
 		if (typeof authCode === 'string') {
 			setJwtAndUserData(authCode);
 		}
-	}, [router.isReady]);
+	});
 
 	return <div className={clsx(styles.GoogleCallback)}></div>;
 }
