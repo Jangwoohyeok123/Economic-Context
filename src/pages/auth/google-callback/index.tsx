@@ -16,6 +16,7 @@ export default function GoogleCallback() {
 	const dispatch = useDispatch();
 
 	const setJwtAndUserData = (authCode: string) => {
+		console.log(authCode);
 		if (authCode) {
 			try {
 				getJwtAndGoogleUserData(authCode).then(result => {
