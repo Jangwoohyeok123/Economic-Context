@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { roboto, poppins } from '../_app';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import Head from 'next/head';
+import SEO from '@/components/SEO/SEO';
 
 export default function Login() {
 	const router = useRouter();
@@ -15,16 +15,7 @@ export default function Login() {
 
 	return (
 		<div className={clsx(styles.Login, poppins.variable, roboto.variable)}>
-			<Head>
-				<title>{`login page | Economic Context`}</title>
-				<meta property='og:title' content='login page | Economic Context' />
-				<meta property='og:type' content='website' />
-				<meta
-					name='description'
-					content='경제지표를 편리하게 저장해두고, 나의 일지를 작성할 수 있습니다. 로그인으로 시작하세요.'
-				/>
-				<meta property='og:url' content='https://localhost:3000' />
-			</Head>
+			<SEO title='Login' />
 			<Image
 				className={clsx(styles.background)}
 				src={loginBackground}
