@@ -1,8 +1,11 @@
 import clsx from 'clsx';
 import styles from './Login.module.scss';
+import loginBackground from '../../../public/loginBackground.jpg';
 import Image from 'next/image';
 import { roboto, poppins } from '../_app';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
+import SEO from '@/components/SEO/SEO';
 
 export default function Login() {
 	const router = useRouter();
@@ -10,33 +13,34 @@ export default function Login() {
 	const redirectUrl =
 		process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URL || 'https://dev-economic-context.vercel.app/google-callback';
 
-	const moveToHomepage = () => router.push('/');
-
-	const googleLogin = () => {
-		const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(
-			redirectUrl
-		)}&response_type=code&scope=email profile`;
-		router.push(url);
-	};
-
 	return (
 		<div className={clsx(styles.Login, poppins.variable, roboto.variable)}>
+			<SEO title='Login' />
 			<Image
 				className={clsx(styles.background)}
-				src='/loginBackground.jpg'
+				src={loginBackground}
 				alt='login-background'
-				layout='fill'
-				objectFit='cover'
+				quality={100}
+				fill
+				style={{ objectFit: 'cover' }}
+				placeholder='blur' //사용자 경험을 향상(이미지 최적화x)
+				priority
 			/>
 			<div className={clsx(styles.wrap)}>
-				<h1 className={clsx(styles.logo)} onClick={moveToHomepage}>
-					<div>ECONOMIC</div>
-					<div>CONTEXT</div>
-				</h1>
+				<Link href={'/'} className={clsx(styles.logo)}>
+					<p>
+						ECONOMIC <br />
+						CONTEXT
+					</p>
+				</Link>
 				<div className={clsx(styles.buttonWrap)}>
-					<div className={clsx(styles.loginButton)} onClick={googleLogin}>
+					<Link
+						href={`https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(
+							redirectUrl
+						)}&response_type=code&scope=email profile`}
+						className={clsx(styles.loginButton)}>
 						<span>Google Login</span>
-					</div>
+					</Link>
 					<span className={clsx(styles.terms)}>Please agree to the Terms of Use of Economic-Context</span>
 				</div>
 			</div>
