@@ -35,7 +35,9 @@ export default function Header() {
 		<>
 			<header className={clsx(styles.Header, poppins.variable)}>
 				<nav className={clsx(styles.mainNav)}>
-					<Link href='/'>EconomicContext</Link>
+					<h1>
+						<Link href='/'>EconomicContext</Link>
+					</h1>
 					{isLogin ? (
 						<div className={clsx(styles.users)}>
 							<Link href='/dashboard'>MyContext</Link>
