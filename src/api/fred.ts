@@ -1,5 +1,6 @@
-import { DateAndValue_Type, Observation_Type, ObservationResult_Type, Indicator_Type } from '@/types/fred';
+import { DateAndValue_Type, ObservationResult_Type, Indicator_Type } from '@/types/fred';
 import axios from 'axios';
+
 //하나의 지표를 만들기 위한 데이터 요청.
 export const getIndicator = async (seriesId: string): Promise<Indicator_Type> => {
 	try {
@@ -16,6 +17,7 @@ export const getIndicator = async (seriesId: string): Promise<Indicator_Type> =>
 		throw error;
 	}
 };
+
 //각 카테고리 fred에서 제공하는 인디케이터 목록을 불러오는 데이터
 export const getCategory_List = async (categoryId: number): Promise<Indicator_Type[]> => {
 	try {
@@ -28,9 +30,9 @@ export const getCategory_List = async (categoryId: number): Promise<Indicator_Ty
 			console.error('Unexpected Error', error);
 		}
 		throw error;
-		return [];
 	}
 };
+
 //지표의 Date 데이터
 export const getChartData = async (seriesId: string): Promise<ObservationResult_Type> => {
 	try {
@@ -48,10 +50,5 @@ export const getChartData = async (seriesId: string): Promise<ObservationResult_
 	} catch (error) {
 		console.error('Error fetching data: ', error);
 		throw error;
-		// return {
-		// 	realtime_start: '',
-		// 	realtime_end: '',
-		// 	dataArray: [],
-		// };
 	}
 };
