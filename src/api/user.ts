@@ -6,7 +6,7 @@ export async function getJwtAndGoogleUserData(authCode: string): Promise<JwtAndG
 	try {
 		console.log('authCode in getJwt: ', authCode);
 		console.log('backendUrl: ', backendUrl);
-		const response = await axios.post(`https://api.economic-context-api.net/auth/google`, { code: authCode });
+		const response = await axios.post(`${backendUrl}/auth/google`, { code: authCode });
 		const jwt = response.data[0];
 		const userData = response.data[1];
 
