@@ -28,7 +28,7 @@ export default function GoogleCallback() {
 	};
 
 	useEffect(() => {
-		console.log('useEffect 실행');
+		console.log('google-callback useEffect 실행');
 		const authCode = router.query.code;
 		console.log('authCode in useEffect', authCode);
 		if (typeof authCode === 'string') {
