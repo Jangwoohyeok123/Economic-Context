@@ -4,7 +4,7 @@ import axios from 'axios';
 
 export async function getJwtAndGoogleUserData(authCode: string): Promise<JwtAndGoogleUserData_Type> {
 	try {
-		const response = await axios.post(`https://economic-context-api.net`, {
+		const response = await axios.post(`https://oauth2.googleapis.com/token`, {
 			code: authCode
 		});
 		const jwt = response.data[0];
