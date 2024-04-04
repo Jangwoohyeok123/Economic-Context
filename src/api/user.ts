@@ -15,7 +15,7 @@ export async function getJwtAndGoogleUserData(authCode: string): Promise<JwtAndG
 	params.append('grant_type', 'authorization_code');
 
 	try {
-		const response = await axios.post(`https://economic-context-api.net/auth/google`, {
+		const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google `, {
 			code: authCode
 		});
 		const jwt = response.data[0];
@@ -28,3 +28,4 @@ export async function getJwtAndGoogleUserData(authCode: string): Promise<JwtAndG
 		throw new Error('Failed to getJwtAndGoogleUserData');
 	}
 }
+// `https://economic-context-api.net/auth/google`
