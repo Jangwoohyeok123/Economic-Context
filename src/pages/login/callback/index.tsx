@@ -21,7 +21,6 @@ export default function Callback() {
 				})
 					.then(response => response.json())
 					.then(data => {
-						console.log('Success:', data);
 						// 여기에 성공 시의 추가 로직을 구현할 수 있습니다.
 					})
 					.catch(error => {

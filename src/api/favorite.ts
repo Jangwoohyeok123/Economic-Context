@@ -46,7 +46,6 @@ export const getFavoriteCateogry_List = async (
 			}
 		});
 		const favoriteCategory_List = response.data;
-		console.log('favoriteCategory_List: ', favoriteCategory_List);
 		return favoriteCategory_List;
 	} catch (error) {
 		console.error(error);
