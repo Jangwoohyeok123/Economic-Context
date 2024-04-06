@@ -22,7 +22,7 @@ import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { roboto, poppins, frontUrl } from './_app';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
-const ReactPaginate = dynamic(() => import('react-paginate'));
+const ReactPaginate = dynamic(() => import('react-paginate'), { ssr: false });
 
 interface Home_Props {
 	interest: Indicator_Type[];
