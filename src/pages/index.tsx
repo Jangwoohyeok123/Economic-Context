@@ -7,7 +7,7 @@ import Footer from '@/components/footer/Footer';
 import dynamic from 'next/dynamic';
 import Category from '@/components/category/Category';
 import mainImage from '../../public/mainImage.jpg';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { useRouter } from 'next/router';
 import { Store_Type } from '@/types/redux';
@@ -40,7 +40,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
 	const initialStates = [interest, exchange, production, consume];
-	const indicatorsPerPage = 12;
+	const indicatorsPerPage = useRef<number>(12);
 	const categoryId = changeNameToCategoryId(categoryNames[categoryIndex]);
 
 	const categoryQueries = useQueries({
@@ -91,21 +91,21 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 					<CategoryWithIsActive
 						categoryData={category || []}
 						currentPage={currentPage}
-						itemsPerPage={indicatorsPerPage}
+						itemsPerPage={indicatorsPerPage.current}
 						categoryId={categoryId}
 					/>
 				) : (
 					<Category
 						categoryData={category || []}
 						currentPage={currentPage}
-						itemsPerPage={indicatorsPerPage}
+						itemsPerPage={indicatorsPerPage.current}
 						categoryId={categoryId}
 						setIsAlertModalOpen={setIsAlertModalOpen}
 					/>
 				)}
-				{category && (
+				{category && category.length > 0 && (
 					<ReactPaginate
-						pageCount={Math.ceil(category.length / indicatorsPerPage)}
+						pageCount={Math.ceil(category.length / indicatorsPerPage.current)}
 						previousAriaLabel='Prev'
 						previousLabel='Prev'
 						nextAriaLabel='Next'
@@ -118,7 +118,9 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 						forcePage={currentPage}
 						activeClassName={styles.paginationActive}
 						previousClassName={currentPage === 0 ? styles.disabled : ''}
-						nextClassName={currentPage === Math.ceil(category.length / indicatorsPerPage) ? styles.disabled : ''}
+						nextClassName={
+							currentPage === Math.ceil(category.length / indicatorsPerPage.current) ? styles.disabled : ''
+						}
 						disabledClassName={styles.disabled}
 					/>
 				)}
