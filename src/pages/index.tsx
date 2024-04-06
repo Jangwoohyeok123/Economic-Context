@@ -53,6 +53,11 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 	});
 	const category = categoryQueries[categoryIndex].data;
 
+	const validIndicatorsPerPage = indicatorsPerPage.current > 0;
+
+	const isCategoryValid = category && category.length > 0 && validIndicatorsPerPage;
+	const pageCount = isCategoryValid ? Math.ceil(category.length / indicatorsPerPage.current) : 0;
+
 	return (
 		<>
 			<Head>
@@ -103,7 +108,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 						setIsAlertModalOpen={setIsAlertModalOpen}
 					/>
 				)}
-				{category && typeof (category.length / indicatorsPerPage.current) === 'number' && (
+				{isCategoryValid && (
 					<ReactPaginate
 						pageCount={Math.ceil(category.length / indicatorsPerPage.current)}
 						previousAriaLabel='Prev'
