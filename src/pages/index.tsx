@@ -103,7 +103,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 						setIsAlertModalOpen={setIsAlertModalOpen}
 					/>
 				)}
-				{category && category.length > 0 && (
+				{category && typeof (category.length / indicatorsPerPage.current) === 'number' && (
 					<ReactPaginate
 						pageCount={Math.ceil(category.length / indicatorsPerPage.current)}
 						previousAriaLabel='Prev'
