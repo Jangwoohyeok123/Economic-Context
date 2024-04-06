@@ -8,7 +8,6 @@ import dynamic from 'next/dynamic';
 import Category from '@/components/category/Category';
 import mainImage from '../../public/mainImage.jpg';
 import { useState } from 'react';
-import ReactPaginate from 'react-paginate';
 import { useRouter } from 'next/router';
 import { Store_Type } from '@/types/redux';
 import { useQueries } from '@tanstack/react-query';
@@ -23,6 +22,7 @@ import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { roboto, poppins, frontUrl } from './_app';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
+const ReactPaginate = dynamic(() => import('react-paginate'));
 
 interface Home_Props {
 	interest: Indicator_Type[];
@@ -110,7 +110,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 				)}
 				{category && (
 					<ReactPaginate
-						pageCount={3}
+						pageCount={pageCount}
 						previousAriaLabel='Prev'
 						previousLabel='Prev'
 						nextAriaLabel='Next'
