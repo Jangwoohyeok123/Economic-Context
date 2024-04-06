@@ -52,18 +52,11 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 		}))
 	});
 	const category = categoryQueries[categoryIndex].data;
-	console.log('category', category);
+	const pageCount = category ? Math.ceil(category.length / indicatorsPerPage) : 0;
 
-	const validIndicatorsPerPage = indicatorsPerPage > 0;
-
-	const isCategoryValid = category && category.length > 0 && validIndicatorsPerPage;
-	console.log(isCategoryValid);
-
-	const pageCount = isCategoryValid ? Math.ceil(category.length / indicatorsPerPage) : 0;
-
-	console.log('pageCount', pageCount);
-
-	if (isCategoryValid) console.log('Math ceil', Math.ceil(category.length / indicatorsPerPage));
+	if (categoryQueries[categoryIndex].isLoading) {
+		return <div>isLoading</div>;
+	}
 
 	return (
 		<>
@@ -115,7 +108,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 						setIsAlertModalOpen={setIsAlertModalOpen}
 					/>
 				)}
-				{isCategoryValid && (
+				{category && (
 					<ReactPaginate
 						pageCount={pageCount}
 						previousAriaLabel='Prev'
