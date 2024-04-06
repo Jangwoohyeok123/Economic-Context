@@ -63,6 +63,8 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 
 	console.log('pageCount', pageCount);
 
+	if (isCategoryValid) console.log('Math ceil', Math.ceil(category.length / indicatorsPerPage.current));
+
 	return (
 		<>
 			<Head>
