@@ -52,11 +52,16 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 		}))
 	});
 	const category = categoryQueries[categoryIndex].data;
+	console.log('category', category);
 
 	const validIndicatorsPerPage = indicatorsPerPage.current > 0;
 
 	const isCategoryValid = category && category.length > 0 && validIndicatorsPerPage;
+	console.log(isCategoryValid);
+
 	const pageCount = isCategoryValid ? Math.ceil(category.length / indicatorsPerPage.current) : 0;
+
+	console.log('pageCount', pageCount);
 
 	return (
 		<>
