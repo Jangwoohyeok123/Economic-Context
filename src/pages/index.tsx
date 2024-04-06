@@ -110,7 +110,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 				)}
 				{category && (
 					<ReactPaginate
-						pageCount={pageCount ? pageCount : 3}
+						pageCount={3}
 						previousAriaLabel='Prev'
 						previousLabel='Prev'
 						nextAriaLabel='Next'
