@@ -21,4 +21,8 @@
 	li.on {
 		font-weight: 500;
 	}
+
+	li.disabled {
+		cursor: default;
+	}
 }
