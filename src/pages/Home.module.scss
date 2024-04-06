@@ -1,10 +1,11 @@
 @use '../styles/Variable.scss' as var;
 
 .Home {
+	position: relative;
 	font-family: var(--baseFont);
 	width: 100%;
 	padding: 0 15%;
-	min-height: 1300px;
+	min-height: 620px;
 	margin: 0 auto;
 
 	.categoryNames {
@@ -30,45 +31,6 @@
 			&.on {
 				color: #fff;
 				background: #111;
-			}
-		}
-	}
-
-	// // dataIndex === buttonIndex(by map)
-	.pagination {
-		padding: 50px;
-		display: flex;
-		width: 100%;
-		justify-content: center;
-		gap: 20px;
-
-		li {
-			padding: 2px 1px;
-			transition: 0.3s;
-			opacity: 0.65;
-
-			a {
-				font-size: 1.2rem;
-				text-align: center;
-				width: 15px;
-			}
-
-			&:hover {
-				cursor: pointer;
-				opacity: 1;
-			}
-		}
-
-		.paginationActive {
-			font-weight: 500;
-			opacity: 1;
-			text-decoration: underline;
-		}
-
-		.disabled {
-			&:hover {
-				cursor: default;
-				opacity: 0.65;
 			}
 		}
 	}

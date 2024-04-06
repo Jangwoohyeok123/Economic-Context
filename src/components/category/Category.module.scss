@@ -9,6 +9,15 @@
 	row-gap: 50px;
 }
 
+@media screen and (max-width: 1400px) {
+	.Category {
+		width: 90%;
+		margin: 0 auto;
+		grid-template-columns: 47% 47%;
+		grid-auto-rows: 400px;
+	}
+}
+
 @media screen and (max-width: var.$tablet) {
 	.Category {
 		width: 90%;

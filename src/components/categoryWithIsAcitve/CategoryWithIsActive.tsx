@@ -77,7 +77,7 @@ export default function CategoryWithIsActive({
 	return (
 		<section className={clsx(styles.CategoryWithIsActive)}>
 			{categoryWithIsActive
-				.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
+				.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
 				.map((series: FavoriteIndicatorWithIsActive_Type, idx: number) => {
 					const { title, seriesId, frequency, popularity, observation_start, observation_end, isActive } = series;
 					const notes = series.notes ?? '';

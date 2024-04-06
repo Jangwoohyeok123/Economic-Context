@@ -22,7 +22,7 @@ export default function Category({
 	return (
 		<section className={clsx(styles.Category)}>
 			{categoryData
-				.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
+				.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
 				.map((series: Indicator_Type, idx: number) => {
 					const { title, id: seriesId, frequency, popularity, observation_start, observation_end } = series;
 					const notes = series.notes ?? '';

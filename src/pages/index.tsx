@@ -20,9 +20,9 @@ import { Indicator_Type } from '@/types/fred';
 import CategoryWithIsActive from '@/components/categoryWithIsAcitve/CategoryWithIsActive';
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { roboto, poppins, frontUrl } from './_app';
+import Pagination from '@/components/pagination/Pagination';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
-const ReactPaginate = dynamic(() => import('react-paginate'), { ssr: false });
 
 interface Home_Props {
 	interest: Indicator_Type[];
@@ -36,7 +36,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 	const router = useRouter();
 
 	const [categoryIndex, setCategoryIndex] = useState(0);
-	const [currentPage, setCurrentPage] = useState(0);
+	const [currentPage, setCurrentPage] = useState(1);
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
 	const initialStates = [interest, exchange, production, consume];
@@ -51,10 +51,9 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 			initialData: initialStates[idx]
 		}))
 	});
-	const category = categoryQueries[categoryIndex].data;
-	const pageCount = category ? Math.ceil(category.length / indicatorsPerPage) : 0;
+	const category_List = categoryQueries[categoryIndex].data;
 
-	if (categoryQueries[categoryIndex].isLoading) {
+	if (!category_List) {
 		return <div>isLoading</div>;
 	}
 
@@ -85,7 +84,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 								key={idx}
 								onClick={() => {
 									setCategoryIndex(idx);
-									setCurrentPage(0);
+									setCurrentPage(1);
 								}}>
 								{categoryNames[idx]}
 							</button>
@@ -94,39 +93,27 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 				</div>
 				{user.isLogin ? (
 					<CategoryWithIsActive
-						categoryData={category || []}
+						categoryData={category_List || []}
 						currentPage={currentPage}
 						itemsPerPage={indicatorsPerPage}
 						categoryId={categoryId}
 					/>
 				) : (
 					<Category
-						categoryData={category || []}
+						categoryData={category_List || []}
 						currentPage={currentPage}
 						itemsPerPage={indicatorsPerPage}
 						categoryId={categoryId}
 						setIsAlertModalOpen={setIsAlertModalOpen}
 					/>
 				)}
-				{category && (
-					<ReactPaginate
-						pageCount={pageCount}
-						previousAriaLabel='Prev'
-						previousLabel='Prev'
-						nextAriaLabel='Next'
-						nextLabel='Next'
-						pageRangeDisplayed={5}
-						marginPagesDisplayed={0}
-						onPageChange={event => setCurrentPage(event.selected)}
-						containerClassName={styles.pagination}
-						breakLabel={null}
-						forcePage={currentPage}
-						activeClassName={styles.paginationActive}
-						previousClassName={currentPage === 0 ? styles.disabled : ''}
-						nextClassName={currentPage === Math.ceil(category.length / indicatorsPerPage) ? styles.disabled : ''}
-						disabledClassName={styles.disabled}
-					/>
-				)}
+				<Pagination
+					data_List={category_List}
+					currentPage={currentPage}
+					setCurrentPage={setCurrentPage}
+					itemsPerPage={indicatorsPerPage}
+					pageRangeDisplayed={5}
+				/>
 			</main>
 			<Footer />
 			<DynamicAlertModal
