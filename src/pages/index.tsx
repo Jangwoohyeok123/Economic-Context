@@ -7,7 +7,7 @@ import Footer from '@/components/footer/Footer';
 import dynamic from 'next/dynamic';
 import Category from '@/components/category/Category';
 import mainImage from '../../public/mainImage.jpg';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { useRouter } from 'next/router';
 import { Store_Type } from '@/types/redux';
@@ -110,7 +110,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 				)}
 				{category && (
 					<ReactPaginate
-						pageCount={pageCount}
+						pageCount={pageCount ? pageCount : 3}
 						previousAriaLabel='Prev'
 						previousLabel='Prev'
 						nextAriaLabel='Next'
