@@ -28,15 +28,6 @@ export default function Menu({ selectedTab, setSelectedTab }: Menu_Props) {
 	const deleteContextMutation = useMutation({
 		mutationFn: (contextId: number) => deleteContext(contextId),
 		onSuccess() {
-			// if (contextIdsWithNames) {
-			// 	const { id: contextId } = contextIdsWithNames?.find(
-			// 		(context: ContextIdWithName) => context.name === selectedTab
-			// 	);
-			// 	console.log('contextIdsWithNames', contextIdsWithNames);
-			// 	queryClient.invalidateQueries({
-			// 		queryKey: [const_queryKey.context]
-			// 	});
-			// }
 			if (contextIdsWithNames) {
 				const newContextIdsWithNames = contextIdsWithNames.filter(
 					(context: ContextNameWithKey_Type) => context.name !== selectedTab

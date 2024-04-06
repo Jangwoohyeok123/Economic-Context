@@ -12,7 +12,6 @@ export async function getJwtAndGoogleUserData(authCode: string): Promise<JwtAndG
 		return { jwt, userData };
 	} catch (error) {
 		console.error(error);
-		console.log('authCode in getJwt: ', authCode);
 		throw new Error('Failed to getJwtAndGoogleUserData');
 	}
 }
