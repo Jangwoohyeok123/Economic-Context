@@ -56,7 +56,7 @@ export default function ChartSwiper({ seriesIds }: ChartSwiper_Props) {
 
 	return (
 		<div className={clsx(styles.ChartSwiper)}>
-			<Swiper spaceBetween={50} slidesPerView={1} onSlideChange={() => console.log('slide change')}>
+			<Swiper spaceBetween={50} slidesPerView={1}>
 				{chartDatasForSwiper.length > 0 &&
 					chartDatasForSwiper?.map((chartData, index: number) => {
 						const { indicator, values } = chartData;

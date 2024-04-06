@@ -40,7 +40,6 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 	}, [selectedTab, contextIdsWithNames]);
 
 	useEffect(() => {
-		console.log('selectedContext', selectedContext);
 		if (selectedContext === 'Indicators') {
 			setSelectedTab('Indicators');
 		} else if (contextIdsWithNames) {

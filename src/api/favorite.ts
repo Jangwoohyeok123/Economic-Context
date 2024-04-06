@@ -1,7 +1,7 @@
 import { backendUrl } from '@/pages/_app';
 import { FavoriteIndicator_Type } from '@/types/favorite';
 import axios from 'axios';
-//메인에서 save한 지표 전체 불러오기.
+
 export const getAllFavorites_List = async (userId: number): Promise<FavoriteIndicator_Type[]> => {
 	try {
 		if (typeof window === 'undefined') {
