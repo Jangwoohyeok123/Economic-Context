@@ -40,7 +40,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
 	const initialStates = [interest, exchange, production, consume];
-	const indicatorsPerPage = useRef<number>(12);
+	const indicatorsPerPage = 12;
 	const categoryId = changeNameToCategoryId(categoryNames[categoryIndex]);
 
 	const categoryQueries = useQueries({
@@ -54,16 +54,16 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 	const category = categoryQueries[categoryIndex].data;
 	console.log('category', category);
 
-	const validIndicatorsPerPage = indicatorsPerPage.current > 0;
+	const validIndicatorsPerPage = indicatorsPerPage > 0;
 
 	const isCategoryValid = category && category.length > 0 && validIndicatorsPerPage;
 	console.log(isCategoryValid);
 
-	const pageCount = isCategoryValid ? Math.ceil(category.length / indicatorsPerPage.current) : 0;
+	const pageCount = isCategoryValid ? Math.ceil(category.length / indicatorsPerPage) : 0;
 
 	console.log('pageCount', pageCount);
 
-	if (isCategoryValid) console.log('Math ceil', Math.ceil(category.length / indicatorsPerPage.current));
+	if (isCategoryValid) console.log('Math ceil', Math.ceil(category.length / indicatorsPerPage));
 
 	return (
 		<>
@@ -103,21 +103,21 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 					<CategoryWithIsActive
 						categoryData={category || []}
 						currentPage={currentPage}
-						itemsPerPage={indicatorsPerPage.current}
+						itemsPerPage={indicatorsPerPage}
 						categoryId={categoryId}
 					/>
 				) : (
 					<Category
 						categoryData={category || []}
 						currentPage={currentPage}
-						itemsPerPage={indicatorsPerPage.current}
+						itemsPerPage={indicatorsPerPage}
 						categoryId={categoryId}
 						setIsAlertModalOpen={setIsAlertModalOpen}
 					/>
 				)}
 				{isCategoryValid && (
 					<ReactPaginate
-						pageCount={Math.ceil(category.length / indicatorsPerPage.current)}
+						pageCount={pageCount}
 						previousAriaLabel='Prev'
 						previousLabel='Prev'
 						nextAriaLabel='Next'
@@ -130,9 +130,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 						forcePage={currentPage}
 						activeClassName={styles.paginationActive}
 						previousClassName={currentPage === 0 ? styles.disabled : ''}
-						nextClassName={
-							currentPage === Math.ceil(category.length / indicatorsPerPage.current) ? styles.disabled : ''
-						}
+						nextClassName={currentPage === Math.ceil(category.length / indicatorsPerPage) ? styles.disabled : ''}
 						disabledClassName={styles.disabled}
 					/>
 				)}
