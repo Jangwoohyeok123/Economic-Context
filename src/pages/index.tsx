@@ -21,7 +21,7 @@ import CategoryWithIsActive from '@/components/categoryWithIsAcitve/CategoryWith
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { roboto, poppins, frontUrl } from './_app';
 import Pagination from '@/components/pagination/Pagination';
-import SEO from '@/components/SEO/SEO';
+import SEO from '@/components/seo/SEO';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
@@ -60,7 +60,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 
 	return (
 		<>
-			<SEO title='homepage' description='Economic indicators can be selected and utilized within myContext.' />
+			<SEO title='homepage' description='Economic indicators can be selected and utilized within myContext' />
 			<Head>
 				<title>Economic-context</title>
 			</Head>
