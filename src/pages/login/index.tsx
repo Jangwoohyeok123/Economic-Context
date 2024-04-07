@@ -17,7 +17,7 @@ export default function Login() {
 		const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(
 			redirectUrl
 		)}&response_type=code&scope=email profile`;
-		window.location.href = url; // 
+		window.location.href = url; //
 	};
 
 	return (
@@ -30,7 +30,7 @@ export default function Login() {
 				quality={100}
 				fill
 				style={{ objectFit: 'cover' }}
-				placeholder='blur' //사용자 경험을 향상(이미지 최적화x)
+				placeholder='blur'
 				priority
 			/>
 			<div className={clsx(styles.wrap)}>
