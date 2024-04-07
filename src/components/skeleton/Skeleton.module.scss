@@ -1,0 +1,42 @@
+$skeletonBgColor: #e7e7e7;
+$skeletonBarColor: linear-gradient(to right, $skeletonBgColor 0%, #f0f0f0 50%, $skeletonBgColor 100%);
+@keyframes slide {
+	from {
+		left: 0%; /* 애니메이션 시작 위치 */
+	}
+	to {
+		left: 100%; /* 애니메이션 종료 위치 */
+	}
+}
+
+.Indicator {
+	width: 100%;
+	> div {
+		background-color: $skeletonBgColor;
+		border-radius: 5px;
+		position: relative;
+		overflow-x: hidden;
+		&::after {
+			content: '';
+			position: absolute;
+			display: block;
+			width: 30%;
+			height: 100%;
+			background: $skeletonBarColor;
+			animation: slide 2s linear infinite;
+			opacity: 0.6;
+			transform: skewX(-20deg);
+		}
+	}
+	.title {
+		height: 60px;
+		margin-bottom: 5px;
+	}
+	.chart {
+		height: 300px;
+		margin-bottom: 16px;
+	}
+	.description {
+		height: 200px;
+	}
+}
