@@ -21,6 +21,7 @@ import CategoryWithIsActive from '@/components/categoryWithIsAcitve/CategoryWith
 import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { roboto, poppins, frontUrl } from './_app';
 import Pagination from '@/components/pagination/Pagination';
+import SEO from '@/components/SEO/SEO';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
@@ -59,6 +60,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 
 	return (
 		<>
+			<SEO title='homepage' description='Economic indicators can be selected and utilized within myContext.' />
 			<Head>
 				<title>Economic-context</title>
 			</Head>
@@ -66,7 +68,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 			<div className={clsx(styles.mainImage)}>
 				<Image
 					src={mainImage}
-					alt='mainImage'
+					alt='mainImage for mainpage'
 					aria-label='mainImage'
 					placeholder='blur'
 					objectFit='cover'
@@ -125,7 +127,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 				leftButtonContent='Cancle'
 				leftButtonHandler={() => setIsAlertModalOpen(false)}
 				rightButtonContent='Login'
-				rightButtonHandler={() => router.push(`${frontUrl}/login`)} // link
+				rightButtonHandler={() => router.push(`${frontUrl}/login`)}
 			/>
 		</>
 	);
