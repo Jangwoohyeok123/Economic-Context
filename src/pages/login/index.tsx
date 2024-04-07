@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { roboto, poppins } from '../_app';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import SEO from '@/components/SEO/SEO';
+import SEO from '@/components/seo/SEO';
 
 export default function Login() {
 	const router = useRouter();
@@ -22,8 +22,8 @@ export default function Login() {
 
 	return (
 		<div className={clsx(styles.Login, poppins.variable, roboto.variable)}>
-			<SEO title='Login' />
-		<Image
+			<SEO title='Login' description='login to Economic Context' />
+			<Image
 				className={clsx(styles.background)}
 				src={loginBackground}
 				alt='login-background'
