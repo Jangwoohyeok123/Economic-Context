@@ -30,9 +30,8 @@ export default function Pagination<T>({
 		for (let i = totalPage - pageRangeDisplayed + 1; i <= totalPage; i++) {
 			page_List.push(i);
 		}
-	} else if (page_List.length === 0) {
 	} else {
-		for (let i = startPage; i <= endPage; i++) page_List.push(i);
+		for (let i = startPage; i < endPage; i++) page_List.push(i);
 	}
 
 	const moveToPrevPage = () => {
