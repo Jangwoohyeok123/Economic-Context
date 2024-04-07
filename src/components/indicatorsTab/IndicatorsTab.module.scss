@@ -2,7 +2,9 @@
 .IndicatorsTab {
 	width: 100%;
 	padding: var.$tabPagePadding;
-
+	padding-bottom: 0;
+	// nav: 70px + tabPagePaddingTop: 30px + header: 60px +
+	// section + footer = 100vh - 160px;
 	nav {
 		display: flex;
 		gap: 20px;
@@ -26,7 +28,7 @@
 		display: grid;
 		width: 100%;
 		grid-template-columns: 30% 30% 30%;
-		grid-template-rows: 70vh;
+		grid-template-rows: calc(100vh - 164px - 12vh);
 		justify-content: space-between;
 		align-items: center;
 		row-gap: 20px;
@@ -95,7 +97,8 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center; /* 요소들을 수직 방향으로 중앙에 배치 */
-		padding-top: 50px;
+		height: 10vh;
+		padding-top: 5px;
 
 		.item {
 			width: 33%;
@@ -126,18 +129,28 @@
 
 @media screen and (max-width: var.$tablet) {
 	.IndicatorsTab {
+		padding: var.$tabPagePadding;
 		.favorites {
 			grid-template-columns: 48% 48%;
-			grid-template-rows: 60vh;
+			grid-auto-rows: 60vh;
+		}
+
+		.footer {
+			padding-top: 10px;
 		}
 	}
 }
 
 @media screen and (max-width: var.$mobile) {
 	.IndicatorsTab {
+		padding: var.$tabPagePadding;
 		.favorites {
 			grid-template-columns: 100%;
-			grid-template-rows: 50vh;
+			grid-auto-rows: 50vh;
+		}
+
+		.footer {
+			padding-top: 10px;
 		}
 	}
 }

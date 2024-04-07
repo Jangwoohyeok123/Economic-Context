@@ -40,7 +40,7 @@ export default function IndicatorsTab() {
 					? {
 							...favoriteIndicator,
 							isPick: prev.isPick
-					  }
+				}
 					: {
 							...favoriteIndicator,
 							isPick: false
