@@ -22,7 +22,7 @@ export default function Login() {
 
 	return (
 		<div className={clsx(styles.Login, poppins.variable, roboto.variable)}>
-			<SEO title='Login' description='Select and manage indicators.' />
+			<SEO title='Login' description='login to Economic Context' />
 			<Image
 				className={clsx(styles.background)}
 				src={loginBackground}
