@@ -16,7 +16,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import BubblePopButton from '@/components/bubblePopButton/BubblePopButton';
 import { addFavorite, deleteFavorite, getFavoriteCateogry_List } from '@/api/favorite';
 import { FavoriteIndicator_Type } from '@/types/favorite';
-import SkeletonIndicatorCard from '@/components/skeleton/SkeletonIndicatorCard';
+import SkeletonMorepage from '@/components/skeleton/SkeletonMorepage';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
@@ -152,7 +152,7 @@ export default function Morepage() {
 		<>
 			<main className={clsx(styles.Morepage, poppins.variable, roboto.variable)}>
 				{!indicator.id ? (
-					<SkeletonIndicatorCard />
+					<SkeletonMorepage />
 				) : (
 					chartDatas.length &&
 					indicator && (
