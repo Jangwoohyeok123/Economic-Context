@@ -16,6 +16,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import BubblePopButton from '@/components/bubblePopButton/BubblePopButton';
 import { addFavorite, deleteFavorite, getFavoriteCateogry_List } from '@/api/favorite';
 import { FavoriteIndicator_Type } from '@/types/favorite';
+import SkeletonMorepage from '@/components/skeleton/SkeletonMorepage';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
@@ -150,22 +151,29 @@ export default function Morepage() {
 	return (
 		<>
 			<main className={clsx(styles.Morepage, poppins.variable, roboto.variable)}>
-				{chartDatas.length && indicator && (
-					<LineChart indicator={indicator} values={chartDatas} width={100} height={50}>
-						{user.isLogin ? (
-							<button className={isActive ? clsx(styles.on) : clsx('')} onClick={buttonHandler}>
-								{isActive ? 'delete' : 'save'}
-							</button>
-						) : (
-							<button onClick={buttonHandler}>save</button>
-						)}
-					</LineChart>
+				{!indicator.id ? (
+					<SkeletonMorepage />
+				) : (
+					chartDatas.length &&
+					indicator && (
+						<>
+							<LineChart indicator={indicator} values={chartDatas} width={100} height={50}>
+								{user.isLogin ? (
+									<button className={isActive ? clsx(styles.on) : clsx('')} onClick={buttonHandler}>
+										{isActive ? 'delete' : 'save'}
+									</button>
+								) : (
+									<button onClick={buttonHandler}>save</button>
+								)}
+							</LineChart>
+							<ChartDescription indicator={indicator}>
+								<BubblePopButton clickHandler={buttonHandler} className={isActive ? clsx(styles.on) : ''}>
+									{isActive ? 'remove' : 'save'}
+								</BubblePopButton>
+							</ChartDescription>
+						</>
+					)
 				)}
-				<ChartDescription indicator={indicator}>
-					<BubblePopButton clickHandler={buttonHandler} className={isActive ? clsx(styles.on) : ''}>
-						{isActive ? 'remove' : 'save'}
-					</BubblePopButton>
-				</ChartDescription>
 			</main>
 			<DynamicAlertModal
 				isModalOpen={isAlertModalOpen}
