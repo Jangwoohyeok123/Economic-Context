@@ -60,11 +60,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 
 	return (
 		<>
-			{/* <SEO title='homepage' description='Economic indicators can be selected and utilized within myContext' /> */}
-			{/* <Head>
-				<title>Economic-context</title>
-			</Head> */}
-
+			<SEO title='Economic-Context' description='Economic indicators can be selected and utilized within myContext' />
 			<div className={clsx(styles.mainImage)}>
 				<Image
 					src={mainImage}
