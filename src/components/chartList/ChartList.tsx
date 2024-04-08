@@ -5,6 +5,7 @@ import { getChartData, getIndicator } from '@/api/fred';
 import const_queryKey from '@/const/queryKey';
 import LineChart from '../charts/line/LineChart';
 import { DateAndValue_Type, Indicator_Type } from '@/types/fred';
+import SkeletonChartList from '../skeleton/SkeletonChartList';
 
 interface ChartSwiper_Props {
 	seriesIds: string[];
@@ -46,7 +47,9 @@ export default function ChartList({ seriesIds }: ChartSwiper_Props) {
 
 	return (
 		<div className={clsx(styles.ChartList)}>
-			{!isLoading &&
+			{isLoading ? (
+				<SkeletonChartList />
+			) : (
 				chartDatasForList.length > 0 &&
 				chartDatasForList.map((chartData, index: number) => {
 					const { indicator, values } = chartData;
@@ -56,7 +59,8 @@ export default function ChartList({ seriesIds }: ChartSwiper_Props) {
 							<LineChart indicator={indicator} values={values} width={100} height={30} className={'ChartList'} />
 						</div>
 					);
-				})}
+				})
+			)}
 		</div>
 	);
 }
