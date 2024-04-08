@@ -31,7 +31,7 @@ export default function Pagination<T>({
 			page_List.push(i);
 		}
 	} else {
-		for (let i = startPage; i < endPage; i++) page_List.push(i);
+		for (let i = startPage; i <= endPage; i++) page_List.push(i);
 	}
 
 	const moveToPrevPage = () => {
