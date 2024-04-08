@@ -21,6 +21,7 @@ export default function Pagination<T>({
 	const endPage = Math.min(currentPage + Math.floor(pageRangeDisplayed / 2), data_List.length / itemsPerPage + 1);
 	const page_List = [];
 
+	// pagiantion 예외처리
 	if (currentPage < Math.ceil(pageRangeDisplayed / 2) && totalPage >= pageRangeDisplayed) {
 		for (let i = 1; i <= pageRangeDisplayed; i++) {
 			page_List.push(i);

@@ -8,7 +8,6 @@ import Link from 'next/link';
 import SEO from '@/components/seo/SEO';
 
 export default function Login() {
-	const router = useRouter();
 	const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 	const redirectUrl =
 		process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URL || 'https://dev-economic-context.vercel.app/google-callback';
