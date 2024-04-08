@@ -12,16 +12,11 @@ interface ChartSwiper_Props {
 
 /** context data 가 넘어왔을 때 */
 export default function ChartList({ seriesIds }: ChartSwiper_Props) {
-	const queryChartValues = useQueries({
+	const queryChartValuesResults = useQueries({
 		queries: seriesIds.map(seriesId => ({
 			queryKey: [const_queryKey.context, seriesId],
 			queryFn: () => getChartData(seriesId)
-		})),
-		combine: results => {
-			return {
-				valuesArrays: results.map<DateAndValue_Type[]>(result => result.data?.dataArray || [])
-			};
-		}
+		}))
 	});
 
 	const queryIndicators = useQueries({
@@ -37,11 +32,12 @@ export default function ChartList({ seriesIds }: ChartSwiper_Props) {
 	});
 
 	const isLoading =
-		queryChartValues.valuesArrays.some(el => el === undefined) || queryIndicators.data.some(el => el === undefined);
+		queryChartValuesResults.some(result => result.isLoading) || queryIndicators.data.some(el => el === undefined);
+	const combineChartValuesResults = {
+		valuesArrays: queryChartValuesResults.map<DateAndValue_Type[]>(result => result.data?.dataArray || [])
+	};
 
-	if (isLoading) return <div>Loading...</div>;
-
-	const chartDatasForList = queryChartValues.valuesArrays.map((values, index: number) => {
+	const chartDatasForList = combineChartValuesResults.valuesArrays.map((values, index: number) => {
 		return {
 			indicator: queryIndicators.data[index],
 			values: values
@@ -50,8 +46,9 @@ export default function ChartList({ seriesIds }: ChartSwiper_Props) {
 
 	return (
 		<div className={clsx(styles.ChartList)}>
-			{chartDatasForList.length > 0 &&
-				chartDatasForList?.map((chartData, index: number) => {
+			{!isLoading &&
+				chartDatasForList.length > 0 &&
+				chartDatasForList.map((chartData, index: number) => {
 					const { indicator, values } = chartData;
 
 					return (
