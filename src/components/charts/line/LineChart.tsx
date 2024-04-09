@@ -103,7 +103,7 @@ const LineChart = ({ indicator, values, width, height, children, className, seri
 			.attr('stroke', 'steelblue')
 			.attr('stroke-width', 1.5)
 			.attr('d', line(values as DateAndValue_Type[]));
-	}, [svgContainerRef]);
+	}, [svgContainerRef, values]);
 
 	return (
 		<div className={clsx(styles.LineChart, className && styles[className])} style={widthStyle}>
