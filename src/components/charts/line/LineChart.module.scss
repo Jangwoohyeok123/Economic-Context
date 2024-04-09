@@ -26,23 +26,23 @@
 		}
 	}
 
-	.chartContainer {
-		width: 100%;
-		height: 70%;
-		outline: 1px solid var(--chartColor);
+	// .chartContainer {
+	// 	width: 100%;
+	// 	height: 70%;
+	// 	outline: 1px solid var(--chartColor);
 
-		.svgWrap {
-			width: 100%;
-			height: 100%;
-			display: flex;
+	// 	.svgWrap {
+	// 		width: 100%;
+	// 		height: 100%;
+	// 		display: flex;
 
-			svg {
-				width: 100%;
-				background: var(--bgColor-light);
-				padding: 10px;
-			}
-		}
-	}
+	// 		svg {
+	// 			width: 100%;
+	// 			background: var(--bgColor-light);
+	// 			padding: 10px;
+	// 		}
+	// 	}
+	// }
 
 	.chartDescription {
 		padding: 10px;
