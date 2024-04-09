@@ -22,6 +22,7 @@ const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/A
 
 export default function Morepage() {
 	const router = useRouter();
+	console.log(router);
 	const user = useSelector((state: Store_Type) => state.user);
 	const queryClient = useQueryClient();
 	const { id: seriesId, title, categoryId } = router.query;
@@ -99,45 +100,46 @@ export default function Morepage() {
 
 	// 화면을 구성하는데 필요한 정보를 get 하는 useEffect
 	useEffect(() => {
-		getChartData(seriesId as string)
-			.then(chartDatas => {
-				const { dataArray } = chartDatas;
-				setChartDatas(dataArray);
-			})
-			.catch(err => {
-				console.error(err.message);
-			});
+		if (seriesId) {
+			getChartData(seriesId as string)
+				.then(chartDatas => {
+					const { dataArray } = chartDatas;
+					setChartDatas(dataArray);
+				})
+				.catch(err => {
+					console.error(err.message);
+				});
 
-		getIndicator(seriesId as string).then((indicator: Indicator_Type) => {
-			const {
-				id,
-				title,
-				notes,
-				observation_start,
-				observation_end,
-				frequency,
-				frequency_short,
-				units,
-				units_short,
-				popularity,
-				seasonal_adjustment,
-				seasonal_adjustment_short
-			} = indicator;
-			setIndicators(prev => ({
-				...prev,
-				id,
-				title: cleanString(title), // Indicator 카드 컴포넌트에게서 router.query 를 통해 전달받은 값입니다.
-				notes: notes ?? '',
-				observation_start,
-				observation_end,
-				frequency,
-				frequency_short,
-				units,
-				units_short,
-				popularity
-			}));
-		});
-	}, []);
+			getIndicator(seriesId as string).then((indicator: Indicator_Type) => {
+				const {
+					id,
+					title,
+					notes,
+					observation_start,
+					observation_end,
+					frequency,
+					frequency_short,
+					units,
+					units_short,
+					popularity
+				} = indicator;
+
+				setIndicators(prev => ({
+					...prev,
+					id,
+					title: cleanString(title), // Indicator 카드 컴포넌트에게서 router.query 를 통해 전달받은 값입니다.
+					notes: notes ?? '',
+					observation_start,
+					observation_end,
+					frequency,
+					frequency_short,
+					units,
+					units_short,
+					popularity
+				}));
+			});
+		}
+	}, [router, seriesId]);
 
 	// save, delete 상황을 확인하는 useEffect
 	useEffect(() => {
@@ -146,7 +148,7 @@ export default function Morepage() {
 		} else {
 			setIsActive(false);
 		}
-	}, [favoriteCateogry_List]);
+	}, [favoriteCateogry_List, seriesId]);
 
 	return (
 		<>
@@ -189,23 +191,3 @@ export default function Morepage() {
 		</>
 	);
 }
-
-/* promise 와 async/await 의 차이점
-	[ async-await ] => '변수선언 = 비동기함수결과' 의 직관적인 코드 작성가능하다.
-	try {
-		const { realtime_start, realtime_end, dataArray } = await getChartDataseriesId as string);
-		return { realtime_start, realtime_end, dataArray };
-	} catch (err) {
-		console.error()
-		return 'fallback value';
-	}
-
-	[ promise ] => 'promise 객체의 then 에서 변수선언 후 처리하는 방식으로 상대적으로 직관적이지 않다.'
-	getChartData(seriesId as string).then((result) => {
-		const { realtime_start, realtime_end, dataArray } = result;
-	})
-
-	[ useEffect 에서 async vs promise ]
-	promise 가 개인적으로 맘에드는 이유는 useEffect 에서 await 를 쓰기 위해서는 async() => {}(); 꼴의
-	비동기 즉시실행함수를 사용해야하기 때문에 프로미스를 생각했다.
-*/
