@@ -14,3 +14,4 @@
 - React-query for server state
 - Next 13 page directory
 - Module.scss
+- Style-component
