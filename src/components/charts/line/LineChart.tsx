@@ -21,7 +21,7 @@ export interface LineChart_Props {
  * @height [x]vh
  * @width [y]%
  */
-const LineChart = ({ indicator, values, width, height, children, className, seriesId }: LineChart_Props) => {
+const LineChart = ({ indicator, values, width, height, className, seriesId }: LineChart_Props) => {
 	const svgRef = useRef<SVGSVGElement>(null);
 	const svgContainerRef = useRef<HTMLDivElement>(null);
 	const widthStyle = {
@@ -31,7 +31,9 @@ const LineChart = ({ indicator, values, width, height, children, className, seri
 		height: `${height}vh`
 	};
 
-	const ChartWrapper = styled.div`
+	const ChartWrapper = styled.div``;
+
+	const Chart = styled.div`
 		width: 100%;
 		height: 100%;
 		display: flex;
@@ -103,21 +105,15 @@ const LineChart = ({ indicator, values, width, height, children, className, seri
 			.attr('stroke', 'steelblue')
 			.attr('stroke-width', 1.5)
 			.attr('d', line(values as DateAndValue_Type[]));
-	}, [svgContainerRef, values]);
+	}, [values]);
 
 	return (
 		<div className={clsx(styles.LineChart, className && styles[className])} style={widthStyle}>
-			<div className={clsx(styles.featuresWrap)}>
-				<h3>{indicator.title}</h3>
-				<div className={clsx(styles.chartFeatures)}>
-					Period: {indicator.observation_start} ~ {indicator.observation_end}
-				</div>
-			</div>
-			<div ref={svgContainerRef} style={heightStyle}>
-				<ChartWrapper>
+			<ChartWrapper ref={svgContainerRef} style={heightStyle}>
+				<Chart>
 					<Svg ref={svgRef} />
-				</ChartWrapper>
-			</div>
+				</Chart>
+			</ChartWrapper>
 		</div>
 	);
 };
