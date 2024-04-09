@@ -54,9 +54,18 @@ const LineChart = ({ indicator, values, width, height, className, seriesId }: Li
 			const marginRight = 40;
 			const marginBottom = 40;
 			const marginLeft = 40;
-			const x = d3.scaleUtc(d3.extent(values, (value: DateAndValue_Type) => value.date) as [Date, Date], [0, width]);
+
 			const maxValue = d3.max(values, (value: DateAndValue_Type) => Number(value.value));
-			const y = d3.scaleLinear([0, Number(maxValue) * 1.3], [height - marginBottom, marginTop]);
+			const [xDomain, xRange] = [
+				d3.extent(values, (value: DateAndValue_Type) => value.date) as [Date, Date],
+				[0, width]
+			];
+			const [yDomain, yRange] = [
+				[0, Number(maxValue) * 1.3],
+				[height - marginBottom, marginTop]
+			];
+
+			const [x, y] = [d3.scaleUtc(xDomain, xRange), d3.scaleLinear(yDomain, yRange)];
 
 			const line = d3
 				.line<DateAndValue_Type>()
