@@ -22,7 +22,6 @@ const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/A
 
 export default function Morepage() {
 	const router = useRouter();
-	console.log(router);
 	const user = useSelector((state: Store_Type) => state.user);
 	const queryClient = useQueryClient();
 	const { id: seriesId, title, categoryId } = router.query;

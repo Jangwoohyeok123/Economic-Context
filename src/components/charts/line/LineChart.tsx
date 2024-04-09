@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import clsx from 'clsx';
 import styles from './LineChart.module.scss';
 import { Indicator_Type, DateAndValue_Type } from '@/types/fred';
+import styled from 'styled-components';
 
 export interface LineChart_Props {
 	indicator: Indicator_Type;
@@ -30,6 +31,18 @@ const LineChart = ({ indicator, values, width, height, children, className, seri
 		height: `${height}vh`
 	};
 
+	const ChartWrapper = styled.div`
+		width: 100%;
+		height: 100%;
+		display: flex;
+	`;
+
+	const Svg = styled.svg`
+		width: 100%;
+		background: var(--bgColor-light);
+		padding: 10px;
+	`;
+
 	// chart 를 세팅하는 라이브러리 로직입니다.
 	useEffect(() => {
 		const width = svgContainerRef.current?.offsetWidth || 0;
@@ -40,7 +53,7 @@ const LineChart = ({ indicator, values, width, height, children, className, seri
 		const marginLeft = 40;
 		const x = d3.scaleUtc(
 			d3.extent(values as DateAndValue_Type[], (value: DateAndValue_Type) => value.date) as unknown as [Date, Date],
-			[marginLeft, width - marginRight]
+			[0, width]
 		);
 		const maxValue = d3.max(values as DateAndValue_Type[], (value: DateAndValue_Type) => Number(value.value));
 		const y = d3.scaleLinear([0, Number(maxValue) * 1.3], [height - marginBottom, marginTop]);
@@ -100,10 +113,10 @@ const LineChart = ({ indicator, values, width, height, children, className, seri
 					Period: {indicator.observation_start} ~ {indicator.observation_end}
 				</div>
 			</div>
-			<div ref={svgContainerRef} className={clsx(styles.chartContainer)} style={heightStyle}>
-				<div className={clsx(styles.svgWrap)}>
-					<svg ref={svgRef} />
-				</div>
+			<div ref={svgContainerRef} style={heightStyle}>
+				<ChartWrapper>
+					<Svg ref={svgRef} />
+				</ChartWrapper>
 			</div>
 		</div>
 	);
