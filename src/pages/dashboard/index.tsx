@@ -11,6 +11,16 @@ import { Store_Type } from '@/types/redux';
 import { useQuery } from '@tanstack/react-query';
 import const_queryKey from '@/const/queryKey';
 import { getContextNameWithKey_List } from '@/api/context';
+import JournalToolbar from '@/components/journalsSection/journalToolbar/JournalToolbar';
+import styled from 'styled-components';
+import { relative } from 'path';
+
+const JournalSection = styled.div`
+	position: fixed;
+	bottom: 100px;
+	right: 3%;
+	z-index: 10;
+`;
 
 export default function Dashboard() {
 	const [selectedTab, setSelectedTab] = useState<string>('Indicators');
@@ -21,18 +31,23 @@ export default function Dashboard() {
 	});
 
 	return (
-		<section className={clsx(styles.Dashboard, roboto.variable, poppins.variable)}>
-			<Menu selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+		<>
+			<section className={clsx(styles.Dashboard, roboto.variable, poppins.variable)} style={{ position: 'relative' }}>
+				<Menu selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
 
-			<section>
-				<DashHeader selectedTab={selectedTab} />
+				<section>
+					<DashHeader selectedTab={selectedTab} />
 
-				{selectedTab === 'Indicators' ? (
-					<IndicatorsTab />
-				) : (
-					<MyContextTab selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
-				)}
+					{selectedTab === 'Indicators' ? (
+						<IndicatorsTab />
+					) : (
+						<MyContextTab selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+					)}
+				</section>
 			</section>
-		</section>
+			<JournalSection>
+				<JournalToolbar />
+			</JournalSection>
+		</>
 	);
 }
