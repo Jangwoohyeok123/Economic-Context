@@ -14,16 +14,25 @@ import { getContextNameWithKey_List } from '@/api/context';
 import JournalToolbar from '@/components/journalsSection/journalToolbar/JournalToolbar';
 import styled from 'styled-components';
 import { relative } from 'path';
+import JournalForm from '@/components/journalsSection/journalForm/JournalForm';
 
-const JournalSection = styled.div`
+const JournalToolbarSection = styled.div`
 	position: fixed;
 	bottom: 100px;
 	right: 3%;
 	z-index: 10;
 `;
+const JournalFormSection = styled.div`
+	position: fixed;
+	bottom: 0px;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 10;
+`;
 
 export default function Dashboard() {
 	const [selectedTab, setSelectedTab] = useState<string>('Indicators');
+	const [isJournalOpen, setIsJournalOpen] = useState(false);
 	const userId = useSelector((state: Store_Type) => state.user.id);
 	const { data: contextNamesWithKey, isLoading } = useQuery({
 		queryKey: [const_queryKey.context, 'names'],
@@ -45,9 +54,10 @@ export default function Dashboard() {
 					)}
 				</section>
 			</section>
-			<JournalSection>
-				<JournalToolbar />
-			</JournalSection>
+			<JournalFormSection>{isJournalOpen && <JournalForm />}</JournalFormSection>
+			<JournalToolbarSection>
+				<JournalToolbar setIsJournalOpen={setIsJournalOpen} />
+			</JournalToolbarSection>
 		</>
 	);
 }
