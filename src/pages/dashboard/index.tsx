@@ -13,7 +13,7 @@ import const_queryKey from '@/const/queryKey';
 import { getContextNameWithKey_List } from '@/api/context';
 import JournalToolbar from '@/components/journalsSection/journalToolbar/JournalToolbar';
 import styled from 'styled-components';
-import { relative } from 'path';
+import { AnimatePresence } from 'framer-motion';
 import JournalForm from '@/components/journalsSection/journalForm/JournalForm';
 
 const JournalToolbarSection = styled.div`
@@ -24,10 +24,12 @@ const JournalToolbarSection = styled.div`
 `;
 const JournalFormSection = styled.div`
 	position: fixed;
-	bottom: 0px;
+	width: 80%;
+	bottom: -10%;
 	left: 50%;
 	transform: translateX(-50%);
 	z-index: 10;
+	transition: 0.3s;
 `;
 
 export default function Dashboard() {
@@ -54,9 +56,15 @@ export default function Dashboard() {
 					)}
 				</section>
 			</section>
-			<JournalFormSection>{isJournalOpen && <JournalForm />}</JournalFormSection>
+			<AnimatePresence>
+				{isJournalOpen && (
+					<JournalFormSection>
+						<JournalForm />
+					</JournalFormSection>
+				)}
+			</AnimatePresence>
 			<JournalToolbarSection>
-				<JournalToolbar setIsJournalOpen={setIsJournalOpen} />
+				<JournalToolbar isJournalOpen={isJournalOpen} setIsJournalOpen={setIsJournalOpen} />
 			</JournalToolbarSection>
 		</>
 	);
