@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import styles from './Morepage.module.scss';
 import dynamic from 'next/dynamic';
 import { Store_Type } from '@/types/redux';
 import LineChart from '@/components/charts/line/LineChart';
@@ -13,12 +12,39 @@ import { frontUrl, poppins, roboto } from './_app';
 import { useEffect, useState } from 'react';
 import { getChartData, getIndicator } from '@/api/fred';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import BubblePopButton from '@/components/bubblePopButton/BubblePopButton';
 import { addFavorite, deleteFavorite, getFavoriteCateogry_List } from '@/api/favorite';
 import { FavoriteIndicator_Type } from '@/types/favorite';
 import SkeletonMorepage from '@/components/skeleton/SkeletonMorepage';
+import styled from 'styled-components';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
+
+const Main = styled.main`
+	width: 80%;
+	background: #fff;
+	min-height: 100vh;
+	padding-top: var(--headerSize);
+`;
+
+const Introduce = styled.aside`
+	border: 1px solid #111 0.5;
+	position: relative;
+	height: 120px;
+
+	h1 {
+		font-weight: 500;
+		font-size: 1.3rem;
+		width: 80%;
+	}
+`;
+
+interface Button_Props {
+	isLogin: boolean;
+}
+
+const Button = styled.button<Button_Props>`
+	background: ${props => (props.isLogin ? '#111' : '#fff')};
+`;
 
 export default function Morepage() {
 	const router = useRouter();
@@ -149,33 +175,42 @@ export default function Morepage() {
 		}
 	}, [favoriteCateogry_List, seriesId]);
 
+	// 작업이 끝나고 처리할 것
+	if (!indicator.id || !chartDatas.length) {
+		return <SkeletonMorepage />;
+	}
+
+	// 정수로 만든 후 다시 소수로 만드는 과정
+	function roundTo(num: number, decimalPlaces: number) {
+		const factor = 10 ** decimalPlaces;
+		return Math.round(num * factor) / factor;
+	}
+
+	const prevData = Number(chartDatas[chartDatas.length - 2].value);
+	const lastData = Number(chartDatas[chartDatas.length - 1].value);
+
+	const result = roundTo(lastData - prevData, 2);
+
 	return (
 		<>
-			<main className={clsx(styles.Morepage, poppins.variable, roboto.variable)}>
-				{!indicator.id ? (
-					<SkeletonMorepage />
-				) : (
-					chartDatas.length &&
-					indicator && (
-						<>
-							<LineChart indicator={indicator} values={chartDatas} width={100} height={50}>
-								{user.isLogin ? (
-									<button className={isActive ? clsx(styles.on) : clsx('')} onClick={buttonHandler}>
-										{isActive ? 'delete' : 'save'}
-									</button>
-								) : (
-									<button onClick={buttonHandler}>save</button>
-								)}
-							</LineChart>
-							<ChartDescription indicator={indicator}>
-								<BubblePopButton clickHandler={buttonHandler} className={isActive ? clsx(styles.on) : ''}>
-									{isActive ? 'remove' : 'save'}
-								</BubblePopButton>
-							</ChartDescription>
-						</>
-					)
+			<Main className={clsx(poppins.variable, roboto.variable)}>
+				{chartDatas.length && indicator && (
+					<>
+						<Introduce>
+							<h1>제목:{indicator.title}</h1>
+							<span>최종데이터: {lastData}</span>
+							<span>변화율: {result}%</span>
+							<div>최종 측정일: {indicator.observation_end}</div>
+						</Introduce>
+						<LineChart duration={1} indicator={indicator} values={chartDatas} width={100}>
+							<Button isLogin={user.isLogin} onClick={buttonHandler}>
+								{user.isLogin ? 'delete' : 'save'}
+							</Button>
+						</LineChart>
+						<ChartDescription indicator={indicator}></ChartDescription>
+					</>
 				)}
-			</main>
+			</Main>
 			<DynamicAlertModal
 				isModalOpen={isAlertModalOpen}
 				setIsModalOpen={setIsAlertModalOpen}

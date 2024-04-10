@@ -4,15 +4,53 @@ import clsx from 'clsx';
 import styles from './LineChart.module.scss';
 import { Indicator_Type, DateAndValue_Type } from '@/types/fred';
 import styled from 'styled-components';
+import { BsCalendar4Week } from 'react-icons/bs';
+
+const ChartWrapper = styled.div``;
+
+const ChartFeatures = styled.div`
+	height: var(--chartHeaderSize);
+	background: #cecece;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 var(--chartPadding);
+
+	.icon {
+		cursor: pointer;
+	}
+
+	> ul {
+		display: flex;
+		gap: 15px;
+
+		li {
+			cursor: pointer;
+		}
+	}
+`;
+
+const Chart = styled.div`
+	width: 100%;
+	height: 100%;
+	display: flex;
+	border-bottom: 1px solid #fff;
+`;
+
+const Svg = styled.svg`
+	width: 100%;
+	background: var(--bgColor-light);
+	padding: 10px;
+`;
 
 export interface LineChart_Props {
 	indicator: Indicator_Type;
+	duration: number;
 	children?: React.ReactElement;
 	height?: number;
 	width?: number;
 	values: DateAndValue_Type[];
 	className?: string;
-	seriesId?: string;
 }
 
 /**
@@ -21,7 +59,7 @@ export interface LineChart_Props {
  * @height [x]vh
  * @width [y]%
  */
-const LineChart = ({ indicator, values, width, height, className, seriesId }: LineChart_Props) => {
+const LineChart = ({ indicator, duration, values, width, height = 70, className }: LineChart_Props) => {
 	const svgRef = useRef<SVGSVGElement>(null);
 	const svgContainerRef = useRef<HTMLDivElement>(null);
 	const widthStyle = {
@@ -30,20 +68,14 @@ const LineChart = ({ indicator, values, width, height, className, seriesId }: Li
 	const heightStyle = {
 		height: `${height}vh`
 	};
+	console.log('values in LineChart', values);
 
-	const ChartWrapper = styled.div``;
+	if (duration === 1) {
+	} else if (duration === 3) {
+	} else if (duration === 5) {
+	}
 
-	const Chart = styled.div`
-		width: 100%;
-		height: 100%;
-		display: flex;
-	`;
-
-	const Svg = styled.svg`
-		width: 100%;
-		background: var(--bgColor-light);
-		padding: 10px;
-	`;
+	const slicedValues = values.slice(-200);
 
 	// chart 를 세팅하는 라이브러리 로직입니다.
 	useEffect(() => {
@@ -55,9 +87,9 @@ const LineChart = ({ indicator, values, width, height, className, seriesId }: Li
 			const marginBottom = 40;
 			const marginLeft = 40;
 
-			const maxValue = d3.max(values, (value: DateAndValue_Type) => Number(value.value));
+			const maxValue = d3.max(slicedValues, (value: DateAndValue_Type) => Number(value.value));
 			const [xDomain, xRange] = [
-				d3.extent(values, (value: DateAndValue_Type) => value.date) as [Date, Date],
+				d3.extent(slicedValues, (value: DateAndValue_Type) => value.date) as [Date, Date],
 				[0, width]
 			];
 			const [yDomain, yRange] = [
@@ -111,13 +143,22 @@ const LineChart = ({ indicator, values, width, height, className, seriesId }: Li
 				.attr('fill', 'none')
 				.attr('stroke', 'steelblue')
 				.attr('stroke-width', 1.5)
-				.attr('d', line(values as DateAndValue_Type[]));
+				.attr('d', line(slicedValues as DateAndValue_Type[]));
 		}
 	}, [values]);
 
 	return (
 		<div className={clsx(styles.LineChart, className && styles[className])} style={widthStyle}>
 			<ChartWrapper ref={svgContainerRef} style={heightStyle}>
+				<ChartFeatures>
+					<BsCalendar4Week className='icon' />
+					<ul>
+						<li>1Y</li>
+						<li>3Y</li>
+						<li>5Y</li>
+						<li>MAX</li>
+					</ul>
+				</ChartFeatures>
 				<Chart>
 					<Svg ref={svgRef} />
 				</Chart>
