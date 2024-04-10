@@ -10,7 +10,7 @@ import { motion } from 'framer-motion';
 
 interface JournalForm_Props {
 	contextId: number;
-	setIsWrite: React.Dispatch<React.SetStateAction<boolean>>;
+	setIsWrite: boolean;
 }
 
 const Form = styled.form`
