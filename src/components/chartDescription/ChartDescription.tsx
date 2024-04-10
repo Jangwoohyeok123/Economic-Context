@@ -3,14 +3,6 @@ import styled from 'styled-components';
 
 const DescriptionWrapper = styled.div``;
 
-const Head = styled.h2`
-	font-weight: 500;
-	font-size: 1.5rem;
-	width: 100%;
-`;
-
-const Body = styled.div``;
-
 const Section = styled.p`
 	padding-bottom: 15px;
 	font-size: 0.85rem;
@@ -29,13 +21,11 @@ export default function ChartDescription({ indicator, children }: ChartDescripti
 	const sections = notes?.split('\n');
 	return (
 		<DescriptionWrapper>
-			<Body>
-				{sections?.map((section, index) => {
-					if (section.length > 1) {
-						return <Section key={index}>{section}</Section>;
-					}
-				})}
-			</Body>
+			{sections?.map((section, index) => {
+				if (section.length > 1) {
+					return <Section key={index}>{section}</Section>;
+				}
+			})}
 		</DescriptionWrapper>
 	);
 }

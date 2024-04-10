@@ -31,16 +31,14 @@ const ChartFeatures = styled.div`
 `;
 
 const Chart = styled.div`
-	width: 100%;
-	height: 100%;
 	display: flex;
+	height: calc(100% - var(--chartHeaderSize));
 	border-bottom: 1px solid #fff;
 `;
 
 const Svg = styled.svg`
 	width: 100%;
 	background: var(--bgColor-light);
-	padding: 10px;
 `;
 
 export interface LineChart_Props {
@@ -59,7 +57,7 @@ export interface LineChart_Props {
  * @height [x]vh
  * @width [y]%
  */
-const LineChart = ({ indicator, duration, values, width, height = 70, className }: LineChart_Props) => {
+const LineChart = ({ indicator, duration, values, width, height = 65, className }: LineChart_Props) => {
 	const svgRef = useRef<SVGSVGElement>(null);
 	const svgContainerRef = useRef<HTMLDivElement>(null);
 	const widthStyle = {
@@ -68,7 +66,6 @@ const LineChart = ({ indicator, duration, values, width, height = 70, className 
 	const heightStyle = {
 		height: `${height}vh`
 	};
-	console.log('values in LineChart', values);
 
 	if (duration === 1) {
 	} else if (duration === 3) {
@@ -93,8 +90,8 @@ const LineChart = ({ indicator, duration, values, width, height = 70, className 
 				[0, width]
 			];
 			const [yDomain, yRange] = [
-				[0, Number(maxValue) * 1.3],
-				[height - marginBottom, marginTop]
+				[0, Number(maxValue)],
+				[height, 0]
 			];
 
 			const [x, y] = [d3.scaleUtc(xDomain, xRange), d3.scaleLinear(yDomain, yRange)];
@@ -104,12 +101,7 @@ const LineChart = ({ indicator, duration, values, width, height = 70, className 
 				.x(d => x(d.date))
 				.y(d => y(Number(d.value)));
 
-			const svg = d3
-				.select(svgRef.current)
-				.attr('width', width)
-				.attr('height', height)
-				.attr('viewBox', [0, 0, width, height])
-				.attr('style', 'max-width: 100%; height: 100%');
+			const svg = d3.select(svgRef.current).attr('style', 'width: 100%; height: 100%; padding: 10px;');
 
 			// 중첩되는 chart 제거
 			svg.selectAll('*').remove();
@@ -117,7 +109,7 @@ const LineChart = ({ indicator, duration, values, width, height = 70, className 
 			// axis bottom 추가
 			svg
 				.append('g')
-				.attr('transform', `translate(0,${height - marginBottom})`)
+				.attr('style', 'width: 95%;')
 				.call(
 					d3
 						.axisBottom(x)
@@ -125,25 +117,25 @@ const LineChart = ({ indicator, duration, values, width, height = 70, className 
 						.tickSizeOuter(10)
 				);
 
-			svg
-				.append('g')
-				.attr('transform', `translate(${marginLeft},0)`)
-				.call(d3.axisLeft(y).ticks(height / 40))
-				.call(g => g.select('.domain').remove())
-				.call(g =>
-					g
-						.selectAll('.tick line')
-						.clone()
-						.attr('x2', width - marginLeft - marginRight)
-						.attr('stroke-opacity', 0.1)
-				);
+			// svg
+			// 	.append('g')
+			// 	.attr('transform', `translate(${marginLeft},0)`)
+			// 	.call(d3.axisLeft(y).ticks(height / 40))
+			// 	.call(g => g.select('.domain').remove())
+			// 	.call(g =>
+			// 		g
+			// 			.selectAll('.tick line')
+			// 			.clone()
+			// 			.attr('x2', width - marginLeft - marginRight)
+			// 			.attr('stroke-opacity', 0.1)
+			// 	);
 
-			svg
-				.append('path')
-				.attr('fill', 'none')
-				.attr('stroke', 'steelblue')
-				.attr('stroke-width', 1.5)
-				.attr('d', line(slicedValues as DateAndValue_Type[]));
+			// svg
+			// 	.append('path')
+			// 	.attr('fill', 'none')
+			// 	.attr('stroke', 'steelblue')
+			// 	.attr('stroke-width', 1.5)
+			// 	.attr('d', line(slicedValues as DateAndValue_Type[]));
 		}
 	}, [values]);
 
