@@ -6,7 +6,13 @@ import { Indicator_Type, DateAndValue_Type } from '@/types/fred';
 import styled from 'styled-components';
 import { BsCalendar4Week } from 'react-icons/bs';
 
-const ChartWrapper = styled.div``;
+interface ChartWrapper_Props {
+	width: number;
+}
+
+const ChartWrapper = styled.div<ChartWrapper_Props>`
+	width: ${Props => `${Props.width}%`};
+`;
 
 const ChartFeatures = styled.div`
 	height: var(--chartHeaderSize);
@@ -57,14 +63,11 @@ export interface LineChart_Props {
  * @height [x]vh
  * @width [y]%
  */
-const LineChart = ({ indicator, duration, values, width, height = 65, className }: LineChart_Props) => {
+const LineChart = ({ indicator, duration, values, width = 100, height = 65, className }: LineChart_Props) => {
 	const svgRef = useRef<SVGSVGElement>(null);
 	const svgContainerRef = useRef<HTMLDivElement>(null);
 	const widthStyle = {
 		width: `${width}%`
-	};
-	const heightStyle = {
-		height: `${height}vh`
 	};
 
 	if (duration === 1) {
@@ -77,8 +80,10 @@ const LineChart = ({ indicator, duration, values, width, height = 65, className 
 	// chart 를 세팅하는 라이브러리 로직입니다.
 	useEffect(() => {
 		if (values) {
-			const width = svgContainerRef.current?.offsetWidth || 0;
-			const height = svgContainerRef.current?.offsetHeight || 0;
+			const { width: xAxisWidth } = svgRef?.current?.getBoundingClientRect();
+			console.log(xAxisWidth);
+			const containerWidth = svgContainerRef.current?.offsetWidth || 0;
+			const containerHeight = svgContainerRef.current?.offsetHeight || 0;
 			const marginTop = 20;
 			const marginRight = 40;
 			const marginBottom = 40;
@@ -87,11 +92,11 @@ const LineChart = ({ indicator, duration, values, width, height = 65, className 
 			const maxValue = d3.max(slicedValues, (value: DateAndValue_Type) => Number(value.value));
 			const [xDomain, xRange] = [
 				d3.extent(slicedValues, (value: DateAndValue_Type) => value.date) as [Date, Date],
-				[0, width]
+				[0, containerWidth]
 			];
 			const [yDomain, yRange] = [
 				[0, Number(maxValue)],
-				[height, 0]
+				[containerHeight, 0]
 			];
 
 			const [x, y] = [d3.scaleUtc(xDomain, xRange), d3.scaleLinear(yDomain, yRange)];
@@ -101,7 +106,7 @@ const LineChart = ({ indicator, duration, values, width, height = 65, className 
 				.x(d => x(d.date))
 				.y(d => y(Number(d.value)));
 
-			const svg = d3.select(svgRef.current).attr('style', 'width: 100%; height: 100%; padding: 10px;');
+			const svg = d3.select(svgRef.current).attr('style', `width: 100%; height: ${height}vh; padding: 20px;`);
 
 			// 중첩되는 chart 제거
 			svg.selectAll('*').remove();
@@ -109,13 +114,18 @@ const LineChart = ({ indicator, duration, values, width, height = 65, className 
 			// axis bottom 추가
 			svg
 				.append('g')
-				.attr('style', 'width: 95%;')
+				.attr('style', 'transform: translate(0, calc(100% - 30px));')
 				.call(
 					d3
 						.axisBottom(x)
-						.ticks(width / 200)
-						.tickSizeOuter(10)
-				);
+						.ticks(containerWidth / (containerWidth * 0.1))
+						.tickSizeOuter(0)
+				)
+				.selectAll('.tick')
+				.each(function (date, index, nodes) {
+					if (index === 0 || index === nodes.length - 1) {
+					}
+				});
 
 			// svg
 			// 	.append('g')
@@ -140,8 +150,8 @@ const LineChart = ({ indicator, duration, values, width, height = 65, className 
 	}, [values]);
 
 	return (
-		<div className={clsx(styles.LineChart, className && styles[className])} style={widthStyle}>
-			<ChartWrapper ref={svgContainerRef} style={heightStyle}>
+		<div className={clsx(styles.LineChart, className && styles[className])}>
+			<ChartWrapper ref={svgContainerRef} width={width}>
 				<ChartFeatures>
 					<BsCalendar4Week className='icon' />
 					<ul>
