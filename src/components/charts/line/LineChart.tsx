@@ -118,6 +118,7 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 			svg.selectAll('*').remove();
 
 			// axis bottom 추가
+			// each 는 x 축에 벗어나는 부분을 제어한다. offset 이 커질수록 축의 가장자리에 숫자가 나오지 않는다.
 			svg
 				.append('g')
 				.attr('style', 'transform: translate(0, calc(100% - 30px));')
@@ -129,10 +130,11 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 				)
 				.selectAll('.tick')
 				.each(function (date, index, nodes) {
-					if (index === 0 && nodes[index].getBoundingClientRect().x - xAxisStartPosition < 50) {
+					const offset = 80;
+					if (index === 0 && nodes[index].getBoundingClientRect().x - xAxisStartPosition < offset) {
 						d3.select(this).remove();
 					}
-					if (index === nodes.length - 1 && xAxisLastPosition - nodes[index].getBoundingClientRect().x < 50) {
+					if (index === nodes.length - 1 && xAxisLastPosition - nodes[index].getBoundingClientRect().x < offset) {
 						d3.select(this).remove();
 					}
 				});
