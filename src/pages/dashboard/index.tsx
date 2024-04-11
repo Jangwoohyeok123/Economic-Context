@@ -52,20 +52,22 @@ export default function Dashboard() {
 					{selectedTab === 'Indicators' ? (
 						<IndicatorsTab />
 					) : (
-						<MyContextTab selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+						<>
+							<MyContextTab selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+							<AnimatePresence>
+								{isJournalOpen && (
+									<JournalFormSection>
+										<JournalForm contextId={1} setIsWrite={true} />
+									</JournalFormSection>
+								)}
+							</AnimatePresence>
+							<JournalToolbarSection>
+								<JournalToolbar isJournalOpen={isJournalOpen} setIsJournalOpen={setIsJournalOpen} />
+							</JournalToolbarSection>
+						</>
 					)}
 				</section>
 			</section>
-			<AnimatePresence>
-				{isJournalOpen && (
-					<JournalFormSection>
-						<JournalForm contextId={1} setIsWrite={true} />
-					</JournalFormSection>
-				)}
-			</AnimatePresence>
-			<JournalToolbarSection>
-				<JournalToolbar isJournalOpen={isJournalOpen} setIsJournalOpen={setIsJournalOpen} />
-			</JournalToolbarSection>
 		</>
 	);
 }
