@@ -80,8 +80,17 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 	// chart 를 세팅하는 라이브러리 로직입니다.
 	useEffect(() => {
 		if (values) {
-			// const { x, y, bottom, height, left, right, top, width } = svgRef?.current?.getBoundingClientRect();
-			console.log(svgRef?.current?.getBoundingClientRect());
+			const {
+				x: svgX,
+				y: svgY,
+				bottom: svgBottom,
+				left: svgLeft,
+				right: svgRight,
+				top: svgTop,
+				width: svgWidth,
+				height: svgHeight
+			} = svgRef?.current?.getBoundingClientRect();
+			const [xAxisStartPosition, xAxisLastPosition] = [svgX, svgX + svgWidth];
 			const containerWidth = svgContainerRef.current?.offsetWidth || 0;
 			const containerHeight = svgContainerRef.current?.offsetHeight || 0;
 			const marginTop = 20;
@@ -120,7 +129,11 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 				)
 				.selectAll('.tick')
 				.each(function (date, index, nodes) {
-					if (index === 0 || index === nodes.length - 1) {
+					if (index === 0 && nodes[index].getBoundingClientRect().x - xAxisStartPosition < 50) {
+						d3.select(this).remove();
+					}
+					if (index === nodes.length - 1 && xAxisLastPosition - nodes[index].getBoundingClientRect().x < 50) {
+						d3.select(this).remove();
 					}
 				});
 
