@@ -97,13 +97,11 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 				[containerHeight, 0]
 			];
 
-			const [x, y] = [d3.scaleUtc(xDomain, xRange), d3.scaleLinear(yDomain, yRange)];
-			console.log(x);
-
+			const [xScale, yScale] = [d3.scaleUtc(xDomain, xRange), d3.scaleLinear(yDomain, yRange)];
 			const line = d3
 				.line<DateAndValue_Type>()
-				.x(d => x(d.date))
-				.y(d => y(Number(d.value)));
+				.x(d => xScale(d.date))
+				.y(d => yScale(Number(d.value)));
 
 			const svg = d3.select(svgRef.current).attr('style', `width: 100%; height: ${height}vh; padding: 20px;`);
 
@@ -116,7 +114,7 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 				.attr('style', 'transform: translate(0, calc(100% - 30px));')
 				.call(
 					d3
-						.axisBottom(x)
+						.axisBottom(xScale)
 						.ticks(containerWidth / (containerWidth * 0.1))
 						.tickSizeOuter(0)
 				)
@@ -126,25 +124,25 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 					}
 				});
 
-			// svg
-			// 	.append('g')
-			// 	.attr('transform', `translate(${marginLeft},0)`)
-			// 	.call(d3.axisLeft(y).ticks(height / 40))
-			// 	.call(g => g.select('.domain').remove())
-			// 	.call(g =>
-			// 		g
-			// 			.selectAll('.tick line')
-			// 			.clone()
-			// 			.attr('x2', width - marginLeft - marginRight)
-			// 			.attr('stroke-opacity', 0.1)
-			// 	);
+			svg
+				.append('g')
+				.attr('transform', `translate(${marginLeft},0)`)
+				.call(d3.axisLeft(yScale).ticks(height / 40))
+				.call(g => g.select('.domain').remove())
+				.call(g =>
+					g
+						.selectAll('.tick line')
+						.clone()
+						.attr('x2', width - marginLeft - marginRight)
+						.attr('stroke-opacity', 0.1)
+				);
 
-			// svg
-			// 	.append('path')
-			// 	.attr('fill', 'none')
-			// 	.attr('stroke', 'steelblue')
-			// 	.attr('stroke-width', 1.5)
-			// 	.attr('d', line(slicedValues as DateAndValue_Type[]));
+			svg
+				.append('path')
+				.attr('fill', 'none')
+				.attr('stroke', 'steelblue')
+				.attr('stroke-width', 1.5)
+				.attr('d', line(slicedValues as DateAndValue_Type[]));
 		}
 	}, [values]);
 
