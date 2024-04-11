@@ -80,8 +80,8 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 	// chart 를 세팅하는 라이브러리 로직입니다.
 	useEffect(() => {
 		if (values) {
-			const { width: xAxisWidth } = svgRef?.current?.getBoundingClientRect();
-			console.log(xAxisWidth);
+			// const { x, y, bottom, height, left, right, top, width } = svgRef?.current?.getBoundingClientRect();
+			console.log(svgRef?.current?.getBoundingClientRect());
 			const containerWidth = svgContainerRef.current?.offsetWidth || 0;
 			const containerHeight = svgContainerRef.current?.offsetHeight || 0;
 			const marginTop = 20;
@@ -90,16 +90,15 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 			const marginLeft = 40;
 
 			const maxValue = d3.max(slicedValues, (value: DateAndValue_Type) => Number(value.value));
-			const [xDomain, xRange] = [
+			const [xDomain, xRange, yDomain, yRange] = [
 				d3.extent(slicedValues, (value: DateAndValue_Type) => value.date) as [Date, Date],
-				[0, containerWidth]
-			];
-			const [yDomain, yRange] = [
+				[0, containerWidth],
 				[0, Number(maxValue)],
 				[containerHeight, 0]
 			];
 
 			const [x, y] = [d3.scaleUtc(xDomain, xRange), d3.scaleLinear(yDomain, yRange)];
+			console.log(x);
 
 			const line = d3
 				.line<DateAndValue_Type>()
