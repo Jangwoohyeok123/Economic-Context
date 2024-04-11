@@ -6,7 +6,7 @@ import styles from './Home.module.scss';
 import Footer from '@/components/footer/Footer';
 import dynamic from 'next/dynamic';
 import Category from '@/components/category/Category';
-import mainImage from '../../public/mainImage.jpg';
+import mainImage from '@/public/mainImage.jpg';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { Store_Type } from '@/types/redux';
