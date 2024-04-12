@@ -77,21 +77,12 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 
 	const slicedValues = values.slice(-200);
 
-	// chart 를 세팅하는 라이브러리 로직입니다.
+	// 차트설정 로직
 	useEffect(() => {
 		if (values && svgRef.current) {
-			const {
-				x: svgX,
-				y: svgY,
-				bottom: svgBottom,
-				left: svgLeft,
-				right: svgRight,
-				top: svgTop,
-				width: svgWidth,
-				height: svgHeight
-			} = svgRef.current.getBoundingClientRect();
+			const { x: svgX, bottom: svgBottom, top: svgTop, width: svgWidth, height: svgHeight } = svgRef.current.getBoundingClientRect();
 			const [xAxisStartPosition, xAxisLastPosition] = [svgX, svgX + svgWidth];
-			const xAxisSize = 22;
+			const xAxisHeight = 25;
 
 			const [xMin, xMax] = d3.extent(slicedValues, (value: DateAndValue_Type) => value.date) as [Date, Date];
 			const [yMin, yMax] = d3.extent(slicedValues, (value: DateAndValue_Type) => Number(value.value)) as [number, number];
@@ -101,8 +92,10 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 				[10, svgWidth - 100]
 			];
 
+			// domain 을 조절해서 화면에서 차트가 벗어나지 않도록 한다. 10% 정도 최소, 최대를 크게 해 range 범위를 chart 가 벗어나지 않게 한다.
+			const expansion = 0.1;
 			const [yDomain, yRange] = [
-				[yMin * 0.7, yMax * 1.3],
+				[yMin * (1 - expansion), yMax * (1 + expansion)],
 				[0, svgHeight - 50]
 			];
 
@@ -118,16 +111,17 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 			svg.selectAll('*').remove();
 
 			// x(axis bottom) 축
-			// each 는 x 축에 벗어나는 부분을 제어한다. offset 이 커질수록 축의 가장자리에 숫자가 나오지 않는다.
+			// each 함수는 x 축에 벗어나는 부분을 제어한다. offset 이 커질수록 축의 가장자리에 숫자가 나오지 않는다.
 			svg
 				.append('g')
-				.attr('style', `transform: translate(0, calc(100% - ${xAxisSize}px));`)
+				.attr('style', `transform: translate(0, calc(100% - ${xAxisHeight}px));`)
 				.call(d3.axisBottom(utcScale).ticks(10).tickSizeOuter(0))
 				.selectAll('.tick')
 				.each(function (_, index, ticks) {
 					const offset = 100;
-					const node: Element = ticks[index];
+					const node: Element = ticks[index] as Element;
 
+					// 양 끝에 tick 이 x 축에서 잘려서 보이는 현상을 제어하는 로직
 					if (index === 0 && node.getBoundingClientRect().x - xAxisStartPosition < offset * 0.3) {
 						d3.select(this).remove();
 					} else if (index === ticks.length - 1 && xAxisLastPosition - node.getBoundingClientRect().x < offset) {
@@ -138,27 +132,24 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 			// axisRight y 축
 			svg
 				.append('g')
-				.attr('style', `transform: translate(calc(100% - ${50}px), ${-xAxisSize + 7}px); `)
+				.attr('style', `transform: translate(calc(100% - ${50}px), ${-xAxisHeight + 7}px); `)
 				.call(d3.axisRight(linearScale).ticks(10))
 				.call(g => g.select('.domain').remove())
 				.call(g =>
 					g
 						.selectAll('.tick line')
 						.clone() // 틱 라인 확장
-						.attr('x2', '-100%') // y 축 우측으로 이동시키기
+						.attr('x2', '-100%') // -100% 는 y 축 우측으로 이동시키기
 						.attr('stroke-opacity', 0.15)
 				)
 				.selectAll('.tick')
 				.each(function (_, index, ticks) {
-					if (index === 0 && ticks[index].getBoundingClientRect().y - svgTop < 20) {
-						console.log('-----------------------');
-						console.log('svgTop', svgTop);
-						console.log('ticks[index].getBoundingClientRect().y', ticks[index].getBoundingClientRect().y - svgTop);
+					const tick: Element = ticks[index] as Element;
+
+					// y 축에서 tick 이 잘려서 보이는 현상 또는 너무 x 축에 가까운 것을 제거하는 로직
+					if (index === 0 && tick.getBoundingClientRect().y - svgTop < 20) {
 						d3.select(this).remove();
-					} else if (index === ticks.length - 1 && svgBottom - ticks[index].getBoundingClientRect().y < 70) {
-						console.log('----------------------');
-						console.log('svgBottom', svgBottom);
-						console.log('svgBottom - ticks[index].getBoundingClientRect().y', svgBottom - ticks[index].getBoundingClientRect().y);
+					} else if (index === ticks.length - 1 && svgBottom - tick.getBoundingClientRect().y < 70) {
 						d3.select(this).remove();
 					}
 				});
