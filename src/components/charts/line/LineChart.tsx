@@ -93,38 +93,35 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 			const [xAxisStartPosition, xAxisLastPosition] = [svgX, svgX + svgWidth];
 			const containerWidth = svgContainerRef.current?.offsetWidth || 0;
 			const containerHeight = svgContainerRef.current?.offsetHeight || 0;
-			const marginTop = 20;
-			const marginRight = 40;
-			const marginBottom = 40;
-			const marginLeft = 40;
+			const xAxisSize = 30;
 
 			const maxValue = d3.max(slicedValues, (value: DateAndValue_Type) => Number(value.value));
 			const [xDomain, xRange, yDomain, yRange] = [
 				d3.extent(slicedValues, (value: DateAndValue_Type) => value.date) as [Date, Date],
 				[0, containerWidth],
 				[0, Number(maxValue)],
-				[containerHeight, 0]
+				[containerHeight - 40, 0] // y 축 길이 제어는 range 로 해라
 			];
 
-			const [xScale, yScale] = [d3.scaleUtc(xDomain, xRange), d3.scaleLinear(yDomain, yRange)];
+			const [utcScale, linearScale] = [d3.scaleUtc(xDomain, xRange), d3.scaleLinear(yDomain, yRange)];
 			const line = d3
 				.line<DateAndValue_Type>()
-				.x(d => xScale(d.date))
-				.y(d => yScale(Number(d.value)));
+				.x(utc => utcScale(utc.date))
+				.y(linear => linearScale(Number(linear.value)));
 
 			const svg = d3.select(svgRef.current).attr('style', `width: 100%; height: ${height}vh; padding: 20px;`);
 
 			// 중첩되는 chart 제거
 			svg.selectAll('*').remove();
 
-			// axis bottom 추가
+			// x(axis bottom) 축
 			// each 는 x 축에 벗어나는 부분을 제어한다. offset 이 커질수록 축의 가장자리에 숫자가 나오지 않는다.
 			svg
 				.append('g')
-				.attr('style', 'transform: translate(0, calc(100% - 30px));')
+				.attr('style', `transform: translate(0, calc(100% - ${xAxisSize}px));`)
 				.call(
 					d3
-						.axisBottom(xScale)
+						.axisBottom(utcScale)
 						.ticks(containerWidth / (containerWidth * 0.1))
 						.tickSizeOuter(0)
 				)
@@ -139,22 +136,18 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 					}
 				});
 
+			// y 축
 			svg
 				.append('g')
-				.attr('transform', `translate(${marginLeft},0)`)
-				.call(d3.axisLeft(yScale).ticks(height / 40))
+				.attr('transform', `translate(${0}, 0)`)
+				.call(d3.axisLeft(linearScale).ticks(10))
 				.call(g => g.select('.domain').remove())
-				.call(g =>
-					g
-						.selectAll('.tick line')
-						.clone()
-						.attr('x2', width - marginLeft - marginRight)
-						.attr('stroke-opacity', 0.1)
-				);
+				.call(g => g.selectAll('.tick line').clone().attr('x2', '100%').attr('stroke-opacity', 0.15));
 
 			svg
 				.append('path')
 				.attr('fill', 'none')
+				.attr('transform', `translate(${0}, 0)`)
 				.attr('stroke', 'steelblue')
 				.attr('stroke-width', 1.5)
 				.attr('d', line(slicedValues as DateAndValue_Type[]));
