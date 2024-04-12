@@ -24,14 +24,14 @@ const JournalToolbarSection = styled.div`
 `;
 const JournalFormSection = styled.div`
 	position: fixed;
-	width: 80%;
-	bottom: -10%;
-	left: 50%;
-	transform: translateX(-50%);
+	max-width: calc(100% - var(--dashMenuWidth));
+	width: 75%;
+	bottom: 0;
+	left: calc(var(--dashMenuWidth) + 2%);
 	z-index: 10;
 	transition: 0.3s;
 `;
-
+//getBoundingclientRect으로 메뉴 너비 만큼 이동.
 export default function Dashboard() {
 	const [selectedTab, setSelectedTab] = useState<string>('Indicators');
 	const [isJournalOpen, setIsJournalOpen] = useState(false);
@@ -46,7 +46,7 @@ export default function Dashboard() {
 			<section className={clsx(styles.Dashboard, roboto.variable, poppins.variable)} style={{ position: 'relative' }}>
 				<Menu selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
 
-				<section>
+				<section style={{ position: 'relative' }}>
 					<DashHeader selectedTab={selectedTab} />
 
 					{selectedTab === 'Indicators' ? (
