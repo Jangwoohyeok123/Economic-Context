@@ -79,7 +79,7 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 
 	// chart 를 세팅하는 라이브러리 로직입니다.
 	useEffect(() => {
-		if (values) {
+		if (values && svgRef.current) {
 			const {
 				x: svgX,
 				y: svgY,
@@ -89,18 +89,15 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 				top: svgTop,
 				width: svgWidth,
 				height: svgHeight
-			} = svgRef?.current?.getBoundingClientRect();
+			} = svgRef.current.getBoundingClientRect();
 			const [xAxisStartPosition, xAxisLastPosition] = [svgX, svgX + svgWidth];
-			const containerWidth = svgContainerRef.current?.offsetWidth || 0;
-			const containerHeight = svgContainerRef.current?.offsetHeight || 0;
 			const xAxisSize = 30;
 
-			const maxValue = d3.max(slicedValues, (value: DateAndValue_Type) => Number(value.value));
 			// const yDomain = d3.extent(slicedValues, (value: DateAndValue_Type) => Number(value.value));
 			const [xDomain, xRange, yDomain, yRange] = [
 				d3.extent(slicedValues, (value: DateAndValue_Type) => value.date) as [Date, Date],
 				[0, svgWidth],
-				d3.extent(slicedValues, (value: DateAndValue_Type) => Number(value.value)),
+				d3.extent(slicedValues, (value: DateAndValue_Type) => Number(value.value)) as [number, number],
 				[0, svgHeight - 100] // y 축 길이 제어는 range 로 해라
 			];
 
@@ -119,34 +116,40 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 			// each 는 x 축에 벗어나는 부분을 제어한다. offset 이 커질수록 축의 가장자리에 숫자가 나오지 않는다.
 			svg
 				.append('g')
-				.attr('style', `transform: translate(0, calc(100% - ${xAxisSize}px));`)
+				.attr('style', `transform: translate(0, calc(100% - ${xAxisSize}px)) scale(0.9);`)
 				.call(d3.axisBottom(utcScale).ticks(10).tickSizeOuter(0))
 				.selectAll('.tick')
 				.each(function (date, index, nodes) {
 					const offset = 80;
-					if (index === 0 && nodes[index].getBoundingClientRect().x - xAxisStartPosition < offset * 0.7) {
+					const node: Element = nodes[index];
+					if (index === 0 && node.getBoundingClientRect().x - xAxisStartPosition < offset * 0.7) {
 						d3.select(this).remove();
 					}
-					if (index === nodes.length - 1 && xAxisLastPosition - nodes[index].getBoundingClientRect().x < offset) {
+					if (index === nodes.length - 1 && xAxisLastPosition - node.getBoundingClientRect().x < offset) {
 						d3.select(this).remove();
 					}
 				});
 
-			// y 축
+			// axisRight y 축
 			svg
 				.append('g')
-				.attr('transform', `translate(${40}, 0)`)
-				.call(d3.axisLeft(linearScale).ticks(10))
-				.call(g => g.select('.domain').remove())
-				.call(g => g.selectAll('.tick line').clone().attr('x2', '100%').attr('stroke-opacity', 0.15));
+				.attr('transform', `translate(${svgWidth - 80}, 20)`) // y 축을 오른쪽으로 이동
+				.call(d3.axisRight(linearScale).ticks(10)) // 오른쪽 축 함수 사용
+				.call(g => g.select('.domain').remove()) // 축 라인 제거
+				.call(g =>
+					g
+						.selectAll('.tick line')
+						.clone() // 틱 라인 확장
+						.attr('x2', '-100%') // y 축 우측으로 이동시키기
+						.attr('stroke-opacity', 0.15)
+				);
 
-			svg
-				.append('path')
-				.attr('fill', 'none')
-				.attr('transform', `translate(${0}, 0)`)
-				.attr('stroke', 'steelblue')
-				.attr('stroke-width', 1.5)
-				.attr('d', line(slicedValues as DateAndValue_Type[]));
+			// svg
+			// 	.append('path')
+			// 	.attr('fill', 'none')
+			// 	.attr('stroke', 'steelblue')
+			// 	.attr('stroke-width', 1.5)
+			// 	.attr('d', line(slicedValues as DateAndValue_Type[]));
 		}
 	}, [values]);
 
