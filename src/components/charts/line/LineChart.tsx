@@ -96,11 +96,12 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 			const xAxisSize = 30;
 
 			const maxValue = d3.max(slicedValues, (value: DateAndValue_Type) => Number(value.value));
+			// const yDomain = d3.extent(slicedValues, (value: DateAndValue_Type) => Number(value.value));
 			const [xDomain, xRange, yDomain, yRange] = [
 				d3.extent(slicedValues, (value: DateAndValue_Type) => value.date) as [Date, Date],
-				[0, containerWidth],
-				[0, Number(maxValue)],
-				[containerHeight - 40, 0] // y 축 길이 제어는 range 로 해라
+				[0, svgWidth],
+				d3.extent(slicedValues, (value: DateAndValue_Type) => Number(value.value)),
+				[0, svgHeight - 100] // y 축 길이 제어는 range 로 해라
 			];
 
 			const [utcScale, linearScale] = [d3.scaleUtc(xDomain, xRange), d3.scaleLinear(yDomain, yRange)];
@@ -119,16 +120,11 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 			svg
 				.append('g')
 				.attr('style', `transform: translate(0, calc(100% - ${xAxisSize}px));`)
-				.call(
-					d3
-						.axisBottom(utcScale)
-						.ticks(containerWidth / (containerWidth * 0.1))
-						.tickSizeOuter(0)
-				)
+				.call(d3.axisBottom(utcScale).ticks(10).tickSizeOuter(0))
 				.selectAll('.tick')
 				.each(function (date, index, nodes) {
 					const offset = 80;
-					if (index === 0 && nodes[index].getBoundingClientRect().x - xAxisStartPosition < offset) {
+					if (index === 0 && nodes[index].getBoundingClientRect().x - xAxisStartPosition < offset * 0.7) {
 						d3.select(this).remove();
 					}
 					if (index === nodes.length - 1 && xAxisLastPosition - nodes[index].getBoundingClientRect().x < offset) {
@@ -139,7 +135,7 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 			// y 축
 			svg
 				.append('g')
-				.attr('transform', `translate(${0}, 0)`)
+				.attr('transform', `translate(${40}, 0)`)
 				.call(d3.axisLeft(linearScale).ticks(10))
 				.call(g => g.select('.domain').remove())
 				.call(g => g.selectAll('.tick line').clone().attr('x2', '100%').attr('stroke-opacity', 0.15));
