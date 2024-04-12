@@ -57,7 +57,12 @@ export default function Dashboard() {
 							<AnimatePresence>
 								{isJournalOpen && (
 									<JournalFormSection>
-										<JournalForm contextId={1} setIsWrite={true} />
+										<JournalForm
+											contextId={1}
+											setIsWrite={true}
+											isJournalOpen={isJournalOpen}
+											setIsJournalOpen={setIsJournalOpen}
+										/>
 									</JournalFormSection>
 								)}
 							</AnimatePresence>
