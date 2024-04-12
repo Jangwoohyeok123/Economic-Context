@@ -12,6 +12,14 @@ interface ChartWrapper_Props {
 
 const ChartWrapper = styled.div<ChartWrapper_Props>`
 	width: ${Props => `${Props.width}%`};
+	position: relative;
+
+	span {
+		position: absolute;
+		top: 50px;
+		right: 10px;
+		opacity: 0.8;
+	}
 `;
 
 const ChartFeatures = styled.div`
@@ -105,7 +113,7 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 				.x(utc => utcScale(utc.date))
 				.y(linear => linearScale(Number(linear.value)));
 
-			const svg = d3.select(svgRef.current).attr('style', `width: 100%; height: ${height}vh; padding: 20px; padding-top: 10px;`);
+			const svg = d3.select(svgRef.current).attr('style', `width: 100%; height: ${height}vh; padding: 20px; padding-top: 30px;`);
 
 			// 중첩되는 chart 제거
 			svg.selectAll('*').remove();
@@ -114,7 +122,7 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 			// each 함수는 x 축에 벗어나는 부분을 제어한다. offset 이 커질수록 축의 가장자리에 숫자가 나오지 않는다.
 			svg
 				.append('g')
-				.attr('style', `transform: translate(0, calc(100% - ${xAxisHeight}px));`)
+				.attr('style', `transform: translate(0, calc(100% - ${xAxisHeight}px)); opacity: 0.9`)
 				.call(d3.axisBottom(utcScale).ticks(10).tickSizeOuter(0))
 				.selectAll('.tick')
 				.each(function (_, index, ticks) {
@@ -132,7 +140,7 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 			// axisRight y 축
 			svg
 				.append('g')
-				.attr('style', `transform: translate(calc(100% - ${50}px), ${-xAxisHeight + 7}px); `)
+				.attr('style', `transform: translate(calc(100% - ${50}px), ${-xAxisHeight}px); opacity: 0.9;`)
 				.call(d3.axisRight(linearScale).ticks(10))
 				.call(g => g.select('.domain').remove())
 				.call(g =>
@@ -147,7 +155,7 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 					const tick: Element = ticks[index] as Element;
 
 					// y 축에서 tick 이 잘려서 보이는 현상 또는 너무 x 축에 가까운 것을 제거하는 로직
-					if (index === 0 && tick.getBoundingClientRect().y - svgTop < 20) {
+					if (index === 0 && tick.getBoundingClientRect().y - svgTop < 40) {
 						d3.select(this).remove();
 					} else if (index === ticks.length - 1 && svgBottom - tick.getBoundingClientRect().y < 70) {
 						d3.select(this).remove();
@@ -175,6 +183,7 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 						<li>MAX</li>
 					</ul>
 				</ChartFeatures>
+				<span>units: {indicator.units_short}</span>
 				<Chart>
 					<Svg ref={svgRef} />
 				</Chart>
