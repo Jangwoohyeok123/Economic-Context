@@ -29,17 +29,22 @@ const Header = styled.div`
 const ToggleButton = styled.span<ToggleButton_Props>`
 	display: flex;
 	justify-content: space-between;
-	transition: 0.3s;
-	transform: ${props => (props.$isJournalOpen ? 'rotate(0deg)' : 'rotate(180deg)')};
 	color: var(--bgColor);
-	&:hover {
-		color: var(--bgColor);
-		transform: translateY(5px) ${props => (props.$isJournalOpen ? 'rotate(0deg)' : 'rotate(180deg)')};
-	}
-	> svg {
-		color: var(--pointColor);
+	> span {
 		margin-bottom: -5px;
-		font-size: 1.4rem;
+		transition: 0.3s;
+		transform: ${props => (props.$isJournalOpen ? 'rotate(0deg)' : 'rotate(180deg)')};
+		cursor: pointer;
+		svg {
+			color: var(--pointColor);
+			font-size: 1.4rem;
+		}
+		&:hover {
+			transform: translateY(5px) ${props => (props.$isJournalOpen ? 'rotate(0deg)' : 'rotate(180deg)')};
+			svg {
+				color: var(--bgColor);
+			}
+		}
 	}
 `;
 
@@ -254,7 +259,10 @@ export default function JournalForm({ contextId, setIsWrite, isJournalOpen, setI
 				<JournalFormWrap>
 					<Header>
 						<ToggleButton $isJournalOpen={isJournalOpen}>
-							투자 일지 <BsChevronDown />
+							투자 일지{' '}
+							<span onClick={() => setIsJournalOpen(false)}>
+								<BsChevronDown />
+							</span>
 						</ToggleButton>
 					</Header>
 					<Form onSubmit={requestAddJournal}>

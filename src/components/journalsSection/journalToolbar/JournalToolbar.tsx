@@ -2,6 +2,8 @@ import clsx from 'clsx';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { BiSolidDockRight, BiSolidDockBottom, BiSolidArea } from 'react-icons/bi';
+import { HiMiniPencilSquare } from 'react-icons/hi2';
+import { BsChevronDown } from 'react-icons/bs';
 
 const buttonSize = 50;
 const paddingSize = 5;
@@ -15,7 +17,7 @@ interface Button_Props {
 const Toolbar = styled.div`
 	position: relative;
 	display: flex;
-	justify-content: center;
+	justify-content: flex-end;
 `;
 const Button = styled.span<Button_Props>`
 	position: absolute;
@@ -32,6 +34,21 @@ const Button = styled.span<Button_Props>`
 	transform: translateY(${paddingSize}px) ${props => (props.$isToolbarOpen ? '' : '!important')};
 	transition: 0.4s;
 
+	&:nth-child(1) {
+		width: ${props => (!props.$isToolbarOpen ? `calc(${buttonSize}px * 2)` : `${buttonSize}px`)};
+		span {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 0 5px;
+			font-size: 0.9rem;
+			height: ${buttonSize}px;
+			svg {
+				margin-top: ${props => (!props.$isToolbarOpen ? `-6px` : `0`)};
+				font-size: 1.2rem;
+			}
+		}
+	}
 	&:nth-child(3),
 	&:nth-child(4),
 	&:nth-child(5) {
@@ -50,21 +67,23 @@ const Button = styled.span<Button_Props>`
 	&:nth-child(4)::after,
 	&:nth-child(5)::after {
 		position: absolute;
+		content: '';
 		width: 90px;
 		right: 0;
 		top: 50%;
 		text-align: right;
 		transform: translateY(-50%);
-		display: block;
+		visibility: hidden;
+		transition: opacity ease 0.3s;
 		color: var(--fontColor);
 		opacity: 0;
-		transition: 0.3s;
 	}
 	&:nth-child(3):hover::after,
 	&:nth-child(4):hover::after,
 	&:nth-child(5):hover::after {
 		right: calc(${buttonSize}px + 10px);
 		opacity: 1;
+		visibility: visible;
 	}
 	&:nth-child(1) {
 		z-index: 5;
@@ -104,11 +123,12 @@ export default function JournalToolbar({ isJournalOpen, setIsJournalOpen }: Jour
 		e.preventDefault();
 		let newValue = !isToolbarOpen;
 		setIsToolbarOpen(newValue);
+		newValue ? setIsJournalOpen(true) : setIsJournalOpen(false);
 		//TODO::Toolbar 닫을 때 JournalForm에 입력한 데이터가 있으면, confirm으로 확인일때만 journal같이 닫히도록.
 	};
 	const openJournalComponent = (e: React.MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
-		console.log('2');
+
 		setIsJournalOpen(prev => !prev);
 	};
 	const routeToJournalPage = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -118,7 +138,16 @@ export default function JournalToolbar({ isJournalOpen, setIsJournalOpen }: Jour
 	return (
 		<Toolbar>
 			<Button $isToolbarOpen={isToolbarOpen} onClick={e => toggleOpen(e)}>
-				{isToolbarOpen ? 'X' : '더보기'}
+				{isToolbarOpen ? (
+					<span>
+						<BsChevronDown />
+					</span>
+				) : (
+					<span>
+						<HiMiniPencilSquare />
+						작성하기
+					</span>
+				)}
 			</Button>
 			<Button $isToolbarOpen={isToolbarOpen} onClick={e => openJournalComponent(e)}>
 				{isJournalOpen ? '닫기' : '열기'}
