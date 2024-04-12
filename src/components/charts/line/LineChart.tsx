@@ -91,17 +91,19 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 				height: svgHeight
 			} = svgRef.current.getBoundingClientRect();
 			const [xAxisStartPosition, xAxisLastPosition] = [svgX, svgX + svgWidth];
-			const xAxisSize = 30;
+			const xAxisSize = 22;
 
-			// const yDomain = d3.extent(slicedValues, (value: DateAndValue_Type) => Number(value.value));
+			const [xMin, xMax] = d3.extent(slicedValues, (value: DateAndValue_Type) => value.date) as [Date, Date];
+			const [yMin, yMax] = d3.extent(slicedValues, (value: DateAndValue_Type) => Number(value.value)) as [number, number];
+
 			const [xDomain, xRange] = [
-				d3.extent(slicedValues, (value: DateAndValue_Type) => value.date) as [Date, Date],
+				[xMin, xMax],
 				[10, svgWidth - 100]
 			];
 
 			const [yDomain, yRange] = [
-				d3.extent(slicedValues, (value: DateAndValue_Type) => Number(value.value)) as [number, number],
-				[40, svgHeight - 50]
+				[yMin * 0.7, yMax * 1.3],
+				[0, svgHeight - 50]
 			];
 
 			const [utcScale, linearScale] = [d3.scaleUtc(xDomain, xRange), d3.scaleLinear(yDomain, yRange)];
@@ -110,7 +112,7 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 				.x(utc => utcScale(utc.date))
 				.y(linear => linearScale(Number(linear.value)));
 
-			const svg = d3.select(svgRef.current).attr('style', `width: 100%; height: ${height}vh; padding: 20px;`);
+			const svg = d3.select(svgRef.current).attr('style', `width: 100%; height: ${height}vh; padding: 20px; padding-top: 10px;`);
 
 			// 중첩되는 chart 제거
 			svg.selectAll('*').remove();
@@ -120,15 +122,15 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 			svg
 				.append('g')
 				.attr('style', `transform: translate(0, calc(100% - ${xAxisSize}px));`)
-				.call(d3.axisBottom(utcScale).ticks(5).tickSizeOuter(0))
+				.call(d3.axisBottom(utcScale).ticks(10).tickSizeOuter(0))
 				.selectAll('.tick')
-				.each(function (date, index, nodes) {
+				.each(function (_, index, ticks) {
 					const offset = 100;
-					const node: Element = nodes[index];
+					const node: Element = ticks[index];
+
 					if (index === 0 && node.getBoundingClientRect().x - xAxisStartPosition < offset * 0.3) {
 						d3.select(this).remove();
-					}
-					if (index === nodes.length - 1 && xAxisLastPosition - node.getBoundingClientRect().x < offset) {
+					} else if (index === ticks.length - 1 && xAxisLastPosition - node.getBoundingClientRect().x < offset) {
 						d3.select(this).remove();
 					}
 				});
@@ -137,7 +139,7 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 			svg
 				.append('g')
 				.attr('style', `transform: translate(calc(100% - ${50}px), ${-xAxisSize + 7}px); `)
-				.call(d3.axisRight(linearScale).ticks(5))
+				.call(d3.axisRight(linearScale).ticks(10))
 				.call(g => g.select('.domain').remove())
 				.call(g =>
 					g
@@ -145,7 +147,21 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 						.clone() // 틱 라인 확장
 						.attr('x2', '-100%') // y 축 우측으로 이동시키기
 						.attr('stroke-opacity', 0.15)
-				);
+				)
+				.selectAll('.tick')
+				.each(function (_, index, ticks) {
+					if (index === 0 && ticks[index].getBoundingClientRect().y - svgTop < 20) {
+						console.log('-----------------------');
+						console.log('svgTop', svgTop);
+						console.log('ticks[index].getBoundingClientRect().y', ticks[index].getBoundingClientRect().y - svgTop);
+						d3.select(this).remove();
+					} else if (index === ticks.length - 1 && svgBottom - ticks[index].getBoundingClientRect().y < 70) {
+						console.log('----------------------');
+						console.log('svgBottom', svgBottom);
+						console.log('svgBottom - ticks[index].getBoundingClientRect().y', svgBottom - ticks[index].getBoundingClientRect().y);
+						d3.select(this).remove();
+					}
+				});
 
 			svg
 				.append('path')

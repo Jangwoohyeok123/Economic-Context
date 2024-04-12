@@ -136,18 +136,7 @@ export default function Morepage() {
 				});
 
 			getIndicator(seriesId as string).then((indicator: Indicator_Type) => {
-				const {
-					id,
-					title,
-					notes,
-					observation_start,
-					observation_end,
-					frequency,
-					frequency_short,
-					units,
-					units_short,
-					popularity
-				} = indicator;
+				const { id, title, notes, observation_start, observation_end, frequency, frequency_short, units, units_short, popularity } = indicator;
 
 				setIndicators(prev => ({
 					...prev,
