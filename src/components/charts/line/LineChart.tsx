@@ -116,11 +116,11 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 			// each 는 x 축에 벗어나는 부분을 제어한다. offset 이 커질수록 축의 가장자리에 숫자가 나오지 않는다.
 			svg
 				.append('g')
-				.attr('style', `transform: translate(0, calc(100% - ${xAxisSize}px)) scale(0.9);`)
+				.attr('style', `transform: translate(0, calc(100% - ${xAxisSize}px)) scale(0.92);`)
 				.call(d3.axisBottom(utcScale).ticks(10).tickSizeOuter(0))
 				.selectAll('.tick')
 				.each(function (date, index, nodes) {
-					const offset = 80;
+					const offset = 100;
 					const node: Element = nodes[index];
 					if (index === 0 && node.getBoundingClientRect().x - xAxisStartPosition < offset * 0.7) {
 						d3.select(this).remove();
@@ -131,18 +131,18 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 				});
 
 			// axisRight y 축
-			svg
-				.append('g')
-				.attr('transform', `translate(${svgWidth - 80}, 20)`) // y 축을 오른쪽으로 이동
-				.call(d3.axisRight(linearScale).ticks(10)) // 오른쪽 축 함수 사용
-				.call(g => g.select('.domain').remove()) // 축 라인 제거
-				.call(g =>
-					g
-						.selectAll('.tick line')
-						.clone() // 틱 라인 확장
-						.attr('x2', '-100%') // y 축 우측으로 이동시키기
-						.attr('stroke-opacity', 0.15)
-				);
+			// svg
+			// 	.append('g')
+			// 	.attr('transform', `translate(${svgWidth}, 0) scale(0.9)`) // y 축을 오른쪽으로 이동
+			// 	.call(d3.axisRight(linearScale).ticks(10)) // 오른쪽 축 함수 사용
+			// 	.call(g => g.select('.domain').remove()) // 축 라인 제거
+			// 	.call(g =>
+			// 		g
+			// 			.selectAll('.tick line')
+			// 			.clone() // 틱 라인 확장
+			// 			.attr('x2', '-100%') // y 축 우측으로 이동시키기
+			// 			.attr('stroke-opacity', 0.15)
+			// 	);
 
 			// svg
 			// 	.append('path')
