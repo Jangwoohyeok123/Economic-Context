@@ -72,8 +72,8 @@ export interface LineChart_Props {
  * @width [y]%
  */
 const LineChart = ({ indicator, duration, values, width = 100, height = 65, className }: LineChart_Props) => {
-	const svgRef = useRef<SVGSVGElement>(null);
-	const svgContainerRef = useRef<HTMLDivElement>(null);
+	const rootSvgRef = useRef<SVGSVGElement>(null);
+	const rootSvgContainerRef = useRef<HTMLDivElement>(null);
 	const widthStyle = {
 		width: `${width}%`
 	};
@@ -101,8 +101,8 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 
 	// 차트설정 로직
 	useEffect(() => {
-		if (values && svgRef.current) {
-			const { x: svgX, bottom: svgBottom, top: svgTop, width: svgWidth, height: svgHeight } = svgRef.current.getBoundingClientRect();
+		if (values && rootSvgRef.current) {
+			const { x: svgX, bottom: svgBottom, top: svgTop, width: svgWidth, height: svgHeight } = rootSvgRef.current.getBoundingClientRect();
 			const [xAxisStartPosition, xAxisLastPosition] = [svgX, svgX + svgWidth];
 			const xAxisHeight = 25;
 
@@ -111,10 +111,10 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 
 			const [xDomain, xRange] = [
 				[xMin, xMax],
-				[10, svgWidth - 100]
+				[10, svgWidth - 50]
 			];
 
-			// domain 을 조절해서 화면에서 차트가 벗어나지 않도록 한다. 10% 정도 최소, 최대를 크게 해 range 범위를 chart 가 벗어나지 않게 한다.
+			// domain을 조절해서 화면에서 차트가 벗어나지 않도록 한다. domain의 최소, 최대를 10% 확장하여 domain이 range안에 있게만듦
 			const expansion = 0.1;
 			const [yDomain, yRange] = [
 				[yMin * (1 - expansion), yMax * (1 + expansion)],
@@ -127,32 +127,33 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 				.x(utc => utcScale(utc.date))
 				.y(linear => linearScale(Number(linear.value)));
 
-			const svg = d3.select(svgRef.current).attr('style', `width: 100%; height: ${height}vh; padding: 20px; padding-top: 30px;`);
+			// chart가 그려질 도화지역할을 하는 svg 태그
+			const rootSvg = d3.select(rootSvgRef.current).attr('style', `width: 100%; height: ${height}vh; padding: 20px; padding-top: 30px;`);
 
 			// 중첩되는 chart 제거
-			svg.selectAll('*').remove();
+			rootSvg.selectAll('*').remove();
 
 			// x(axis bottom) 축
-			// each 함수는 x 축에 벗어나는 부분을 제어한다. offset 이 커질수록 축의 가장자리에 숫자가 나오지 않는다.
-			svg
+			// each 함수는 x 축에 벗어나는 tick을 제어한다. offset 이 커질수록 축의 가장자리에 날짜(tick)가 나오지 않는다.
+			rootSvg
 				.append('g')
 				.attr('style', `transform: translate(0, calc(100% - ${xAxisHeight}px)); opacity: 0.9`)
 				.call(d3.axisBottom(utcScale).ticks(10).tickSizeOuter(0))
 				.selectAll('.tick')
 				.each(function (_, index, ticks) {
-					const offset = 100;
+					const xOffset = 100;
 					const node: Element = ticks[index] as Element;
 
-					// 양 끝에 tick 이 x 축에서 잘려서 보이는 현상을 제어하는 로직
-					if (index === 0 && node.getBoundingClientRect().x - xAxisStartPosition < offset * 0.3) {
+					// 양 끝에 tick이 x축에서 잘려서 보이는 현상을 제어하는 로직으로 this는 tick을 의미한다.
+					if (index === 0 && node.getBoundingClientRect().x - xAxisStartPosition < xOffset * 0.3) {
 						d3.select(this).remove();
-					} else if (index === ticks.length - 1 && xAxisLastPosition - node.getBoundingClientRect().x < offset) {
+					} else if (index === ticks.length - 1 && xAxisLastPosition - node.getBoundingClientRect().x < xOffset) {
 						d3.select(this).remove();
 					}
 				});
 
-			// axisRight y 축
-			svg
+			// axisRight y축
+			rootSvg
 				.append('g')
 				.attr('style', `transform: translate(calc(100% - ${50}px), ${-xAxisHeight}px); opacity: 0.9;`)
 				.call(d3.axisRight(linearScale).ticks(10))
@@ -166,28 +167,40 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 				)
 				.selectAll('.tick')
 				.each(function (_, index, ticks) {
+					const yOffset = 100;
 					const tick: Element = ticks[index] as Element;
 
 					// y 축에서 tick 이 잘려서 보이는 현상 또는 너무 x 축에 가까운 것을 제거하는 로직
-					if (index === 0 && tick.getBoundingClientRect().y - svgTop < 40) {
+					if (index === 0 && tick.getBoundingClientRect().y - svgTop < yOffset * 0.4) {
 						d3.select(this).remove();
-					} else if (index === ticks.length - 1 && svgBottom - tick.getBoundingClientRect().y < 70) {
+					} else if (index === ticks.length - 1 && svgBottom - tick.getBoundingClientRect().y < yOffset * 0.7) {
 						d3.select(this).remove();
 					}
 				});
 
-			svg
+			rootSvg
+				.append('svg')
+				.attr('width', '100%')
+				.attr('height', '100%')
+				.attr('transform', 'translate(0, 0)')
 				.append('path')
 				.attr('fill', 'none')
 				.attr('stroke', 'steelblue')
 				.attr('stroke-width', 1.5)
 				.attr('d', line(slicedValues as DateAndValue_Type[]));
+
+			// svg
+			// 	.append('path')
+			// 	.attr('fill', 'none')
+			// 	.attr('stroke', 'steelblue')
+			// 	.attr('stroke-width', 1.5)
+			// 	.attr('d', line(slicedValues as DateAndValue_Type[]));
 		}
 	}, [values]);
 
 	return (
 		<div className={clsx(styles.LineChart, className && styles[className])}>
-			<ChartWrapper ref={svgContainerRef} width={width}>
+			<ChartWrapper ref={rootSvgContainerRef} width={width}>
 				<ChartFeatures>
 					<BsCalendar4Week className='icon' />
 					<ul>
@@ -199,7 +212,7 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 				</ChartFeatures>
 				<span>units: {indicator.units_short}</span>
 				<Chart>
-					<Svg ref={svgRef} />
+					<Svg ref={rootSvgRef} />
 				</Chart>
 			</ChartWrapper>
 		</div>
