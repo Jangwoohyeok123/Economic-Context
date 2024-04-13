@@ -8,6 +8,7 @@ import { BsChevronDown } from 'react-icons/bs';
 const buttonSize = 50;
 const paddingSize = 5;
 interface Button_Props {
+	$isRight?: boolean;
 	children?: React.ReactNode;
 	$isToolbarOpen?: boolean;
 	onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -50,8 +51,7 @@ const Button = styled.span<Button_Props>`
 		}
 	}
 	&:nth-child(3),
-	&:nth-child(4),
-	&:nth-child(5) {
+	&:nth-child(4) {
 		line-height: calc(${buttonSize}px + 7px);
 		transform: ${props => {
 			if (props.$isToolbarOpen && props.$isJournalOpen) {
@@ -64,8 +64,7 @@ const Button = styled.span<Button_Props>`
 		}};
 	}
 	&:nth-child(3)::after,
-	&:nth-child(4)::after,
-	&:nth-child(5)::after {
+	&:nth-child(4)::after {
 		position: absolute;
 		content: '';
 		width: 90px;
@@ -79,8 +78,7 @@ const Button = styled.span<Button_Props>`
 		opacity: 0;
 	}
 	&:nth-child(3):hover::after,
-	&:nth-child(4):hover::after,
-	&:nth-child(5):hover::after {
+	&:nth-child(4):hover::after {
 		right: calc(${buttonSize}px + 10px);
 		opacity: 1;
 		visibility: visible;
@@ -103,32 +101,31 @@ const Button = styled.span<Button_Props>`
 		transform: translateY(calc(-1 * (${buttonSize}px * 3 + ${paddingSize}px* 2)));
 		z-index: 2;
 		&::after {
-			content: '하단으로 이동';
-		}
-	}
-	&:nth-child(5) {
-		transform: translateY(calc(-1 * (${buttonSize}px * 4 + ${paddingSize}px* 3)));
-		&::after {
-			content: '우측으로 이동';
+			${props => (props.$isRight ? `content: '하단으로 이동'` : `content: '우측으로 이동'`)};
 		}
 	}
 `;
 interface JournalToolbar_Props {
 	isJournalOpen: boolean;
+	isRight: boolean;
 	setIsJournalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	setIsRight: React.Dispatch<React.SetStateAction<boolean>>;
 }
-export default function JournalToolbar({ isJournalOpen, setIsJournalOpen }: JournalToolbar_Props) {
+export default function JournalToolbar({ isJournalOpen, setIsJournalOpen, isRight, setIsRight }: JournalToolbar_Props) {
 	const [isToolbarOpen, setIsToolbarOpen] = useState(false);
 	const toggleOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
 		let newValue = !isToolbarOpen;
 		setIsToolbarOpen(newValue);
-		newValue ? setIsJournalOpen(true) : setIsJournalOpen(false);
+		if (newValue) {
+			setIsJournalOpen(true);
+		} else {
+			setIsJournalOpen(false);
+		}
 		//TODO::Toolbar 닫을 때 JournalForm에 입력한 데이터가 있으면, confirm으로 확인일때만 journal같이 닫히도록.
 	};
 	const openJournalComponent = (e: React.MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
-
 		setIsJournalOpen(prev => !prev);
 	};
 	const routeToJournalPage = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -156,16 +153,11 @@ export default function JournalToolbar({ isJournalOpen, setIsJournalOpen }: Jour
 				<BiSolidArea />
 			</Button>
 			<Button
+				$isRight={isRight}
 				$isToolbarOpen={isToolbarOpen}
 				$isJournalOpen={isJournalOpen}
-				onClick={() => console.log('화면 하단으로 위치변경')}>
-				<BiSolidDockBottom />
-			</Button>
-			<Button
-				$isToolbarOpen={isToolbarOpen}
-				$isJournalOpen={isJournalOpen}
-				onClick={() => console.log('화면 우측으로 위치변경')}>
-				<BiSolidDockRight />
+				onClick={() => setIsRight(prev => !prev)}>
+				{isRight ? <BiSolidDockBottom /> : <BiSolidDockRight />}
 			</Button>
 		</Toolbar>
 	);

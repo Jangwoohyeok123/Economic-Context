@@ -47,10 +47,12 @@ const ToggleButton = styled.span<ToggleButton_Props>`
 		}
 	}
 `;
-
-const Form = styled.form`
+interface Form_Props {
+	$isRight: boolean;
+}
+const Form = styled.form<Form_Props>`
 	width: 100%;
-	height: 50vh;
+	height: ${props => (props.$isRight ? `100vh` : `40vh`)};
 	overflow-y: scroll;
 	padding: 40px 20px;
 	background-color: var(--bgColor-light);
@@ -162,11 +164,18 @@ const Dropdown = styled.ul<Dropdown_Props>`
 interface JournalForm_Props {
 	contextId: number;
 	setIsWrite: boolean;
+	isRight: boolean;
 	isJournalOpen: boolean;
 	setIsJournalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function JournalForm({ contextId, setIsWrite, isJournalOpen, setIsJournalOpen }: JournalForm_Props) {
+export default function JournalForm({
+	contextId,
+	setIsWrite,
+	isRight,
+	isJournalOpen,
+	setIsJournalOpen
+}: JournalForm_Props) {
 	const userId = useSelector((state: Store_Type) => state.user.id);
 	const [journalDataParams, setJournalDataParams] = useState({ contextId: 0, title: '', body: '' });
 	const [isDrop, setIsDrop] = useState(false);
@@ -265,7 +274,7 @@ export default function JournalForm({ contextId, setIsWrite, isJournalOpen, setI
 							</span>
 						</ToggleButton>
 					</Header>
-					<Form onSubmit={requestAddJournal}>
+					<Form onSubmit={requestAddJournal} $isRight={isRight}>
 						<label>Context</label>
 						<DropDownMenu tabIndex={0} onBlur={e => blurDropdown(e)}>
 							<span className='dropdown' onClick={e => toggleDropBox(e)}>
