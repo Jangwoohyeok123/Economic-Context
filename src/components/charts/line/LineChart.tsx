@@ -78,6 +78,20 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 		width: `${width}%`
 	};
 
+	const lastDate = new Date(values[values.length - 1].date);
+	const oneYearAgo = new Date(lastDate.setFullYear(lastDate.getFullYear() - 1));
+	// 월별 데이터
+
+	console.log('-------------------------------');
+	console.log('1 년전 데이터 찾아보기');
+	for (let i = values.length - 1; i >= values.length - 5; i--) {
+		console.log('index: ', i);
+		console.log('years: ', values[i].date.getFullYear());
+		console.log('month: ', values[i].date.getMonth());
+		console.log('day: ', values[i].date.getDay());
+	}
+	console.log('-------------------------------');
+
 	if (duration === 1) {
 	} else if (duration === 3) {
 	} else if (duration === 5) {
