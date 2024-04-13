@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import clsx from 'clsx';
 import styles from './LineChart.module.scss';
@@ -32,6 +32,11 @@ const ChartFeatures = styled.div`
 
 	.icon {
 		cursor: pointer;
+	}
+
+	> div {
+		font-size: 0.9rem;
+		opacity: 0.9;
 	}
 
 	> ul {
@@ -71,54 +76,66 @@ export interface LineChart_Props {
  * @height [x]vh
  * @width [y]%
  */
-const LineChart = ({ indicator, duration, values, width = 100, height = 65, className }: LineChart_Props) => {
+const LineChart = ({ indicator, values: values_List, width = 100, height = 65, className }: LineChart_Props) => {
 	const rootSvgRef = useRef<SVGSVGElement>(null);
 	const rootSvgContainerRef = useRef<HTMLDivElement>(null);
 	const widthStyle = {
 		width: `${width}%`
 	};
+	const { frequency } = indicator;
+	const [duration, setDuration] = useState<number>(10);
+	let periodValues_List: DateAndValue_Type[] = [];
+	const lastDate = values_List[values_List.length - 1].date;
+	const [lastYear, lastMonth, lastDay] = [lastDate.getFullYear(), lastDate.getMonth(), lastDate.getDay()];
 
-	const lastDate = new Date(values[values.length - 1].date);
-	const oneYearAgo = new Date(lastDate.setFullYear(lastDate.getFullYear() - 1));
-	// 월별 데이터
+	function filterChartValues(duration: number, values_List: DateAndValue_Type[]): DateAndValue_Type[] {
+		let periodValues_List: DateAndValue_Type[] = [];
+		for (let i = values_List.length - 1; i >= 0; i--) {
+			const curDate = values_List[i].date;
+			const [curYear, curMonth] = [curDate.getFullYear(), curDate.getMonth()];
+			if (curYear === lastYear - duration && curMonth < lastMonth) break;
+			else periodValues_List.push(values_List[i]);
+		}
 
-	console.log('-------------------------------');
-	console.log('1 년전 데이터 찾아보기');
-	for (let i = values.length - 1; i >= values.length - 5; i--) {
-		console.log('index: ', i);
-		console.log('years: ', values[i].date.getFullYear());
-		console.log('month: ', values[i].date.getMonth());
-		console.log('day: ', values[i].date.getDay());
-	}
-	console.log('-------------------------------');
-
-	if (duration === 1) {
-	} else if (duration === 3) {
-	} else if (duration === 5) {
+		return periodValues_List;
 	}
 
-	const slicedValues = values.slice(-200);
+	function setPeriodValues_List(duration: number, values_List: DateAndValue_Type[]): DateAndValue_Type[] {
+		if (duration === 1 || duration === 3 || duration === 5) return filterChartValues(duration, values_List);
+		else return values_List;
+	}
+
+	periodValues_List = setPeriodValues_List(duration, values_List);
 
 	// 차트설정 로직
 	useEffect(() => {
-		if (values && rootSvgRef.current) {
+		if (values_List && rootSvgRef.current) {
 			const { x: svgX, bottom: svgBottom, top: svgTop, width: svgWidth, height: svgHeight } = rootSvgRef.current.getBoundingClientRect();
 			const [xAxisStartPosition, xAxisLastPosition] = [svgX, svgX + svgWidth];
-			const xAxisHeight = 25;
+			const [xAxisHeight, yAxisWidth] = [25, 50];
+			const [rootSvgPadding, rootSvgPaddingTop] = [20, 30];
 
-			const [xMin, xMax] = d3.extent(slicedValues, (value: DateAndValue_Type) => value.date) as [Date, Date];
-			const [yMin, yMax] = d3.extent(slicedValues, (value: DateAndValue_Type) => Number(value.value)) as [number, number];
+			const [xMin, xMax] = d3.extent(periodValues_List, (value: DateAndValue_Type) => value.date) as [Date, Date];
+			const [yMin, yMax] = d3.extent(periodValues_List, (value: DateAndValue_Type) => Number(value.value)) as [number, number];
 
 			const [xDomain, xRange] = [
 				[xMin, xMax],
-				[10, svgWidth - 50]
+				[0, svgWidth - rootSvgPadding * 2 - yAxisWidth]
 			];
 
 			// domain을 조절해서 화면에서 차트가 벗어나지 않도록 한다. domain의 최소, 최대를 10% 확장하여 domain이 range안에 있게만듦
-			const expansion = 0.1;
+			const expansion = 0.15;
 			const [yDomain, yRange] = [
 				[yMin * (1 - expansion), yMax * (1 + expansion)],
-				[0, svgHeight - 50]
+				[svgHeight - 50 - xAxisHeight, -20]
+			];
+
+			// tick 사이의 간격을 고정시키고 동적으로 tick의 개수만들기 위한 변수집합
+			const [xAxisLength, yAxisLength, xTickLength, yTickLength] = [
+				svgWidth - rootSvgPadding * 2 - yAxisWidth, // xRange
+				svgHeight - 50 - xAxisHeight + 20, // yRange
+				150,
+				50
 			];
 
 			const [utcScale, linearScale] = [d3.scaleUtc(xDomain, xRange), d3.scaleLinear(yDomain, yRange)];
@@ -128,7 +145,9 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 				.y(linear => linearScale(Number(linear.value)));
 
 			// chart가 그려질 도화지역할을 하는 svg 태그
-			const rootSvg = d3.select(rootSvgRef.current).attr('style', `width: 100%; height: ${height}vh; padding: 20px; padding-top: 30px;`);
+			const rootSvg = d3
+				.select(rootSvgRef.current)
+				.attr('style', `width: 100%; height: ${height}vh; padding: ${rootSvgPadding}px; padding-top: ${rootSvgPaddingTop}px;`);
 
 			// 중첩되는 chart 제거
 			rootSvg.selectAll('*').remove();
@@ -138,25 +157,27 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 			rootSvg
 				.append('g')
 				.attr('style', `transform: translate(0, calc(100% - ${xAxisHeight}px)); opacity: 0.9`)
-				.call(d3.axisBottom(utcScale).ticks(10).tickSizeOuter(0))
+				.call(
+					d3
+						.axisBottom(utcScale)
+						.ticks(xAxisLength / xTickLength)
+						.tickSizeOuter(0)
+				)
 				.selectAll('.tick')
 				.each(function (_, index, ticks) {
 					const xOffset = 100;
 					const node: Element = ticks[index] as Element;
 
 					// 양 끝에 tick이 x축에서 잘려서 보이는 현상을 제어하는 로직으로 this는 tick을 의미한다.
-					if (index === 0 && node.getBoundingClientRect().x - xAxisStartPosition < xOffset * 0.3) {
-						d3.select(this).remove();
-					} else if (index === ticks.length - 1 && xAxisLastPosition - node.getBoundingClientRect().x < xOffset) {
-						d3.select(this).remove();
-					}
+					if (index === 0 && node.getBoundingClientRect().x - xAxisStartPosition < xOffset * 0.3) d3.select(this).remove();
+					else if (index === ticks.length - 1 && xAxisLastPosition - node.getBoundingClientRect().x < xOffset) d3.select(this).remove();
 				});
 
 			// axisRight y축
 			rootSvg
 				.append('g')
-				.attr('style', `transform: translate(calc(100% - ${50}px), ${-xAxisHeight}px); opacity: 0.9;`)
-				.call(d3.axisRight(linearScale).ticks(10))
+				.attr('style', `transform: translate(calc(100% - ${yAxisWidth}px), ${-xAxisHeight}px); opacity: 0.9;`)
+				.call(d3.axisRight(linearScale).ticks(yAxisLength / yTickLength))
 				.call(g => g.select('.domain').remove())
 				.call(g =>
 					g
@@ -169,45 +190,33 @@ const LineChart = ({ indicator, duration, values, width = 100, height = 65, clas
 				.each(function (_, index, ticks) {
 					const yOffset = 100;
 					const tick: Element = ticks[index] as Element;
+					const curTickYPosition = tick.getBoundingClientRect().y;
 
-					// y 축에서 tick 이 잘려서 보이는 현상 또는 너무 x 축에 가까운 것을 제거하는 로직
-					if (index === 0 && tick.getBoundingClientRect().y - svgTop < yOffset * 0.4) {
-						d3.select(this).remove();
-					} else if (index === ticks.length - 1 && svgBottom - tick.getBoundingClientRect().y < yOffset * 0.7) {
-						d3.select(this).remove();
-					}
+					// y 축에서 tick 이 잘려서 보이는 현상 또는 너무 x 축에 가까운 것을 제거하는 로직svgBottom - tick.getBoundingClientRect().y < yOffset * 0.7
+					if (Math.abs(curTickYPosition - svgBottom) < yOffset * 0.3) d3.select(this).remove();
+					else if (Math.abs(curTickYPosition - svgTop) < yOffset * 0.3) d3.select(this).remove();
 				});
 
 			rootSvg
-				.append('svg')
-				.attr('width', '100%')
-				.attr('height', '100%')
-				.attr('transform', 'translate(0, 0)')
 				.append('path')
 				.attr('fill', 'none')
 				.attr('stroke', 'steelblue')
 				.attr('stroke-width', 1.5)
-				.attr('d', line(slicedValues as DateAndValue_Type[]));
-
-			// svg
-			// 	.append('path')
-			// 	.attr('fill', 'none')
-			// 	.attr('stroke', 'steelblue')
-			// 	.attr('stroke-width', 1.5)
-			// 	.attr('d', line(slicedValues as DateAndValue_Type[]));
+				.attr('d', line(periodValues_List as DateAndValue_Type[]));
 		}
-	}, [values]);
+	}, [values_List, duration]);
 
 	return (
 		<div className={clsx(styles.LineChart, className && styles[className])}>
 			<ChartWrapper ref={rootSvgContainerRef} width={width}>
 				<ChartFeatures>
-					<BsCalendar4Week className='icon' />
+					{/* <BsCalendar4Week className='icon' /> */}
+					<div>Frequency: {frequency}</div>
 					<ul>
-						<li>1Y</li>
-						<li>3Y</li>
-						<li>5Y</li>
-						<li>MAX</li>
+						<li onClick={() => setDuration(1)}>1Y</li>
+						<li onClick={() => setDuration(3)}>3Y</li>
+						<li onClick={() => setDuration(5)}>5Y</li>
+						<li onClick={() => setDuration(10)}>MAX</li>
 					</ul>
 				</ChartFeatures>
 				<span>units: {indicator.units_short}</span>
