@@ -1,12 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
-import * as d3 from 'd3';
 import clsx from 'clsx';
 import styles from './LineChart.module.scss';
-import { Indicator_Type, DateAndValue_Type } from '@/types/fred';
 import styled from 'styled-components';
-import makeDebouncedHandler from '@/utils/makeDebounceHandler';
+import * as d3 from 'd3';
 import createChartSvg from '@/utils/createChart';
 import setPeriodValues_List from '@/utils/setPeriodValues_List';
+import makeDebouncedHandler from '@/utils/makeDebounceHandler';
+import { Indicator_Type, DateAndValue_Type } from '@/types/fred';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface ChartWrapper_Props {
 	width: number;
@@ -26,7 +26,7 @@ const ChartWrapper = styled.div<ChartWrapper_Props>`
 
 const ChartFeatures = styled.div`
 	height: var(--chartHeaderSize);
-	background: #cecece;
+	background: var(--chartHeaderColor);
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -114,7 +114,7 @@ const LineChart = ({ indicator, values: values_List, width = 100, height = 65, c
 	}, [duration]);
 
 	return (
-		<div className={clsx(styles.LineChart, className && styles[className])}>
+		<div className={className}>
 			<ChartWrapper ref={rootSvgContainerRef} width={width}>
 				<ChartFeatures>
 					<div>Frequency: {frequency}</div>
