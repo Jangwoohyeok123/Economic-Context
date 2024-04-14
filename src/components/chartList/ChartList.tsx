@@ -32,8 +32,7 @@ export default function ChartList({ seriesIds }: ChartSwiper_Props) {
 		}
 	});
 
-	const isLoading =
-		queryChartValuesResults.some(result => result.isLoading) || queryIndicators.data.some(el => el === undefined);
+	const isLoading = queryChartValuesResults.some(result => result.isLoading) || queryIndicators.data.some(el => el === undefined);
 	const combineChartValuesResults = {
 		valuesArrays: queryChartValuesResults.map<DateAndValue_Type[]>(result => result.data?.dataArray || [])
 	};
@@ -56,7 +55,7 @@ export default function ChartList({ seriesIds }: ChartSwiper_Props) {
 
 					return (
 						<div key={index} className={clsx(styles.Chart)}>
-							<LineChart indicator={indicator} values={values} width={100} height={30} className={'ChartList'} />
+							<LineChart indicator={indicator} values={values} width={100} height={30} className={'ChartList'} duration={3} />
 						</div>
 					);
 				})
