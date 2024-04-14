@@ -1,8 +1,8 @@
 export default function makeDebouncedHandler(eventHandler: () => any, delay: number) {
-	let timer = null;
+	let timer: number | null = null;
 
 	return () => {
-		if (timer) clearTimeout(timer);
+		if (timer !== null) clearTimeout(timer);
 		setTimeout(eventHandler, delay);
 	};
 }
