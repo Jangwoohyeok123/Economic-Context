@@ -3,7 +3,6 @@ import styles from './CurrentContext.module.scss';
 import const_queryKey from '@/const/queryKey';
 import { useQuery } from '@tanstack/react-query';
 import ChartSwiper from '../chartSwiper/ChartSwiper';
-import Journal from '../journalsSection/JournalsSection';
 import ChartList from '../chartList/ChartList';
 import { Context_Type } from '@/types/context';
 import { getContext } from '@/api/context';
@@ -30,8 +29,6 @@ export default function CurrentContext({ currentContextId }: CurrentContext_Prop
 			<h2>Context Chart List</h2>
 			{/* {seriesIds && <ChartSwiper seriesIds={seriesIds} />} */}
 			{seriesIds && <ChartList seriesIds={seriesIds} />}
-
-			{currentContext && <Journal contextId={currentContext.id} />}
 		</section>
 	);
 }

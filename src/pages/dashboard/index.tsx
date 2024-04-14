@@ -15,26 +15,36 @@ import JournalToolbar from '@/components/journalsSection/journalToolbar/JournalT
 import styled from 'styled-components';
 import { AnimatePresence } from 'framer-motion';
 import JournalForm from '@/components/journalsSection/journalForm/JournalForm';
-
+interface JournalFormSection_Props {
+	$isRight: boolean;
+}
 const JournalToolbarSection = styled.div`
 	position: fixed;
 	bottom: 100px;
 	right: 3%;
 	z-index: 10;
 `;
-const JournalFormSection = styled.div`
+const JournalFormSection = styled.div<JournalFormSection_Props>`
 	position: fixed;
-	width: 80%;
-	bottom: -10%;
-	left: 50%;
-	transform: translateX(-50%);
+	max-width: calc(100% - var(--dashMenuWidth));
+	${props =>
+		props.$isRight
+			? `
+		width: 40%;
+		height: 100%;
+		right: 0;
+	`
+			: `
+			width:75%;
+	left: calc(var(--dashMenuWidth) + 2%);
+	`}
+	bottom: 0;
 	z-index: 10;
-	transition: 0.3s;
 `;
-
 export default function Dashboard() {
 	const [selectedTab, setSelectedTab] = useState<string>('Indicators');
 	const [isJournalOpen, setIsJournalOpen] = useState(false);
+	const [isRight, setIsRight] = useState(false);
 	const userId = useSelector((state: Store_Type) => state.user.id);
 	const { data: contextNamesWithKey, isLoading } = useQuery({
 		queryKey: [const_queryKey.context, 'names'],
@@ -46,26 +56,39 @@ export default function Dashboard() {
 			<section className={clsx(styles.Dashboard, roboto.variable, poppins.variable)} style={{ position: 'relative' }}>
 				<Menu selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
 
-				<section>
+				<section style={{ position: 'relative' }}>
 					<DashHeader selectedTab={selectedTab} />
 
 					{selectedTab === 'Indicators' ? (
 						<IndicatorsTab />
 					) : (
-						<MyContextTab selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+						<>
+							<MyContextTab selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+							<AnimatePresence>
+								{isJournalOpen && (
+									<JournalFormSection $isRight={isRight}>
+										<JournalForm
+											contextId={1}
+											setIsWrite={true}
+											isRight={isRight}
+											isJournalOpen={isJournalOpen}
+											setIsJournalOpen={setIsJournalOpen}
+										/>
+									</JournalFormSection>
+								)}
+							</AnimatePresence>
+							<JournalToolbarSection>
+								<JournalToolbar
+									isRight={isRight}
+									setIsRight={setIsRight}
+									isJournalOpen={isJournalOpen}
+									setIsJournalOpen={setIsJournalOpen}
+								/>
+							</JournalToolbarSection>
+						</>
 					)}
 				</section>
 			</section>
-			<AnimatePresence>
-				{isJournalOpen && (
-					<JournalFormSection>
-						<JournalForm contextId={1} setIsWrite={true} />
-					</JournalFormSection>
-				)}
-			</AnimatePresence>
-			<JournalToolbarSection>
-				<JournalToolbar isJournalOpen={isJournalOpen} setIsJournalOpen={setIsJournalOpen} />
-			</JournalToolbarSection>
 		</>
 	);
 }
