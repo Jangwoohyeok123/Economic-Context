@@ -5,9 +5,8 @@ import styles from './LineChart.module.scss';
 import { Indicator_Type, DateAndValue_Type } from '@/types/fred';
 import styled from 'styled-components';
 import makeDebouncedHandler from '@/utils/makeDebounceHandler';
-import filterChartValues from '@/utils/filterChartValues';
+import createChartSvg from '@/utils/createChart';
 import setPeriodValues_List from '@/utils/setPeriodValues_List';
-import createChart from '@/utils/createChart';
 
 interface ChartWrapper_Props {
 	width: number;
@@ -85,31 +84,32 @@ const LineChart = ({ indicator, values: values_List, width = 100, height = 65, c
 	const rootSvgContainerRef = useRef<HTMLDivElement>(null);
 	const { frequency } = indicator;
 	const [duration, setDuration] = useState<number>(10);
+	const lastDate = values_List[values_List.length - 1].date;
 
-	// 차트설정 로직
+	// resize 이벤트 발생시 차트 다시그리기
 	useEffect(() => {
 		const resetChart = () => {
-			// 차트초기화
 			if (rootSvgRef.current) {
 				d3.select(rootSvgRef.current).selectAll('*').remove();
-				createChart(rootSvgRef.current, values_List, duration, setDuration, height);
+				createChartSvg(rootSvgRef.current, values_List, height);
 			}
 		};
 		const debounced_resetChart = makeDebouncedHandler(resetChart, 200);
 
 		window.addEventListener('resize', debounced_resetChart);
-		resetChart();
 
 		return () => {
 			window.removeEventListener('resize', debounced_resetChart);
 		};
 	}, [values_List]);
 
-	// duration의 변경시 차트 새로그리기
+	// duration 변경시 차트 다시그리기
 	useEffect(() => {
+		let periodValues_List: DateAndValue_Type[] = setPeriodValues_List(duration, values_List, lastDate);
+
 		if (rootSvgRef.current) {
 			d3.select(rootSvgRef.current).selectAll('*').remove();
-			createChart(rootSvgRef.current, values_List, duration, setDuration, height); 
+			createChartSvg(rootSvgRef.current, periodValues_List, height);
 		}
 	}, [duration]);
 
@@ -122,7 +122,7 @@ const LineChart = ({ indicator, values: values_List, width = 100, height = 65, c
 						<li onClick={() => setDuration(1)}>1Y</li>
 						<li onClick={() => setDuration(3)}>3Y</li>
 						<li onClick={() => setDuration(5)}>5Y</li>
-						<li onClick={() => setDuration(10)}>MAX</li>
+						<li onClick={() => setDuration(10)}>MAX</li> {/* 10은 max를 의미한다 */}
 					</ul>
 				</ChartFeatures>
 				<span>units: {indicator.units_short}</span>

@@ -4,15 +4,7 @@ import * as d3 from 'd3';
 
 // 차트가 될 svg 태그를 만드는 함수입니다.
 // svg 태그 내부에 x, y 축과 line 이 포함됩니다.
-export default function createChart(
-	svg: SVGElement,
-	values_List: DateAndValue_Type[],
-	duration: number,
-	setDuration: React.Dispatch<number>,
-	height: number
-): SVGElement {
-	const lastDate = values_List[values_List.length - 1].date;
-	let periodValues_List: DateAndValue_Type[] = setPeriodValues_List(duration, values_List, lastDate);
+export default function createChart(svg: SVGElement, periodValues_List: DateAndValue_Type[], height: number): SVGElement {
 	const { x: svgX, bottom: svgBottom, top: svgTop, width: svgWidth, height: svgHeight } = svg.getBoundingClientRect();
 	const [xAxisStartPosition, xAxisLastPosition] = [svgX, svgX + svgWidth];
 	const [xAxisHeight, yAxisWidth] = [25, 50];
