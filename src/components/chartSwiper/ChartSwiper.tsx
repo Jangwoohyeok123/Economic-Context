@@ -35,15 +35,12 @@ export default function ChartSwiper({ seriesIds }: ChartSwiper_Props) {
 		})),
 		combine: results => {
 			return {
-				data: results
-					.filter(result => result.data !== undefined)
-					.map<Indicator_Type>(result => result.data as Indicator_Type)
+				data: results.filter(result => result.data !== undefined).map<Indicator_Type>(result => result.data as Indicator_Type)
 			};
 		}
 	});
 
-	const isLoading =
-		queryChartValues.valuesArrays.some(el => el === undefined) || queryIndicators.data.some(el => el === undefined);
+	const isLoading = queryChartValues.valuesArrays.some(el => el === undefined) || queryIndicators.data.some(el => el === undefined);
 
 	if (isLoading) return <div>Loading...</div>;
 
@@ -63,7 +60,7 @@ export default function ChartSwiper({ seriesIds }: ChartSwiper_Props) {
 
 						return (
 							<SwiperSlide key={index}>
-								<LineChart indicator={indicator} values={values} />
+								<LineChart duration={3} indicator={indicator} values={values} />
 							</SwiperSlide>
 						);
 					})}
