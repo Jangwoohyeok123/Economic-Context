@@ -5,6 +5,7 @@ import { getChartData, getIndicator } from '@/api/fred';
 import const_queryKey from '@/const/queryKey';
 import LineChart from '../charts/line/LineChart';
 import { DateAndValue_Type, Indicator_Type } from '@/types/fred';
+import SkeletonChartList from '../skeleton/SkeletonChartList';
 
 interface ChartSwiper_Props {
 	seriesIds: string[];
@@ -12,16 +13,11 @@ interface ChartSwiper_Props {
 
 /** context data 가 넘어왔을 때 */
 export default function ChartList({ seriesIds }: ChartSwiper_Props) {
-	const queryChartValues = useQueries({
+	const queryChartValuesResults = useQueries({
 		queries: seriesIds.map(seriesId => ({
 			queryKey: [const_queryKey.context, seriesId],
 			queryFn: () => getChartData(seriesId)
-		})),
-		combine: results => {
-			return {
-				valuesArrays: results.map<DateAndValue_Type[]>(result => result.data?.dataArray || [])
-			};
-		}
+		}))
 	});
 
 	const queryIndicators = useQueries({
@@ -36,12 +32,12 @@ export default function ChartList({ seriesIds }: ChartSwiper_Props) {
 		}
 	});
 
-	const isLoading =
-		queryChartValues.valuesArrays.some(el => el === undefined) || queryIndicators.data.some(el => el === undefined);
+	const isLoading = queryChartValuesResults.some(result => result.isLoading) || queryIndicators.data.some(el => el === undefined);
+	const combineChartValuesResults = {
+		valuesArrays: queryChartValuesResults.map<DateAndValue_Type[]>(result => result.data?.dataArray || [])
+	};
 
-	if (isLoading) return <div>Loading...</div>;
-
-	const chartDatasForList = queryChartValues.valuesArrays.map((values, index: number) => {
+	const chartDatasForList = combineChartValuesResults.valuesArrays.map((values, index: number) => {
 		return {
 			indicator: queryIndicators.data[index],
 			values: values
@@ -50,16 +46,20 @@ export default function ChartList({ seriesIds }: ChartSwiper_Props) {
 
 	return (
 		<div className={clsx(styles.ChartList)}>
-			{chartDatasForList.length > 0 &&
-				chartDatasForList?.map((chartData, index: number) => {
+			{isLoading ? (
+				<SkeletonChartList />
+			) : (
+				chartDatasForList.length > 0 &&
+				chartDatasForList.map((chartData, index: number) => {
 					const { indicator, values } = chartData;
 
 					return (
 						<div key={index} className={clsx(styles.Chart)}>
-							<LineChart indicator={indicator} values={values} width={100} height={30} className={'ChartList'} />
+							<LineChart indicator={indicator} values={values} width={100} height={30} className={'ChartList'} duration={3} />
 						</div>
 					);
-				})}
+				})
+			)}
 		</div>
 	);
 }

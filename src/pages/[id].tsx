@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import styles from './Morepage.module.scss';
 import dynamic from 'next/dynamic';
 import { Store_Type } from '@/types/redux';
 import LineChart from '@/components/charts/line/LineChart';
@@ -13,21 +12,104 @@ import { frontUrl, poppins, roboto } from './_app';
 import { useEffect, useState } from 'react';
 import { getChartData, getIndicator } from '@/api/fred';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import BubblePopButton from '@/components/bubblePopButton/BubblePopButton';
 import { addFavorite, deleteFavorite, getFavoriteCateogry_List } from '@/api/favorite';
 import { FavoriteIndicator_Type } from '@/types/favorite';
 import SkeletonMorepage from '@/components/skeleton/SkeletonMorepage';
+import styled from 'styled-components';
+import Footer from '@/components/footer/Footer';
+import AnotherIndicators from '@/components/anotherIndicators/AnotherIndicators';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
+
+const Main = styled.main`
+	width: 80%;
+	background: #fff;
+	min-height: 100vh;
+	padding-top: var(--headerSize);
+`;
+
+interface IntroduceContainer_Props {
+	volatility: number;
+}
+
+const IntroduceContainer = styled.div<IntroduceContainer_Props>`
+	border: 1px solid #111 0.5;
+	position: relative;
+	height: 150px;
+	padding: 20px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	> div {
+		width: 80%;
+
+		h1 {
+			font-weight: 400;
+			font-size: 1.4rem;
+			width: 80%;
+		}
+
+		.values {
+			span:nth-of-type(1) {
+				font-size: 3rem;
+				font-weight: 500;
+				padding-right: 20px;
+			}
+
+			span:nth-of-type(2) {
+				color: ${props => {
+					const { volatility } = props;
+					if (volatility > 0) return 'red';
+					else if (volatility === 0) return '#111';
+					else return 'blue';
+				}};
+			}
+		}
+
+		div:nth-of-type(2) {
+			font-size: 0.85rem;
+			opacity: 0.8;
+		}
+	}
+`;
+
+interface SaveFavoriteIndicatorButton_Props {
+	isSavedIndicator?: boolean;
+	isLogin: boolean;
+}
+
+const SaveFavoriteIndicatorButton = styled.button<SaveFavoriteIndicatorButton_Props>`
+	width: 150px;
+	height: 50px;
+	background: ${props => {
+		const { isSavedIndicator, isLogin } = props;
+		if (!isLogin) return '#ccc';
+
+		return isSavedIndicator ? '#111' : '#ccc';
+	}};
+	color: ${props => {
+		const { isSavedIndicator, isLogin } = props;
+		if (!isLogin) return '#111';
+
+		return isSavedIndicator ? '#fff' : '#111';
+	}};
+	border: none;
+	transition: 0.3s;
+
+	&:hover {
+		cursor: pointer;
+	}
+`;
 
 export default function Morepage() {
 	const router = useRouter();
 	const user = useSelector((state: Store_Type) => state.user);
 	const queryClient = useQueryClient();
 	const { id: seriesId, title, categoryId } = router.query;
-	const [isActive, setIsActive] = useState(false);
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 	const [chartDatas, setChartDatas] = useState<DateAndValue_Type[]>([]);
+	const [isSavedIndicator, setIsSavedIndicator] = useState<boolean>(false);
 	const [indicator, setIndicators] = useState<Indicator_Type>({
 		id: '',
 		realtime_start: '',
@@ -88,93 +170,92 @@ export default function Morepage() {
 
 		const isFind = favoriteCateogry_List?.find((indicator: FavoriteIndicator_Type) => indicator.seriesId === seriesId);
 
-		if (isFind) {
-			deleteFavoriteMutation.mutate({ userId: user.id, seriesId: seriesId as string });
-			setIsActive(!isActive);
-		} else {
-			addFavoriteMutation.mutate({ userId: user.id, seriesId: seriesId as string });
-			setIsActive(!isActive);
-		}
+		isFind
+			? deleteFavoriteMutation.mutate({ userId: user.id, seriesId: seriesId as string })
+			: addFavoriteMutation.mutate({ userId: user.id, seriesId: seriesId as string });
 	};
 
 	// 화면을 구성하는데 필요한 정보를 get 하는 useEffect
 	useEffect(() => {
-		getChartData(seriesId as string)
-			.then(chartDatas => {
-				const { dataArray } = chartDatas;
-				setChartDatas(dataArray);
-			})
-			.catch(err => {
-				console.error(err.message);
+		if (seriesId) {
+			getChartData(seriesId as string)
+				.then(chartDatas => {
+					const { dataArray } = chartDatas;
+					setChartDatas(dataArray);
+				})
+				.catch(err => {
+					console.error(err.message);
+				});
+
+			getIndicator(seriesId as string).then((indicator: Indicator_Type) => {
+				const { id, title, notes, observation_start, observation_end, frequency, frequency_short, units, units_short, popularity } = indicator;
+
+				setIndicators(prev => ({
+					...prev,
+					id,
+					title: cleanString(title), // Indicator 카드 컴포넌트에게서 router.query 를 통해 전달받은 값입니다.
+					notes: notes ?? '',
+					observation_start,
+					observation_end,
+					frequency,
+					frequency_short,
+					units,
+					units_short,
+					popularity
+				}));
 			});
-
-		getIndicator(seriesId as string).then((indicator: Indicator_Type) => {
-			const {
-				id,
-				title,
-				notes,
-				observation_start,
-				observation_end,
-				frequency,
-				frequency_short,
-				units,
-				units_short,
-				popularity,
-				seasonal_adjustment,
-				seasonal_adjustment_short
-			} = indicator;
-			setIndicators(prev => ({
-				...prev,
-				id,
-				title: cleanString(title), // Indicator 카드 컴포넌트에게서 router.query 를 통해 전달받은 값입니다.
-				notes: notes ?? '',
-				observation_start,
-				observation_end,
-				frequency,
-				frequency_short,
-				units,
-				units_short,
-				popularity
-			}));
-		});
-	}, []);
-
-	// save, delete 상황을 확인하는 useEffect
-	useEffect(() => {
-		if (favoriteCateogry_List?.some((el: FavoriteIndicator_Type) => el.seriesId === seriesId)) {
-			setIsActive(true);
-		} else {
-			setIsActive(false);
 		}
-	}, [favoriteCateogry_List]);
+	}, [router, seriesId]);
+
+	// 현재 지표가 save 상태인지 확인하는 useEffect
+	useEffect(() => {
+		if (user.isLogin) {
+			favoriteCateogry_List?.some((el: FavoriteIndicator_Type) => el.seriesId === seriesId) ? setIsSavedIndicator(true) : setIsSavedIndicator(false);
+		}
+	}, [favoriteCateogry_List, seriesId]);
+
+	// 작업이 끝나고 처리할 것
+	if (!indicator.id || !chartDatas.length) {
+		return <SkeletonMorepage />;
+	}
+
+	// 최신변화율을 만드는 과정이다. 정수로 만든 후 다시 소수로 전환하는 과정을 거친다.
+	function roundTo(num: number, decimalPlaces: number) {
+		const factor = 10 ** decimalPlaces;
+		return Math.round(num * factor) / factor;
+	}
+
+	const prevData = Number(chartDatas[chartDatas.length - 2].value);
+	const lastData = Number(chartDatas[chartDatas.length - 1].value);
+
+	const volatility = roundTo(lastData - prevData, 2);
 
 	return (
 		<>
-			<main className={clsx(styles.Morepage, poppins.variable, roboto.variable)}>
-				{!indicator.id ? (
-					<SkeletonMorepage />
-				) : (
-					chartDatas.length &&
-					indicator && (
-						<>
-							<LineChart indicator={indicator} values={chartDatas} width={100} height={50}>
-								{user.isLogin ? (
-									<button className={isActive ? clsx(styles.on) : clsx('')} onClick={buttonHandler}>
-										{isActive ? 'delete' : 'save'}
-									</button>
-								) : (
-									<button onClick={buttonHandler}>save</button>
-								)}
-							</LineChart>
-							<ChartDescription indicator={indicator}>
-								<BubblePopButton clickHandler={buttonHandler} className={isActive ? clsx(styles.on) : ''}>
-									{isActive ? 'remove' : 'save'}
-								</BubblePopButton>
-							</ChartDescription>
-						</>
-					)
+			<Main className={clsx(poppins.variable, roboto.variable)}>
+				{chartDatas.length && indicator && (
+					<>
+						<IntroduceContainer volatility={volatility}>
+							<div>
+								<h1>{indicator.title}</h1>
+								<div className='values'>
+									<span>{lastData}</span>
+									<span>{volatility >= 0 ? `(+${volatility}%)` : `(-${volatility}%)`}</span>
+								</div>
+								<div>last_updated: {indicator.observation_end}</div>
+							</div>
+							<SaveFavoriteIndicatorButton isLogin={user.isLogin} isSavedIndicator={isSavedIndicator} onClick={buttonHandler}>
+								{user.isLogin ? (isSavedIndicator ? 'remove' : 'save') : 'save'}
+							</SaveFavoriteIndicatorButton>
+						</IntroduceContainer>
+
+						<LineChart duration={10} indicator={indicator} values={chartDatas} width={100}></LineChart>
+						<ChartDescription indicator={indicator}></ChartDescription>
+						<AnotherIndicators />
+					</>
 				)}
-			</main>
+			</Main>
+			<Footer />
 			<DynamicAlertModal
 				isModalOpen={isAlertModalOpen}
 				setIsModalOpen={setIsAlertModalOpen}
@@ -189,23 +270,3 @@ export default function Morepage() {
 		</>
 	);
 }
-
-/* promise 와 async/await 의 차이점
-	[ async-await ] => '변수선언 = 비동기함수결과' 의 직관적인 코드 작성가능하다.
-	try {
-		const { realtime_start, realtime_end, dataArray } = await getChartDataseriesId as string);
-		return { realtime_start, realtime_end, dataArray };
-	} catch (err) {
-		console.error()
-		return 'fallback value';
-	}
-
-	[ promise ] => 'promise 객체의 then 에서 변수선언 후 처리하는 방식으로 상대적으로 직관적이지 않다.'
-	getChartData(seriesId as string).then((result) => {
-		const { realtime_start, realtime_end, dataArray } = result;
-	})
-
-	[ useEffect 에서 async vs promise ]
-	promise 가 개인적으로 맘에드는 이유는 useEffect 에서 await 를 쓰기 위해서는 async() => {}(); 꼴의
-	비동기 즉시실행함수를 사용해야하기 때문에 프로미스를 생각했다.
-*/

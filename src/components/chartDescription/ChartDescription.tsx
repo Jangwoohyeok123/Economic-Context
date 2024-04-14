@@ -1,6 +1,27 @@
-import clsx from 'clsx';
-import styles from './ChartDescription.module.scss';
 import { Indicator_Type } from '@/types/fred';
+import styled from 'styled-components';
+
+const DescriptionWrapper = styled.div`
+	padding-top: 30px;
+
+	h3 {
+		/* border-top: 1px solid #ccc; */
+		border-bottom: 1px solid #ccc;
+		height: 50px;
+		padding: 0 20px;
+		font-size: 1.5rem;
+		font-weight: 500;
+		display: flex;
+		justify-content: left;
+		align-items: center;
+	}
+`;
+
+const Section = styled.p`
+	opacity: 0.85;
+	width: 100%;
+	padding: 20px;
+`;
 
 interface ChartDescription_Props {
 	indicator: Indicator_Type;
@@ -8,25 +29,17 @@ interface ChartDescription_Props {
 }
 
 export default function ChartDescription({ indicator, children }: ChartDescription_Props) {
+	const { notes } = indicator;
+
+	const sections = notes?.split('\n');
 	return (
-		<div className={clsx(styles.ChartDescription)}>
-			<h3>{indicator.title}</h3>
-			<p className={clsx(styles.notes)}>{indicator.notes}</p>
-			<div className={clsx(styles.additional)}>
-				<div>
-					<div>
-						<span>Frequency</span> : {indicator.frequency ? indicator.frequency : 'hello'}
-					</div>
-					<div>
-						<span>Continued</span> :
-						{indicator.observation_end === indicator.realtime_end ? ' continued' : ' discontinued'}
-					</div>
-					<div>
-						<span>Period</span> : {indicator.observation_start} ~ {indicator.observation_end}
-					</div>
-				</div>
-				{children}
-			</div>
-		</div>
+		<DescriptionWrapper>
+			<h3>notes</h3>
+			{sections?.map((section, index) => {
+				if (section.length > 1) {
+					return <Section key={index}>{section}</Section>;
+				}
+			})}
+		</DescriptionWrapper>
 	);
 }
