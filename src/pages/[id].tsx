@@ -16,6 +16,8 @@ import { addFavorite, deleteFavorite, getFavoriteCateogry_List } from '@/api/fav
 import { FavoriteIndicator_Type } from '@/types/favorite';
 import SkeletonMorepage from '@/components/skeleton/SkeletonMorepage';
 import styled from 'styled-components';
+import Footer from '@/components/footer/Footer';
+import AnotherIndicators from '@/components/anotherIndicators/AnotherIndicators';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
@@ -26,24 +28,78 @@ const Main = styled.main`
 	padding-top: var(--headerSize);
 `;
 
-const Introduce = styled.aside`
+interface IntroduceContainer_Props {
+	volatility: number;
+}
+
+const IntroduceContainer = styled.div<IntroduceContainer_Props>`
 	border: 1px solid #111 0.5;
 	position: relative;
-	height: 120px;
+	height: 150px;
+	padding: 20px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 
-	h1 {
-		font-weight: 500;
-		font-size: 1.3rem;
+	> div {
 		width: 80%;
+
+		h1 {
+			font-weight: 400;
+			font-size: 1.4rem;
+			width: 80%;
+		}
+
+		.values {
+			span:nth-of-type(1) {
+				font-size: 3rem;
+				font-weight: 500;
+				padding-right: 20px;
+			}
+
+			span:nth-of-type(2) {
+				color: ${props => {
+					const { volatility } = props;
+					if (volatility > 0) return 'red';
+					else if (volatility === 0) return '#111';
+					else return 'blue';
+				}};
+			}
+		}
+
+		div:nth-of-type(2) {
+			font-size: 0.85rem;
+			opacity: 0.8;
+		}
 	}
 `;
 
-interface Button_Props {
+interface SaveFavoriteIndicatorButton_Props {
+	isSavedIndicator?: boolean;
 	isLogin: boolean;
 }
 
-const Button = styled.button<Button_Props>`
-	background: ${props => (props.isLogin ? '#111' : '#fff')};
+const SaveFavoriteIndicatorButton = styled.button<SaveFavoriteIndicatorButton_Props>`
+	width: 150px;
+	height: 50px;
+	background: ${props => {
+		const { isSavedIndicator, isLogin } = props;
+		if (!isLogin) return '#ccc';
+
+		return isSavedIndicator ? '#111' : '#ccc';
+	}};
+	color: ${props => {
+		const { isSavedIndicator, isLogin } = props;
+		if (!isLogin) return '#111';
+
+		return isSavedIndicator ? '#fff' : '#111';
+	}};
+	border: none;
+	transition: 0.3s;
+
+	&:hover {
+		cursor: pointer;
+	}
 `;
 
 export default function Morepage() {
@@ -51,9 +107,9 @@ export default function Morepage() {
 	const user = useSelector((state: Store_Type) => state.user);
 	const queryClient = useQueryClient();
 	const { id: seriesId, title, categoryId } = router.query;
-	const [isActive, setIsActive] = useState(false);
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 	const [chartDatas, setChartDatas] = useState<DateAndValue_Type[]>([]);
+	const [isSavedIndicator, setIsSavedIndicator] = useState<boolean>(false);
 	const [indicator, setIndicators] = useState<Indicator_Type>({
 		id: '',
 		realtime_start: '',
@@ -114,13 +170,9 @@ export default function Morepage() {
 
 		const isFind = favoriteCateogry_List?.find((indicator: FavoriteIndicator_Type) => indicator.seriesId === seriesId);
 
-		if (isFind) {
-			deleteFavoriteMutation.mutate({ userId: user.id, seriesId: seriesId as string });
-			setIsActive(!isActive);
-		} else {
-			addFavoriteMutation.mutate({ userId: user.id, seriesId: seriesId as string });
-			setIsActive(!isActive);
-		}
+		isFind
+			? deleteFavoriteMutation.mutate({ userId: user.id, seriesId: seriesId as string })
+			: addFavoriteMutation.mutate({ userId: user.id, seriesId: seriesId as string });
 	};
 
 	// 화면을 구성하는데 필요한 정보를 get 하는 useEffect
@@ -155,12 +207,10 @@ export default function Morepage() {
 		}
 	}, [router, seriesId]);
 
-	// save, delete 상황을 확인하는 useEffect
+	// 현재 지표가 save 상태인지 확인하는 useEffect
 	useEffect(() => {
-		if (favoriteCateogry_List?.some((el: FavoriteIndicator_Type) => el.seriesId === seriesId)) {
-			setIsActive(true);
-		} else {
-			setIsActive(false);
+		if (user.isLogin) {
+			favoriteCateogry_List?.some((el: FavoriteIndicator_Type) => el.seriesId === seriesId) ? setIsSavedIndicator(true) : setIsSavedIndicator(false);
 		}
 	}, [favoriteCateogry_List, seriesId]);
 
@@ -178,28 +228,34 @@ export default function Morepage() {
 	const prevData = Number(chartDatas[chartDatas.length - 2].value);
 	const lastData = Number(chartDatas[chartDatas.length - 1].value);
 
-	const result = roundTo(lastData - prevData, 2);
+	const volatility = roundTo(lastData - prevData, 2);
 
 	return (
 		<>
 			<Main className={clsx(poppins.variable, roboto.variable)}>
 				{chartDatas.length && indicator && (
 					<>
-						<Introduce>
-							<h1>제목:{indicator.title}</h1>
-							<span>최종데이터: {lastData}</span>
-							<span>변화율: {result}%</span>
-							<div>최종 측정일: {indicator.observation_end}</div>
-						</Introduce>
-						<LineChart duration={1} indicator={indicator} values={chartDatas} width={100}>
-							<Button isLogin={user.isLogin} onClick={buttonHandler}>
-								{user.isLogin ? 'delete' : 'save'}
-							</Button>
-						</LineChart>
+						<IntroduceContainer volatility={volatility}>
+							<div>
+								<h1>{indicator.title}</h1>
+								<div className='values'>
+									<span>{lastData}</span>
+									<span>{volatility >= 0 ? `(+${volatility}%)` : `(-${volatility}%)`}</span>
+								</div>
+								<div>last_updated: {indicator.observation_end}</div>
+							</div>
+							<SaveFavoriteIndicatorButton isLogin={user.isLogin} isSavedIndicator={isSavedIndicator} onClick={buttonHandler}>
+								{user.isLogin ? (isSavedIndicator ? 'remove' : 'save') : 'save'}
+							</SaveFavoriteIndicatorButton>
+						</IntroduceContainer>
+
+						<LineChart duration={10} indicator={indicator} values={chartDatas} width={100}></LineChart>
 						<ChartDescription indicator={indicator}></ChartDescription>
+						<AnotherIndicators />
 					</>
 				)}
 			</Main>
+			<Footer />
 			<DynamicAlertModal
 				isModalOpen={isAlertModalOpen}
 				setIsModalOpen={setIsAlertModalOpen}
