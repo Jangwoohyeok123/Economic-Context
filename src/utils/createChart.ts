@@ -5,7 +5,7 @@ import * as d3 from 'd3';
 // 차트가 될 svg 태그를 만드는 함수입니다.
 // svg 태그 내부에 x, y 축과 line 이 포함됩니다.
 export default function createChart(svg: SVGElement, periodValues_List: DateAndValue_Type[], height: number): SVGElement {
-	const { x: svgX, bottom: svgBottom, top: svgTop, width: svgWidth, height: svgHeight } = svg.getBoundingClientRect();
+	const { x: svgX, y: svgY, bottom: svgBottom, top: svgTop, width: svgWidth, height: svgHeight } = svg.getBoundingClientRect();
 	const [xAxisStartPosition, xAxisLastPosition] = [svgX, svgX + svgWidth];
 	const [xAxisHeight, yAxisWidth] = [25, 50];
 	const [rootSvgPadding, rootSvgPaddingTop] = [20, 30];
@@ -34,6 +34,7 @@ export default function createChart(svg: SVGElement, periodValues_List: DateAndV
 		50
 	];
 
+	// domain과 range의 관계를 설정하여, domain을 range로 변환하는 scale함수를 만들었습니다.
 	const [utcScale, linearScale] = [d3.scaleUtc(xDomain, xRange), d3.scaleLinear(yDomain, yRange)];
 
 	// 시계열 데이터를 SVG(path)에서 사용할 수 있는 형태로 가공하는 역할함수를 만든다.
@@ -46,7 +47,6 @@ export default function createChart(svg: SVGElement, periodValues_List: DateAndV
 	const rootSvg = d3
 		.select(svg)
 		.attr('style', `width: 100%; height: ${height}vh; padding: ${rootSvgPadding}px; padding-top: ${rootSvgPaddingTop}px;`);
-
 	// x 축 (하단 축)을 추가합니다.
 	// 'each' 함수를 사용하여 x 축에서 표시되지 않아야 하는 tick들을 제어합니다.
 	// 특정 offset 이상으로 축 가장자리에 위치한 날짜(tick)가 나오지 않도록 조정합니다.
@@ -100,6 +100,51 @@ export default function createChart(svg: SVGElement, periodValues_List: DateAndV
 		.attr('stroke', 'steelblue')
 		.attr('stroke-width', 1.5)
 		.attr('d', makeLineDataForPath(periodValues_List as DateAndValue_Type[]));
+
+	rootSvg
+		.append('line')
+		.attr('x1', 200)
+		.attr('y1', 0)
+		.attr('x2', 200)
+		.attr('y2', svgHeight - xAxisHeight - rootSvgPadding - rootSvgPaddingTop)
+		.attr('stroke', '#111')
+		.attr('opacity', '0.25');
+
+	// 데이터 포인트에 대한 원을 추가
+	// const points = rootSvg
+	// 	.selectAll('.point')
+	// 	.data(periodValues_List)
+	// 	.enter()
+	// 	.append('circle')
+	// 	.attr('class', 'point')
+	// 	.attr('cx', d => utcScale(d.date))
+	// 	.attr('cy', d => linearScale(Number(d.value)))
+	// 	.attr('r', 5)
+	// 	.attr('fill', 'red');
+
+	// // 툴팁을 위한 div 요소 추가
+	// const tooltip = d3
+	// 	.select('body')
+	// 	.append('div')
+	// 	.attr('class', 'tooltip')
+	// 	.style('position', 'absolute')
+	// 	.style('visibility', 'hidden')
+	// 	.style('background', 'white')
+	// 	.style('border', '1px solid black')
+	// 	.style('padding', '5px');
+
+	// // 각 원에 마우스 이벤트 리스너 추가
+	// points
+	// 	.on('mouseover', (event, d) => {
+	// 		tooltip
+	// 			.html(`Date: ${d.date}<br>Value: ${d.value}`)
+	// 			.style('top', event.pageY - 10 + 'px')
+	// 			.style('left', event.pageX + 10 + 'px')
+	// 			.style('visibility', 'visible');
+	// 	})
+	// 	.on('mouseout', () => {
+	// 		tooltip.style('visibility', 'hidden');
+	// 	});
 
 	return svg;
 }
