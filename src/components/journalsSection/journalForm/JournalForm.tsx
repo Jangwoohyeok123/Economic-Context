@@ -12,18 +12,17 @@ import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 import * as S from '@/styles/JournalForm.style';
 
 interface JournalForm_Props {
-	contextId: number;
-	setIsWrite: boolean;
-	isRight: boolean;
-	isJournalOpen: boolean;
-	setIsJournalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	currentContext: ContextNameWithKey_Type; //Dashboard page에서 현재 context data가져오기
+	isRight: boolean; //journalForm의 위치가 오른쪽인지 boolean
+	isJournalOpen: boolean; //journal작성을 위해 journalForm을 열었는지 boolean
+	setIsJournalOpen: React.Dispatch<React.SetStateAction<boolean>>; //Dashboard page에 위치한 journal의 열고 닫음을 제어하는 툴바에게 전달할 boolean
 }
-
-export default function JournalForm({ contextId, setIsWrite, isRight, isJournalOpen, setIsJournalOpen }: JournalForm_Props) {
+export default function JournalForm({ currentContext, isRight, isJournalOpen, setIsJournalOpen }: JournalForm_Props) {
 	const userId = useSelector((state: Store_Type) => state.user.id);
-	const [journalDataParams, setJournalDataParams] = useState({ contextId: 0, title: '', body: '' });
-	const [isDrop, setIsDrop] = useState(false);
-	const [toggleButtonText, setTogglebuttonText] = useState('전체');
+	const [journalDataParams, setJournalDataParams] = useState({ title: '', body: '' });
+	const [isDrop, setIsDrop] = useState(false); //드롭다운 박스가 열리면 true
+	const [toggleButtonText, setToggleButtonText] = useState<string>(currentContext.name); //드롭다운 박스에 선택된 context name
+	const [contextId, setContextId] = useState(currentContext.id); //드롭박스 초기값은 Dashboard page에서 가져온 context.id
 	const queryClient = useQueryClient();
 
 	const { data: contextIdsWithNames, isLoading } = useQuery<ContextNameWithKey_Type[]>({
@@ -49,7 +48,6 @@ export default function JournalForm({ contextId, setIsWrite, isRight, isJournalO
 		e.preventDefault();
 		if (journalDataParams.body) {
 			addJournalMutation.mutate({ userId, contextId, journalDataParams });
-			// setIsWrite(false);
 		} else {
 			alert('모두 작성해주세요.');
 		}
@@ -73,15 +71,11 @@ export default function JournalForm({ contextId, setIsWrite, isRight, isJournalO
 			};
 			setJournalDataParams(newParams);
 		} else if (context?.id && context.id !== 0) {
-			newParams = {
-				...journalDataParams,
-				contextId: context.id
-			};
-			setTogglebuttonText(context.name);
+			setContextId(context.id);
+			setToggleButtonText(context.name);
 			setIsDrop(false);
-			setJournalDataParams(newParams);
 		} else {
-			setTogglebuttonText('전체');
+			setToggleButtonText('전체');
 			setIsDrop(false);
 		}
 	};
@@ -102,7 +96,7 @@ export default function JournalForm({ contextId, setIsWrite, isRight, isJournalO
 				<S.JournalFormWrap>
 					<S.Header>
 						<S.ToggleButton $isJournalOpen={isJournalOpen}>
-							투자 일지{' '}
+							투자 일지
 							<span onClick={() => setIsJournalOpen(false)}>
 								<BsChevronDown />
 							</span>

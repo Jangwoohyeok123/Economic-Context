@@ -13,9 +13,10 @@ import { ContextNameWithKey_Type } from '@/types/context';
 interface Menu_Props {
 	selectedTab: string;
 	setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
+	setCurrentContext: React.Dispatch<React.SetStateAction<ContextNameWithKey_Type>>;
 }
 
-export default function Menu({ selectedTab, setSelectedTab }: Menu_Props) {
+export default function Menu({ selectedTab, setSelectedTab, setCurrentContext: setCurrentContext }: Menu_Props) {
 	const tabs = ['Indicators', 'MyContext'];
 	const queryClient = useQueryClient();
 	const [isAccordianOpen, setIsAccordianOpen] = useState(false);
@@ -29,9 +30,7 @@ export default function Menu({ selectedTab, setSelectedTab }: Menu_Props) {
 		mutationFn: (contextId: number) => deleteContext(contextId),
 		onSuccess() {
 			if (contextIdsWithNames) {
-				const newContextIdsWithNames = contextIdsWithNames.filter(
-					(context: ContextNameWithKey_Type) => context.name !== selectedTab
-				);
+				const newContextIdsWithNames = contextIdsWithNames.filter((context: ContextNameWithKey_Type) => context.name !== selectedTab);
 				queryClient.setQueryData([const_queryKey.context, 'names'], newContextIdsWithNames); // 내일 정리하기
 				queryClient.invalidateQueries({
 					queryKey: [const_queryKey.context, 'names']
@@ -90,7 +89,10 @@ export default function Menu({ selectedTab, setSelectedTab }: Menu_Props) {
 							return (
 								<div
 									key={index}
-									onClick={() => setSelectedTab(name)}
+									onClick={() => {
+										setSelectedTab(name);
+										setCurrentContext(context);
+									}}
 									className={clsx(styles.context, { [styles.on]: selectedTab === name })}>
 									<span>{name}</span>
 									<span className={clsx(styles.deleteIcon)} onClick={() => deleteContextMutation.mutate(contextId)}>
