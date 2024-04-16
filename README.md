@@ -47,7 +47,11 @@
 3. 대시보드 페이지 context delete 에러 수정
 
 
-## Author & Contributor 
-
-
+<!-- CONTACT -->
 ## Contact
+
+Your Name - dkanvk1@gmail.com
+Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
