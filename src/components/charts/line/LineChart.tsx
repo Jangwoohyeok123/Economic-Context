@@ -2,11 +2,12 @@ import clsx from 'clsx';
 import styles from './LineChart.module.scss';
 import styled from 'styled-components';
 import * as d3 from 'd3';
-import createChartSvg from '@/utils/createChart';
+import renderChartSvg from '@/utils/renderChartSvg';
 import setPeriodValues_List from '@/utils/setPeriodValues_List';
 import makeDebouncedHandler from '@/utils/makeDebounceHandler';
 import { Indicator_Type, DateAndValue_Type } from '@/types/fred';
 import React, { useEffect, useRef, useState } from 'react';
+import Tooltip from '@mui/material/Tooltip';
 
 interface ChartWrapper_Props {
 	width: number;
@@ -91,7 +92,7 @@ const LineChart = ({ indicator, values: values_List, width = 100, height = 65, c
 		const resetChart = () => {
 			if (rootSvgRef.current) {
 				d3.select(rootSvgRef.current).selectAll('*').remove();
-				createChartSvg(rootSvgRef.current, values_List, height);
+				renderChartSvg(rootSvgRef.current, values_List, height);
 			}
 		};
 		const debounced_resetChart = makeDebouncedHandler(resetChart, 200);
@@ -109,7 +110,7 @@ const LineChart = ({ indicator, values: values_List, width = 100, height = 65, c
 
 		if (rootSvgRef.current) {
 			d3.select(rootSvgRef.current).selectAll('*').remove();
-			createChartSvg(rootSvgRef.current, periodValues_List, height);
+			renderChartSvg(rootSvgRef.current, periodValues_List, height);
 		}
 	}, [duration]);
 

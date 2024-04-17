@@ -1,10 +1,12 @@
 import { DateAndValue_Type } from '@/types/fred';
-import setPeriodValues_List from './setPeriodValues_List';
 import * as d3 from 'd3';
+
+// 모듈 스코프의 생명주기를 따라간다.
+let tooltipIndex = 0;
 
 // 차트가 될 svg 태그를 만드는 함수입니다.
 // svg 태그 내부에 x, y 축과 line 이 포함됩니다.
-export default function createChart(svg: SVGElement, periodValues_List: DateAndValue_Type[], height: number): SVGElement {
+export default function renderChartSvg(svg: SVGElement, periodValues_List: DateAndValue_Type[], height: number): SVGElement {
 	const { x: svgX, y: svgY, bottom: svgBottom, top: svgTop, width: svgWidth, height: svgHeight } = svg.getBoundingClientRect();
 	const [xAxisStartPosition, xAxisLastPosition] = [svgX, svgX + svgWidth];
 	const [xAxisHeight, yAxisWidth] = [25, 50];
@@ -37,14 +39,15 @@ export default function createChart(svg: SVGElement, periodValues_List: DateAndV
 	// domain과 range의 관계를 설정하여, domain을 range로 변환하는 scale함수를 만들었습니다.
 	const [utcScale, linearScale] = [d3.scaleUtc(xDomain, xRange), d3.scaleLinear(yDomain, yRange)];
 
+	// x 축에 실제값을 넣기전에 도메인의 범위, 레인지의 범위를 정하는 로직입니다.
 	const xScale = d3
 		.scaleUtc()
 		.domain([xMin, xMax])
 		.range([0, svgWidth - rootSvgPadding * 2 - yAxisWidth]);
 
 	// 시계열 데이터를 SVG(path)에서 사용할 수 있는 형태로 가공하는 역할함수를 만든다.
-	const makeLineDataForPath = d3
-		.line<DateAndValue_Type>() // 각 데이터 항목의 date와 value 필드를 읽어서 선으로 변화시킨다.
+	const makeDataForPath = d3
+		.line<DateAndValue_Type>() // line 함수는 data를 path의 d속성값으로 사용될 문자열을 생성
 		.x(utc => utcScale(utc.date))
 		.y(linear => linearScale(Number(linear.value)));
 
@@ -104,28 +107,45 @@ export default function createChart(svg: SVGElement, periodValues_List: DateAndV
 		.attr('fill', 'none')
 		.attr('stroke', 'steelblue')
 		.attr('stroke-width', 1.5)
-		.attr('d', makeLineDataForPath(periodValues_List as DateAndValue_Type[]));
+		.attr('d', makeDataForPath(periodValues_List as DateAndValue_Type[]));
 
-	periodValues_List.forEach((dataPoint, index) => {
-		rootSvg
-			.append('line')
-			.attr('class', `tooltipLine${index}`)
-			.attr('x1', utcScale(dataPoint.date))
-			.attr('y1', 0)
-			.attr('x2', utcScale(dataPoint.date))
-			.attr('y2', svgHeight - xAxisHeight - rootSvgPadding - rootSvgPaddingTop)
-			.attr('stroke', '#111')
-			.attr('opacity', '0.25')
-			.attr('visibility', 'visible');
+	rootSvg
+		.append('line')
+		.attr('class', 'tooltipLine')
+		.attr('x1', utcScale(periodValues_List[200].date))
+		.attr('y1', 0)
+		.attr('x2', utcScale(periodValues_List[200].date))
+		.attr('y2', svgHeight - xAxisHeight - rootSvgPadding - rootSvgPaddingTop)
+		.attr('stroke', '#111')
+		.attr('stroke-width', 1.5)
+		.attr('opacity', 1);
 
-		d3.select(`.tooltipLine${index}`)
-			.on('mouseover', function () {
-				d3.select(this).attr('visibility', 'hidden');
-			})
-			.on('mouseout', function () {
-				d3.select(this).attr('visibility', 'visible');
-			});
+	svg.addEventListener('mouseover', () => {
+		console.log('hello');
 	});
+
+	// periodValues_List.forEach((dataPoint, index) => {
+	// 	rootSvg
+	// 		.append('line')
+	// 		.attr('class', 'tooltipLine')
+	// 		.attr('x1', utcScale(dataPoint.date))
+	// 		.attr('y1', 0)
+	// 		.attr('x2', utcScale(dataPoint.date))
+	// 		.attr('y2', svgHeight - xAxisHeight - rootSvgPadding - rootSvgPaddingTop)
+	// 		.attr('stroke', '#111')
+	// 		.attr('stroke-width', 1.5)
+	// 		.attr('opacity', 0);
+	// });
+
+	// 모든 선에 대한 이벤트 핸들러를 등록합니다.
+	// rootSvg
+	// 	.selectAll('.tooltipLine')
+	// 	.on('mouseover', function () {
+	// 		d3.select(this).attr('opacity', '0.25'); // 마우스 오버시 보이도록 설정
+	// 	})
+	// 	.on('mouseout', function () {
+	// 		d3.select(this).attr('opacity', '0'); // 마우스 아웃시 숨기도록 설정
+	// 	});
 
 	return svg;
 }
