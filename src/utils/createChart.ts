@@ -106,26 +106,31 @@ export default function createChart(svg: SVGElement, periodValues_List: DateAndV
 		.attr('stroke-width', 1.5)
 		.attr('d', makeLineDataForPath(periodValues_List as DateAndValue_Type[]));
 
+	// 모든 선을 생성합니다.
 	periodValues_List.forEach((dataPoint, index) => {
 		rootSvg
 			.append('line')
-			.attr('class', `tooltipLine${index}`)
+			.attr('class', 'tooltipLine')
 			.attr('x1', utcScale(dataPoint.date))
 			.attr('y1', 0)
 			.attr('x2', utcScale(dataPoint.date))
 			.attr('y2', svgHeight - xAxisHeight - rootSvgPadding - rootSvgPaddingTop)
 			.attr('stroke', '#111')
-			.attr('opacity', '0.25')
-			.attr('visibility', 'visible');
-
-		d3.select(`.tooltipLine${index}`)
-			.on('mouseover', function () {
-				d3.select(this).attr('visibility', 'hidden');
-			})
-			.on('mouseout', function () {
-				d3.select(this).attr('visibility', 'visible');
-			});
+			.attr('stroke-width', 1.5)
+			.attr('opacity', 0);
+		// visibility가 hidden이면 이벤트를 감지할 수 없다.
 	});
+
+	// 모든 선에 대한 이벤트 핸들러를 등록합니다.
+	rootSvg
+		.selectAll('.tooltipLine')
+		.on('mouseover', function () {
+			d3.select(this).attr('opacity', '0.25'); // 마우스 오버시 보이도록 설정
+			console.log(d3.select(this).attr('x1'));
+		})
+		.on('mouseout', function () {
+			d3.select(this).attr('opacity', '0'); // 마우스 아웃시 숨기도록 설정
+		});
 
 	return svg;
 }
