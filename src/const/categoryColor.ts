@@ -1,8 +1,12 @@
 const const_categoryColor = {
-	interest: '#FFF9DB',
-	exchange: '#D6FAE6',
-	consume: '#EDE6FA',
-	production: '#CCE0FF'
+	interest_mortage: '#E5B04F',
+	interest_fed: '#B88855',
+	materials: '#D8C3A0',
+	gdp: '#A9C9C2',
+	exchange: '#59AEC3',
+	production: '#FEBCD7',
+	consume: '#CBEDFE',
+	labor: '#7CB8EF'
 };
 
 export default const_categoryColor;
