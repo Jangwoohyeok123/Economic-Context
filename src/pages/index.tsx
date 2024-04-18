@@ -22,6 +22,7 @@ import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { roboto, poppins, frontUrl } from './_app';
 import Pagination from '@/components/pagination/Pagination';
 import SEO from '@/components/seo/SEO';
+import CategoryTabMenu from '@/components/categoryTabMenu/CategoryTabMenu';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
@@ -65,21 +66,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 				<Image src={mainImage} alt='mainImage for mainpage' aria-label='mainImage' placeholder='blur' objectFit='cover' quality={80} fill priority />
 			</div>
 			<main className={clsx(styles.Home, poppins.variable, roboto.variable)}>
-				<div className={clsx(styles.categoryNames)}>
-					{categoryNames.map((_, idx) => {
-						return (
-							<button
-								className={clsx(categoryIndex === idx ? styles.on : '')}
-								key={idx}
-								onClick={() => {
-									setCategoryIndex(idx);
-									setCurrentPage(1);
-								}}>
-								{categoryNames[idx]}
-							</button>
-						);
-					})}
-				</div>
+				<CategoryTabMenu categoryNames={categoryNames} />
 				{user.isLogin ? (
 					<CategoryWithIsActive
 						categoryData={category_List || []}
