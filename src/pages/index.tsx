@@ -54,6 +54,11 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 		}))
 	});
 	const category_List = categoryQueries[categoryIndex].data;
+	const selectCategory = (e: React.MouseEvent<HTMLButtonElement>, idx: number) => {
+		e.preventDefault();
+		setCategoryIndex(idx);
+		setCurrentPage(1);
+	};
 
 	if (!category_List) {
 		return <div>isLoading</div>;
@@ -66,7 +71,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 				<Image src={mainImage} alt='mainImage for mainpage' aria-label='mainImage' placeholder='blur' objectFit='cover' quality={80} fill priority />
 			</div>
 			<main className={clsx(styles.Home, poppins.variable, roboto.variable)}>
-				<CategoryTabMenu categoryNames={categoryNames} />
+				<CategoryTabMenu categoryNames={categoryNames} categoryIndex={categoryIndex} selectCategory={selectCategory} />
 				{user.isLogin ? (
 					<CategoryWithIsActive
 						categoryData={category_List || []}
