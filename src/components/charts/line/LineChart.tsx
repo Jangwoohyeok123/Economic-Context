@@ -120,6 +120,11 @@ const LineChart = ({ indicator, values: values_List, width = 100, height = 65, c
 		renderChartSvg(rootSvgRef.current, preparedValues_List, height, duration);
 	}, [duration]);
 
+	// 초기렌더링 문제문제 해결을 위해서 빈배열 useEffect추가
+	useEffect(() => {
+		if (rootSvgRef.current) renderChartSvg(rootSvgRef.current, values_List, height, duration);
+	}, []);
+
 	return (
 		<div className={className}>
 			<ChartWrapper ref={rootSvgContainerRef} width={width}>
