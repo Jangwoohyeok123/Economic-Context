@@ -7,6 +7,7 @@ import { Indicator_Type, DateAndValue_Type } from '@/types/fred';
 import React, { useEffect, useRef, useState } from 'react';
 import Tooltip from '@mui/material/Tooltip';
 import makeThrottledHandler from '@/utils/makeThrottledHandler';
+import { useRouter } from 'next/router';
 
 interface ChartWrapper_Props {
 	width: number;
@@ -85,6 +86,7 @@ const LineChart = ({ indicator, values: values_List, width = 100, height = 65, c
 	const { frequency } = indicator;
 	const [duration, setDuration] = useState<number>(10);
 	const lastDate = values_List[values_List.length - 1].date;
+	const router = useRouter();
 
 	// resize 이벤트 발생시 차트 다시그리기
 	useEffect(() => {

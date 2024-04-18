@@ -30,3 +30,28 @@ a {
 	text-decoration: none;
 	outline: 0;
 }
+
+.myTooltipStyle {
+	position: absolute;
+	visibility: hidden;
+	padding: 10px;
+	background: white;
+	border: 1px solid;
+	border-color: var(--tooltipColor);
+	border-radius: 5px;
+	width: 150px;
+
+	&::after {
+		content: '';
+		position: absolute;
+		top: 100%;
+		left: 50%;
+		margin-left: -10px;
+		border-width: 10px;
+		border-style: solid;
+		border-color: var(--tooltipColor) transparent transparent transparent;
+	}
+
+	&::before {
+	}
+}
