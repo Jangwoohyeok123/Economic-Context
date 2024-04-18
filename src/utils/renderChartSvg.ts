@@ -137,7 +137,7 @@ export default function renderChartSvg(svg: SVGElement, periodValues_List: DateA
 					const tooltipY = linearScale(d.value as number);
 
 					// 툴팁 위치 조정, SVG 내에서의 좌표 사용
-					tooltipElement.style.left = `${tooltipX}px`;
+					tooltipElement.style.left = `${tooltipX - 10}px`;
 					tooltipElement.style.top = `${tooltipY}px`;
 					tooltipElement.style.transform = 'translate(-30%, -30%)';
 				}
