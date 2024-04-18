@@ -23,6 +23,7 @@ import Pagination from '@/components/pagination/Pagination';
 import SEO from '@/components/seo/SEO';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
+const CategoryTabMenu = dynamic(() => import('@/components/categoryTabMenu/CategoryTabMenu'), { ssr: false });
 
 interface Home_Props {
 	interest: Indicator_Type[];
@@ -52,6 +53,12 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 		}))
 	});
 	const category_List = categoryQueries[categoryIndex].data;
+	const selectCategory = (e: React.MouseEvent<HTMLButtonElement>, idx: number) => {
+		e.preventDefault();
+		const newIndex = idx;
+		setCategoryIndex(newIndex);
+		setCurrentPage(1);
+	};
 
 	if (!category_List) {
 		return <div>isLoading</div>;
@@ -64,21 +71,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 				<Image src={mainImage} alt='mainImage for mainpage' aria-label='mainImage' placeholder='blur' objectFit='cover' quality={80} fill priority />
 			</div>
 			<main className={clsx(styles.Home, poppins.variable, roboto.variable)}>
-				<div className={clsx(styles.categoryNames)}>
-					{categoryNames.map((_, idx) => {
-						return (
-							<button
-								className={clsx(categoryIndex === idx ? styles.on : '')}
-								key={idx}
-								onClick={() => {
-									setCategoryIndex(idx);
-									setCurrentPage(1);
-								}}>
-								{categoryNames[idx]}
-							</button>
-						);
-					})}
-				</div>
+				<CategoryTabMenu categoryNames={categoryNames} categoryIndex={categoryIndex} selectCategory={selectCategory} />
 				{user.isLogin ? (
 					<CategoryWithIsActive
 						categoryData={category_List || []}
@@ -123,7 +116,9 @@ export async function getStaticProps() {
 	const baseUrl = 'https://api.stlouisfed.org/fred/';
 
 	const requests = [
-		axios.get(`${baseUrl}category/series?category_id=${const_categoryId.interest}&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`),
+		axios.get(
+			`${baseUrl}category/series?category_id=${const_categoryId.interest_mortgage}&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
+		),
 		axios.get(`${baseUrl}category/series?category_id=${const_categoryId.exchange}&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`),
 		axios.get(`${baseUrl}category/series?category_id=${const_categoryId.production}&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`),
 		axios.get(`${baseUrl}category/series?category_id=${const_categoryId.consume}&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`)

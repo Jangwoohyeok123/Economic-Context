@@ -7,33 +7,6 @@
 	padding: 0 15%;
 	min-height: 620px;
 	margin: 0 auto;
-
-	.categoryNames {
-		width: 100%;
-		padding-top: 50px;
-		text-align: center;
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		gap: 20px;
-
-		button {
-			border: 1px solid #ccc;
-			padding: 10px 20px; // button 크기가 늘어나면 화면이 커짐
-			cursor: pointer;
-			transition: 0.3s;
-
-			&:hover {
-				color: #fff;
-				background: #111;
-			}
-
-			&.on {
-				color: #fff;
-				background: #111;
-			}
-		}
-	}
 }
 
 .mainImage {
@@ -46,14 +19,6 @@
 @media screen and (max-width: var.$tablet) {
 	.Home {
 		width: 100%;
-
-		.categoryNames {
-			flex-direction: row;
-
-			button {
-				width: 40%;
-			}
-		}
 	}
 
 	.mainImage {
