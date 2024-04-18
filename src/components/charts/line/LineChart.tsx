@@ -1,12 +1,13 @@
-import clsx from 'clsx';
-import styles from './LineChart.module.scss';
 import styled from 'styled-components';
 import * as d3 from 'd3';
-import createChartSvg from '@/utils/createChart';
-import setPeriodValues_List from '@/utils/setPeriodValues_List';
+import renderChartSvg from '@/utils/renderChartSvg';
+import prepareValues_ListByPeriod from '@/utils/setPeriodValues_List';
 import makeDebouncedHandler from '@/utils/makeDebounceHandler';
 import { Indicator_Type, DateAndValue_Type } from '@/types/fred';
 import React, { useEffect, useRef, useState } from 'react';
+import Tooltip from '@mui/material/Tooltip';
+import makeThrottledHandler from '@/utils/makeThrottledHandler';
+import { useRouter } from 'next/router';
 
 interface ChartWrapper_Props {
 	width: number;
@@ -51,7 +52,7 @@ const ChartFeatures = styled.div`
 	}
 `;
 
-const Chart = styled.div`
+const ChartSvgWrapper = styled.div`
 	display: flex;
 	height: calc(100% - var(--chartHeaderSize));
 	border-bottom: 1px solid #fff;
@@ -85,13 +86,14 @@ const LineChart = ({ indicator, values: values_List, width = 100, height = 65, c
 	const { frequency } = indicator;
 	const [duration, setDuration] = useState<number>(10);
 	const lastDate = values_List[values_List.length - 1].date;
+	const router = useRouter();
 
 	// resize 이벤트 발생시 차트 다시그리기
 	useEffect(() => {
 		const resetChart = () => {
 			if (rootSvgRef.current) {
 				d3.select(rootSvgRef.current).selectAll('*').remove();
-				createChartSvg(rootSvgRef.current, values_List, height);
+				renderChartSvg(rootSvgRef.current, values_List, height, duration);
 			}
 		};
 		const debounced_resetChart = makeDebouncedHandler(resetChart, 200);
@@ -101,16 +103,16 @@ const LineChart = ({ indicator, values: values_List, width = 100, height = 65, c
 		return () => {
 			window.removeEventListener('resize', debounced_resetChart);
 		};
-	}, [values_List]);
+	}, [rootSvgRef.current]);
 
-	// duration 변경시 차트 다시그리기
+	// duration 변경시 데이터를 변경하고 차트 다시그리기
+	// duration 변경시 tooltip 을 다시생성한다.
 	useEffect(() => {
-		let periodValues_List: DateAndValue_Type[] = setPeriodValues_List(duration, values_List, lastDate);
+		if (!rootSvgRef.current) return;
+		d3.select(rootSvgRef.current).selectAll('*').remove();
 
-		if (rootSvgRef.current) {
-			d3.select(rootSvgRef.current).selectAll('*').remove();
-			createChartSvg(rootSvgRef.current, periodValues_List, height);
-		}
+		const preparedValues_List: DateAndValue_Type[] = prepareValues_ListByPeriod(duration, values_List, lastDate);
+		renderChartSvg(rootSvgRef.current, preparedValues_List, height, duration);
 	}, [duration]);
 
 	return (
@@ -126,9 +128,9 @@ const LineChart = ({ indicator, values: values_List, width = 100, height = 65, c
 					</ul>
 				</ChartFeatures>
 				<span>units: {indicator.units_short}</span>
-				<Chart>
+				<ChartSvgWrapper>
 					<Svg ref={rootSvgRef} />
-				</Chart>
+				</ChartSvgWrapper>
 			</ChartWrapper>
 		</div>
 	);
