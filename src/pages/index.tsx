@@ -124,7 +124,9 @@ export async function getStaticProps() {
 	const baseUrl = 'https://api.stlouisfed.org/fred/';
 
 	const requests = [
-		axios.get(`${baseUrl}category/series?category_id=${const_categoryId.interest_mortage}&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`),
+		axios.get(
+			`${baseUrl}category/series?category_id=${const_categoryId.interest_mortgage}&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
+		),
 		axios.get(`${baseUrl}category/series?category_id=${const_categoryId.exchange}&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`),
 		axios.get(`${baseUrl}category/series?category_id=${const_categoryId.production}&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`),
 		axios.get(`${baseUrl}category/series?category_id=${const_categoryId.consume}&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`)

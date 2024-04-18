@@ -1,5 +1,5 @@
 const const_categoryColor = {
-	interest_mortage: '#E5B04F',
+	interest_mortgage: '#E5B04F',
 	interest_fed: '#B88855',
 	materials: '#D8C3A0',
 	gdp: '#A9C9C2',
