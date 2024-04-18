@@ -126,20 +126,24 @@ export default function renderChartSvg(svg: SVGElement, periodValues_List: DateA
 			.attr('fill', 'black')
 			.attr('opacity', 0)
 			.on('mouseover', function (event, d) {
-				tooltipElement.style.visibility = 'visible';
-				updateTooltipContent(d);
+				if (tooltipElement) {
+					tooltipElement.style.visibility = 'visible';
+					updateTooltipContent(d);
+				}
 			})
 			.on('mousemove', function (event, d) {
-				const tooltipX = utcScale(d.date);
-				const tooltipY = linearScale(d.value as number);
+				if (tooltipElement) {
+					const tooltipX = utcScale(d.date);
+					const tooltipY = linearScale(d.value as number);
 
-				// 툴팁 위치 조정, SVG 내에서의 좌표 사용
-				tooltipElement.style.left = `${tooltipX}px`;
-				tooltipElement.style.top = `${tooltipY}px`;
-				tooltipElement.style.transform = 'translate(-30%, -30%)'; // 툴팁을 상단으
+					// 툴팁 위치 조정, SVG 내에서의 좌표 사용
+					tooltipElement.style.left = `${tooltipX}px`;
+					tooltipElement.style.top = `${tooltipY}px`;
+					tooltipElement.style.transform = 'translate(-30%, -30%)';
+				}
 			})
 			.on('mouseout', function () {
-				tooltipElement.style.visibility = 'hidden';
+				if (tooltipElement) tooltipElement.style.visibility = 'hidden';
 			});
 	}
 
