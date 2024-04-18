@@ -140,8 +140,6 @@ export default function Morepage() {
 			queryClient.invalidateQueries({
 				queryKey: [const_queryKey.favorite]
 			});
-
-			alert('add 성공');
 		},
 		onError(error) {
 			console.error(error);
@@ -154,7 +152,6 @@ export default function Morepage() {
 			queryClient.invalidateQueries({
 				queryKey: [const_queryKey.favorite]
 			});
-			alert('delete 성공');
 		},
 		onError(error) {
 			console.error(error);

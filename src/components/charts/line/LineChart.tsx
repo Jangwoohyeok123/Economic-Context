@@ -5,8 +5,6 @@ import prepareValues_ListByPeriod from '@/utils/setPeriodValues_List';
 import makeDebouncedHandler from '@/utils/makeDebounceHandler';
 import { Indicator_Type, DateAndValue_Type } from '@/types/fred';
 import React, { useEffect, useRef, useState } from 'react';
-import Tooltip from '@mui/material/Tooltip';
-import makeThrottledHandler from '@/utils/makeThrottledHandler';
 import { useRouter } from 'next/router';
 
 interface ChartWrapper_Props {
@@ -91,9 +89,16 @@ const LineChart = ({ indicator, values: values_List, width = 100, height = 65, c
 	// resize 이벤트 발생시 차트 다시그리기
 	useEffect(() => {
 		const resetChart = () => {
-			if (rootSvgRef.current) {
+			// tooltip 남아있는 현상 제거
+			const tooltips = document.querySelectorAll('.myTooltipStyle');
+			tooltips.forEach(tooltip => {
+				tooltip.remove();
+			});
+
+			if (rootSvgRef.current && rootSvgContainerRef.current) {
 				d3.select(rootSvgRef.current).selectAll('*').remove();
 				renderChartSvg(rootSvgRef.current, values_List, height, duration);
+				console.log('reset Chart');
 			}
 		};
 		const debounced_resetChart = makeDebouncedHandler(resetChart, 200);
@@ -103,7 +108,7 @@ const LineChart = ({ indicator, values: values_List, width = 100, height = 65, c
 		return () => {
 			window.removeEventListener('resize', debounced_resetChart);
 		};
-	}, [rootSvgRef.current]);
+	}, []);
 
 	// duration 변경시 데이터를 변경하고 차트 다시그리기
 	// duration 변경시 tooltip 을 다시생성한다.
