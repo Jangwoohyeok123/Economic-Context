@@ -23,8 +23,10 @@ export const TabMenuWrap = styled.div`
 		overflow: hidden;
 		> span.icon {
 			position: absolute;
-			right: -5px;
-			bottom: -5px;
+			transform: scale(70%);
+			right: -9px;
+			bottom: -9px;
+			transition: 0.3s;
 		}
 	}
 	@media screen and (max-width: 1024px) {
