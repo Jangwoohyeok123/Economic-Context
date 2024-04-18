@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import Head from 'next/head';
 import Image from 'next/image';
 import axios from 'axios';
 import styles from './Home.module.scss';
@@ -62,16 +61,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 		<>
 			<SEO title='Economic-Context' description='Economic indicators can be selected and utilized within myContext' />
 			<div className={clsx(styles.mainImage)}>
-				<Image
-					src={mainImage}
-					alt='mainImage for mainpage'
-					aria-label='mainImage'
-					placeholder='blur'
-					objectFit='cover'
-					quality={80}
-					fill
-					priority
-				/>
+				<Image src={mainImage} alt='mainImage for mainpage' aria-label='mainImage' placeholder='blur' objectFit='cover' quality={80} fill priority />
 			</div>
 			<main className={clsx(styles.Home, poppins.variable, roboto.variable)}>
 				<div className={clsx(styles.categoryNames)}>
@@ -133,18 +123,10 @@ export async function getStaticProps() {
 	const baseUrl = 'https://api.stlouisfed.org/fred/';
 
 	const requests = [
-		axios.get(
-			`${baseUrl}category/series?category_id=${const_categoryId.interest}&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
-		),
-		axios.get(
-			`${baseUrl}category/series?category_id=${const_categoryId.exchange}&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
-		),
-		axios.get(
-			`${baseUrl}category/series?category_id=${const_categoryId.production}&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
-		),
-		axios.get(
-			`${baseUrl}category/series?category_id=${const_categoryId.consume}&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
-		)
+		axios.get(`${baseUrl}category/series?category_id=${const_categoryId.interest}&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`),
+		axios.get(`${baseUrl}category/series?category_id=${const_categoryId.exchange}&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`),
+		axios.get(`${baseUrl}category/series?category_id=${const_categoryId.production}&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`),
+		axios.get(`${baseUrl}category/series?category_id=${const_categoryId.consume}&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`)
 	];
 
 	try {

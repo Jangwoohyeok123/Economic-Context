@@ -1,12 +1,10 @@
 import { DateAndValue_Type } from '@/types/fred';
 import * as d3 from 'd3';
-
-// 모듈 스코프의 생명주기를 따라간다.
-let tooltipIndex = 0;
+import makeThrottledHandler from './makeThrottledHandler';
 
 // 차트가 될 svg 태그를 만드는 함수입니다.
 // svg 태그 내부에 x, y 축과 line 이 포함됩니다.
-export default function renderChartSvg(svg: SVGElement, periodValues_List: DateAndValue_Type[], height: number): SVGElement {
+export default function renderChartSvg(svg: SVGElement, periodValues_List: DateAndValue_Type[], height: number, duration: number): SVGElement {
 	const { x: svgX, y: svgY, bottom: svgBottom, top: svgTop, width: svgWidth, height: svgHeight } = svg.getBoundingClientRect();
 	const [xAxisStartPosition, xAxisLastPosition] = [svgX, svgX + svgWidth];
 	const [xAxisHeight, yAxisWidth] = [25, 50];
@@ -39,11 +37,10 @@ export default function renderChartSvg(svg: SVGElement, periodValues_List: DateA
 	// domain과 range의 관계를 설정하여, domain을 range로 변환하는 scale함수를 만들었습니다.
 	const [utcScale, linearScale] = [d3.scaleUtc(xDomain, xRange), d3.scaleLinear(yDomain, yRange)];
 
-	// x 축에 실제값을 넣기전에 도메인의 범위, 레인지의 범위를 정하는 로직입니다.
-	const xScale = d3
-		.scaleUtc()
-		.domain([xMin, xMax])
-		.range([0, svgWidth - rootSvgPadding * 2 - yAxisWidth]);
+	// // x 축에 실제값을 넣기전에 도메인의 범위, 레인지의 범위를 정하는 로직입니다.
+	// d3.scaleUtc()
+	// 	.domain([xMin, xMax])
+	// 	.range([0, svgWidth - rootSvgPadding * 2 - yAxisWidth]);
 
 	// 시계열 데이터를 SVG(path)에서 사용할 수 있는 형태로 가공하는 역할함수를 만든다.
 	const makeDataForPath = d3
@@ -109,43 +106,64 @@ export default function renderChartSvg(svg: SVGElement, periodValues_List: DateA
 		.attr('stroke-width', 1.5)
 		.attr('d', makeDataForPath(periodValues_List as DateAndValue_Type[]));
 
+	const dataCount = periodValues_List.length;
+	const lengthForTooltip = svgWidth / dataCount;
+	let tooltipElement = document.getElementById('myTooltip');
+
+	// 툴팁 요소가 존재하지 않는 경우에만 새로 생성
+	if (!tooltipElement) {
+		tooltipElement = document.createElement('div');
+		tooltipElement.id = 'myTooltip'; // ID 할당
+		document.body.appendChild(tooltipElement);
+
+		// 기본 스타일 부여
+		tooltipElement.style.position = 'absolute';
+		tooltipElement.style.visibility = 'hidden';
+		tooltipElement.style.padding = '8px';
+		tooltipElement.style.background = 'white';
+		tooltipElement.style.border = '1px solid black';
+		tooltipElement.style.pointerEvents = 'none'; // 툴팁이 마우스 이벤트에 반응하지 않도록 설정
+	}
+	// 요소 생성
+
+	// 요소 기본 스타일 부여
+	tooltipElement.style.position = 'absolute';
+	tooltipElement.style.visibility = 'hidden';
+	tooltipElement.style.padding = '8px';
+	tooltipElement.style.background = 'white';
+	tooltipElement.style.border = '1px solid black';
+	tooltipElement.style.pointerEvents = 'none'; // 툴팁이 마우스 이벤트에 반응하지 않도록 설
+
 	rootSvg
-		.append('line')
-		.attr('class', 'tooltipLine')
-		.attr('x1', utcScale(periodValues_List[200].date))
-		.attr('y1', 0)
-		.attr('x2', utcScale(periodValues_List[200].date))
-		.attr('y2', svgHeight - xAxisHeight - rootSvgPadding - rootSvgPaddingTop)
-		.attr('stroke', '#111')
-		.attr('stroke-width', 1.5)
-		.attr('opacity', 1);
+		.selectAll('rect')
+		.data(periodValues_List) // 데이터 바인딩
+		.enter() // 데이터 항목에 대해 처리
+		.append('rect') // rect 요소 추가
+		.attr('x', d => utcScale(d.date) - lengthForTooltip / 2) // 중심 x축 위치 설정, 사각형 중앙을 맞추기 위해 폭의 절반을 뺌
+		.attr('y', 0) // 중심 y축 위치 설정, 사각형 중앙을 맞추기 위해 높이의 절반을 뺌
+		.attr('width', lengthForTooltip) // 사각형의 폭
+		.attr('height', svgHeight - 50 - xAxisHeight) // 사각형의 높이
+		.attr('fill', 'black') // 사각형의 색상 설정
+		.attr('opacity', 0.3)
+		.on('mouseover', function (event, d) {
+			tooltipElement.style.visibility = 'visible';
+			updateTooltipContent(d);
+		})
+		.on('mousemove', function (event) {
+			tooltipElement.style.left = `${event.pageX + 10}px`;
+			tooltipElement.style.top = `${event.pageY + 10}px`;
+		})
+		.on('mouseout', function () {
+			tooltipElement.style.visibility = 'hidden';
+		});
 
-	svg.addEventListener('mouseover', () => {
-		console.log('hello');
-	});
-
-	// periodValues_List.forEach((dataPoint, index) => {
-	// 	rootSvg
-	// 		.append('line')
-	// 		.attr('class', 'tooltipLine')
-	// 		.attr('x1', utcScale(dataPoint.date))
-	// 		.attr('y1', 0)
-	// 		.attr('x2', utcScale(dataPoint.date))
-	// 		.attr('y2', svgHeight - xAxisHeight - rootSvgPadding - rootSvgPaddingTop)
-	// 		.attr('stroke', '#111')
-	// 		.attr('stroke-width', 1.5)
-	// 		.attr('opacity', 0);
-	// });
-
-	// 모든 선에 대한 이벤트 핸들러를 등록합니다.
-	// rootSvg
-	// 	.selectAll('.tooltipLine')
-	// 	.on('mouseover', function () {
-	// 		d3.select(this).attr('opacity', '0.25'); // 마우스 오버시 보이도록 설정
-	// 	})
-	// 	.on('mouseout', function () {
-	// 		d3.select(this).attr('opacity', '0'); // 마우스 아웃시 숨기도록 설정
-	// 	});
+	function updateTooltipContent(data) {
+		tooltipElement.innerHTML = `Value: ${data.value}<br>Date: ${data.date.toISOString()}`;
+	}
 
 	return svg;
 }
+
+// 중심 x, y 축을 알 수 있다.
+// createChart가 실행되면 js 코드를 통해 tooltip을 만든다.
+//
