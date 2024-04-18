@@ -84,7 +84,6 @@ const LineChart = ({ indicator, values: values_List, width = 100, height = 65, c
 	const { frequency } = indicator;
 	const [duration, setDuration] = useState<number>(10);
 	const lastDate = values_List[values_List.length - 1].date;
-	const router = useRouter();
 
 	// resize 이벤트 발생시 차트 다시그리기
 	useEffect(() => {
@@ -98,7 +97,6 @@ const LineChart = ({ indicator, values: values_List, width = 100, height = 65, c
 			if (rootSvgRef.current && rootSvgContainerRef.current) {
 				d3.select(rootSvgRef.current).selectAll('*').remove();
 				renderChartSvg(rootSvgRef.current, values_List, height, duration);
-				console.log('reset Chart');
 			}
 		};
 		const debounced_resetChart = makeDebouncedHandler(resetChart, 200);
@@ -119,6 +117,14 @@ const LineChart = ({ indicator, values: values_List, width = 100, height = 65, c
 		const preparedValues_List: DateAndValue_Type[] = prepareValues_ListByPeriod(duration, values_List, lastDate);
 		renderChartSvg(rootSvgRef.current, preparedValues_List, height, duration);
 	}, [duration]);
+
+	// 초기렌더링 문제문제 해결을 위해서 빈배열 useEffect추가
+	useEffect(() => {
+		if (rootSvgRef.current) {
+			d3.select(rootSvgRef.current).selectAll('*').remove();
+			renderChartSvg(rootSvgRef.current, values_List, height, duration);
+		}
+	}, []);
 
 	return (
 		<div className={className}>
