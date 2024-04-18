@@ -1,6 +1,5 @@
 import clsx from 'clsx';
-import styles from './CategoryTabMenu.module.scss';
-import { useState } from 'react';
+import * as S from '@/styles/CategoryTabMenu.style';
 
 interface CategoryTabMenu_Props {
 	categoryNames: string[];
@@ -11,19 +10,20 @@ interface CategoryTabMenu_Props {
 /** categoryNames 배열을 전달하면 tab 기능을 제공한다. */
 export default function CategoryTabMenu({ categoryNames, categoryIndex, selectCategory }: CategoryTabMenu_Props) {
 	return (
-		<div className={clsx(styles.CategoryTabMenu)}>
+		<S.TabMenu>
 			{categoryNames.map((_, idx) => {
 				return (
 					<button
-						className={clsx(categoryIndex === idx ? clsx(styles.on) : '')}
 						key={idx}
 						onClick={e => {
 							selectCategory(e, idx);
-						}}>
+						}}
+						type='button'
+						className={clsx({ on: idx === categoryIndex })}>
 						{categoryNames[idx]}
 					</button>
 				);
 			})}
-		</div>
+		</S.TabMenu>
 	);
 }

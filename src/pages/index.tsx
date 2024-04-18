@@ -22,9 +22,9 @@ import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { roboto, poppins, frontUrl } from './_app';
 import Pagination from '@/components/pagination/Pagination';
 import SEO from '@/components/seo/SEO';
-import CategoryTabMenu from '@/components/categoryTabMenu/CategoryTabMenu';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
+const CategoryTabMenu = dynamic(() => import('@/components/categoryTabMenu/CategoryTabMenu'), { ssr: false });
 
 interface Home_Props {
 	interest: Indicator_Type[];
@@ -56,7 +56,8 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 	const category_List = categoryQueries[categoryIndex].data;
 	const selectCategory = (e: React.MouseEvent<HTMLButtonElement>, idx: number) => {
 		e.preventDefault();
-		setCategoryIndex(idx);
+		const newIndex = idx;
+		setCategoryIndex(newIndex);
 		setCurrentPage(1);
 	};
 
