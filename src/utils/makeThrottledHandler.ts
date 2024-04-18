@@ -1,5 +1,5 @@
 export default function makeThrottledHandler(eventHandler: () => any, delay: number) {
-	let timer: number | null = null;
+	let timer: NodeJS.Timeout | null = null;
 
 	return () => {
 		if (timer) return;
