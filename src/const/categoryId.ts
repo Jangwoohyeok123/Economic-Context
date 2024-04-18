@@ -1,5 +1,5 @@
 const const_categoryId = {
-	interest_mortage: 114,
+	interest_mortgage: 114,
 	interest_fed: 22,
 	materials: 32217,
 	gdp: 106,

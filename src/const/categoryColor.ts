@@ -1,12 +1,12 @@
-const const_categoryColor = {
-	interest_mortage: '#E5B04F',
-	interest_fed: '#B88855',
-	materials: '#D8C3A0',
-	gdp: '#A9C9C2',
-	exchange: '#59AEC3',
-	production: '#FEBCD7',
-	consume: '#CBEDFE',
-	labor: '#7CB8EF'
-};
+const const_categoryColor = [
+	{ name: 'interest_mortgage', color: '#E5B04F' },
+	{ name: 'interest_fed', color: '#B88855' },
+	{ name: 'materials', color: '#D8C3A0' },
+	{ name: 'gdp', color: '#A9C9C2' },
+	{ name: 'exchange', color: '#59AEC3' },
+	{ name: 'production', color: '#FEBCD7' },
+	{ name: 'consume', color: '#CBEDFE' },
+	{ name: 'labor', color: '#7CB8EF' }
+];
 
 export default const_categoryColor;
