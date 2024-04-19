@@ -12,6 +12,7 @@ import AllContexts from '../allContexts/AllContexts';
 import CurrentContext from '../currentContext/CurrentContext';
 import { ContextNameWithKey_Type } from '@/types/context';
 import { getContextNameWithKey_List } from '@/api/context';
+import Profile from './propfile/Profile';
 
 interface MyContextTab_Props {
 	selectedTab: string;
@@ -31,9 +32,7 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 	// selectedTab 이 변경될 때마다 currentContextId 를 찾아서 CurrentContext 로 전달
 	useEffect(() => {
 		if (contextIdsWithNames) {
-			const currentContextIdWithName = contextIdsWithNames?.find(
-				contextIdWithName => contextIdWithName.name === selectedTab
-			);
+			const currentContextIdWithName = contextIdsWithNames?.find(contextIdWithName => contextIdWithName.name === selectedTab);
 
 			if (currentContextIdWithName) setCurrentContextId(currentContextIdWithName.id);
 		}
@@ -43,9 +42,7 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 		if (selectedContext === 'Indicators') {
 			setSelectedTab('Indicators');
 		} else if (contextIdsWithNames) {
-			const currentContextIdWithName = contextIdsWithNames?.find(
-				contextIdWithName => contextIdWithName.name === selectedContext
-			);
+			const currentContextIdWithName = contextIdsWithNames?.find(contextIdWithName => contextIdWithName.name === selectedContext);
 
 			if (currentContextIdWithName) {
 				setCurrentContextId(currentContextIdWithName.id);
@@ -57,6 +54,7 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 	if (isLoading) return <div className={clsx(styles.MyContext)}>loading...</div>;
 	return (
 		<div className={clsx(styles.MyContext)}>
+			<Profile />
 			{selectedTab === 'MyContext' ? (
 				<AllContexts selectedContext={selectedContext} setSelectedContext={setSelectedContext} />
 			) : (
