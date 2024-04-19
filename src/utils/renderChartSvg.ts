@@ -148,7 +148,7 @@ export default function renderChartSvg(svg: SVGElement, periodValues_List: DateA
 
 				tooltipElement.style.left = `${tooltipX - 10}px`;
 				tooltipElement.style.top = `${tooltipY}px`;
-				tooltipElement.style.transform = 'translate(-50%, -100%)';
+				tooltipElement.style.transform = 'translate(-30%, -50%)';
 			})
 			.on('mouseout', function () {
 				tooltipElement.style.visibility = 'hidden';
