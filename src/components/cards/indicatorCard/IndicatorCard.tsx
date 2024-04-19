@@ -2,10 +2,13 @@ import clsx from 'clsx';
 import styles from './IndicatorCard.module.scss';
 import { useRouter } from 'next/router';
 import { cleanString } from '@/utils/cleanString';
-import { FavoriteIndicator_Type } from '@/types/favorite';
 import { frontUrl } from '@/pages/_app';
+import { Indicator_Type } from '@/types/fred';
+import { changeCategoryIdToColor } from '@/utils/changeNameToCategoryId';
 
-interface IndicatorCard_Props extends FavoriteIndicator_Type {
+interface IndicatorCard_Props {
+	categoryId: number;
+	indicator: Indicator_Type;
 	children: React.ReactNode;
 	className?: string;
 }
@@ -18,18 +21,8 @@ interface IndicatorCard_Props extends FavoriteIndicator_Type {
  * @param observation_start
  * @returns title, 기간 정보가 담기 card 를 반환한다. className 을 통해 커스텀 가능하다.
  */
-export default function IndicatorCard({
-	children,
-	notes,
-	title,
-	seriesId,
-	categoryId,
-	frequency,
-	popularity,
-	observation_end,
-	observation_start,
-	className
-}: IndicatorCard_Props) {
+export default function IndicatorCard({ indicator, categoryId, children, className }: IndicatorCard_Props) {
+	const { title, id: seriesId, observation_start, observation_end, notes } = indicator;
 	const router = useRouter();
 	const cleandTitle = title ? cleanString(title) : 'title';
 	const routeMorePage = (seriesId: string) => {
