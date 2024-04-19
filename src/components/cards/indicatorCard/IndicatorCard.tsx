@@ -22,7 +22,7 @@ interface IndicatorCard_Props {
  * @returns title, 기간 정보가 담기 card 를 반환한다. className 을 통해 커스텀 가능하다.
  */
 export default function IndicatorCard({ indicator, categoryId, children, className }: IndicatorCard_Props) {
-	const { title, id: seriesId, observation_start, observation_end, notes } = indicator;
+	const { title, id: seriesId, observation_start, observation_end, notes } = indicator ?? {}; // `??` indicator가 없을 때 생기는 에러를 위한 널병합연산자
 	const router = useRouter();
 	const cleandTitle = title ? cleanString(title) : 'title';
 	const routeMorePage = (seriesId: string) => {
