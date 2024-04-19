@@ -27,23 +27,44 @@ export default function AllContexts({ selectedContext, setSelectedContext }: All
 		<div>Loading...</div>;
 	}
 	const tooltipTitle = {
-		guide1: 'Click to proceed to the individual context page!'
+		guide1: "Let's go add indicators!",
+		guide2: 'Click to proceed to the individual context page!'
 	};
 	return (
 		<section className={clsx(styles.AllContexts)}>
 			<div className={clsx(styles.header)}>
 				<h2></h2>
-				<span onClick={() => setSelectedContext('Indicators')}>
-					<FaPlus />
-				</span>{' '}
+				<Tooltip
+					title={tooltipTitle.guide1}
+					placement='top'
+					componentsProps={{
+						tooltip: {
+							sx: {
+								width: 140,
+								height: 40,
+								bgcolor: '#fefefe',
+								color: '#111',
+								padding: 1,
+								fontSize: '13px',
+								whiteSpace: 'pre-line',
+								border: 0,
+								lineHeight: 1.2,
+								boxShadow: '0px 0px 3px rgba(0,0,0,0.1)'
+							}
+						}
+					}}>
+					<span onClick={() => setSelectedContext('Indicators')}>
+						<FaPlus />
+					</span>
+				</Tooltip>
 				{/*TODO :: 클릭하면 indicators로 이동*/}
 			</div>
 			<div className={clsx(styles.contextCardList)}>
-				{allContexts?.map((context: Context_Type, index: number) => {
-					const { id: contextId, name, createdAt } = context;
+				{allContexts ? (
+					allContexts.map((context: Context_Type, index: number) => {
+						const { id: contextId, name, createdAt } = context;
 
-					return (
-						<>
+						return (
 							<div key={index} className={clsx(styles.contextCard)}>
 								<div className={clsx(styles.cover)} onClick={() => setSelectedContext(name)}>
 									<Folder fill={'#F1F4FC'} className={clsx(styles.folder)} />
@@ -56,7 +77,7 @@ export default function AllContexts({ selectedContext, setSelectedContext }: All
 								{/* TODO:: 클릭 시 수정 & 삭제기능 있는 메뉴 노출로 수정 아래 툴팁은 임시 아이콘 : <RiMore2Line />*/}
 
 								<Tooltip
-									title={tooltipTitle.guide1}
+									title={tooltipTitle.guide2}
 									placement='top'
 									componentsProps={{
 										tooltip: {
@@ -79,9 +100,11 @@ export default function AllContexts({ selectedContext, setSelectedContext }: All
 									</button>
 								</Tooltip>
 							</div>
-						</>
-					);
-				})}
+						);
+					})
+				) : (
+					<div>{`context없음`}</div>
+				)}
 			</div>
 		</section>
 	);
