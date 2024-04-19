@@ -6,6 +6,7 @@ import makeDebouncedHandler from '@/utils/makeDebounceHandler';
 import { Indicator_Type, DateAndValue_Type } from '@/types/fred';
 import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
+import { changeCategoryIdToColor } from '@/utils/changeNameToCategoryId';
 
 interface ChartWrapper_Props {
 	width: number;
@@ -23,9 +24,13 @@ const ChartWrapper = styled.div<ChartWrapper_Props>`
 	}
 `;
 
-const ChartFeatures = styled.div`
+interface ChartFeatures_Props {
+	categoryColor: string;
+}
+
+const ChartFeatures = styled.div<ChartFeatures_Props>`
 	height: var(--chartHeaderSize);
-	background: var(--chartHeaderColor);
+	background: ${Props => Props.categoryColor};
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -62,6 +67,7 @@ const Svg = styled.svg`
 `;
 
 export interface LineChart_Props {
+	categoryId: number;
 	indicator: Indicator_Type;
 	duration: number;
 	children?: React.ReactElement;
@@ -78,7 +84,7 @@ export interface LineChart_Props {
  * @width [y]%
  * @className
  */
-const LineChart = ({ indicator, values: values_List, width = 100, height = 65, className }: LineChart_Props) => {
+const LineChart = ({ categoryId, indicator, values: values_List, width = 100, height = 65, className }: LineChart_Props) => {
 	const rootSvgRef = useRef<SVGSVGElement>(null);
 	const rootSvgContainerRef = useRef<HTMLDivElement>(null);
 	const { frequency } = indicator;
@@ -129,7 +135,7 @@ const LineChart = ({ indicator, values: values_List, width = 100, height = 65, c
 	return (
 		<div className={className}>
 			<ChartWrapper ref={rootSvgContainerRef} width={width}>
-				<ChartFeatures>
+				<ChartFeatures categoryColor={changeCategoryIdToColor(categoryId)}>
 					<div>Frequency: {frequency}</div>
 					<ul>
 						<li onClick={() => setDuration(1)}>1Y</li>
