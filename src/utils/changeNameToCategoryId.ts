@@ -1,4 +1,6 @@
+import const_categoryColor from '@/const/categoryColor';
 import const_categoryTypes from '@/const/categoryId';
+import { ReactElement } from 'react';
 
 export const changeNameToCategoryId = (categoryName: string): number => {
 	let type = const_categoryTypes.interest_mortgage;
@@ -18,4 +20,20 @@ export const changeCategoryIdToName = (categoryType: number): string => {
 	if (categoryType === const_categoryTypes.consume) return (categoryName = 'Consume');
 
 	return categoryName;
+};
+
+export const changeCategoryIdToColor = (categoryId: number): string => {
+	const defaultColor = '#333;';
+	let categoryName = changeCategoryIdToName(categoryId);
+	let color = const_categoryColor[categoryName];
+	if (categoryName === 'Interest') color = const_categoryColor['interest_mortgage'];
+	if (categoryName === 'Fed') color = const_categoryColor['interest_fed'];
+	if (categoryName === 'Materials') color = const_categoryColor['materials'];
+	if (categoryName === 'GDP') color = const_categoryColor['gdp'];
+	if (categoryName === 'Exchange') color = const_categoryColor['exchange'];
+	if (categoryName === 'Production') color = const_categoryColor['production'];
+	if (categoryName === 'Consume') color = const_categoryColor['consume'];
+	if (categoryName === 'Labor') color = const_categoryColor['labor'];
+
+	return color || defaultColor;
 };

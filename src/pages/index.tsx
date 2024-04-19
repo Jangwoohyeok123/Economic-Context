@@ -43,6 +43,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 	const initialStates = [interest, exchange, production, consume];
 	const indicatorsPerPage = 12;
 	const categoryId = changeNameToCategoryId(categoryNames[categoryIndex]);
+	const categoryIdList = categoryNames.map(el => changeNameToCategoryId(el));
 
 	const categoryQueries = useQueries({
 		queries: categoryNames.map((_, idx) => ({
@@ -71,7 +72,12 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 				<Image src={mainImage} alt='mainImage for mainpage' aria-label='mainImage' placeholder='blur' objectFit='cover' quality={80} fill priority />
 			</div>
 			<main className={clsx(styles.Home, poppins.variable, roboto.variable)}>
-				<CategoryTabMenu categoryNames={categoryNames} categoryIndex={categoryIndex} selectCategory={selectCategory} />
+				<CategoryTabMenu
+					categoryNames={categoryNames}
+					categoryIndex={categoryIndex}
+					selectCategory={selectCategory}
+					categoryIdList={categoryIdList}
+				/>
 				{user.isLogin ? (
 					<CategoryWithIsActive
 						categoryData={category_List || []}

@@ -9,15 +9,17 @@ import Exchange from '@/public/exchange.svg';
 import Production from '@/public/production.svg';
 import Consume from '@/public/consume.svg';
 import Labor from '@/public/labor.svg';
+import { changeCategoryIdToColor, changeCategoryIdToName } from '@/utils/changeNameToCategoryId';
 
 interface CategoryTabMenu_Props {
 	categoryNames: string[];
+	categoryIdList: number[];
 	categoryIndex: number;
 	selectCategory: (e: React.MouseEvent<HTMLButtonElement>, idx: number) => void;
 }
 
 /** categoryNames 배열을 전달하면 tab 기능을 제공한다. */
-export default function CategoryTabMenu({ categoryNames, categoryIndex: selectedCategory, selectCategory }: CategoryTabMenu_Props) {
+export default function CategoryTabMenu({ categoryNames, categoryIndex: selectedCategory, selectCategory, categoryIdList }: CategoryTabMenu_Props) {
 	return (
 		<S.TabMenuWrap>
 			{categoryNames.map((_, idx) => {
@@ -27,30 +29,44 @@ export default function CategoryTabMenu({ categoryNames, categoryIndex: selected
 						onClick={e => {
 							selectCategory(e, idx);
 						}}
-						$categoryColor={const_categoryColor[idx].color}
+						$categoryColor={changeCategoryIdToColor(categoryIdList[idx])}
 						className={clsx({ on: idx === selectedCategory })}>
 						{categoryNames[idx]}
 						<span className={clsx('icon')}>
-							{const_categoryColor[idx].name === 'interest_mortgage' && (
-								<Interest_mortgage fill={idx === selectedCategory ? '#fefefe' : const_categoryColor[idx].color} />
-							)}
-							{const_categoryColor[idx].name === 'interest_fed' && (
-								<Interest_fed stroke={idx === selectedCategory ? '#fefefe' : const_categoryColor[idx].color} />
-							)}
-							{const_categoryColor[idx].name === 'materials' && (
-								<Materials stroke={idx === selectedCategory ? '#fefefe' : const_categoryColor[idx].color} />
-							)}
-							{const_categoryColor[idx].name === 'gdp' && <Gdp fill={idx === selectedCategory ? '#fefefe' : const_categoryColor[idx].color} />}
-							{const_categoryColor[idx].name === 'exchange' && (
-								<Exchange stroke={idx === selectedCategory ? '#fefefe' : const_categoryColor[idx].color} />
-							)}
-							{const_categoryColor[idx].name === 'production' && (
-								<Production fill={idx === selectedCategory ? '#fefefe' : const_categoryColor[idx].color} />
-							)}
-							{const_categoryColor[idx].name === 'consume' && (
-								<Consume fill={idx === selectedCategory ? '#fefefe' : const_categoryColor[idx].color} />
-							)}
-							{const_categoryColor[idx].name === 'labor' && <Labor stroke={idx === selectedCategory ? '#fefefe' : const_categoryColor[idx].color} />}
+							{(() => {
+								const name = changeCategoryIdToName(categoryIdList[idx]);
+								const color = idx === selectedCategory ? '#fefefe' : changeCategoryIdToColor(categoryIdList[idx]);
+								let svgComponent = <Interest_mortgage fill={color} />;
+								switch (name) {
+									case 'Interest':
+										svgComponent = <Interest_mortgage fill={color} />;
+										break;
+									case 'Fed':
+										svgComponent = <Interest_fed stroke={color} />;
+										break;
+									case 'Materials':
+										svgComponent = <Materials stroke={color} />;
+										break;
+									case 'GDP':
+										svgComponent = <Gdp fill={color} />;
+										break;
+									case 'Exchange':
+										svgComponent = <Exchange stroke={color} />;
+										break;
+									case 'Production':
+										svgComponent = <Production stroke={color} />;
+										break;
+									case 'Consume':
+										svgComponent = <Consume fill={color} />;
+										break;
+									case 'Labor':
+										svgComponent = <Labor stroke={color} />;
+										break;
+									default:
+										return svgComponent;
+								}
+								return svgComponent;
+							})()}
 						</span>
 					</S.MenuButton>
 				);
