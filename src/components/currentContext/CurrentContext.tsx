@@ -14,7 +14,7 @@ interface CurrentContext_Props {
 
 export default function CurrentContext({ currentContextId }: CurrentContext_Props) {
 	const { data: currentContext, isLoading } = useQuery<Context_Type>({
-		queryKey: [const_queryKey.context, currentContextId],
+		queryKey: [const_queryKey.context, 'getContext', currentContextId],
 		queryFn: () => getContext(currentContextId)
 	});
 

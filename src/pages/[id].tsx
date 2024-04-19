@@ -18,6 +18,7 @@ import SkeletonMorepage from '@/components/skeleton/SkeletonMorepage';
 import styled from 'styled-components';
 import Footer from '@/components/footer/Footer';
 import AnotherIndicators from '@/components/anotherIndicators/AnotherIndicators';
+import { changeCategoryIdToColor } from '@/utils/changeNameToCategoryId';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 
@@ -246,7 +247,7 @@ export default function Morepage() {
 							</SaveFavoriteIndicatorButton>
 						</IntroduceContainer>
 
-						<LineChart duration={10} indicator={indicator} values={chartDatas} width={100}></LineChart>
+						<LineChart categoryId={Number(categoryId as string)} duration={10} indicator={indicator} values={chartDatas} width={100}></LineChart>
 						<ChartDescription indicator={indicator}></ChartDescription>
 						<AnotherIndicators />
 					</>
