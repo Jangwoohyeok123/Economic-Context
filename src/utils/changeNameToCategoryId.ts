@@ -1,5 +1,6 @@
-import const_categoryId from '@/const/categoryId';
+import const_categoryColor from '@/const/categoryColor';
 import const_categoryTypes from '@/const/categoryId';
+import { ReactElement } from 'react';
 
 export const changeNameToCategoryId = (categoryName: string): number => {
 	let type = const_categoryTypes.interest_mortgage;
@@ -22,15 +23,17 @@ export const changeCategoryIdToName = (categoryId: number): string => {
 };
 
 export const changeCategoryIdToColor = (categoryId: number): string => {
-	let categoryColor = '';
-	if (categoryId === const_categoryId.interest_mortgage) categoryColor = '#E5B04F';
-	if (categoryId === const_categoryId.interest_fed) categoryColor = '#B88855';
-	if (categoryId === const_categoryId.materials) categoryColor = '#D8C3A0';
-	if (categoryId === const_categoryId.gdp) categoryColor = '#A9C9C2';
-	if (categoryId === const_categoryId.exchange) categoryColor = '#59AEC3';
-	if (categoryId === const_categoryId.production) categoryColor = '#FEBCD7';
-	if (categoryId === const_categoryId.consume) categoryColor = '#CBEDFE';
-	if (categoryId === const_categoryId.labor) categoryColor = '#7CB8EF';
+	const defaultColor = '#333;';
+	let categoryName = changeCategoryIdToName(categoryId);
+	let color = const_categoryColor[categoryName];
+	if (categoryName === 'Interest') color = const_categoryColor['interest_mortgage'];
+	if (categoryName === 'Fed') color = const_categoryColor['interest_fed'];
+	if (categoryName === 'Materials') color = const_categoryColor['materials'];
+	if (categoryName === 'GDP') color = const_categoryColor['gdp'];
+	if (categoryName === 'Exchange') color = const_categoryColor['exchange'];
+	if (categoryName === 'Production') color = const_categoryColor['production'];
+	if (categoryName === 'Consume') color = const_categoryColor['consume'];
+	if (categoryName === 'Labor') color = const_categoryColor['labor'];
 
-	return categoryColor;
+	return color || defaultColor;
 };
