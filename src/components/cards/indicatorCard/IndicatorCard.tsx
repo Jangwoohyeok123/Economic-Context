@@ -9,8 +9,12 @@ import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getChartData } from '@/api/fred';
 import styled from 'styled-components';
+import { FavoriteIndicator_Type } from '@/types/favorite';
 
-const IndicatorCardWrapper = styled.div``;
+const IndicatorCardWrapper = styled.div`
+	.notChart {
+	}
+`;
 
 interface IndicatorCard_Props {
 	categoryId: number;
@@ -45,22 +49,25 @@ export default function IndicatorCard({ indicator, categoryId, children, classNa
 	if (chartDatas.length === 0) return <div>loading</div>;
 
 	return (
-		<IndicatorCardWrapper>
+		<IndicatorCardWrapper onClick={() => routeMorePage(seriesId)}>
 			<LineChart categoryId={categoryId} indicator={indicator} values={chartDatas} width={100} height={40} duration={1} />
-			<div className={clsx(styles.cardWrap)}>
-				<div className={clsx(styles.IndicatorCard, className)} onClick={() => routeMorePage(seriesId)}>
-					{/* <div className={styles.header}>
+			<div className='notChart'>
+				<div className={clsx(className)}>{children}</div>
+			</div>
+		</IndicatorCardWrapper>
+	);
+}
+
+{
+	/* <div className={styles.header}>
 						<h3>{cleandTitle}</h3>
 						<div className={clsx(styles.period)}>
 							<div>
 								Period: {observation_start} ~ {observation_end}
 							</div>
 						</div>
-					</div> */}
-					{/* <p>{notes ? notes : 'This indicator does not have information about the indicator description.'}</p> */}
-					{children}
-				</div>
-			</div>
-		</IndicatorCardWrapper>
-	);
+					</div> */
+}
+{
+	/* <p>{notes ? notes : 'This indicator does not have information about the indicator description.'}</p> */
 }
