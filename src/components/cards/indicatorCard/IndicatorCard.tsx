@@ -34,7 +34,6 @@ export default function IndicatorCard({ indicator, categoryId, children, classNa
 	const cleandTitle = title ? cleanString(title) : 'title';
 	const routeMorePage = (seriesId: string) => router.push(`${frontUrl}/${seriesId}?title=${cleandTitle}&categoryId=${categoryId}`);
 	const [chartDatas, setChartDatas] = useState<DateAndValue_Type[]>([]);
-	console.log(currentPage, 'rerender', chartDatas);
 
 	useEffect(() => {
 		getChartData(seriesId).then(data => {

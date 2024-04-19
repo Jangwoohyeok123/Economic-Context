@@ -47,10 +47,11 @@ const ChartFeatures = styled.div<ChartFeature_Props>`
 
 	> ul {
 		display: flex;
-		gap: 15px;
+		gap: 10px;
 
 		li {
 			cursor: pointer;
+			font-size: 0.8rem;
 		}
 	}
 `;
@@ -127,10 +128,6 @@ const LineChart = ({ categoryId, indicator, values: values_List, width = 100, he
 	// 초기렌더링 문제문제 해결을 위해서 빈배열 useEffect추가
 	useEffect(() => {
 		if (rootSvgRef.current) {
-			const tooltips = document.querySelectorAll('myChartTooltipStyle');
-			tooltips.forEach(tooltip => {
-				tooltip.remove();
-			});
 			d3.select(rootSvgRef.current).selectAll('*').remove();
 			renderChartSvg(rootSvgRef.current, values_List, height, duration);
 		}

@@ -96,24 +96,38 @@ export default function renderChartSvg(svg: SVGElement, periodValues_List: DateA
 		.append('path')
 		.attr('fill', 'none')
 		.attr('stroke', 'steelblue')
-		.attr('stroke-width', 1.5)
+		.attr('stroke-width', 1)
 		.attr('d', makeDataForPath(periodValues_List as DateAndValue_Type[]));
 
 	const dataCount = periodValues_List.length;
 	const lengthForTooltip = svgWidth / dataCount;
 
-	let tooltipElement = document.getElementById('myTooltip');
 	const rootSvgElement = rootSvg.node() as SVGElement;
 	const svgWrapper = rootSvgElement.parentNode;
+	console.log(svgWrapper);
 
+	// 모든 .myTooltipStyle 요소 검색
+	const tooltips = svgWrapper?.querySelectorAll('.myTooltipStyle');
+
+	// 첫 번째 요소를 제외한 모든 툴팁 요소 제거
+	tooltips?.forEach((tooltip, index) => {
+		if (index > 0) tooltip.remove();
+	});
+
+	// 유효한 첫 번째 툴팁 요소 가져오기 (혹은 존재하지 않는 경우 null)
+	let tooltipElement: HTMLDivElement | null = null;
+	if (tooltips && tooltips.length > 0) tooltips.length > 0 ? (tooltips[0] as HTMLDivElement) : null;
+	// let tooltipElement = tooltips.length > 0 ? (tooltips[0] as HTMLDivElement) : null;
+
+	// 툴팁 요소가 없으면 새로 생성
 	if (!tooltipElement && svgWrapper) {
 		tooltipElement = document.createElement('div');
-		svgWrapper.appendChild(tooltipElement);
 		tooltipElement.classList.add('myTooltipStyle');
+		svgWrapper.appendChild(tooltipElement);
 	}
 
+	// 툴팁이 있는 경우 이벤트 핸들러 설정
 	if (tooltipElement) {
-		tooltipElement.classList.add('myTooltipStyle');
 		rootSvg
 			.selectAll('rect')
 			.data(periodValues_List) // 데이터 바인딩
@@ -123,27 +137,21 @@ export default function renderChartSvg(svg: SVGElement, periodValues_List: DateA
 			.attr('y', 0)
 			.attr('width', lengthForTooltip)
 			.attr('height', svgHeight - 50 - xAxisHeight)
-			.attr('fill', 'black')
 			.attr('opacity', 0)
 			.on('mouseover', function (event, d) {
-				if (tooltipElement) {
-					tooltipElement.style.visibility = 'visible';
-					updateTooltipContent(d);
-				}
+				tooltipElement.style.visibility = 'visible';
+				updateTooltipContent(d);
 			})
 			.on('mousemove', function (event, d) {
-				if (tooltipElement) {
-					const tooltipX = utcScale(d.date);
-					const tooltipY = linearScale(d.value as number);
+				const tooltipX = utcScale(d.date);
+				const tooltipY = linearScale(Number(d.value));
 
-					// 툴팁 위치 조정, SVG 내에서의 좌표 사용
-					tooltipElement.style.left = `${tooltipX - 10}px`;
-					tooltipElement.style.top = `${tooltipY}px`;
-					tooltipElement.style.transform = 'translate(-30%, -30%)';
-				}
+				tooltipElement.style.left = `${tooltipX - 10}px`;
+				tooltipElement.style.top = `${tooltipY}px`;
+				tooltipElement.style.transform = 'translate(-50%, -100%)';
 			})
 			.on('mouseout', function () {
-				if (tooltipElement) tooltipElement.style.visibility = 'hidden';
+				tooltipElement.style.visibility = 'hidden';
 			});
 	}
 
