@@ -90,17 +90,11 @@ const LineChart = ({ categoryId, indicator, values: values_List, width = 100, he
 	const rootSvgContainerRef = useRef<HTMLDivElement>(null);
 	const [duration, setDuration] = useState<number>(10);
 	const lastDate = values_List[values_List.length - 1].date;
-	const router = useRouter();
 
 	// resize 이벤트 발생시 차트 다시그리기
 	useEffect(() => {
 		const resetChart = () => {
 			// tooltip 남아있는 현상 제거
-			const tooltips = document.querySelectorAll('.myTooltipStyle');
-			tooltips.forEach(tooltip => {
-				tooltip.remove();
-			});
-
 			if (rootSvgRef.current && rootSvgContainerRef.current) {
 				d3.select(rootSvgRef.current).selectAll('*').remove();
 				renderChartSvg(rootSvgRef.current, values_List, height, duration);
