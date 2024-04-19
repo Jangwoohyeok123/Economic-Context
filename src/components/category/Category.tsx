@@ -3,6 +3,7 @@ import styles from './Category.module.scss';
 import { Indicator_Type } from '@/types/fred';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
 import BubblePopButton from '../bubblePopButton/BubblePopButton';
+import { FaRegStar } from 'react-icons/fa6';
 
 interface Category_Props {
 	categoryData: Indicator_Type[];
@@ -22,7 +23,7 @@ export default function Category({ categoryData, currentPage, itemsPerPage, cate
 							clickHandler={() => {
 								setIsAlertModalOpen(true);
 							}}>
-							save
+							<FaRegStar />
 						</BubblePopButton>
 					</IndicatorCard>
 				);

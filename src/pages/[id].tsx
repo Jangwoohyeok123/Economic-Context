@@ -233,7 +233,7 @@ export default function Morepage() {
 								<h1>{indicator.title}</h1>
 								<div className='values'>
 									<span>{lastData}</span>
-									<span>{volatility >= 0 ? `(+${volatility}%)` : `(-${volatility}%)`}</span>
+									<span>{volatility >= 0 ? `(+${volatility}%)` : `(${volatility}%)`}</span>
 								</div>
 								<div>last_updated: {indicator.observation_end}</div>
 							</div>
