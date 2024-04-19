@@ -17,7 +17,7 @@ export default function Category({ categoryData, currentPage, itemsPerPage, cate
 		<section className={clsx(styles.Category)}>
 			{categoryData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((seriess: Indicator_Type, idx: number) => {
 				return (
-					<IndicatorCard key={idx} indicator={seriess} categoryId={categoryId} className={styles.IndicatorCard}>
+					<IndicatorCard key={idx} indicator={seriess} categoryId={categoryId} className={styles.IndicatorCard} currentPage={currentPage}>
 						<BubblePopButton
 							clickHandler={() => {
 								setIsAlertModalOpen(true);

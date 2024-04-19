@@ -24,15 +24,15 @@ const ChartWrapper = styled.div<ChartWrapper_Props>`
 	}
 `;
 
-interface ChartFeatures_Props {
-	categoryColor: string;
+interface ChartFeature_Props {
+	chartColor: string;
 }
 
-const ChartFeatures = styled.div<ChartFeatures_Props>`
+const ChartFeatures = styled.div<ChartFeature_Props>`
 	height: var(--chartHeaderSize);
-	background: ${Props => Props.categoryColor};
+	background: ${Props => Props.chartColor};
 	display: flex;
-	justify-content: space-between;
+	justify-content: right;
 	align-items: center;
 	padding: 0 var(--chartPadding);
 
@@ -87,9 +87,9 @@ export interface LineChart_Props {
 const LineChart = ({ categoryId, indicator, values: values_List, width = 100, height = 65, className }: LineChart_Props) => {
 	const rootSvgRef = useRef<SVGSVGElement>(null);
 	const rootSvgContainerRef = useRef<HTMLDivElement>(null);
-	const { frequency } = indicator;
 	const [duration, setDuration] = useState<number>(10);
 	const lastDate = values_List[values_List.length - 1].date;
+	const router = useRouter();
 
 	// resize 이벤트 발생시 차트 다시그리기
 	useEffect(() => {
@@ -127,16 +127,19 @@ const LineChart = ({ categoryId, indicator, values: values_List, width = 100, he
 	// 초기렌더링 문제문제 해결을 위해서 빈배열 useEffect추가
 	useEffect(() => {
 		if (rootSvgRef.current) {
+			const tooltips = document.querySelectorAll('myChartTooltipStyle');
+			tooltips.forEach(tooltip => {
+				tooltip.remove();
+			});
 			d3.select(rootSvgRef.current).selectAll('*').remove();
 			renderChartSvg(rootSvgRef.current, values_List, height, duration);
 		}
-	}, []);
+	}, [values_List]);
 
 	return (
 		<div className={className}>
 			<ChartWrapper ref={rootSvgContainerRef} width={width}>
-				<ChartFeatures categoryColor={changeCategoryIdToColor(categoryId)}>
-					<div>Frequency: {frequency}</div>
+				<ChartFeatures chartColor={changeCategoryIdToColor(categoryId)}>
 					<ul>
 						<li onClick={() => setDuration(1)}>1Y</li>
 						<li onClick={() => setDuration(3)}>3Y</li>
@@ -144,7 +147,6 @@ const LineChart = ({ categoryId, indicator, values: values_List, width = 100, he
 						<li onClick={() => setDuration(10)}>MAX</li> {/* 10은 max를 의미한다 */}
 					</ul>
 				</ChartFeatures>
-				<span>units: {indicator.units_short}</span>
 				<ChartSvgWrapper>
 					<Svg ref={rootSvgRef} />
 				</ChartSvgWrapper>
