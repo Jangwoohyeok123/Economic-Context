@@ -1,63 +1,63 @@
-.cardWrap {
-	padding: 20px;
-	height: 100%;
-	background: var(--bgColor-light);
-	font-family: var(--baseFont);
-	box-shadow: 10px 10px 20px rgba(var(--fontColor-code), 0.1);
-	transition: 0.3s;
+// .cardWrap {
+// 	padding: 20px;
+// 	height: 100%;
+// 	background: var(--bgColor-light);
+// 	font-family: var(--baseFont);
+// 	box-shadow: 10px 10px 20px rgba(var(--fontColor-code), 0.1);
+// 	transition: 0.3s;
 
-	&:hover {
-		scale: 1.04;
-		cursor: pointer;
-		outline: 1px solid var(--bgColor-dark);
-	}
+// 	&:hover {
+// 		scale: 1.04;
+// 		cursor: pointer;
+// 		outline: 1px solid var(--bgColor-dark);
+// 	}
 
-	.IndicatorCard {
-		width: 100%;
-		height: 100%;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
+// 	.IndicatorCard {
+// 		width: 100%;
+// 		height: 100%;
+// 		display: flex;
+// 		flex-direction: column;
+// 		justify-content: space-between;
 
-		p {
-			padding-top: 10px;
-			display: -webkit-box;
-			-webkit-line-clamp: 4;
-			-webkit-box-orient: vertical;
-			overflow: hidden;
-			text-overflow: ellipsis;
-		}
+// 		p {
+// 			padding-top: 10px;
+// 			display: -webkit-box;
+// 			-webkit-line-clamp: 4;
+// 			-webkit-box-orient: vertical;
+// 			overflow: hidden;
+// 			text-overflow: ellipsis;
+// 		}
 
-		button {
-			width: 100%;
-			height: 50px;
-			border: none;
-			cursor: pointer;
-			transition: 0.2s;
+// 		button {
+// 			width: 100%;
+// 			height: 50px;
+// 			border: none;
+// 			cursor: pointer;
+// 			transition: 0.2s;
 
-			&:hover,
-			&.on {
-				background: var(--bgColor-dark);
-				color: var(--bgColor);
-			}
-		}
+// 			&:hover,
+// 			&.on {
+// 				background: var(--bgColor-dark);
+// 				color: var(--bgColor);
+// 			}
+// 		}
 
-		.header {
-			h3 {
-				margin-bottom: 10px;
-				font-family: var(--pointFont);
-				font-weight: 500;
-				font-size: 1.2rem;
-				line-height: 1.6rem;
-			}
-		}
+// 		.header {
+// 			h3 {
+// 				margin-bottom: 10px;
+// 				font-family: var(--pointFont);
+// 				font-weight: 500;
+// 				font-size: 1.2rem;
+// 				line-height: 1.6rem;
+// 			}
+// 		}
 
-		.period {
-			text-align: left;
-			opacity: 0.8;
-			div {
-				font-size: 0.9rem;
-			}
-		}
-	}
-}
+// 		.period {
+// 			text-align: left;
+// 			opacity: 0.8;
+// 			div {
+// 				font-size: 0.9rem;
+// 			}
+// 		}
+// 	}
+// }

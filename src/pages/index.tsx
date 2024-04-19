@@ -41,7 +41,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
 	const initialStates = [interest, exchange, production, consume];
-	const indicatorsPerPage = 12;
+	const indicatorsPerPage = 6;
 	const categoryId = changeNameToCategoryId(categoryNames[categoryIndex]);
 	const categoryIdList = categoryNames.map(el => changeNameToCategoryId(el));
 

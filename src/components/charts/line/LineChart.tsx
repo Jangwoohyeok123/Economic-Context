@@ -6,6 +6,7 @@ import makeDebouncedHandler from '@/utils/makeDebounceHandler';
 import { Indicator_Type, DateAndValue_Type } from '@/types/fred';
 import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
+import { changeCategoryIdToColor } from '@/utils/changeNameToCategoryId';
 
 interface ChartWrapper_Props {
 	width: number;
@@ -23,11 +24,15 @@ const ChartWrapper = styled.div<ChartWrapper_Props>`
 	}
 `;
 
-const ChartFeatures = styled.div`
+interface ChartFeature_Props {
+	chartColor: string;
+}
+
+const ChartFeatures = styled.div<ChartFeature_Props>`
 	height: var(--chartHeaderSize);
-	background: var(--chartHeaderColor);
+	background: ${Props => Props.chartColor};
 	display: flex;
-	justify-content: space-between;
+	justify-content: right;
 	align-items: center;
 	padding: 0 var(--chartPadding);
 
@@ -42,10 +47,11 @@ const ChartFeatures = styled.div`
 
 	> ul {
 		display: flex;
-		gap: 15px;
+		gap: 10px;
 
 		li {
 			cursor: pointer;
+			font-size: 0.8rem;
 		}
 	}
 `;
@@ -62,6 +68,7 @@ const Svg = styled.svg`
 `;
 
 export interface LineChart_Props {
+	categoryId: number;
 	indicator: Indicator_Type;
 	duration: number;
 	children?: React.ReactElement;
@@ -78,10 +85,9 @@ export interface LineChart_Props {
  * @width [y]%
  * @className
  */
-const LineChart = ({ indicator, values: values_List, width = 100, height = 65, className }: LineChart_Props) => {
+const LineChart = ({ categoryId, indicator, values: values_List, width = 100, height = 65, className }: LineChart_Props) => {
 	const rootSvgRef = useRef<SVGSVGElement>(null);
 	const rootSvgContainerRef = useRef<HTMLDivElement>(null);
-	const { frequency } = indicator;
 	const [duration, setDuration] = useState<number>(10);
 	const lastDate = values_List[values_List.length - 1].date;
 
@@ -89,11 +95,6 @@ const LineChart = ({ indicator, values: values_List, width = 100, height = 65, c
 	useEffect(() => {
 		const resetChart = () => {
 			// tooltip 남아있는 현상 제거
-			const tooltips = document.querySelectorAll('.myTooltipStyle');
-			tooltips.forEach(tooltip => {
-				tooltip.remove();
-			});
-
 			if (rootSvgRef.current && rootSvgContainerRef.current) {
 				d3.select(rootSvgRef.current).selectAll('*').remove();
 				renderChartSvg(rootSvgRef.current, values_List, height, duration);
@@ -124,13 +125,12 @@ const LineChart = ({ indicator, values: values_List, width = 100, height = 65, c
 			d3.select(rootSvgRef.current).selectAll('*').remove();
 			renderChartSvg(rootSvgRef.current, values_List, height, duration);
 		}
-	}, []);
+	}, [values_List]);
 
 	return (
 		<div className={className}>
 			<ChartWrapper ref={rootSvgContainerRef} width={width}>
-				<ChartFeatures>
-					<div>Frequency: {frequency}</div>
+				<ChartFeatures chartColor={changeCategoryIdToColor(categoryId)}>
 					<ul>
 						<li onClick={() => setDuration(1)}>1Y</li>
 						<li onClick={() => setDuration(3)}>3Y</li>
@@ -138,7 +138,6 @@ const LineChart = ({ indicator, values: values_List, width = 100, height = 65, c
 						<li onClick={() => setDuration(10)}>MAX</li> {/* 10은 max를 의미한다 */}
 					</ul>
 				</ChartFeatures>
-				<span>units: {indicator.units_short}</span>
 				<ChartSvgWrapper>
 					<Svg ref={rootSvgRef} />
 				</ChartSvgWrapper>

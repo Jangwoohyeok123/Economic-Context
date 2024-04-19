@@ -3,7 +3,7 @@
 .Category {
 	padding-top: 50px;
 	display: grid;
-	grid-template-columns: 29% 29% 29%;
+	grid-template-columns: 47% 47%;
 	grid-auto-rows: 380px;
 	justify-content: space-between;
 	row-gap: 50px;
@@ -11,7 +11,7 @@
 
 @media screen and (max-width: 1400px) {
 	.Category {
-		width: 90%;
+		width: 100%;
 		margin: 0 auto;
 		grid-template-columns: 47% 47%;
 		grid-auto-rows: 400px;
@@ -20,7 +20,7 @@
 
 @media screen and (max-width: var.$tablet) {
 	.Category {
-		width: 90%;
+		width: 100%;
 		margin: 0 auto;
 		grid-template-columns: 47% 47%;
 		grid-auto-rows: 400px;
@@ -31,6 +31,6 @@
 		width: 80%;
 		margin: 0 auto;
 		grid-template-columns: 100%;
-		grid-template-rows: repeat(12, 400px);
+		grid-auto-rows: 400px;
 	}
 }
