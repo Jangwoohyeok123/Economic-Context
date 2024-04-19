@@ -104,7 +104,6 @@ export default function renderChartSvg(svg: SVGElement, periodValues_List: DateA
 
 	const rootSvgElement = rootSvg.node() as SVGElement;
 	const svgWrapper = rootSvgElement.parentNode;
-	console.log(svgWrapper);
 
 	// 모든 .myTooltipStyle 요소 검색
 	const tooltips = svgWrapper?.querySelectorAll('.myTooltipStyle');

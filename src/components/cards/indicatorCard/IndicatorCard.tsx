@@ -1,18 +1,21 @@
-import clsx from 'clsx';
-import styles from './IndicatorCard.module.scss';
 import { useRouter } from 'next/router';
 import { cleanString } from '@/utils/cleanString';
 import { frontUrl } from '@/pages/_app';
 import { DateAndValue_Type, Indicator_Type } from '@/types/fred';
 import LineChart from '@/components/charts/line/LineChart';
 import { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { getChartData } from '@/api/fred';
 import styled from 'styled-components';
-import { FavoriteIndicator_Type } from '@/types/favorite';
 
 const IndicatorCardWrapper = styled.div`
 	.notChart {
+		display: flex;
+		justify-content: space-between;
+
+		h3 {
+			font-weight: 400;
+			width: 60%;
+		}
 	}
 `;
 
@@ -51,8 +54,9 @@ export default function IndicatorCard({ indicator, categoryId, children, classNa
 	return (
 		<IndicatorCardWrapper onClick={() => routeMorePage(seriesId)}>
 			<LineChart categoryId={categoryId} indicator={indicator} values={chartDatas} width={100} height={40} duration={1} />
-			<div className='notChart'>
-				<div className={clsx(className)}>{children}</div>
+			<div className={'notChart ' + className}>
+				<h3>{title}</h3>
+				<div>{children}</div>
 			</div>
 		</IndicatorCardWrapper>
 	);
