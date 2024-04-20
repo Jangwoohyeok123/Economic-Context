@@ -3,7 +3,7 @@ import styles from './MyContext.module.scss';
 import { useSelector } from 'react-redux';
 import { Store_Type } from '@/types/redux';
 import const_queryKey from '@/const/queryKey';
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
 // Import Swiper styles
@@ -13,6 +13,7 @@ import CurrentContext from '../currentContext/CurrentContext';
 import { ContextNameWithKey_Type } from '@/types/context';
 import { getContextNameWithKey_List } from '@/api/context';
 import Profile from './propfile/Profile';
+import JournalSection from '../journalsSection/JournalSection';
 
 interface MyContextTab_Props {
 	selectedTab: string;
@@ -60,6 +61,7 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 			) : (
 				currentContextId && <CurrentContext currentContextId={currentContextId} />
 			)}
+			<JournalSection />
 		</div>
 	);
 }
