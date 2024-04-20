@@ -11,6 +11,7 @@ import { Context_Type } from '@/types/context';
 import { getAllContexts_List } from '@/api/context';
 import Folder from '@/public/folder.svg';
 import Tooltip from '@mui/material/Tooltip';
+import NoDataContext from './NoDataContext';
 
 interface AllContexts_Props {
 	selectedContext: string;
@@ -32,36 +33,37 @@ export default function AllContexts({ selectedContext, setSelectedContext }: All
 	};
 	return (
 		<section className={clsx(styles.AllContexts)}>
-			<div className={clsx(styles.header)}>
-				<h2></h2>
-				<Tooltip
-					title={tooltipTitle.guide1}
-					placement='top'
-					componentsProps={{
-						tooltip: {
-							sx: {
-								width: 140,
-								height: 40,
-								bgcolor: '#fefefe',
-								color: '#111',
-								padding: 1,
-								fontSize: '13px',
-								whiteSpace: 'pre-line',
-								border: 0,
-								lineHeight: 1.2,
-								boxShadow: '0px 0px 3px rgba(0,0,0,0.1)'
+			{allContexts && (
+				<div className={clsx(styles.header)}>
+					<h2></h2>
+					<Tooltip
+						title={tooltipTitle.guide1}
+						placement='top'
+						componentsProps={{
+							tooltip: {
+								sx: {
+									width: 140,
+									height: 40,
+									bgcolor: '#fefefe',
+									color: '#111',
+									padding: 1,
+									fontSize: '13px',
+									whiteSpace: 'pre-line',
+									border: 0,
+									lineHeight: 1.2,
+									boxShadow: '0px 0px 3px rgba(0,0,0,0.1)'
+								}
 							}
-						}
-					}}>
-					<span onClick={() => setSelectedContext('Indicators')}>
-						<FaPlus />
-					</span>
-				</Tooltip>
-				{/*TODO :: 클릭하면 indicators로 이동*/}
-			</div>
+						}}>
+						<span onClick={() => setSelectedContext('Indicators')}>
+							<FaPlus />
+						</span>
+					</Tooltip>
+				</div>
+			)}
 			<div className={clsx(styles.contextCardList)}>
 				{allContexts ? (
-					allContexts.map((context: Context_Type, index: number) => {
+					allContexts?.map((context: Context_Type, index: number) => {
 						const { id: contextId, name, createdAt } = context;
 
 						return (
@@ -103,7 +105,7 @@ export default function AllContexts({ selectedContext, setSelectedContext }: All
 						);
 					})
 				) : (
-					<div>{`context없음`}</div>
+					<NoDataContext setSelectedContext={() => setSelectedContext('Indicators')} />
 				)}
 			</div>
 		</section>
