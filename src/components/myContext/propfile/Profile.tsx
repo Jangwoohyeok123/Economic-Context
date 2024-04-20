@@ -1,11 +1,8 @@
 import { Store_Type } from '@/types/redux';
-import Image from 'next/image';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import defaultProfile from '@/public/defaultProfile.png';
 import { TfiEmail } from 'react-icons/tfi';
-import * as S from '@/styles/ProfileImage.style';
-import { useState } from 'react';
+import ProfileImage from '@/components/common/profileImage/ProfileImage';
 
 const ProfileWrapper = styled.div`
 	display: flex;
@@ -48,25 +45,11 @@ const ProfileWrapper = styled.div`
 
 export default function Profile() {
 	const user = useSelector((state: Store_Type) => state.user);
-	const [loaded, setLoaded] = useState(true);
-	const profileImageUrl = user.picture_url;
 
 	return (
 		<ProfileWrapper>
 			<span className='profile'>
-				{profileImageUrl && loaded ? (
-					<S.ProfileImage
-						src={profileImageUrl}
-						width={70}
-						height={70}
-						alt='User profile image'
-						onLoad={() => setLoaded(true)}
-						onError={() => setLoaded(false)}
-						unoptimized={true}
-					/>
-				) : (
-					<S.ProfileImage src={defaultProfile} width={70} height={70} alt='User default profile image' unoptimized={true} />
-				)}
+				<ProfileImage width={70} height={70} />
 			</span>
 			<span className='id'>{user.google_id || 'user_id'}</span>
 			<span className='email'>
