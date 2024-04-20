@@ -15,13 +15,13 @@ interface IndicatorCardWrapper_Props {
 
 const IndicatorCardWrapper = styled.div<IndicatorCardWrapper_Props>`
 	.notChart {
-		padding: 0 20px;
+		padding: 20px;
 		background: #fff;
 		display: flex;
-		padding-top: 20px;
+		/* padding-top: 20px; */
 		justify-content: space-between;
 		align-items: top;
-		height: 130px;
+		/* height: 200px; */
 
 		h3 {
 			font-weight: 400;
