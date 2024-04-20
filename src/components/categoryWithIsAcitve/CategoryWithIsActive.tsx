@@ -72,21 +72,11 @@ export default function CategoryWithIsActive({ categoryData, currentPage, itemsP
 		<section className={clsx(styles.CategoryWithIsActive)}>
 			{categoryWithIsActive
 				.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-				.map((series: FavoriteIndicatorWithIsActive_Type, idx: number) => {
-					const { title, seriesId, frequency, popularity, observation_start, observation_end, isActive } = series;
-					const notes = series.notes ?? '';
+				.map((seriess: FavoriteIndicatorWithIsActive_Type, idx: number) => {
+					const { title, seriesId, frequency, popularity, observation_start, observation_end, isActive } = seriess;
+					const notes = seriess.notes ?? '';
 					return (
-						<IndicatorCard
-							key={idx}
-							title={title}
-							seriesId={seriesId}
-							categoryId={categoryId}
-							frequency={frequency as string}
-							popularity={popularity as number}
-							notes={notes}
-							observation_end={observation_end as string}
-							observation_start={observation_start as string}
-							className={styles.IndicatorCard}>
+						<IndicatorCard key={idx} categoryId={categoryId} indicator={seriess} currentPage={currentPage} className={styles.IndicatorCard}>
 							<BubblePopButton
 								className={clsx(isActive ? styles.on : '')}
 								clickHandler={() => {
