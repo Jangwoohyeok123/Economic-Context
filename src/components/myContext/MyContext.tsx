@@ -61,7 +61,7 @@ export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextT
 			) : (
 				currentContextId && <CurrentContext currentContextId={currentContextId} />
 			)}
-			<JournalSection type={'myContext'} />
+			<JournalSection type={selectedTab === 'MyContext' ? 'myContext' : 'currentContext'} />
 		</div>
 	);
 }
