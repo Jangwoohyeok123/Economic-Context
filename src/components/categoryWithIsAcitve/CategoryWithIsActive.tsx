@@ -14,6 +14,7 @@ import { FavoriteIndicatorWithIsActive_Type, FavoriteIndicator_Type } from '@/ty
 import FavoriteIndicatorCard from '../cards/favoriteIndicatorCard/FavoriteIndicatorCard';
 import styled from 'styled-components';
 import { FaRegStar } from 'react-icons/fa6';
+import { FaStar } from 'react-icons/fa6';
 
 interface CategoryWithIsActive_Props {
 	categoryData: Indicator_Type[];
@@ -24,10 +25,17 @@ interface CategoryWithIsActive_Props {
 
 const StarCotainer = styled.div`
 	height: 30px;
+	transition: 0.3s;
 
 	.star {
-		width: 25px;
+		width: 30px;
 		height: 100%;
+		fill: #dddddd;
+		transition: 0.2s;
+	}
+
+	.activeStar {
+		fill: var(--yellowColor);
 	}
 `;
 
@@ -105,7 +113,7 @@ export default function CategoryWithIsActive({ categoryData, currentPage, itemsP
 									});
 								}}>
 								<StarCotainer>
-									<FaRegStar className='star' />
+									<FaStar className={clsx('star', isActive ? 'activeStar' : '')} />
 								</StarCotainer>
 							</BubblePopButton>
 						</FavoriteIndicatorCard>

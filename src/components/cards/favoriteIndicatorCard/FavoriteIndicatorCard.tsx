@@ -18,10 +18,8 @@ const IndicatorCardWrapper = styled.div<IndicatorCardWrapper_Props>`
 		padding: 20px;
 		background: #fff;
 		display: flex;
-		/* padding-top: 20px; */
 		justify-content: space-between;
 		align-items: top;
-		/* height: 200px; */
 
 		h3 {
 			font-weight: 400;
