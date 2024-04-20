@@ -12,12 +12,12 @@ export const changeNameToCategoryId = (categoryName: string): number => {
 	return type;
 };
 
-export const changeCategoryIdToName = (categoryType: number): string => {
+export const changeCategoryIdToName = (categoryId: number): string => {
 	let categoryName = 'Interest';
-	if (categoryType === const_categoryTypes.interest_mortgage) return (categoryName = 'Interest');
-	if (categoryType === const_categoryTypes.exchange) return (categoryName = 'Exchange');
-	if (categoryType === const_categoryTypes.production) return (categoryName = 'Production');
-	if (categoryType === const_categoryTypes.consume) return (categoryName = 'Consume');
+	if (categoryId === const_categoryTypes.interest_mortgage) return (categoryName = 'Interest');
+	if (categoryId === const_categoryTypes.exchange) return (categoryName = 'Exchange');
+	if (categoryId === const_categoryTypes.production) return (categoryName = 'Production');
+	if (categoryId === const_categoryTypes.consume) return (categoryName = 'Consume');
 
 	return categoryName;
 };

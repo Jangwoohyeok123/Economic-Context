@@ -19,12 +19,7 @@ interface CategoryWithIsActive_Props {
 	categoryId: number;
 }
 
-export default function CategoryWithIsActive({
-	categoryData,
-	currentPage,
-	itemsPerPage,
-	categoryId
-}: CategoryWithIsActive_Props) {
+export default function CategoryWithIsActive({ categoryData, currentPage, itemsPerPage, categoryId }: CategoryWithIsActive_Props) {
 	const user = useSelector((state: Store_Type) => state.user);
 	const [categoryWithIsActive, setCategoryWithActive] = useState<FavoriteIndicatorWithIsActive_Type[]>([]);
 
@@ -61,8 +56,7 @@ export default function CategoryWithIsActive({
 
 			favorite.forEach((favoriteIndicator: FavoriteIndicator_Type) => {
 				favoriteCategoryWithIsActive.forEach((favoriteCategoryIndicator: FavoriteIndicatorWithIsActive_Type) => {
-					if (favoriteIndicator.seriesId === favoriteCategoryIndicator.seriesId)
-						favoriteCategoryIndicator.isActive = true;
+					if (favoriteIndicator.seriesId === favoriteCategoryIndicator.seriesId) favoriteCategoryIndicator.isActive = true;
 				});
 			});
 
