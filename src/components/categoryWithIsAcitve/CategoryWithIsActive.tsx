@@ -32,6 +32,7 @@ const StarCotainer = styled.div`
 		height: 100%;
 		fill: #dddddd;
 		transition: 0.2s;
+		cursor: pointer;
 	}
 
 	.activeStar {

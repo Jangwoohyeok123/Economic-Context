@@ -20,6 +20,7 @@ const StarCotainer = styled.div`
 	.star {
 		width: 25px;
 		height: 100%;
+		cursor: pointer;
 	}
 `;
 
