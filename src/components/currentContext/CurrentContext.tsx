@@ -20,15 +20,17 @@ export default function CurrentContext({ currentContextId }: CurrentContext_Prop
 
 	if (isLoading) return <div>Loading...</div>;
 
-	const seriesIds = currentContext?.customIndicators.map((indicator: FavoriteIndicator_Type) => {
-		return indicator.seriesId;
+	const [seriesIds, categoryIds]: [string[], number[]] = [[], []];
+	currentContext?.customIndicators.forEach((indicator: FavoriteIndicator_Type) => {
+		seriesIds.push(indicator.seriesId);
+		categoryIds.push(indicator.categoryId);
 	});
 
 	return (
 		<section className={clsx(styles.CurrentContext)}>
 			<h2>Context Chart List</h2>
 			{/* {seriesIds && <ChartSwiper seriesIds={seriesIds} />} */}
-			{seriesIds && <ChartList seriesIds={seriesIds} />}
+			{seriesIds && categoryIds && <ChartList seriesIds={seriesIds} categoryIds={categoryIds} />}
 		</section>
 	);
 }

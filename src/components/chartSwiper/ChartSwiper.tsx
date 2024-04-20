@@ -62,7 +62,7 @@ export default function ChartSwiper({ seriesIds }: ChartSwiper_Props) {
 						return (
 							<SwiperSlide key={index}>
 								{/* 구조변경 전 default 값으로 처리 */}
-								<LineChart categoryId={const_categoryId.interest_fed} duration={3} indicator={indicator} values={values} />
+								<LineChart categoryId={const_categoryId.interest_fed} values={values} />
 							</SwiperSlide>
 						);
 					})}

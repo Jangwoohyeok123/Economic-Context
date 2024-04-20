@@ -69,7 +69,6 @@ const Svg = styled.svg`
 
 export interface LineChart_Props {
 	categoryId: number;
-	duration: number;
 	children?: React.ReactElement;
 	height?: number;
 	width?: number;
@@ -78,8 +77,8 @@ export interface LineChart_Props {
 }
 
 /**
- * @indicator SeriessType
- * @values Value[]
+ * @categoryId number
+ * @values DateAndValue_Type[]
  * @height [x]vh
  * @width [y]%
  * @className

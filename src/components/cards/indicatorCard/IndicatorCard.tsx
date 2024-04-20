@@ -91,7 +91,7 @@ export default function IndicatorCard({ indicator, categoryId, children, classNa
 
 	return (
 		<IndicatorCardWrapper volatility={volatility}>
-			<LineChart categoryId={categoryId} values={chartDatas} width={100} height={40} duration={1} />
+			<LineChart categoryId={categoryId} values={chartDatas} width={100} height={40} />
 			<div className={'notChart ' + className}>
 				<h3>{title}</h3>
 				<div className='right'>

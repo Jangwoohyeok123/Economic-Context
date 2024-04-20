@@ -9,10 +9,11 @@ import SkeletonChartList from '../skeleton/SkeletonChartList';
 
 interface ChartSwiper_Props {
 	seriesIds: string[];
+	categoryIds: number[];
 }
 
 /** context data 가 넘어왔을 때 */
-export default function ChartList({ seriesIds }: ChartSwiper_Props) {
+export default function ChartList({ seriesIds, categoryIds }: ChartSwiper_Props) {
 	const queryChartValuesResults = useQueries({
 		queries: seriesIds.map(seriesId => ({
 			queryKey: [const_queryKey.context, seriesId],
@@ -55,7 +56,7 @@ export default function ChartList({ seriesIds }: ChartSwiper_Props) {
 
 					return (
 						<div key={index} className={clsx(styles.Chart)}>
-							<LineChart indicator={indicator} values={values} width={100} height={30} className={'ChartList'} duration={3} />
+							<LineChart categoryId={categoryIds[index]} values={values} width={100} height={30} className='ChartList' />
 						</div>
 					);
 				})
