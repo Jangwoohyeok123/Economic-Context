@@ -4,6 +4,7 @@ import { Indicator_Type } from '@/types/fred';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
 import BubblePopButton from '../bubblePopButton/BubblePopButton';
 import { FaRegStar } from 'react-icons/fa6';
+import styled from 'styled-components';
 
 interface Category_Props {
 	categoryData: Indicator_Type[];
@@ -12,6 +13,16 @@ interface Category_Props {
 	categoryId: number;
 	setIsAlertModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+const StarCotainer = styled.div`
+	height: 30px;
+
+	.star {
+		width: 25px;
+		height: 100%;
+		cursor: pointer;
+	}
+`;
 
 export default function Category({ categoryData, currentPage, itemsPerPage, categoryId, setIsAlertModalOpen }: Category_Props) {
 	return (
@@ -23,7 +34,9 @@ export default function Category({ categoryData, currentPage, itemsPerPage, cate
 							clickHandler={() => {
 								setIsAlertModalOpen(true);
 							}}>
-							<FaRegStar />
+							<StarCotainer>
+								<FaRegStar className='star' />
+							</StarCotainer>
 						</BubblePopButton>
 					</IndicatorCard>
 				);

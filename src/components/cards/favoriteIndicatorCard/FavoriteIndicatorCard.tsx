@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { getChartData } from '@/api/fred';
 import styled from 'styled-components';
 import getVolatility from '@/utils/getVolatility';
+import { FavoriteIndicator_Type } from '@/types/favorite';
 
 interface IndicatorCardWrapper_Props {
 	volatility: number;
@@ -14,13 +15,11 @@ interface IndicatorCardWrapper_Props {
 
 const IndicatorCardWrapper = styled.div<IndicatorCardWrapper_Props>`
 	.notChart {
-		padding: 0 20px;
+		padding: 20px;
 		background: #fff;
 		display: flex;
-		padding-top: 20px;
 		justify-content: space-between;
 		align-items: top;
-		height: 130px;
 
 		h3 {
 			font-weight: 400;
@@ -53,9 +52,9 @@ const IndicatorCardWrapper = styled.div<IndicatorCardWrapper_Props>`
 	}
 `;
 
-interface IndicatorCard_Props {
+interface FavoriteIndicatorCard_Props {
 	categoryId: number;
-	indicator: Indicator_Type;
+	favoriteIndicator: FavoriteIndicator_Type;
 	children: React.ReactNode;
 	className?: string;
 	currentPage: number;
@@ -69,8 +68,8 @@ interface IndicatorCard_Props {
  * @param observation_start
  * @returns title, 기간 정보가 담기 card 를 반환한다. className 을 통해 커스텀 가능하다.
  */
-export default function IndicatorCard({ indicator, categoryId, children, className, currentPage }: IndicatorCard_Props) {
-	const { title, id: seriesId, observation_start, observation_end, notes } = indicator;
+export default function FavoriteIndicatorCard({ favoriteIndicator, categoryId, children, className, currentPage }: FavoriteIndicatorCard_Props) {
+	const { title, seriesId, observation_start, observation_end, notes } = favoriteIndicator;
 	const router = useRouter();
 	const cleandTitle = title ? cleanString(title) : 'title';
 	const routeMorePage = (seriesId: string) => router.push(`${frontUrl}/${seriesId}?title=${cleandTitle}&categoryId=${categoryId}`);
@@ -99,7 +98,7 @@ export default function IndicatorCard({ indicator, categoryId, children, classNa
 					<div className='values'>
 						<span>{lastData}</span>
 						<span>{volatility >= 0 ? `(+${volatility}%)` : `(${volatility}%)`}</span>
-						<div>last_updated: {indicator.observation_end}</div>
+						<div>last_updated: {favoriteIndicator.observation_end}</div>
 					</div>
 				</div>
 			</div>

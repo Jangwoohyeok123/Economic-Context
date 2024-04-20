@@ -11,6 +11,10 @@ import { Store_Type } from '@/types/redux';
 import useFavoriteMutation from '@/hooks/useFavoriteMutation';
 import { getFavoriteCateogry_List } from '@/api/favorite';
 import { FavoriteIndicatorWithIsActive_Type, FavoriteIndicator_Type } from '@/types/favorite';
+import FavoriteIndicatorCard from '../cards/favoriteIndicatorCard/FavoriteIndicatorCard';
+import styled from 'styled-components';
+import { FaRegStar } from 'react-icons/fa6';
+import { FaStar } from 'react-icons/fa6';
 
 interface CategoryWithIsActive_Props {
 	categoryData: Indicator_Type[];
@@ -18,6 +22,23 @@ interface CategoryWithIsActive_Props {
 	itemsPerPage: number;
 	categoryId: number;
 }
+
+const StarCotainer = styled.div`
+	height: 30px;
+	transition: 0.3s;
+
+	.star {
+		width: 30px;
+		height: 100%;
+		fill: #dddddd;
+		transition: 0.2s;
+		cursor: pointer;
+	}
+
+	.activeStar {
+		fill: var(--yellowColor);
+	}
+`;
 
 export default function CategoryWithIsActive({ categoryData, currentPage, itemsPerPage, categoryId }: CategoryWithIsActive_Props) {
 	const user = useSelector((state: Store_Type) => state.user);
@@ -72,20 +93,15 @@ export default function CategoryWithIsActive({ categoryData, currentPage, itemsP
 		<section className={clsx(styles.CategoryWithIsActive)}>
 			{categoryWithIsActive
 				.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-				.map((series: FavoriteIndicatorWithIsActive_Type, idx: number) => {
-					const { title, seriesId, frequency, popularity, observation_start, observation_end, isActive } = series;
-					const notes = series.notes ?? '';
+				.map((seriess: FavoriteIndicatorWithIsActive_Type, idx: number) => {
+					const { title, seriesId, frequency, popularity, observation_start, observation_end, isActive } = seriess;
+					const notes = seriess.notes ?? '';
 					return (
-						<IndicatorCard
+						<FavoriteIndicatorCard
 							key={idx}
-							title={title}
-							seriesId={seriesId}
 							categoryId={categoryId}
-							frequency={frequency as string}
-							popularity={popularity as number}
-							notes={notes}
-							observation_end={observation_end as string}
-							observation_start={observation_start as string}
+							favoriteIndicator={seriess}
+							currentPage={currentPage}
 							className={styles.IndicatorCard}>
 							<BubblePopButton
 								className={clsx(isActive ? styles.on : '')}
@@ -97,9 +113,11 @@ export default function CategoryWithIsActive({ categoryData, currentPage, itemsP
 										});
 									});
 								}}>
-								{isActive ? 'remove' : 'save'}
+								<StarCotainer>
+									<FaStar className={clsx('star', isActive ? 'activeStar' : '')} />
+								</StarCotainer>
 							</BubblePopButton>
-						</IndicatorCard>
+						</FavoriteIndicatorCard>
 					);
 				})}
 		</section>
