@@ -201,7 +201,6 @@ export default function JournalForm({
 			queryClient.invalidateQueries({
 				queryKey: [const_queryKey.journal, contextId]
 			});
-			alert('add 성공');
 		},
 		onError(error) {
 			console.error(error);
@@ -214,7 +213,7 @@ export default function JournalForm({
 			addJournalMutation.mutate({ userId, contextId, journalDataParams });
 			// setIsWrite(false);
 		} else {
-			alert('모두 작성해주세요.');
+			// alert('모두 작성해주세요.');
 		}
 	};
 	interface ContextType {

@@ -16,7 +16,7 @@ export default function useFavoriteMutation(categoryId?: number) {
 				queryKey: [const_queryKey.favorite]
 			});
 
-			alert('add 성공');
+			// alert('add 성공');
 		},
 		onError(error) {
 			console.error(error);
@@ -29,7 +29,7 @@ export default function useFavoriteMutation(categoryId?: number) {
 			queryClient.invalidateQueries({
 				queryKey: [const_queryKey.favorite]
 			});
-			alert('delete 성공');
+			// alert('delete 성공');
 		},
 		onError(error) {
 			console.error(error);
@@ -43,7 +43,7 @@ export default function useFavoriteMutation(categoryId?: number) {
 				queryKey: [const_queryKey.favorite, categoryId]
 			});
 
-			alert('add 성공');
+			// alert('add 성공');
 		},
 		onError(error) {
 			console.error(error);
@@ -56,14 +56,12 @@ export default function useFavoriteMutation(categoryId?: number) {
 			queryClient.invalidateQueries({
 				queryKey: [const_queryKey.favorite, categoryId]
 			});
-			alert('delete 성공');
+			// alert('delete 성공');
 		},
 		onError(error) {
 			console.error(error);
 		}
 	});
 
-	return categoryId
-		? { addFavoriteMutation, deleteFavoriteMutation }
-		: { addFavoriteMutationAll, deleteFavoriteMutationAll };
+	return categoryId ? { addFavoriteMutation, deleteFavoriteMutation } : { addFavoriteMutationAll, deleteFavoriteMutationAll };
 }

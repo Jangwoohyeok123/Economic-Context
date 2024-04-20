@@ -11,6 +11,9 @@ import { Store_Type } from '@/types/redux';
 import useFavoriteMutation from '@/hooks/useFavoriteMutation';
 import { getFavoriteCateogry_List } from '@/api/favorite';
 import { FavoriteIndicatorWithIsActive_Type, FavoriteIndicator_Type } from '@/types/favorite';
+import FavoriteIndicatorCard from '../cards/favoriteIndicatorCard/FavoriteIndicatorCard';
+import styled from 'styled-components';
+import { FaRegStar } from 'react-icons/fa6';
 
 interface CategoryWithIsActive_Props {
 	categoryData: Indicator_Type[];
@@ -18,6 +21,15 @@ interface CategoryWithIsActive_Props {
 	itemsPerPage: number;
 	categoryId: number;
 }
+
+const StarCotainer = styled.div`
+	height: 30px;
+
+	.star {
+		width: 25px;
+		height: 100%;
+	}
+`;
 
 export default function CategoryWithIsActive({ categoryData, currentPage, itemsPerPage, categoryId }: CategoryWithIsActive_Props) {
 	const user = useSelector((state: Store_Type) => state.user);
@@ -76,7 +88,12 @@ export default function CategoryWithIsActive({ categoryData, currentPage, itemsP
 					const { title, seriesId, frequency, popularity, observation_start, observation_end, isActive } = seriess;
 					const notes = seriess.notes ?? '';
 					return (
-						<IndicatorCard key={idx} categoryId={categoryId} indicator={seriess} currentPage={currentPage} className={styles.IndicatorCard}>
+						<FavoriteIndicatorCard
+							key={idx}
+							categoryId={categoryId}
+							favoriteIndicator={seriess}
+							currentPage={currentPage}
+							className={styles.IndicatorCard}>
 							<BubblePopButton
 								className={clsx(isActive ? styles.on : '')}
 								clickHandler={() => {
@@ -87,9 +104,11 @@ export default function CategoryWithIsActive({ categoryData, currentPage, itemsP
 										});
 									});
 								}}>
-								{isActive ? 'remove' : 'save'}
+								<StarCotainer>
+									<FaRegStar className='star' />
+								</StarCotainer>
 							</BubblePopButton>
-						</IndicatorCard>
+						</FavoriteIndicatorCard>
 					);
 				})}
 		</section>
