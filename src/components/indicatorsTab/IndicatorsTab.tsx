@@ -19,14 +19,14 @@ import PickedTable from '../pickedTable/PickedTable';
 
 const itemsPerPage = 3;
 
-const FavoriteWrapper = styled.section`
+const FavoriteContainer = styled.section`
 	display: flex;
 	width: 100%;
 	height: calc(100vh - var(--headerSize) - 30px * 2); // 100vh - headerSize - padding * 2 - menuSize
 	justify-content: space-evenly;
 `;
 
-const LeftWrapper = styled.section`
+const LeftContainer = styled.section`
 	width: 50%;
 	height: 100%;
 
@@ -54,7 +54,22 @@ const LeftWrapper = styled.section`
 
 	.favoriteList {
 		height: calc(100% - var(--headerSize) - 20px);
-		overflow-y: scroll;
+		overflow-y: auto;
+		transition: 0.5s;
+
+		&::-webkit-scrollbar {
+			width: 3px;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			width: 3px;
+			background: #ccc;
+			visibility: hidden;
+		}
+
+		&:hover::-webkit-scrollbar-thumb {
+			visibility: visible;
+		}
 	}
 
 	.item:last-child {
@@ -62,10 +77,93 @@ const LeftWrapper = styled.section`
 	}
 `;
 
-const RightWrapper = styled.section`
+/*
+					<div className='header'>
+						<h2>Create Context</h2>
+						<span>make your custom content</span>
+					</div>
+					<div className='contextName'>
+						<h3>Context Name</h3>
+						<input type='text' />
+					</div>
+					<div className='features'>
+						<span>Allcheck</span>
+						<span>Uncheck</span>
+					</div>
+					<PickedTable />
+					<button className='createButton'>create Context</button>
+*/
+
+// 위아래패딩은 30px로 가봅시다.
+const RightContainer = styled.section`
 	width: 40%;
-	height: 100%;
 	background: #fff;
+	padding: 30px 40px;
+
+	.header {
+		height: 15%;
+
+		h2 {
+			font-weight: 500;
+			font-size: 2rem;
+		}
+		span {
+			opacity: 0.8;
+		}
+	}
+
+	.contextName {
+		height: 15%;
+
+		h3 {
+			font-weight: 500;
+			padding-bottom: 5px;
+		}
+
+		input {
+			width: 100%;
+			padding: 3px 10px;
+
+			&::placeholder {
+				opacity: 0.8;
+			}
+
+			&:focus {
+				outline: none;
+			}
+		}
+	}
+
+	.features {
+		display: flex;
+		gap: 20px;
+		padding-bottom: 10px;
+
+		span {
+			background: #dfdfdf;
+			padding: 3px 15px;
+			border-radius: 10px;
+
+			&:hover {
+				cursor: pointer;
+			}
+		}
+	}
+
+	.createButtonWrapper {
+		text-align: right;
+
+		button {
+			padding: 10px 20px;
+			border: none;
+			background: #222;
+			color: white;
+
+			&:hover {
+				cursor: pointer;
+			}
+		}
+	}
 `;
 
 export default function IndicatorsTab() {
@@ -89,8 +187,8 @@ export default function IndicatorsTab() {
 
 	return (
 		<div className={clsx(styles.IndicatorsTab)}>
-			<FavoriteWrapper>
-				<LeftWrapper>
+			<FavoriteContainer>
+				<LeftContainer>
 					<nav>
 						{categoryIds.map((categoryId, index) => {
 							if (index > 4) return;
@@ -120,26 +218,28 @@ export default function IndicatorsTab() {
 										</div>
 									);
 							  })
-							: ''}
+							: '이 페이지는 작업이 필요해'}
 					</div>
-				</LeftWrapper>
-				<RightWrapper>
-					<div>
+				</LeftContainer>
+				<RightContainer>
+					<div className='header'>
 						<h2>Create Context</h2>
 						<span>make your custom content</span>
 					</div>
-					<div>
+					<div className='contextName'>
 						<h3>Context Name</h3>
-						<input type='text' />
+						<input type='text' placeholder='write your context name' />
 					</div>
 					<div className='features'>
 						<span>Allcheck</span>
 						<span>Uncheck</span>
 					</div>
 					<PickedTable />
-					<button>create Context</button>
-				</RightWrapper>
-			</FavoriteWrapper>
+					<div className='createButtonWrapper'>
+						<button>Create Context</button>
+					</div>
+				</RightContainer>
+			</FavoriteContainer>
 
 			<AlertModal
 				isModalOpen={isValidateModal}
