@@ -10,3 +10,8 @@ const const_categoryId = {
 };
 
 export default const_categoryId;
+
+const categoryIdsKeys = Object.keys(const_categoryId) as Array<keyof typeof const_categoryId>;
+export const categoryIds: number[] = categoryIdsKeys.map(key => {
+	return const_categoryId[key];
+});
