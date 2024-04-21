@@ -55,7 +55,7 @@ export default function MakeContextModal({ favorites, isModalOpen, setIsModalOpe
 		) {
 			addContextMutation.mutate(favoritesForContext);
 		} else {
-			alert('title 이 중복됩니다.');
+			// alert('title 이 중복됩니다.');
 		}
 	};
 

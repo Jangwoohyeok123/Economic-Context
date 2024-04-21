@@ -242,7 +242,7 @@ export default function Morepage() {
 							</SaveFavoriteIndicatorButton>
 						</IntroduceContainer>
 
-						<LineChart categoryId={Number(categoryId as string)} duration={10} indicator={indicator} values={chartDatas} width={100}></LineChart>
+						<LineChart categoryId={Number(categoryId as string)} values={chartDatas} width={100}></LineChart>
 						<ChartDescription indicator={indicator}></ChartDescription>
 						<AnotherIndicators />
 					</>

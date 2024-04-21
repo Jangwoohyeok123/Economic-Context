@@ -1,5 +1,4 @@
-import clsx from 'clsx';
-import styles from './BubblePopButton.module.scss';
+import styled from 'styled-components';
 
 interface BubblePopButton_Props {
 	children?: React.ReactNode;
@@ -7,19 +6,26 @@ interface BubblePopButton_Props {
 	clickHandler: () => void;
 }
 
+const Button = styled.button`
+	border: none;
+	background: #fff;
+	width: 100%;
+	height: 100%;
+`;
+
 export default function BubblePopButton({ children, className, clickHandler: onClick }: BubblePopButton_Props) {
 	const bubblePop = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		event.stopPropagation();
 	};
 
 	return (
-		<button
-			className={(clsx(styles.BubblePopButton), className)}
+		<Button
+			className={className}
 			onClick={event => {
 				bubblePop(event);
 				onClick();
 			}}>
 			{children}
-		</button>
+		</Button>
 	);
 }
