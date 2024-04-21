@@ -29,14 +29,6 @@ export const removeComma = (title: string) => {
 export const addEllipsis = (text: string, maxLength: number) => {
 	return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
 };
-export const changeDate = (date: string) => {
-	//Date객체로 변환하여 내장함수 사용으로 날짜 형식 포맷하기.
-	const newDate = new Date(date);
-
-	const formattedDate = `${newDate.getDate()} ${newDate.toLocaleString('en-us', { month: 'short' })} ${newDate.getFullYear()}`;
-
-	return formattedDate;
-};
 
 export const cleanString = (title: string, maxLength?: number, string?: string) => {
 	let cleanedString = title;

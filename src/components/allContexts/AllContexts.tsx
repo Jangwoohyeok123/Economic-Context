@@ -4,7 +4,8 @@ import { useQuery } from '@tanstack/react-query';
 import const_queryKey from '@/const/queryKey';
 import { useSelector } from 'react-redux';
 import { Store_Type } from '@/types/redux';
-import { addEllipsis, changeDate } from '@/utils/cleanString';
+import { addEllipsis } from '@/utils/cleanString';
+import { changeDateForm } from '@/utils/changeDate';
 import { FaPlus, FaInfo, FaRegStar } from 'react-icons/fa6';
 import { RiMore2Line } from 'react-icons/ri';
 import { Context_Type } from '@/types/context';
@@ -71,7 +72,7 @@ export default function AllContexts({ selectedContext, setSelectedContext }: All
 								<div className={clsx(styles.cover)} onClick={() => setSelectedContext(name)}>
 									<Folder fill={'#F1F4FC'} className={clsx(styles.folder)} />
 									<span className={clsx(styles.name)}>{addEllipsis(name, 10)}</span>
-									<span className={clsx(styles.date)}>{changeDate(createdAt.toString())}</span>
+									<span className={clsx(styles.date)}>{changeDateForm(createdAt.toString())}</span>
 									<span className={clsx(styles.icon)}>
 										<FaRegStar />
 									</span>

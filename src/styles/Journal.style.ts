@@ -60,6 +60,7 @@ export const Journal = styled.div<Journal_Props>`
 			flex-direction: column;
 			justify-content: flex-start;
 			padding: 10px 20px;
+			margin-bottom: 10px;
 		}
 		.icon {
 			padding: 10px 20px;
