@@ -86,7 +86,7 @@ export default function JournalList({ type }: JournalList_Props) {
 					);
 				})}
 
-			{/* <JournalForm contextId={17} setIsWrite={true} isRight={false} isJournalOpen={true} /> */}
+			{type === 'currentContext' && <JournalForm contextId={17} setIsWrite={true} isRight={false} isJournalOpen={true} />}
 		</JournalWrapper>
 	);
 }
