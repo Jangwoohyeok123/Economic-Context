@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import styles from './IndicatorsTab.module.scss';
 import { Store_Type } from '@/types/redux';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
 import { useSelector } from 'react-redux';
 import BubblePopButton from '../bubblePopButton/BubblePopButton';
@@ -16,6 +16,8 @@ import FavoriteIndicatorCard from '../cards/favoriteIndicatorCard/FavoriteIndica
 import styled from 'styled-components';
 import const_categoryId, { categoryIds } from '@/const/categoryId';
 import PickedTable from '../pickedTable/PickedTable';
+import TableFeatures from '../tableFeatures/TableFeatures';
+import CheckedFavoriteSection from '../checkedFavoriteSection/CheckedFavoriteSection';
 
 const itemsPerPage = 3;
 
@@ -77,23 +79,6 @@ const LeftContainer = styled.section`
 	}
 `;
 
-/*
-					<div className='header'>
-						<h2>Create Context</h2>
-						<span>make your custom content</span>
-					</div>
-					<div className='contextName'>
-						<h3>Context Name</h3>
-						<input type='text' />
-					</div>
-					<div className='features'>
-						<span>Allcheck</span>
-						<span>Uncheck</span>
-					</div>
-					<PickedTable />
-					<button className='createButton'>create Context</button>
-*/
-
 // 위아래패딩은 30px로 가봅시다.
 const RightContainer = styled.section`
 	width: 40%;
@@ -122,7 +107,7 @@ const RightContainer = styled.section`
 
 		input {
 			width: 100%;
-			padding: 3px 10px;
+			padding: 10px 10px;
 
 			&::placeholder {
 				opacity: 0.8;
@@ -175,6 +160,8 @@ export default function IndicatorsTab() {
 	const { deleteFavoriteMutationAll } = useFavoriteMutation();
 	const { allFavorites_List } = useFavoriteQuery();
 	const [currentCategoryId, setCurrentCategoryId] = useState<number>(const_categoryId.interest_mortgage);
+	const [checkedFavorite_List, setCheckedFavorite_List] = useState<FavoriteIndicator_Type[]>([]);
+	const refIndicatorCheckbox = useRef<HTMLInputElement>(null);
 
 	// const curFavorites = favoritesWithPick?.filter((favorite: FavoriteIndicator_Type) => favorite?.categoryId == currentCategoryId);
 	if (!allFavorites_List) {
@@ -184,6 +171,21 @@ export default function IndicatorsTab() {
 	const curFavorites_List = allFavorites_List?.filter(favorite => {
 		return favorite.categoryId === currentCategoryId;
 	});
+
+	// 정확하게 정리하고 말로 설명해보기
+	const pickIndicator = (favoriteIndicator: FavoriteIndicator_Type) => {
+		setCheckedFavorite_List(prev => {
+			if (prev.find(item => item.seriesId === favoriteIndicator.seriesId)) {
+				return prev.filter(item => item.seriesId !== favoriteIndicator.seriesId);
+			}
+
+			return [...prev, favoriteIndicator];
+		});
+	};
+
+	const openAlertModal = () => {
+		setIsValidateModal(!isValidateModal);
+	};
 
 	return (
 		<div className={clsx(styles.IndicatorsTab)}>
@@ -197,9 +199,7 @@ export default function IndicatorsTab() {
 								<button
 									key={index}
 									className={categoryId === currentCategoryId ? clsx(styles.on) : ''}
-									onClick={() => {
-										setCurrentCategoryId(categoryId);
-									}}>
+									onClick={() => setCurrentCategoryId(categoryId)}>
 									{changeCategoryIdToName(categoryId)}
 								</button>
 							);
@@ -208,12 +208,21 @@ export default function IndicatorsTab() {
 
 					<div className='favoriteList'>
 						{curFavorites_List.length > 0
-							? curFavorites_List?.map((favorite: FavoriteIndicator_Type, index: number) => {
-									const { title, seriesId, notes, categoryId, observation_end, observation_start, frequency, popularity } = favorite;
+							? curFavorites_List?.map((favoriteIndicator: FavoriteIndicator_Type, index: number) => {
+									const { title, seriesId, notes, categoryId, observation_end, observation_start, frequency, popularity } = favoriteIndicator;
 
+									// 선언당시에 값을 기억하는 것 같은데 이런현상이 가능한 이유가뭐지?
+									// input의 check가 안됐다면 setCheckedFavorite를 통해 값을 추가한다.
+									// input의 check가 됐다면 setCheckedFavorite를 통해 값을 삭제한다.
 									return (
-										<div key={index} className='item'>
-											<input type='checkbox' />
+										<div key={index} className='item' onClick={() => pickIndicator(favoriteIndicator)}>
+											<input
+												type='checkbox'
+												ref={refIndicatorCheckbox}
+												checked={checkedFavorite_List.some(checkedFavoriteIndicator => {
+													return checkedFavoriteIndicator.seriesId === favoriteIndicator.seriesId;
+												})}
+											/>
 											<h4>{title}</h4>
 										</div>
 									);
@@ -224,20 +233,18 @@ export default function IndicatorsTab() {
 				<RightContainer>
 					<div className='header'>
 						<h2>Create Context</h2>
-						<span>make your custom content</span>
+						<span>make your custom content</span>d
 					</div>
 					<div className='contextName'>
 						<h3>Context Name</h3>
 						<input type='text' placeholder='write your context name' />
 					</div>
-					<div className='features'>
-						<span>Allcheck</span>
-						<span>Uncheck</span>
-					</div>
-					<PickedTable />
-					<div className='createButtonWrapper'>
-						<button>Create Context</button>
-					</div>
+
+					<CheckedFavoriteSection
+						checkedFavorite_List={checkedFavorite_List}
+						isValidateModal={isValidateModal}
+						setIsValidateModalOpen={setIsValidateModal}
+					/>
 				</RightContainer>
 			</FavoriteContainer>
 
