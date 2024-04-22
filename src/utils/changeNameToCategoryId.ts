@@ -14,10 +14,14 @@ export const changeNameToCategoryId = (categoryName: string): number => {
 
 export const changeCategoryIdToName = (categoryId: number): string => {
 	let categoryName = 'Interest';
-	if (categoryId === const_categoryTypes.interest_mortgage) return (categoryName = 'Interest');
+	if (categoryId === const_categoryTypes.interest_mortgage) return (categoryName = 'Mortagage');
+	if (categoryId === const_categoryTypes.interest_fed) return (categoryName = 'Fed');
+	if (categoryId === const_categoryTypes.materials) return (categoryName = 'Materials');
+	if (categoryId === const_categoryTypes.gdp) return (categoryName = 'GDP');
 	if (categoryId === const_categoryTypes.exchange) return (categoryName = 'Exchange');
 	if (categoryId === const_categoryTypes.production) return (categoryName = 'Production');
 	if (categoryId === const_categoryTypes.consume) return (categoryName = 'Consume');
+	if (categoryId === const_categoryTypes.labor) return (categoryName = 'Labor');
 
 	return categoryName;
 };
