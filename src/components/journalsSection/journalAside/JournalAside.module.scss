@@ -1,0 +1,10 @@
+.JournalAside {
+	border: 1px solid var(--chartHeaderColor);
+	border-radius: 5px;
+	padding: 10px 20px;
+}
+.JournalAsideCalendar {
+	.MuiDateCalendar-root,
+	.MuiDateCalendar-viewTransitionContainer {
+	}
+}

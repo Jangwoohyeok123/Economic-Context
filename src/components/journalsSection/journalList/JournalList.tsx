@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import styles from '../JournalSection.module.scss';
 import ProfileImage from '@/components/common/profileImage/ProfileImage';
 import { Journal, JournalWrapper } from '@/styles/Journal.style';
 import { Menu, MenuItem, IconButton } from '@mui/material';
