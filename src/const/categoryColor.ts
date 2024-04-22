@@ -17,7 +17,7 @@ const const_categoryColor: ComponentTypes = {
 	gdp: '#A9C9C2',
 	exchange: '#59AEC3',
 	production: '#FEBCD7',
-	consume: '#CBEDFE',
+	consume: '#005a86',
 	labor: '#7CB8EF'
 };
 

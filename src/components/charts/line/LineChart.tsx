@@ -25,12 +25,12 @@ const ChartWrapper = styled.div<ChartWrapper_Props>`
 `;
 
 interface ChartFeature_Props {
-	chartColor: string;
+	$chartColor: string;
 }
 
 const ChartFeatures = styled.div<ChartFeature_Props>`
 	height: var(--chartHeaderSize);
-	background: ${Props => Props.chartColor};
+	background: ${Props => Props.$chartColor};
 	display: flex;
 	justify-content: right;
 	align-items: center;
@@ -128,7 +128,7 @@ const LineChart = ({ categoryId, values: values_List, width = 100, height = 65, 
 	return (
 		<div className={className}>
 			<ChartWrapper ref={rootSvgContainerRef} width={width}>
-				<ChartFeatures chartColor={changeCategoryIdToColor(categoryId)}>
+				<ChartFeatures $chartColor={changeCategoryIdToColor(categoryId)}>
 					<ul>
 						<li onClick={() => setDuration(1)}>1Y</li>
 						<li onClick={() => setDuration(3)}>3Y</li>
