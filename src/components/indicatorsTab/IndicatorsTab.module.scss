@@ -1,6 +1,7 @@
 @use '../../styles/Variable' as var;
 .IndicatorsTab {
 	width: 100%;
+	background: var(--bgColor);
 	padding: var.$tabPagePadding;
 	padding-bottom: 0;
 	// nav: 70px + tabPagePaddingTop: 30px + header: 60px +
