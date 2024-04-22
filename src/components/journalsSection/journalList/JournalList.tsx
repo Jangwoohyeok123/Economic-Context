@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import styles from '../JournalSection.module.scss';
 import ProfileImage from '@/components/common/profileImage/ProfileImage';
 import { Journal, JournalWrapper } from '@/styles/Journal.style';
 import { Menu, MenuItem, IconButton } from '@mui/material';
@@ -11,6 +10,7 @@ import const_queryKey from '@/const/queryKey';
 import { useQuery } from '@tanstack/react-query';
 import { JournalData_Type } from '@/types/journal';
 import JournalForm from '../journalForm/JournalForm';
+import { changeDateToRelativeTime } from '@/utils/changeDate';
 
 interface JournalList_Props {
 	type?: string;
@@ -24,7 +24,6 @@ export default function JournalList({ type }: JournalList_Props) {
 		queryKey: [const_queryKey.journal, 'journal'],
 		queryFn: () => getAllJournal()
 	});
-	console.log('AllJournal_List: ', AllJournal_List);
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -50,7 +49,7 @@ export default function JournalList({ type }: JournalList_Props) {
 									<div className='headerData'>
 										{type === 'myContext' && <ProfileImage width={30} height={30} />}
 										<span className='id'>{journal.id}</span>
-										<span className='date'>{journal.createdAt}</span>
+										<span className='date'>{changeDateToRelativeTime(journal.createdAt)}</span>
 									</div>
 									<IconButton
 										aria-label='more'

@@ -5,15 +5,18 @@ interface Journal_Props {
 	$type?: string;
 }
 
-export const JournalWrapper = styled.div``;
+export const JournalWrapper = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 12px 0;
+`;
 
 export const Journal = styled.div<Journal_Props>`
 	display: flex;
-	padding: 10px;
 	justify-content: space-between;
 	align-items: flex-start;
 	.journalBox {
-		${props => (props.$type === 'myContext' ? `width: 100%; border: 1px solid var(--chartHeaderColor);` : `width: 93%; border: 1px solid blue`)}
+		${props => (props.$type === 'myContext' ? `width: 100%; border: 1px solid var(--chartHeaderColor);` : `width: 93%;`)}
 		border-radius:5px;
 		header {
 			display: flex;
@@ -60,6 +63,7 @@ export const Journal = styled.div<Journal_Props>`
 			flex-direction: column;
 			justify-content: flex-start;
 			padding: 10px 20px;
+			margin-bottom: 10px;
 		}
 		.icon {
 			padding: 10px 20px;
