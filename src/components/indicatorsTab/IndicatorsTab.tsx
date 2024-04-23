@@ -1,22 +1,15 @@
 import clsx from 'clsx';
 import styles from './IndicatorsTab.module.scss';
 import { Store_Type } from '@/types/redux';
-import { useEffect, useRef, useState } from 'react';
-import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
+import { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import BubblePopButton from '../bubblePopButton/BubblePopButton';
 import useFavoriteQuery from '@/hooks/useFavoriteQuery';
 import useFavoriteMutation from '@/hooks/useFavoriteMutation';
-import { changeCategoryIdToName, changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
-import MakeContextModal from '../modals/makeContextModal/MakeContextModal';
+import { changeCategoryIdToName } from '@/utils/changeNameToCategoryId';
 import AlertModal from '../modals/alertModal/AlertModal';
-import { FavoriteIndicatorWithIsPick_Type, FavoriteIndicator_Type } from '@/types/favorite';
-import Pagination from '../pagination/Pagination';
-import FavoriteIndicatorCard from '../cards/favoriteIndicatorCard/FavoriteIndicatorCard';
+import { FavoriteIndicator_Type } from '@/types/favorite';
 import styled from 'styled-components';
 import const_categoryId, { categoryIds } from '@/const/categoryId';
-import PickedTable from '../pickedTable/PickedTable';
-import TableFeatures from '../tableFeatures/TableFeatures';
 import CheckedFavoriteSection from '../checkedFavoriteSection/CheckedFavoriteSection';
 
 const itemsPerPage = 3;
@@ -32,32 +25,53 @@ const LeftContainer = styled.section`
 	width: 50%;
 	height: 100%;
 
-	.item {
-		padding: 0 20px;
-		width: 100%;
-		height: 60px;
-		display: flex;
-		align-items: center;
-		border-top: 1px solid #ccc;
-		gap: 20px;
-
-		input[type='checkbox'] {
-			transform: scale(1.2);
-		}
-
-		&:hover {
-			background: #ddd;
-		}
-
-		h4 {
-			font-weight: 500;
-		}
-	}
-
 	.favoriteList {
 		height: calc(100% - var(--headerSize) - 20px);
 		overflow-y: auto;
 		transition: 0.5s;
+
+		> .item {
+			padding: 0 20px;
+			width: 100%;
+			height: 60px;
+			display: flex;
+			align-items: center;
+			border-top: 1px solid #ccc;
+			gap: 20px;
+
+			input[type='checkbox'] {
+				transform: scale(1.2);
+			}
+
+			&:hover {
+				background: #ddd;
+			}
+
+			h4 {
+				font-weight: 500;
+			}
+		}
+
+		> .favoriteListHeader {
+			padding: 0 20px;
+			display: flex;
+			align-items: center;
+			gap: 20px;
+			width: 100%;
+			height: 40px;
+			background: var(--bgColor2);
+
+			input[type='checkbox'] {
+				transform: scale(1.2);
+			}
+
+			h4 {
+				width: 100%;
+				display: flex;
+				justify-content: center;
+				font-weight: 500;
+			}
+		}
 
 		&::-webkit-scrollbar {
 			width: 3px;
@@ -85,7 +99,7 @@ const RightContainer = styled.section`
 	background: #fff;
 	padding: 30px 40px;
 
-	.header {
+	> .header {
 		height: 15%;
 
 		h2 {
@@ -97,7 +111,7 @@ const RightContainer = styled.section`
 		}
 	}
 
-	.contextName {
+	> .contextName {
 		height: 15%;
 
 		h3 {
@@ -119,7 +133,7 @@ const RightContainer = styled.section`
 		}
 	}
 
-	.features {
+	> .features {
 		display: flex;
 		gap: 20px;
 		padding-bottom: 10px;
@@ -135,7 +149,7 @@ const RightContainer = styled.section`
 		}
 	}
 
-	.createButtonWrapper {
+	> .createButtonWrapper {
 		text-align: right;
 
 		button {
@@ -154,38 +168,41 @@ const RightContainer = styled.section`
 export default function IndicatorsTab() {
 	const user = useSelector((state: Store_Type) => state.user);
 
-	// const [categoryIndex, setCategoryIndex] = useState<number>(0);
 	const [isValidateModal, setIsValidateModal] = useState<boolean>(false);
 
 	const { deleteFavoriteMutationAll } = useFavoriteMutation();
 	const { allFavorites_List } = useFavoriteQuery();
 	const [currentCategoryId, setCurrentCategoryId] = useState<number>(const_categoryId.interest_mortgage);
 	const [checkedFavorite_List, setCheckedFavorite_List] = useState<FavoriteIndicator_Type[]>([]);
-	const refIndicatorCheckbox = useRef<HTMLInputElement>(null);
+	const refFavoriteListHeaderCheckbox = useRef<HTMLInputElement>(null);
+	const refFavoriteList = useRef<HTMLDivElement>(null);
 
-	// const curFavorites = favoritesWithPick?.filter((favorite: FavoriteIndicator_Type) => favorite?.categoryId == currentCategoryId);
-	if (!allFavorites_List) {
-		return <div>isLoading</div>;
-	}
+	if (!allFavorites_List) return <div>isLoading</div>;
 
-	const curFavorites_List = allFavorites_List?.filter(favorite => {
-		return favorite.categoryId === currentCategoryId;
-	});
+	const curFavorites_List = allFavorites_List?.filter(favorite => favorite.categoryId === currentCategoryId);
 
-	// 정확하게 정리하고 말로 설명해보기
 	const pickIndicator = (favoriteIndicator: FavoriteIndicator_Type) => {
 		setCheckedFavorite_List(prev => {
-			if (prev.find(item => item.seriesId === favoriteIndicator.seriesId)) {
-				return prev.filter(item => item.seriesId !== favoriteIndicator.seriesId);
-			}
+			if (prev.find(item => item.seriesId === favoriteIndicator.seriesId)) return prev.filter(item => item.seriesId !== favoriteIndicator.seriesId);
 
 			return [...prev, favoriteIndicator];
 		});
 	};
 
-	const openAlertModal = () => {
-		setIsValidateModal(!isValidateModal);
+	const openAlertModal = () => setIsValidateModal(!isValidateModal);
+
+	// checked라면 checkedFavorite_List에서 curFavorite_List와 일치하는 지표들을 삭제한다.
+	// !checked라면 checkedFavorite_List에서 curFavorite_List와 일치하는 지표들을 삭제하고 curFavorite_List를 checkedFavorite_List에 추가한다.
+	const allClick = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { checked } = e.target;
+
+		if (checked) setCheckedFavorite_List(curFavorites_List);
+		else setCheckedFavorite_List([]);
 	};
+
+	function isSubset(subset: FavoriteIndicator_Type[], superset: FavoriteIndicator_Type[]) {
+		return subset.every(element => superset.includes(element));
+	}
 
 	return (
 		<div className={clsx(styles.IndicatorsTab)}>
@@ -206,22 +223,25 @@ export default function IndicatorsTab() {
 						})}
 					</nav>
 
-					<div className='favoriteList'>
+					{/* checkedFavorite_List에 curFavorite_List가 모두 포함되어 있다면 input의 checked는 true가 되도록 만들기 */}
+					<div className='favoriteList' ref={refFavoriteList}>
+						<div className='favoriteListHeader'>
+							<input type='checkbox' checked={isSubset(curFavorites_List, checkedFavorite_List)} onChange={allClick} />
+							<h4>Indicator</h4>
+						</div>
 						{curFavorites_List.length > 0
 							? curFavorites_List?.map((favoriteIndicator: FavoriteIndicator_Type, index: number) => {
 									const { title, seriesId, notes, categoryId, observation_end, observation_start, frequency, popularity } = favoriteIndicator;
 
-									// 선언당시에 값을 기억하는 것 같은데 이런현상이 가능한 이유가뭐지?
-									// input의 check가 안됐다면 setCheckedFavorite를 통해 값을 추가한다.
-									// input의 check가 됐다면 setCheckedFavorite를 통해 값을 삭제한다.
 									return (
 										<div key={index} className='item' onClick={() => pickIndicator(favoriteIndicator)}>
 											<input
 												type='checkbox'
-												ref={refIndicatorCheckbox}
 												checked={checkedFavorite_List.some(checkedFavoriteIndicator => {
 													return checkedFavoriteIndicator.seriesId === favoriteIndicator.seriesId;
 												})}
+												// onChange가 일어날 때 item > input 요소들의 checked를 확인하여 하나라도 false라면 refFavoriteListHeeaderCheckbox.current가 false가 되도록 만든다.
+												onChange={() => {}}
 											/>
 											<h4>{title}</h4>
 										</div>
@@ -261,83 +281,3 @@ export default function IndicatorsTab() {
 		</div>
 	);
 }
-
-/*
-						// <FavoriteIndicatorCard key={index}>
-						// 	<div className={styles.buttons}>
-						// 		<BubblePopButton clickHandler={() => deleteFavoriteMutationAll?.mutate({ userId: user.id, seriesId })}>delete</BubblePopButton>
-						// 		<BubblePopButton
-						// 			className={isPick ? clsx(styles.on) : ''}
-						// 			clickHandler={() => {
-						// 				const updated = favoritesWithPick?.map((favorite: FavoriteIndicatorWithIsPick_Type) => {
-						// 					if (favorite.seriesId === seriesId) {
-						// 						return {
-						// 							...favorite,
-						// 							isPick: !favorite.isPick
-						// 						};
-						// 					}
-
-						// 					return favorite;
-						// 				});
-
-						// 				setFavoritesWithPick(updated);
-						// 			}}>
-						// 			{isPick ? 'unpick' : 'pick'}
-						// 		</BubblePopButton>
-						// 	</div>
-						// </FavoriteIndicatorCard>
-
-
-
-			  <Pagination
-					data_List={favoritesWithPick.filter(favoriteIndicator => favoriteIndicator.categoryId === categoryId)}
-					currentPage={currentPage}
-					setCurrentPage={setCurrentPage}
-					itemsPerPage={3}
-					pageRangeDisplayed={5}
-				/>
-
-        <MakeContextModal favorites={favoritesWithPick} isModalOpen={isMakeOpen} setIsModalOpen={setIsMakeOpen} />
-        <div className={clsx(styles.item, styles.buttonWrap)}>
-					<button
-						onClick={() => {
-							if (favoritesWithPick?.filter(favoriteIndicator => favoriteIndicator.isPick).length > 0) setIsMakeOpen(true);
-							else setIsValidateModal(true);
-						}}>
-						Make Context
-					</button>
-				</div> 
-
-				const pagedFavorite = curFavorites?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
-					useEffect(() => {
-		if (favoritesWithPick.length) {
-			// favorite 하나가 추가될 때
-			const updated = allFavorites_List?.map((favoriteIndicator: FavoriteIndicator_Type) => {
-				const prev = favoritesWithPick.find(
-					(prevFavorites: FavoriteIndicatorWithIsPick_Type) => prevFavorites.seriesId === favoriteIndicator.seriesId
-				);
-				return prev
-					? {
-							...favoriteIndicator,
-							isPick: prev.isPick
-					  }
-					: {
-							...favoriteIndicator,
-							isPick: false
-					  };
-			});
-			updated && setFavoritesWithPick(updated);
-			return;
-		}
-
-		const updated = allFavorites_List?.map((favoriteIndicator: FavoriteIndicator_Type) => {
-			return {
-				...favoriteIndicator,
-				isPick: false
-			};
-		});
-
-		updated && setFavoritesWithPick(updated);
-	}, [allFavorites_List]);
-*/
