@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 import * as S from '@/styles/CategoryTabMenu.style';
-import const_categoryColor from '@/const/categoryColor';
 import Interest_mortgage from '@/public/interest_mortgage.svg';
 import Interest_fed from '@/public/interest_fed.svg';
 import Materials from '@/public/materials.svg';
@@ -12,33 +11,32 @@ import Labor from '@/public/labor.svg';
 import { changeCategoryIdToColor, changeCategoryIdToName } from '@/utils/changeNameToCategoryId';
 
 interface CategoryTabMenu_Props {
-	categoryNames: string[];
+	selectedCategoryId: number;
+	selectCategory: (e: React.MouseEvent<HTMLButtonElement>, categoryId: number) => void;
 	categoryIdList: number[];
-	categoryIndex: number;
-	selectCategory: (e: React.MouseEvent<HTMLButtonElement>, idx: number) => void;
 }
 
-/** categoryNames 배열을 전달하면 tab 기능을 제공한다. */
-export default function CategoryTabMenu({ categoryNames, categoryIndex: selectedCategory, selectCategory, categoryIdList }: CategoryTabMenu_Props) {
+export default function CategoryTabMenu({ selectedCategoryId, selectCategory, categoryIdList }: CategoryTabMenu_Props) {
+	console.log('selectedCategoryId: ', selectedCategoryId);
 	return (
 		<S.TabMenuWrap>
-			{categoryNames.map((_, idx) => {
+			{categoryIdList.map((categoryId, idx) => {
 				return (
 					<S.MenuButton
-						key={idx}
+						key={categoryId + idx}
 						onClick={e => {
-							selectCategory(e, idx);
+							selectCategory(e, categoryId);
 						}}
-						$categoryColor={changeCategoryIdToColor(categoryIdList[idx])}
-						className={clsx({ on: idx === selectedCategory })}>
-						{categoryNames[idx]}
+						$categoryColor={changeCategoryIdToColor(categoryId)}
+						className={clsx({ on: categoryId === selectedCategoryId })}>
+						{changeCategoryIdToName(categoryId)}
 						<span className={clsx('icon')}>
 							{(() => {
-								const name = changeCategoryIdToName(categoryIdList[idx]);
-								const color = idx === selectedCategory ? '#fefefe' : changeCategoryIdToColor(categoryIdList[idx]);
+								const name = changeCategoryIdToName(categoryId);
+								const color = categoryId === selectedCategoryId ? '#fefefe' : changeCategoryIdToColor(categoryId);
 								let svgComponent = <Interest_mortgage fill={color} />;
 								switch (name) {
-									case 'Interest':
+									case 'Mortgage':
 										svgComponent = <Interest_mortgage fill={color} />;
 										break;
 									case 'Fed':
