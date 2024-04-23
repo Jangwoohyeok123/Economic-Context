@@ -166,15 +166,12 @@ const RightContainer = styled.section`
 `;
 
 export default function IndicatorsTab() {
-	const user = useSelector((state: Store_Type) => state.user);
-
 	const [isValidateModal, setIsValidateModal] = useState<boolean>(false);
 
 	const { deleteFavoriteMutationAll } = useFavoriteMutation();
 	const { allFavorites_List } = useFavoriteQuery();
 	const [currentCategoryId, setCurrentCategoryId] = useState<number>(const_categoryId.interest_mortgage);
 	const [checkedFavorite_List, setCheckedFavorite_List] = useState<FavoriteIndicator_Type[]>([]);
-	const refFavoriteListHeaderCheckbox = useRef<HTMLInputElement>(null);
 	const refFavoriteList = useRef<HTMLDivElement>(null);
 
 	if (!allFavorites_List) return <div>isLoading</div>;
@@ -196,11 +193,18 @@ export default function IndicatorsTab() {
 	const allClick = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { checked } = e.target;
 
-		if (checked) setCheckedFavorite_List(curFavorites_List);
-		else setCheckedFavorite_List([]);
+		if (checked) {
+			// 체크된 경우: 현재의 curFavorites_List를 추가하지만 중복을 피하기 위해 Set을 사용
+			setCheckedFavorite_List(prev => [...new Set([...prev, ...curFavorites_List])]);
+		} else {
+			// 체크 해제된 경우: curFavorites_List와 일치하는 항목을 제거하고, 나머지는 유지
+			const idsToRemove = new Set(curFavorites_List.map(item => item.seriesId));
+			setCheckedFavorite_List(prev => prev.filter(item => !idsToRemove.has(item.seriesId)));
+		}
 	};
 
 	function isSubset(subset: FavoriteIndicator_Type[], superset: FavoriteIndicator_Type[]) {
+		if (subset.length === 0) return false;
 		return subset.every(element => superset.includes(element));
 	}
 
@@ -240,8 +244,6 @@ export default function IndicatorsTab() {
 												checked={checkedFavorite_List.some(checkedFavoriteIndicator => {
 													return checkedFavoriteIndicator.seriesId === favoriteIndicator.seriesId;
 												})}
-												// onChange가 일어날 때 item > input 요소들의 checked를 확인하여 하나라도 false라면 refFavoriteListHeeaderCheckbox.current가 false가 되도록 만든다.
-												onChange={() => {}}
 											/>
 											<h4>{title}</h4>
 										</div>
@@ -262,6 +264,7 @@ export default function IndicatorsTab() {
 
 					<CheckedFavoriteSection
 						checkedFavorite_List={checkedFavorite_List}
+						setCheckedFavorite_List={setCheckedFavorite_List}
 						isValidateModal={isValidateModal}
 						setIsValidateModalOpen={setIsValidateModal}
 					/>

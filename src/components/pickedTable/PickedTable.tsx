@@ -1,4 +1,5 @@
 import { FavoriteIndicator_Type } from '@/types/favorite';
+import { changeCategoryIdToName } from '@/utils/changeNameToCategoryId';
 import styled from 'styled-components';
 
 const PickedTableContainer = styled.div`
@@ -55,30 +56,40 @@ const PickedTableContainer = styled.div`
 		.row {
 			display: flex;
 			align-items: center;
+			justify-content: space-between;
 
 			div {
 				display: flex;
 				justify-content: center;
 				align-items: center;
-				width: 60%;
+				width: 70%;
 			}
 
 			div:nth-of-type(1) {
 				gap: 10px;
 				padding-left: 3px;
+				width: 65%;
 				justify-content: left;
 				overflow: hidden; /* 내용이 넘치면 잘라냄 */
+
+				/* 텍스트 관련 스타일 추가 */
+				white-space: nowrap; /* 텍스트를 한 줄로 유지 */
+				text-overflow: ellipsis; /* 텍스트가 넘치면 ...로 표시 */
 
 				input[type='checkbox'] {
 					transform: scale(1.2);
 				}
+
+				span {
+					display: inline-block; // 너비와 높이 조정 가능하게 변경
+					max-width: 100%; // 부모의 최대 너비를 넘지 않도록 설정
+					overflow: hidden; // 넘치는 내용 숨김
+					text-overflow: ellipsis; // 넘치는 텍스트를 '...'로 표시
+					white-space: nowrap; // 줄바꿈 없이 한 줄에 표시
+				}
 			}
 
 			div:nth-of-type(2) {
-				width: 20%;
-			}
-
-			div:nth-of-type(3) {
 				width: 20%;
 			}
 		}
@@ -96,12 +107,11 @@ export default function PickedTable({ checkedFavorite_List, isChecked_List, setI
 		<PickedTableContainer>
 			<div className='tableHead'>
 				<span>Indicator</span>
-				<span>volality</span>
 				<span>category</span>
 			</div>
 			<div className='tableBody'>
 				{checkedFavorite_List.map((favoriteIndicator, index) => {
-					const { title } = favoriteIndicator;
+					const { title, categoryId } = favoriteIndicator;
 
 					return (
 						<div className='row' key={index}>
@@ -116,8 +126,7 @@ export default function PickedTable({ checkedFavorite_List, isChecked_List, setI
 								<input type='checkbox' checked={isChecked_List[index]}></input>
 								<span>{title}</span>
 							</div>
-							<div>volality</div>
-							<div>category</div>
+							<div>{changeCategoryIdToName(categoryId)}</div>
 						</div>
 					);
 				})}
