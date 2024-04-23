@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import styles from '../JournalsSection.module.scss';
 import { JournalData_Type } from '@/types/journal';
-import { changeDate } from '@/utils/cleanString';
+import { changeDateForm } from '@/utils/changeDate';
 
 interface JournalListTable_Prop {
 	contextJournal_List: JournalData_Type[];
@@ -25,7 +25,7 @@ export default function JournalListTable({ contextJournal_List, isContextJournal
 									</div>
 									<div className={clsx(styles.body)}>
 										<span>{item.body}</span>
-										<em>{changeDate(item.createdAt)}</em>
+										<em>{changeDateForm(item.createdAt)}</em>
 									</div>
 								</td>
 							</tr>

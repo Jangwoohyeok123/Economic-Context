@@ -77,9 +77,14 @@ export default function Dashboard() {
 									</JournalFormSection>
 								)}
 							</AnimatePresence>
-							<JournalToolbarSection>
-								<JournalToolbar isRight={isRight} setIsRight={setIsRight} isJournalOpen={isJournalOpen} setIsJournalOpen={setIsJournalOpen} />
-							</JournalToolbarSection>
+							{/* <JournalToolbarSection>
+								<JournalToolbar
+									isRight={isRight}
+									setIsRight={setIsRight}
+									isJournalOpen={isJournalOpen}
+									setIsJournalOpen={setIsJournalOpen}
+								/>
+							</JournalToolbarSection> */}
 						</>
 					)}
 				</section>
