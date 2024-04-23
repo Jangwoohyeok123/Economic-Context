@@ -5,12 +5,14 @@ interface Journal_Props {
 }
 
 export const JournalWrapper = styled.div`
-	display: flex;
-	flex-direction: column;
+	width: 100%;
+	display: grid;
+	align-items: stretch;
 	gap: 12px 0;
 `;
 
 export const Journal = styled.div<Journal_Props>`
+	width: 100%;
 	display: flex;
 	justify-content: space-between;
 	align-items: flex-start;
