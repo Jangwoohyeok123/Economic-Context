@@ -9,8 +9,8 @@ import { FavoriteIndicator_Type } from '@/types/favorite';
 import styled from 'styled-components';
 import const_categoryId, { categoryIds } from '@/const/categoryId';
 import CreateContextSection from '../createContextSection/CreateContextSection';
-
-const itemsPerPage = 3;
+import { MdExpandMore } from 'react-icons/md';
+import Accordian from '../accordian/Accordian';
 
 const FavoriteContainer = styled.section`
 	display: flex;
@@ -91,16 +91,6 @@ const LeftContainer = styled.section`
 	}
 `;
 
-/* 
-<div className='contextName'>
-  <div>
-    <h3>Context Name</h3>
-    <div>label</div>
-  </div>
-  <input type='text' placeholder='write your context name' />
-</div>
-*/
-
 // 위아래패딩은 30px로 가봅시다.
 const RightContainer = styled.section`
 	width: 40%;
@@ -125,24 +115,14 @@ const RightContainer = styled.section`
 		> div {
 			display: flex;
 			justify-content: space-between;
-			align-items: center;
 			margin-bottom: 1px;
+			position: relative;
+			height: 40px;
 
 			h3 {
-				font-weight: 500;
-			}
-
-			// width, height가 정해지면 padding은 크기를 키울 수 없다.
-			> .label {
-				width: 100px;
-				height: 30px;
 				display: flex;
-				padding-left: 10px;
-				justify-content: left;
 				align-items: center;
-
-				border: 1px solid #ccc;
-				margin-bottom: 5px;
+				font-weight: 500;
 			}
 		}
 
@@ -215,25 +195,20 @@ export default function IndicatorsTab() {
 
 	const openAlertModal = () => setIsValidateModal(!isValidateModal);
 
-	// checked라면 checkedFavorite_List에서 curFavorite_List와 일치하는 지표들을 삭제한다.
-	// !checked라면 checkedFavorite_List에서 curFavorite_List와 일치하는 지표들을 삭제하고 curFavorite_List를 checkedFavorite_List에 추가한다.
 	const allClick = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { checked } = e.target;
 
-		if (checked) {
-			// 체크된 경우: 현재의 curFavorites_List를 추가하지만 중복을 피하기 위해 Set을 사용
-			setCheckedFavorite_List(prev => [...new Set([...prev, ...curFavorites_List])]);
-		} else {
-			// 체크 해제된 경우: curFavorites_List와 일치하는 항목을 제거하고, 나머지는 유지
+		if (checked) setCheckedFavorite_List(prev => [...new Set([...prev, ...curFavorites_List])]);
+		else {
 			const idsToRemove = new Set(curFavorites_List.map(item => item.seriesId));
 			setCheckedFavorite_List(prev => prev.filter(item => !idsToRemove.has(item.seriesId)));
 		}
 	};
 
-	function isSubset(subset: FavoriteIndicator_Type[], superset: FavoriteIndicator_Type[]) {
+	const isSubset = (subset: FavoriteIndicator_Type[], superset: FavoriteIndicator_Type[]) => {
 		if (subset.length === 0) return false;
 		return subset.every(element => superset.includes(element));
-	}
+	};
 
 	return (
 		<div className={clsx(styles.IndicatorsTab)}>
@@ -261,7 +236,7 @@ export default function IndicatorsTab() {
 						</div>
 						{curFavorites_List.length > 0
 							? curFavorites_List?.map((favoriteIndicator: FavoriteIndicator_Type, index: number) => {
-									const { title, seriesId, notes, categoryId, observation_end, observation_start, frequency, popularity } = favoriteIndicator;
+									const { title } = favoriteIndicator;
 
 									return (
 										<div key={index} className='item' onClick={() => pickIndicator(favoriteIndicator)}>
@@ -286,7 +261,7 @@ export default function IndicatorsTab() {
 					<div className='contextName'>
 						<div>
 							<h3>Context Name</h3>
-							<div className='label'>label</div>
+							<Accordian />
 						</div>
 						<input type='text' placeholder='write your context name' />
 					</div>
