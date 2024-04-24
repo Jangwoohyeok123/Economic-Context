@@ -46,6 +46,12 @@
 2. SSG를 사용해 홈페이지 비로그인시 Flickring 현상 제거
 3. 대시보드 페이지 context delete 에러 수정
 
+### Version 1.2 
+1. 더보기 페이지 layout 변경
+2. alert 제거 
+
+
+
 
 <!-- CONTACT -->
 ## Contact
