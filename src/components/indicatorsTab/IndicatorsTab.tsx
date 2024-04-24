@@ -91,6 +91,16 @@ const LeftContainer = styled.section`
 	}
 `;
 
+/* 
+<div className='contextName'>
+  <div>
+    <h3>Context Name</h3>
+    <div>label</div>
+  </div>
+  <input type='text' placeholder='write your context name' />
+</div>
+*/
+
 // 위아래패딩은 30px로 가봅시다.
 const RightContainer = styled.section`
 	width: 40%;
@@ -112,9 +122,28 @@ const RightContainer = styled.section`
 	> .contextName {
 		height: 15%;
 
-		h3 {
-			font-weight: 500;
-			padding-bottom: 5px;
+		> div {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 1px;
+
+			h3 {
+				font-weight: 500;
+			}
+
+			// width, height가 정해지면 padding은 크기를 키울 수 없다.
+			> .label {
+				width: 100px;
+				height: 30px;
+				display: flex;
+				padding-left: 10px;
+				justify-content: left;
+				align-items: center;
+
+				border: 1px solid #ccc;
+				margin-bottom: 5px;
+			}
 		}
 
 		input {
@@ -252,10 +281,13 @@ export default function IndicatorsTab() {
 				<RightContainer>
 					<div className='header'>
 						<h2>Create Context</h2>
-						<span>make your custom content</span>d
+						<span>make your custom context</span>
 					</div>
 					<div className='contextName'>
-						<h3>Context Name</h3>
+						<div>
+							<h3>Context Name</h3>
+							<div className='label'>label</div>
+						</div>
 						<input type='text' placeholder='write your context name' />
 					</div>
 

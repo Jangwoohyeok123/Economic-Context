@@ -1,5 +1,6 @@
+import { CategoryName } from '@/styles/CategoryName.style';
 import { FavoriteIndicator_Type } from '@/types/favorite';
-import { changeCategoryIdToName } from '@/utils/changeNameToCategoryId';
+import { changeCategoryIdToColor, changeCategoryIdToName } from '@/utils/changeNameToCategoryId';
 import styled from 'styled-components';
 
 const ContextTableContainer = styled.div`
@@ -11,18 +12,6 @@ const ContextTableContainer = styled.div`
 		height: 35px;
 		border-bottom: 1px solid var(--bgColor);
 	}
-
-	/* 
-				<div className='tableHead'>
-				<div className='favoriteListHeader'>
-					<input type='checkbox' />
-					<h4>Indicator</h4>
-				</div>
-				<span>category</span>
-			</div>
-	
-	
-	*/
 
 	.tableHead {
 		display: flex;
@@ -74,12 +63,11 @@ const ContextTableContainer = styled.div`
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			padding: 0 20px;
+			padding-left: 20px;
 
 			div {
 				display: flex;
 				align-items: center;
-				justify-content: right;
 				width: 70%;
 			}
 
@@ -109,6 +97,8 @@ const ContextTableContainer = styled.div`
 
 			div:nth-of-type(2) {
 				width: 20%;
+				display: flex;
+				justify-content: right;
 			}
 		}
 	}
@@ -155,7 +145,9 @@ export default function ContextTable({ checkedFavorite_List, finalCheckedFavorit
 								<input type='checkbox' checked={finalCheckedFavorite_List.includes(favoriteIndicator)}></input>
 								<span>{title}</span>
 							</div>
-							<div>{changeCategoryIdToName(categoryId)}</div>
+							<div>
+								<CategoryName $categoryColor={changeCategoryIdToColor(categoryId)}>{changeCategoryIdToName(categoryId)}</CategoryName>
+							</div>
 						</div>
 					);
 				})}
