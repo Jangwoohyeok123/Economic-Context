@@ -1,8 +1,6 @@
 import clsx from 'clsx';
 import styles from './IndicatorsTab.module.scss';
-import { Store_Type } from '@/types/redux';
 import { useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 import useFavoriteQuery from '@/hooks/useFavoriteQuery';
 import useFavoriteMutation from '@/hooks/useFavoriteMutation';
 import { changeCategoryIdToName } from '@/utils/changeNameToCategoryId';
@@ -10,7 +8,7 @@ import AlertModal from '../modals/alertModal/AlertModal';
 import { FavoriteIndicator_Type } from '@/types/favorite';
 import styled from 'styled-components';
 import const_categoryId, { categoryIds } from '@/const/categoryId';
-import CheckedFavoriteSection from '../checkedFavoriteSection/CheckedFavoriteSection';
+import CreateContextSection from '../createContextSection/CreateContextSection';
 
 const itemsPerPage = 3;
 
@@ -227,7 +225,6 @@ export default function IndicatorsTab() {
 						})}
 					</nav>
 
-					{/* checkedFavorite_List에 curFavorite_List가 모두 포함되어 있다면 input의 checked는 true가 되도록 만들기 */}
 					<div className='favoriteList' ref={refFavoriteList}>
 						<div className='favoriteListHeader'>
 							<input type='checkbox' checked={isSubset(curFavorites_List, checkedFavorite_List)} onChange={allClick} />
@@ -262,7 +259,7 @@ export default function IndicatorsTab() {
 						<input type='text' placeholder='write your context name' />
 					</div>
 
-					<CheckedFavoriteSection
+					<CreateContextSection
 						checkedFavorite_List={checkedFavorite_List}
 						setCheckedFavorite_List={setCheckedFavorite_List}
 						isValidateModal={isValidateModal}
