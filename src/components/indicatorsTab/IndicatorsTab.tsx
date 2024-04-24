@@ -1,23 +1,16 @@
 import clsx from 'clsx';
 import styles from './IndicatorsTab.module.scss';
-import { Store_Type } from '@/types/redux';
-import { useEffect, useState } from 'react';
-import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
-import { useSelector } from 'react-redux';
-import BubblePopButton from '../bubblePopButton/BubblePopButton';
+import { useRef, useState } from 'react';
 import useFavoriteQuery from '@/hooks/useFavoriteQuery';
 import useFavoriteMutation from '@/hooks/useFavoriteMutation';
-import { changeCategoryIdToName, changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
-import MakeContextModal from '../modals/makeContextModal/MakeContextModal';
+import { changeCategoryIdToName } from '@/utils/changeNameToCategoryId';
 import AlertModal from '../modals/alertModal/AlertModal';
-import { FavoriteIndicatorWithIsPick_Type, FavoriteIndicator_Type } from '@/types/favorite';
-import Pagination from '../pagination/Pagination';
-import FavoriteIndicatorCard from '../cards/favoriteIndicatorCard/FavoriteIndicatorCard';
+import { FavoriteIndicator_Type } from '@/types/favorite';
 import styled from 'styled-components';
 import const_categoryId, { categoryIds } from '@/const/categoryId';
-import PickedTable from '../pickedTable/PickedTable';
-
-const itemsPerPage = 3;
+import CreateContextSection from '../createContextSection/CreateContextSection';
+import { MdExpandMore } from 'react-icons/md';
+import Accordian from '../accordian/Accordian';
 
 const FavoriteContainer = styled.section`
 	display: flex;
@@ -30,32 +23,53 @@ const LeftContainer = styled.section`
 	width: 50%;
 	height: 100%;
 
-	.item {
-		padding: 0 20px;
-		width: 100%;
-		height: 60px;
-		display: flex;
-		align-items: center;
-		border-top: 1px solid #ccc;
-		gap: 20px;
-
-		input[type='checkbox'] {
-			transform: scale(1.2);
-		}
-
-		&:hover {
-			background: #ddd;
-		}
-
-		h4 {
-			font-weight: 500;
-		}
-	}
-
 	.favoriteList {
 		height: calc(100% - var(--headerSize) - 20px);
 		overflow-y: auto;
 		transition: 0.5s;
+
+		> .item {
+			padding: 0 20px;
+			width: 100%;
+			height: 60px;
+			display: flex;
+			align-items: center;
+			border-top: 1px solid #ccc;
+			gap: 20px;
+
+			input[type='checkbox'] {
+				transform: scale(1.2);
+			}
+
+			&:hover {
+				background: #ddd;
+			}
+
+			h4 {
+				font-weight: 500;
+			}
+		}
+
+		> .favoriteListHeader {
+			padding: 0 20px;
+			display: flex;
+			align-items: center;
+			gap: 20px;
+			width: 100%;
+			height: 40px;
+			background: var(--bgColor2);
+
+			input[type='checkbox'] {
+				transform: scale(1.2);
+			}
+
+			h4 {
+				width: 100%;
+				display: flex;
+				justify-content: center;
+				font-weight: 500;
+			}
+		}
 
 		&::-webkit-scrollbar {
 			width: 3px;
@@ -77,30 +91,13 @@ const LeftContainer = styled.section`
 	}
 `;
 
-/*
-					<div className='header'>
-						<h2>Create Context</h2>
-						<span>make your custom content</span>
-					</div>
-					<div className='contextName'>
-						<h3>Context Name</h3>
-						<input type='text' />
-					</div>
-					<div className='features'>
-						<span>Allcheck</span>
-						<span>Uncheck</span>
-					</div>
-					<PickedTable />
-					<button className='createButton'>create Context</button>
-*/
-
 // 위아래패딩은 30px로 가봅시다.
 const RightContainer = styled.section`
 	width: 40%;
 	background: #fff;
 	padding: 30px 40px;
 
-	.header {
+	> .header {
 		height: 15%;
 
 		h2 {
@@ -112,17 +109,26 @@ const RightContainer = styled.section`
 		}
 	}
 
-	.contextName {
+	> .contextName {
 		height: 15%;
 
-		h3 {
-			font-weight: 500;
-			padding-bottom: 5px;
+		> div {
+			display: flex;
+			justify-content: space-between;
+			margin-bottom: 1px;
+			position: relative;
+			height: 40px;
+
+			h3 {
+				display: flex;
+				align-items: center;
+				font-weight: 500;
+			}
 		}
 
 		input {
 			width: 100%;
-			padding: 3px 10px;
+			padding: 10px 10px;
 
 			&::placeholder {
 				opacity: 0.8;
@@ -134,7 +140,7 @@ const RightContainer = styled.section`
 		}
 	}
 
-	.features {
+	> .features {
 		display: flex;
 		gap: 20px;
 		padding-bottom: 10px;
@@ -150,7 +156,7 @@ const RightContainer = styled.section`
 		}
 	}
 
-	.createButtonWrapper {
+	> .createButtonWrapper {
 		text-align: right;
 
 		button {
@@ -167,23 +173,42 @@ const RightContainer = styled.section`
 `;
 
 export default function IndicatorsTab() {
-	const user = useSelector((state: Store_Type) => state.user);
-
-	// const [categoryIndex, setCategoryIndex] = useState<number>(0);
 	const [isValidateModal, setIsValidateModal] = useState<boolean>(false);
 
 	const { deleteFavoriteMutationAll } = useFavoriteMutation();
 	const { allFavorites_List } = useFavoriteQuery();
 	const [currentCategoryId, setCurrentCategoryId] = useState<number>(const_categoryId.interest_mortgage);
+	const [checkedFavorite_List, setCheckedFavorite_List] = useState<FavoriteIndicator_Type[]>([]);
+	const refFavoriteList = useRef<HTMLDivElement>(null);
 
-	// const curFavorites = favoritesWithPick?.filter((favorite: FavoriteIndicator_Type) => favorite?.categoryId == currentCategoryId);
-	if (!allFavorites_List) {
-		return <div>isLoading</div>;
-	}
+	if (!allFavorites_List) return <div>isLoading</div>;
 
-	const curFavorites_List = allFavorites_List?.filter(favorite => {
-		return favorite.categoryId === currentCategoryId;
-	});
+	const curFavorites_List = allFavorites_List?.filter(favorite => favorite.categoryId === currentCategoryId);
+
+	const pickIndicator = (favoriteIndicator: FavoriteIndicator_Type) => {
+		setCheckedFavorite_List(prev => {
+			if (prev.find(item => item.seriesId === favoriteIndicator.seriesId)) return prev.filter(item => item.seriesId !== favoriteIndicator.seriesId);
+
+			return [...prev, favoriteIndicator];
+		});
+	};
+
+	const openAlertModal = () => setIsValidateModal(!isValidateModal);
+
+	const allClick = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { checked } = e.target;
+
+		if (checked) setCheckedFavorite_List(prev => [...new Set([...prev, ...curFavorites_List])]);
+		else {
+			const idsToRemove = new Set(curFavorites_List.map(item => item.seriesId));
+			setCheckedFavorite_List(prev => prev.filter(item => !idsToRemove.has(item.seriesId)));
+		}
+	};
+
+	const isSubset = (subset: FavoriteIndicator_Type[], superset: FavoriteIndicator_Type[]) => {
+		if (subset.length === 0) return false;
+		return subset.every(element => superset.includes(element));
+	};
 
 	return (
 		<div className={clsx(styles.IndicatorsTab)}>
@@ -197,23 +222,30 @@ export default function IndicatorsTab() {
 								<button
 									key={index}
 									className={categoryId === currentCategoryId ? clsx(styles.on) : ''}
-									onClick={() => {
-										setCurrentCategoryId(categoryId);
-									}}>
+									onClick={() => setCurrentCategoryId(categoryId)}>
 									{changeCategoryIdToName(categoryId)}
 								</button>
 							);
 						})}
 					</nav>
 
-					<div className='favoriteList'>
+					<div className='favoriteList' ref={refFavoriteList}>
+						<div className='favoriteListHeader'>
+							<input type='checkbox' checked={isSubset(curFavorites_List, checkedFavorite_List)} onChange={allClick} />
+							<h4>Indicator</h4>
+						</div>
 						{curFavorites_List.length > 0
-							? curFavorites_List?.map((favorite: FavoriteIndicator_Type, index: number) => {
-									const { title, seriesId, notes, categoryId, observation_end, observation_start, frequency, popularity } = favorite;
+							? curFavorites_List?.map((favoriteIndicator: FavoriteIndicator_Type, index: number) => {
+									const { title } = favoriteIndicator;
 
 									return (
-										<div key={index} className='item'>
-											<input type='checkbox' />
+										<div key={index} className='item' onClick={() => pickIndicator(favoriteIndicator)}>
+											<input
+												type='checkbox'
+												checked={checkedFavorite_List.some(checkedFavoriteIndicator => {
+													return checkedFavoriteIndicator.seriesId === favoriteIndicator.seriesId;
+												})}
+											/>
 											<h4>{title}</h4>
 										</div>
 									);
@@ -224,20 +256,22 @@ export default function IndicatorsTab() {
 				<RightContainer>
 					<div className='header'>
 						<h2>Create Context</h2>
-						<span>make your custom content</span>
+						<span>make your custom context</span>
 					</div>
 					<div className='contextName'>
-						<h3>Context Name</h3>
+						<div>
+							<h3>Context Name</h3>
+							<Accordian />
+						</div>
 						<input type='text' placeholder='write your context name' />
 					</div>
-					<div className='features'>
-						<span>Allcheck</span>
-						<span>Uncheck</span>
-					</div>
-					<PickedTable />
-					<div className='createButtonWrapper'>
-						<button>Create Context</button>
-					</div>
+
+					<CreateContextSection
+						checkedFavorite_List={checkedFavorite_List}
+						setCheckedFavorite_List={setCheckedFavorite_List}
+						isValidateModal={isValidateModal}
+						setIsValidateModalOpen={setIsValidateModal}
+					/>
 				</RightContainer>
 			</FavoriteContainer>
 
@@ -254,83 +288,3 @@ export default function IndicatorsTab() {
 		</div>
 	);
 }
-
-/*
-						// <FavoriteIndicatorCard key={index}>
-						// 	<div className={styles.buttons}>
-						// 		<BubblePopButton clickHandler={() => deleteFavoriteMutationAll?.mutate({ userId: user.id, seriesId })}>delete</BubblePopButton>
-						// 		<BubblePopButton
-						// 			className={isPick ? clsx(styles.on) : ''}
-						// 			clickHandler={() => {
-						// 				const updated = favoritesWithPick?.map((favorite: FavoriteIndicatorWithIsPick_Type) => {
-						// 					if (favorite.seriesId === seriesId) {
-						// 						return {
-						// 							...favorite,
-						// 							isPick: !favorite.isPick
-						// 						};
-						// 					}
-
-						// 					return favorite;
-						// 				});
-
-						// 				setFavoritesWithPick(updated);
-						// 			}}>
-						// 			{isPick ? 'unpick' : 'pick'}
-						// 		</BubblePopButton>
-						// 	</div>
-						// </FavoriteIndicatorCard>
-
-
-
-			  <Pagination
-					data_List={favoritesWithPick.filter(favoriteIndicator => favoriteIndicator.categoryId === categoryId)}
-					currentPage={currentPage}
-					setCurrentPage={setCurrentPage}
-					itemsPerPage={3}
-					pageRangeDisplayed={5}
-				/>
-
-        <MakeContextModal favorites={favoritesWithPick} isModalOpen={isMakeOpen} setIsModalOpen={setIsMakeOpen} />
-        <div className={clsx(styles.item, styles.buttonWrap)}>
-					<button
-						onClick={() => {
-							if (favoritesWithPick?.filter(favoriteIndicator => favoriteIndicator.isPick).length > 0) setIsMakeOpen(true);
-							else setIsValidateModal(true);
-						}}>
-						Make Context
-					</button>
-				</div> 
-
-				const pagedFavorite = curFavorites?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
-					useEffect(() => {
-		if (favoritesWithPick.length) {
-			// favorite 하나가 추가될 때
-			const updated = allFavorites_List?.map((favoriteIndicator: FavoriteIndicator_Type) => {
-				const prev = favoritesWithPick.find(
-					(prevFavorites: FavoriteIndicatorWithIsPick_Type) => prevFavorites.seriesId === favoriteIndicator.seriesId
-				);
-				return prev
-					? {
-							...favoriteIndicator,
-							isPick: prev.isPick
-					  }
-					: {
-							...favoriteIndicator,
-							isPick: false
-					  };
-			});
-			updated && setFavoritesWithPick(updated);
-			return;
-		}
-
-		const updated = allFavorites_List?.map((favoriteIndicator: FavoriteIndicator_Type) => {
-			return {
-				...favoriteIndicator,
-				isPick: false
-			};
-		});
-
-		updated && setFavoritesWithPick(updated);
-	}, [allFavorites_List]);
-*/

@@ -14,10 +14,9 @@ import const_queryKey from '@/const/queryKey';
 import { getCategory_List } from '@/api/fred';
 import { useSelector } from 'react-redux';
 import const_categoryId from '@/const/categoryId';
-import { categoryNames } from './_app';
+import { categoryIdList } from './_app';
 import { Indicator_Type } from '@/types/fred';
 import CategoryWithIsActive from '@/components/categoryWithIsAcitve/CategoryWithIsActive';
-import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
 import { roboto, poppins, frontUrl } from './_app';
 import Pagination from '@/components/pagination/Pagination';
 import SEO from '@/components/seo/SEO';
@@ -36,28 +35,28 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 	const user = useSelector((state: Store_Type) => state.user);
 	const router = useRouter();
 
-	const [categoryIndex, setCategoryIndex] = useState(0);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
-
+	const [selectedCategoryId, setSelectedCategoryId] = useState(categoryIdList[0]);
+	const [selectedCategoryIdIndex, setSelectedCategoryIdIndex] = useState(0);
 	const initialStates = [interest, exchange, production, consume];
 	const indicatorsPerPage = 6;
-	const categoryId = changeNameToCategoryId(categoryNames[categoryIndex]);
-	const categoryIdList = categoryNames.map(el => changeNameToCategoryId(el));
 
 	const categoryQueries = useQueries({
-		queries: categoryNames.map((_, idx) => ({
-			queryKey: [const_queryKey.category, 'getCategory', changeNameToCategoryId(categoryNames[idx])],
-			queryFn: () => getCategory_List(changeNameToCategoryId(categoryNames[idx])),
-			staleTime: 1000 * 60 * 10,
-			initialData: initialStates[idx]
+		queries: categoryIdList.map((categoryId: number) => ({
+			queryKey: [const_queryKey.category, `getCategory${categoryId}`, categoryId],
+			queryFn: () => getCategory_List(categoryId, 20),
+			staleTime: 1000 * 60 * 10
 		}))
 	});
-	const category_List = categoryQueries[categoryIndex].data;
-	const selectCategory = (e: React.MouseEvent<HTMLButtonElement>, idx: number) => {
+
+	const category_List = categoryQueries[selectedCategoryIdIndex]?.data as Indicator_Type[];
+
+	const selectCategory = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
 		e.preventDefault();
-		const newIndex = idx;
-		setCategoryIndex(newIndex);
+		const newIndex = categoryIdList.indexOf(id);
+		setSelectedCategoryId(id);
+		setSelectedCategoryIdIndex(newIndex);
 		setCurrentPage(1);
 	};
 
@@ -72,25 +71,20 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 				<Image src={mainImage} alt='mainImage for mainpage' aria-label='mainImage' placeholder='blur' objectFit='cover' quality={80} fill priority />
 			</div>
 			<main className={clsx(styles.Home, poppins.variable, roboto.variable)}>
-				<CategoryTabMenu
-					categoryNames={categoryNames}
-					categoryIndex={categoryIndex}
-					selectCategory={selectCategory}
-					categoryIdList={categoryIdList}
-				/>
+				<CategoryTabMenu selectedCategoryId={selectedCategoryId} selectCategory={selectCategory} categoryIdList={categoryIdList} />
 				{user.isLogin ? (
 					<CategoryWithIsActive
 						categoryData={category_List || []}
 						currentPage={currentPage}
 						itemsPerPage={indicatorsPerPage}
-						categoryId={categoryId}
+						categoryId={selectedCategoryId}
 					/>
 				) : (
 					<Category
 						categoryData={category_List || []}
 						currentPage={currentPage}
 						itemsPerPage={indicatorsPerPage}
-						categoryId={categoryId}
+						categoryId={selectedCategoryId}
 						setIsAlertModalOpen={setIsAlertModalOpen}
 					/>
 				)}

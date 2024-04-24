@@ -138,10 +138,12 @@ export default function renderChartSvg(svg: SVGElement, periodValues_List: DateA
 			.attr('height', svgHeight - 50 - xAxisHeight)
 			.attr('opacity', 0)
 			.on('mouseover', function (event, d) {
+				if (!tooltipElement) return;
 				tooltipElement.style.visibility = 'visible';
 				updateTooltipContent(d);
 			})
 			.on('mousemove', function (event, d) {
+				if (!tooltipElement) return;
 				const tooltipX = utcScale(d.date);
 				const tooltipY = linearScale(Number(d.value));
 
@@ -150,6 +152,7 @@ export default function renderChartSvg(svg: SVGElement, periodValues_List: DateA
 				tooltipElement.style.transform = 'translate(-30%, -50%)';
 			})
 			.on('mouseout', function () {
+				if (!tooltipElement) return;
 				tooltipElement.style.visibility = 'hidden';
 			});
 	}

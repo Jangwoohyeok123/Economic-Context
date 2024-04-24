@@ -18,11 +18,9 @@ export default async function getCategory(req: NextApiRequest, res: NextApiRespo
 	const apiKey = process.env.NEXT_PUBLIC_FREDKEY;
 
 	try {
-		const { categoryId } = req.query;
+		const { categoryId, limit } = req.query;
 
-		const response = await fetch(
-			`${baseUrl}category/series?category_id=${categoryId}&api_key=${apiKey}&file_type=json`
-		);
+		const response = await fetch(`${baseUrl}category/series?category_id=${categoryId}&api_key=${apiKey}&file_type=json&limit=${limit}`);
 		const json = await response.json();
 
 		res.status(200).json(json);
