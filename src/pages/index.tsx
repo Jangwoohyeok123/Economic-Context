@@ -37,25 +37,26 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 
 	const [currentPage, setCurrentPage] = useState(1);
 	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
-	const [selectedCategoryId, setSelectedCategoryId] = useState(106);
+	const [selectedCategoryId, setSelectedCategoryId] = useState(categoryIdList[0]);
+	const [selectedCategoryIdIndex, setSelectedCategoryIdIndex] = useState(0);
 	const initialStates = [interest, exchange, production, consume];
 	const indicatorsPerPage = 6;
 
 	const categoryQueries = useQueries({
 		queries: categoryIdList.map((categoryId: number) => ({
-			queryKey: [const_queryKey.category, 'getCategory', categoryId],
-			queryFn: () => getCategory_List(categoryId),
-			staleTime: 1000 * 60 * 10,
-			initialData: initialStates
+			queryKey: [const_queryKey.category, `getCategory${categoryId}`, categoryId],
+			queryFn: () => getCategory_List(categoryId, 20),
+			staleTime: 1000 * 60 * 10
 		}))
 	});
 
-	const category_List = categoryQueries[0]?.data;
-	console.log('category_List: ', category_List);
+	const category_List = categoryQueries[selectedCategoryIdIndex]?.data as Indicator_Type[];
 
 	const selectCategory = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
 		e.preventDefault();
+		const newIndex = categoryIdList.indexOf(id);
 		setSelectedCategoryId(id);
+		setSelectedCategoryIdIndex(newIndex);
 		setCurrentPage(1);
 	};
 

@@ -19,9 +19,9 @@ export const getIndicator = async (seriesId: string): Promise<Indicator_Type> =>
 };
 
 //각 카테고리 fred에서 제공하는 인디케이터 목록을 불러오는 데이터
-export const getCategory_List = async (categoryId: number): Promise<Indicator_Type[]> => {
+export const getCategory_List = async (categoryId: number, limit: number): Promise<Indicator_Type[]> => {
 	try {
-		const response = await axios.get(`/api/category?categoryId=${categoryId}`);
+		const response = await axios.get(`/api/category?categoryId=${categoryId}&limit=${limit}`);
 		return response.data.seriess;
 	} catch (error) {
 		if (axios.isAxiosError(error)) {
