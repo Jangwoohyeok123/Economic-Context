@@ -1,35 +1,38 @@
 import { FavoriteIndicator_Type } from '@/types/favorite';
-import PickedTable from '../pickedTable/PickedTable';
-import TableFeatures from '../tableFeatures/TableFeatures';
+import ContextTable from '../contextTable/ContextTable';
+import ContextTableMethods from '../tableFeatures/TableFeatures';
 import React, { useState } from 'react';
 import MakeContextModal from '../modals/makeContextModal/MakeContextModal';
 import AlertModal from '../modals/alertModal/AlertModal';
 
-interface CheckedFavoriteSection_Props {
+interface CreateContextSection_Props {
 	checkedFavorite_List: FavoriteIndicator_Type[];
 	setCheckedFavorite_List: React.Dispatch<React.SetStateAction<FavoriteIndicator_Type[]>>;
 	isValidateModal: boolean;
 	setIsValidateModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function CheckedFavoriteSection({
+export default function CreateContextSection({
 	checkedFavorite_List,
 	setCheckedFavorite_List,
 	isValidateModal,
 	setIsValidateModalOpen
-}: CheckedFavoriteSection_Props) {
-	// isChecked_List는 checkedFavorite_List가 변경돼도 변경되지 않는다. (마운트시 한번만 초기값 설정이 된다.)
-	const [isChecked_List, setIsChecked_List] = useState<boolean[]>(new Array(checkedFavorite_List.length).fill(false));
+}: CreateContextSection_Props) {
+	const [finalCheckedFavorite_List, setFinalCheckedFavorite_List] = useState<FavoriteIndicator_Type[]>([]);
 
 	return (
 		<>
-			<TableFeatures
+			<ContextTableMethods
 				checkedFavorite_List={checkedFavorite_List}
 				setCheckedFavorite_List={setCheckedFavorite_List}
-				isChecked_List={isChecked_List}
-				setIsChecked_List={setIsChecked_List}
+				finalCheckedFavorite_List={finalCheckedFavorite_List}
+				setFinalCheckedFavorite_List={setFinalCheckedFavorite_List}
 			/>
-			<PickedTable checkedFavorite_List={checkedFavorite_List} isChecked_List={isChecked_List} setIsChecked_List={setIsChecked_List} />
+			<ContextTable
+				checkedFavorite_List={checkedFavorite_List}
+				finalCheckedFavorite_List={finalCheckedFavorite_List}
+				setFinalCheckedFavorite_List={setFinalCheckedFavorite_List}
+			/>
 			<div className='createButtonWrapper'>
 				<button>Create Context</button>
 			</div>

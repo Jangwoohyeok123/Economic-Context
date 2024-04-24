@@ -1,8 +1,6 @@
 import clsx from 'clsx';
 import styles from './IndicatorsTab.module.scss';
-import { Store_Type } from '@/types/redux';
 import { useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 import useFavoriteQuery from '@/hooks/useFavoriteQuery';
 import useFavoriteMutation from '@/hooks/useFavoriteMutation';
 import { changeCategoryIdToName } from '@/utils/changeNameToCategoryId';
@@ -10,9 +8,9 @@ import AlertModal from '../modals/alertModal/AlertModal';
 import { FavoriteIndicator_Type } from '@/types/favorite';
 import styled from 'styled-components';
 import const_categoryId, { categoryIds } from '@/const/categoryId';
-import CheckedFavoriteSection from '../checkedFavoriteSection/CheckedFavoriteSection';
-
-const itemsPerPage = 3;
+import CreateContextSection from '../createContextSection/CreateContextSection';
+import { MdExpandMore } from 'react-icons/md';
+import Accordian from '../accordian/Accordian';
 
 const FavoriteContainer = styled.section`
 	display: flex;
@@ -114,9 +112,18 @@ const RightContainer = styled.section`
 	> .contextName {
 		height: 15%;
 
-		h3 {
-			font-weight: 500;
-			padding-bottom: 5px;
+		> div {
+			display: flex;
+			justify-content: space-between;
+			margin-bottom: 1px;
+			position: relative;
+			height: 40px;
+
+			h3 {
+				display: flex;
+				align-items: center;
+				font-weight: 500;
+			}
 		}
 
 		input {
@@ -188,25 +195,20 @@ export default function IndicatorsTab() {
 
 	const openAlertModal = () => setIsValidateModal(!isValidateModal);
 
-	// checked라면 checkedFavorite_List에서 curFavorite_List와 일치하는 지표들을 삭제한다.
-	// !checked라면 checkedFavorite_List에서 curFavorite_List와 일치하는 지표들을 삭제하고 curFavorite_List를 checkedFavorite_List에 추가한다.
 	const allClick = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { checked } = e.target;
 
-		if (checked) {
-			// 체크된 경우: 현재의 curFavorites_List를 추가하지만 중복을 피하기 위해 Set을 사용
-			setCheckedFavorite_List(prev => [...new Set([...prev, ...curFavorites_List])]);
-		} else {
-			// 체크 해제된 경우: curFavorites_List와 일치하는 항목을 제거하고, 나머지는 유지
+		if (checked) setCheckedFavorite_List(prev => [...new Set([...prev, ...curFavorites_List])]);
+		else {
 			const idsToRemove = new Set(curFavorites_List.map(item => item.seriesId));
 			setCheckedFavorite_List(prev => prev.filter(item => !idsToRemove.has(item.seriesId)));
 		}
 	};
 
-	function isSubset(subset: FavoriteIndicator_Type[], superset: FavoriteIndicator_Type[]) {
+	const isSubset = (subset: FavoriteIndicator_Type[], superset: FavoriteIndicator_Type[]) => {
 		if (subset.length === 0) return false;
 		return subset.every(element => superset.includes(element));
-	}
+	};
 
 	return (
 		<div className={clsx(styles.IndicatorsTab)}>
@@ -227,7 +229,6 @@ export default function IndicatorsTab() {
 						})}
 					</nav>
 
-					{/* checkedFavorite_List에 curFavorite_List가 모두 포함되어 있다면 input의 checked는 true가 되도록 만들기 */}
 					<div className='favoriteList' ref={refFavoriteList}>
 						<div className='favoriteListHeader'>
 							<input type='checkbox' checked={isSubset(curFavorites_List, checkedFavorite_List)} onChange={allClick} />
@@ -235,7 +236,7 @@ export default function IndicatorsTab() {
 						</div>
 						{curFavorites_List.length > 0
 							? curFavorites_List?.map((favoriteIndicator: FavoriteIndicator_Type, index: number) => {
-									const { title, seriesId, notes, categoryId, observation_end, observation_start, frequency, popularity } = favoriteIndicator;
+									const { title } = favoriteIndicator;
 
 									return (
 										<div key={index} className='item' onClick={() => pickIndicator(favoriteIndicator)}>
@@ -255,14 +256,17 @@ export default function IndicatorsTab() {
 				<RightContainer>
 					<div className='header'>
 						<h2>Create Context</h2>
-						<span>make your custom content</span>d
+						<span>make your custom context</span>
 					</div>
 					<div className='contextName'>
-						<h3>Context Name</h3>
+						<div>
+							<h3>Context Name</h3>
+							<Accordian />
+						</div>
 						<input type='text' placeholder='write your context name' />
 					</div>
 
-					<CheckedFavoriteSection
+					<CreateContextSection
 						checkedFavorite_List={checkedFavorite_List}
 						setCheckedFavorite_List={setCheckedFavorite_List}
 						isValidateModal={isValidateModal}
