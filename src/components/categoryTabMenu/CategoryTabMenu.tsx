@@ -17,7 +17,6 @@ interface CategoryTabMenu_Props {
 }
 
 export default function CategoryTabMenu({ selectedCategoryId, selectCategory, categoryIdList }: CategoryTabMenu_Props) {
-	console.log('selectedCategoryId: ', selectedCategoryId);
 	return (
 		<S.TabMenuWrap>
 			{categoryIdList.map((categoryId, idx) => {
@@ -58,7 +57,7 @@ export default function CategoryTabMenu({ selectedCategoryId, selectCategory, ca
 										svgComponent = <Consume fill={color} />;
 										break;
 									case 'Labor':
-										svgComponent = <Labor stroke={color} />;
+										svgComponent = <Labor fill={color} />;
 										break;
 									default:
 										return svgComponent;
