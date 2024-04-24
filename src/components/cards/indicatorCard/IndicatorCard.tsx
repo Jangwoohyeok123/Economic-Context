@@ -9,7 +9,7 @@ import styled from 'styled-components';
 import getVolatility from '@/utils/getVolatility';
 
 interface IndicatorCardWrapper_Props {
-	volatility: number;
+	$volatility: number;
 }
 
 const IndicatorCardWrapper = styled.div<IndicatorCardWrapper_Props>`
@@ -39,7 +39,7 @@ const IndicatorCardWrapper = styled.div<IndicatorCardWrapper_Props>`
 			span:nth-of-type(2) {
 				font-size: 0.85rem;
 				color: ${props => {
-					const { volatility } = props;
+					const { $volatility: volatility } = props;
 					if (volatility > 0) return 'red';
 					if (volatility === 0) return '#111';
 					else return 'blue';
@@ -90,7 +90,7 @@ export default function IndicatorCard({ indicator, categoryId, children, classNa
 	const volatility = getVolatility(prevData, lastData);
 
 	return (
-		<IndicatorCardWrapper volatility={volatility}>
+		<IndicatorCardWrapper $volatility={volatility}>
 			<LineChart categoryId={categoryId} values={chartDatas} width={100} height={40} />
 			<div className={'notChart ' + className}>
 				<h3>{title}</h3>
