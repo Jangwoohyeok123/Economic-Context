@@ -2,6 +2,7 @@ import { FavoriteIndicator_Type } from '@/types/favorite';
 import styled from 'styled-components';
 import { MdOutlineDeleteOutline } from 'react-icons/md';
 import { MdOutlineRefresh } from 'react-icons/md';
+import React from 'react';
 
 const FeaturesContainer = styled.div`
 	display: flex;
@@ -26,21 +27,33 @@ const FeaturesContainer = styled.div`
 interface TableFeatures_Props {
 	checkedFavorite_List: FavoriteIndicator_Type[];
 	setCheckedFavorite_List: React.Dispatch<React.SetStateAction<FavoriteIndicator_Type[]>>;
-	isChecked_List: boolean[];
-	setIsChecked_List: React.Dispatch<React.SetStateAction<boolean[]>>;
+	finalCheckedFavorite_List: FavoriteIndicator_Type[];
+	setFinalCheckedFavorite_List: React.Dispatch<React.SetStateAction<FavoriteIndicator_Type[]>>;
 }
-
-export default function TableFeatures({ checkedFavorite_List, setCheckedFavorite_List, isChecked_List, setIsChecked_List }: TableFeatures_Props) {
+// finalCheckedFavorite_List, setFinalCheckedFavorite_List
+export default function ContextTableMethods({
+	checkedFavorite_List,
+	setCheckedFavorite_List,
+	finalCheckedFavorite_List,
+	setFinalCheckedFavorite_List
+}: TableFeatures_Props) {
 	return (
 		<FeaturesContainer>
 			<span
 				onClick={() => {
 					setCheckedFavorite_List([]);
-					setIsChecked_List([]);
+					setFinalCheckedFavorite_List([]);
 				}}>
 				<MdOutlineRefresh />
 			</span>
-			<span onClick={() => {}}>
+			<span
+				onClick={() => {
+					setCheckedFavorite_List(prev => {
+						return prev.filter(indicator => !finalCheckedFavorite_List.includes(indicator));
+					});
+
+					setFinalCheckedFavorite_List([]);
+				}}>
 				<MdOutlineDeleteOutline />
 			</span>
 		</FeaturesContainer>
