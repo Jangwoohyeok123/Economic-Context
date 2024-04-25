@@ -61,8 +61,8 @@ interface IndicatorCard_Props {
 	className?: string;
 	currentPage: number;
 }
+
 /**
- *
  * @param title
  * @param seriesId
  * @param categoryId
