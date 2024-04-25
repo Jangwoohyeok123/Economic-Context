@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { getChartData } from '@/api/fred';
 import styled from 'styled-components';
 import getVolatility from '@/utils/getVolatility';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 interface IndicatorCardWrapper_Props {
 	$volatility: number;
@@ -83,7 +84,7 @@ export default function IndicatorCard({ indicator, categoryId, children, classNa
 		});
 	}, [seriesId, currentPage]);
 
-	if (chartDatas.length === 0) return <div>loading</div>;
+	if (chartDatas.length === 0) return <ClipLoader color='blue' size={150} aria-label='Loading Spinner' data-testid='loader' />;
 
 	const [prevData, lastData] = [Number(chartDatas[chartDatas.length - 2].value), Number(chartDatas[chartDatas.length - 1].value)];
 
