@@ -8,6 +8,7 @@ import { getChartData } from '@/api/fred';
 import styled from 'styled-components';
 import getVolatility from '@/utils/getVolatility';
 import ClipLoader from 'react-spinners/ClipLoader';
+import Loading from '@/components/loading/Loading';
 
 interface IndicatorCardWrapper_Props {
 	$volatility: number;
@@ -62,13 +63,13 @@ interface IndicatorCard_Props {
 	currentPage: number;
 }
 /**
- * - required props
+ *
  * @param title
- * @param seriesId morepage 로 이동하기 위해 필요하다.
- * @param categoryId morepage 로 이동하기 위해 필요하다.
+ * @param seriesId
+ * @param categoryId
  * @param observation_end
  * @param observation_start
- * @returns title, 기간 정보가 담기 card 를 반환한다. className 을 통해 커스텀 가능하다.
+ * @returns
  */
 export default function IndicatorCard({ indicator, categoryId, children, className, currentPage }: IndicatorCard_Props) {
 	const { title, id: seriesId, observation_start, observation_end, notes } = indicator ?? {}; // `??` indicator가 없을 때 생기는 에러를 위한 널병합연산자
@@ -84,7 +85,8 @@ export default function IndicatorCard({ indicator, categoryId, children, classNa
 		});
 	}, [seriesId, currentPage]);
 
-	if (chartDatas.length === 0) return <ClipLoader color='blue' size={150} aria-label='Loading Spinner' data-testid='loader' />;
+	// chartData를 불러오는 로딩중에 보여줄 clipLoader
+	if (chartDatas.length === 0) return <Loading />;
 
 	const [prevData, lastData] = [Number(chartDatas[chartDatas.length - 2].value), Number(chartDatas[chartDatas.length - 1].value)];
 
@@ -106,20 +108,4 @@ export default function IndicatorCard({ indicator, categoryId, children, classNa
 			</div>
 		</IndicatorCardWrapper>
 	);
-}
-
-// onClick={() => routeMorePage(seriesId)}
-
-{
-	/* <div className={styles.header}>
-						<h3>{cleandTitle}</h3>
-						<div className={clsx(styles.period)}>
-							<div>
-								Period: {observation_start} ~ {observation_end}
-							</div>
-						</div>
-					</div> */
-}
-{
-	/* <p>{notes ? notes : 'This indicator does not have information about the indicator description.'}</p> */
 }

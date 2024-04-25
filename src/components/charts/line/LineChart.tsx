@@ -3,9 +3,8 @@ import * as d3 from 'd3';
 import renderChartSvg from '@/utils/renderChartSvg';
 import prepareValues_ListByPeriod from '@/utils/setPeriodValues_List';
 import makeDebouncedHandler from '@/utils/makeDebounceHandler';
-import { Indicator_Type, DateAndValue_Type } from '@/types/fred';
+import { DateAndValue_Type } from '@/types/fred';
 import React, { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/router';
 import { changeCategoryIdToColor } from '@/utils/changeNameToCategoryId';
 
 interface ChartWrapper_Props {
@@ -86,7 +85,8 @@ export interface LineChart_Props {
 const LineChart = ({ categoryId, values: values_List, width = 100, height = 65, className }: LineChart_Props) => {
 	const rootSvgRef = useRef<SVGSVGElement>(null);
 	const rootSvgContainerRef = useRef<HTMLDivElement>(null);
-	const [duration, setDuration] = useState<number>(10);
+	const [duration, setDuration] = useState<number>(5);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const lastDate = values_List[values_List.length - 1].date;
 
 	// resize 이벤트 발생시 차트 다시그리기
@@ -96,6 +96,7 @@ const LineChart = ({ categoryId, values: values_List, width = 100, height = 65, 
 			if (rootSvgRef.current && rootSvgContainerRef.current) {
 				d3.select(rootSvgRef.current).selectAll('*').remove();
 				renderChartSvg(rootSvgRef.current, values_List, height, duration);
+				setIsLoading(false);
 			}
 		};
 		const debounced_resetChart = makeDebouncedHandler(resetChart, 200);
