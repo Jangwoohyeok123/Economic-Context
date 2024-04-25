@@ -70,7 +70,12 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 				<Image src={mainImage} alt='mainImage for mainpage' aria-label='mainImage' placeholder='blur' objectFit='cover' quality={80} fill priority />
 			</div>
 			<main className={clsx(styles.Home, poppins.variable, roboto.variable)}>
-				<CategoryTabMenu selectedCategoryId={selectedCategoryId} selectCategory={selectCategory} categoryIdList={categoryIdList} />
+				<CategoryTabMenu
+					selectedCategoryId={selectedCategoryId}
+					setSelectedCategoryId={setSelectedCategoryId}
+					selectCategory={selectCategory}
+					categoryIdList={categoryIdList}
+				/>
 				{user.isLogin ? (
 					<CategoryWithIsActive
 						categoryData={category_List || []}

@@ -4,7 +4,6 @@ interface MenuButton_Props {
 }
 export const TabMenuWrap = styled.div`
 	width: 100%;
-	padding-top: 50px;
 	text-align: center;
 	display: flex;
 	flex-wrap: wrap;
@@ -12,7 +11,8 @@ export const TabMenuWrap = styled.div`
 	gap: 20px;
 
 	button {
-		padding: 14px 30px;
+		padding: 14px;
+		padding-left: 15px;
 		transition: 0.3s;
 		border-radius: 3px;
 		cursor: pointer;
@@ -40,6 +40,7 @@ export const TabMenuWrap = styled.div`
 	}
 `;
 export const MenuButton = styled.button<MenuButton_Props>`
+	width: 120px;
 	border: 1px solid ${props => props.$categoryColor};
 	color: ${props => props.$categoryColor};
 	&:hover {
