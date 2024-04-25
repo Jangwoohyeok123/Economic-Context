@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 import { getChartData } from '@/api/fred';
 import styled from 'styled-components';
 import getVolatility from '@/utils/getVolatility';
-import ClipLoader from 'react-spinners/ClipLoader';
 import Loading from '@/components/loading/Loading';
 
 interface IndicatorCardWrapper_Props {
@@ -72,7 +71,7 @@ interface IndicatorCard_Props {
  * @returns
  */
 export default function IndicatorCard({ indicator, categoryId, children, className, currentPage }: IndicatorCard_Props) {
-	const { title, id: seriesId, observation_start, observation_end, notes } = indicator ?? {}; // `??` indicator가 없을 때 생기는 에러를 위한 널병합연산자
+	const { title, id: seriesId } = indicator ?? {}; // `??` indicator가 없을 때 생기는 에러를 위한 널병합연산자
 	const router = useRouter();
 	const cleandTitle = title ? cleanString(title) : 'title';
 	const routeMorePage = (seriesId: string) => router.push(`${frontUrl}/${seriesId}?title=${cleandTitle}&categoryId=${categoryId}`);

@@ -6,13 +6,17 @@ import makeDebouncedHandler from '@/utils/makeDebounceHandler';
 import { DateAndValue_Type } from '@/types/fred';
 import React, { useEffect, useRef, useState } from 'react';
 import { changeCategoryIdToColor } from '@/utils/changeNameToCategoryId';
+import Loading from '@/components/loading/Loading';
 
 interface ChartWrapper_Props {
 	width: number;
+	height: number;
 }
 
+// min-height를 주면 렌더링을 나눠서 처리하는 경
 const ChartWrapper = styled.div<ChartWrapper_Props>`
 	width: ${Props => `${Props.width}%`};
+	min-height: ${Props => `${Props.height}vh`};
 	position: relative;
 
 	span {
@@ -96,7 +100,6 @@ const LineChart = ({ categoryId, values: values_List, width = 100, height = 65, 
 			if (rootSvgRef.current && rootSvgContainerRef.current) {
 				d3.select(rootSvgRef.current).selectAll('*').remove();
 				renderChartSvg(rootSvgRef.current, values_List, height, duration);
-				setIsLoading(false);
 			}
 		};
 		const debounced_resetChart = makeDebouncedHandler(resetChart, 200);
@@ -128,7 +131,7 @@ const LineChart = ({ categoryId, values: values_List, width = 100, height = 65, 
 
 	return (
 		<div className={className}>
-			<ChartWrapper ref={rootSvgContainerRef} width={width}>
+			<ChartWrapper ref={rootSvgContainerRef} width={width} height={height}>
 				<ChartFeatures $chartColor={changeCategoryIdToColor(categoryId)}>
 					<ul>
 						<li onClick={() => setDuration(1)}>1Y</li>
