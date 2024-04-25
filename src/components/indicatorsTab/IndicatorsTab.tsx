@@ -216,20 +216,6 @@ export default function IndicatorsTab() {
 			<FavoriteContainer>
 				<LeftContainer>
 					<CategoryTabMenu categoryIdList={categoryIds} selectedCategoryId={currentCategoryId} setSelectedCategoryId={setCurrentCategoryId} />
-					{/* <nav>
-						{categoryIds.map((categoryId, index) => {
-							if (index > 4) return;
-
-							return (
-								<button
-									key={index}
-									className={categoryId === currentCategoryId ? clsx(styles.on) : ''}
-									onClick={() => setCurrentCategoryId(categoryId)}>
-									{changeCategoryIdToName(categoryId)}
-								</button>
-							);
-						})}
-					</nav> */}
 
 					<div className='favoriteList' ref={refFavoriteList}>
 						<div className='favoriteListHeader'>
