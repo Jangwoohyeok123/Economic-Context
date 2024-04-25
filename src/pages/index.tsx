@@ -19,6 +19,7 @@ import { Indicator_Type } from '@/types/fred';
 import CategoryWithIsActive from '@/components/categoryWithIsAcitve/CategoryWithIsActive';
 import { roboto, poppins, frontUrl } from './_app';
 import Pagination from '@/components/pagination/Pagination';
+import ClipLoader from 'react-spinners/ClipLoader';
 import SEO from '@/components/seo/SEO';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
@@ -60,9 +61,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 		setCurrentPage(1);
 	};
 
-	if (!category_List) {
-		return <div>isLoading</div>;
-	}
+	if (!category_List) return <ClipLoader></ClipLoader>;
 
 	return (
 		<>
@@ -71,7 +70,12 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 				<Image src={mainImage} alt='mainImage for mainpage' aria-label='mainImage' placeholder='blur' objectFit='cover' quality={80} fill priority />
 			</div>
 			<main className={clsx(styles.Home, poppins.variable, roboto.variable)}>
-				<CategoryTabMenu selectedCategoryId={selectedCategoryId} selectCategory={selectCategory} categoryIdList={categoryIdList} />
+				<CategoryTabMenu
+					selectedCategoryId={selectedCategoryId}
+					setSelectedCategoryId={setSelectedCategoryId}
+					selectCategory={selectCategory}
+					categoryIdList={categoryIdList}
+				/>
 				{user.isLogin ? (
 					<CategoryWithIsActive
 						categoryData={category_List || []}

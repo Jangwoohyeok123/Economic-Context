@@ -12,11 +12,17 @@ import { changeCategoryIdToColor, changeCategoryIdToName } from '@/utils/changeN
 
 interface CategoryTabMenu_Props {
 	selectedCategoryId: number;
-	selectCategory: (e: React.MouseEvent<HTMLButtonElement>, categoryId: number) => void;
+	setSelectedCategoryId: React.Dispatch<React.SetStateAction<number>>;
+	selectCategory?: (e: React.MouseEvent<HTMLButtonElement>, categoryId: number) => void;
 	categoryIdList: number[];
 }
 
-export default function CategoryTabMenu({ selectedCategoryId, selectCategory, categoryIdList }: CategoryTabMenu_Props) {
+export default function CategoryTabMenu({
+	selectedCategoryId,
+	setSelectedCategoryId,
+	selectCategory = () => {},
+	categoryIdList
+}: CategoryTabMenu_Props) {
 	return (
 		<S.TabMenuWrap>
 			{categoryIdList.map((categoryId, idx) => {
@@ -25,6 +31,7 @@ export default function CategoryTabMenu({ selectedCategoryId, selectCategory, ca
 						key={categoryId + idx}
 						onClick={e => {
 							selectCategory(e, categoryId);
+							setSelectedCategoryId(categoryId);
 						}}
 						$categoryColor={changeCategoryIdToColor(categoryId)}
 						className={clsx({ on: categoryId === selectedCategoryId })}>

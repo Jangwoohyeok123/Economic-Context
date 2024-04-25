@@ -7,7 +7,7 @@ import makeThrottledHandler from './makeThrottledHandler';
 export default function renderChartSvg(svg: SVGElement, periodValues_List: DateAndValue_Type[], height: number, duration: number): SVGElement {
 	const { x: svgX, y: svgY, bottom: svgBottom, top: svgTop, width: svgWidth, height: svgHeight } = svg.getBoundingClientRect();
 	const [xAxisStartPosition, xAxisLastPosition] = [svgX, svgX + svgWidth];
-	const [xAxisHeight, yAxisWidth] = [25, 50];
+	const [xAxisHeight, yAxisWidth] = [25, 30];
 	const [rootSvgPadding, rootSvgPaddingTop] = [20, 30];
 
 	const [xMin, xMax] = d3.extent(periodValues_List, (value: DateAndValue_Type) => value.date) as [Date, Date];
@@ -57,6 +57,8 @@ export default function renderChartSvg(svg: SVGElement, periodValues_List: DateA
 				.ticks(xAxisLength / xTickLength)
 				.tickSizeOuter(0)
 		)
+		.selectAll('.tick text') // 모든 tick 라벨 선택
+		.style('font-size', '11px') // font-size 스타일 적용
 		.selectAll('.tick')
 		.each(function (_, index, ticks) {
 			const xOffset = 100;
@@ -69,18 +71,22 @@ export default function renderChartSvg(svg: SVGElement, periodValues_List: DateA
 
 	// y 축 (우측 축)을 추가합니다.
 	// y 축의 도메인을 숨기고, 틱 라인을 확장하여 시각적 가이드를 제공합니다.
+	// .attr('style', `transform: translateX(calc(100% - ${yAxisWidth}px)); opacity: 0.9;`)
 	rootSvg
 		.append('g')
-		.attr('style', `transform: translateX(calc(100% - ${yAxisWidth}px)); opacity: 0.9;`)
+		.attr('style', `transform: translateX(calc(100% - ${yAxisWidth}px)); opacity: 0.9; `)
 		.call(d3.axisRight(linearScale).ticks(yAxisLength / yTickLength))
 		.call(g => g.select('.domain').remove())
 		.call(g =>
 			g
 				.selectAll('.tick line')
+				.attr('style', `font-size: 10px;`)
 				.clone() // 틱 라인 확장
 				.attr('x2', '-100%') // -100% 는 y 축 우측으로 이동시킨 것을 의미합니다.
 				.attr('stroke-opacity', 0.15)
 		)
+		.selectAll('.tick text') // 모든 tick 라벨 선택
+		.style('font-size', '11px') // font-size 스타일 적용
 		.selectAll('.tick')
 		.each(function (_, index, ticks) {
 			const yOffset = 100;
