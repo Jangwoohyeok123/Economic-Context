@@ -11,6 +11,7 @@ import const_categoryId, { categoryIds } from '@/const/categoryId';
 import CreateContextSection from '../createContextSection/CreateContextSection';
 import { MdExpandMore } from 'react-icons/md';
 import Accordian from '../accordian/Accordian';
+import CategoryTabMenu from '../categoryTabMenu/CategoryTabMenu';
 
 const FavoriteContainer = styled.section`
 	display: flex;
@@ -214,20 +215,7 @@ export default function IndicatorsTab() {
 		<div className={clsx(styles.IndicatorsTab)}>
 			<FavoriteContainer>
 				<LeftContainer>
-					<nav>
-						{categoryIds.map((categoryId, index) => {
-							if (index > 4) return;
-
-							return (
-								<button
-									key={index}
-									className={categoryId === currentCategoryId ? clsx(styles.on) : ''}
-									onClick={() => setCurrentCategoryId(categoryId)}>
-									{changeCategoryIdToName(categoryId)}
-								</button>
-							);
-						})}
-					</nav>
+					<CategoryTabMenu categoryIdList={categoryIds} selectedCategoryId={currentCategoryId} setSelectedCategoryId={setCurrentCategoryId} />
 
 					<div className='favoriteList' ref={refFavoriteList}>
 						<div className='favoriteListHeader'>

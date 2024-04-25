@@ -3,17 +3,20 @@ import * as d3 from 'd3';
 import renderChartSvg from '@/utils/renderChartSvg';
 import prepareValues_ListByPeriod from '@/utils/setPeriodValues_List';
 import makeDebouncedHandler from '@/utils/makeDebounceHandler';
-import { Indicator_Type, DateAndValue_Type } from '@/types/fred';
+import { DateAndValue_Type } from '@/types/fred';
 import React, { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/router';
 import { changeCategoryIdToColor } from '@/utils/changeNameToCategoryId';
+import Loading from '@/components/loading/Loading';
 
 interface ChartWrapper_Props {
 	width: number;
+	height: number;
 }
 
+// min-height를 주면 렌더링을 나눠서 처리하는 경
 const ChartWrapper = styled.div<ChartWrapper_Props>`
 	width: ${Props => `${Props.width}%`};
+	min-height: ${Props => `${Props.height}vh`};
 	position: relative;
 
 	span {
@@ -86,7 +89,8 @@ export interface LineChart_Props {
 const LineChart = ({ categoryId, values: values_List, width = 100, height = 65, className }: LineChart_Props) => {
 	const rootSvgRef = useRef<SVGSVGElement>(null);
 	const rootSvgContainerRef = useRef<HTMLDivElement>(null);
-	const [duration, setDuration] = useState<number>(10);
+	const [duration, setDuration] = useState<number>(5);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const lastDate = values_List[values_List.length - 1].date;
 
 	// resize 이벤트 발생시 차트 다시그리기
@@ -127,7 +131,7 @@ const LineChart = ({ categoryId, values: values_List, width = 100, height = 65, 
 
 	return (
 		<div className={className}>
-			<ChartWrapper ref={rootSvgContainerRef} width={width}>
+			<ChartWrapper ref={rootSvgContainerRef} width={width} height={height}>
 				<ChartFeatures $chartColor={changeCategoryIdToColor(categoryId)}>
 					<ul>
 						<li onClick={() => setDuration(1)}>1Y</li>

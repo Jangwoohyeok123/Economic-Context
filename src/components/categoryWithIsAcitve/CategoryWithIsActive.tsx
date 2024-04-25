@@ -15,6 +15,7 @@ import FavoriteIndicatorCard from '../cards/favoriteIndicatorCard/FavoriteIndica
 import styled from 'styled-components';
 import { FaRegStar } from 'react-icons/fa6';
 import { FaStar } from 'react-icons/fa6';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 interface CategoryWithIsActive_Props {
 	categoryData: Indicator_Type[];
@@ -42,7 +43,7 @@ const StarCotainer = styled.div`
 
 export default function CategoryWithIsActive({ categoryData, currentPage, itemsPerPage, categoryId }: CategoryWithIsActive_Props) {
 	const user = useSelector((state: Store_Type) => state.user);
-	const [categoryWithIsActive, setCategoryWithActive] = useState<FavoriteIndicatorWithIsActive_Type[]>([]);
+	const [categoryWithIsActive, setCategoryWithActive] = useState<FavoriteIndicatorWithIsActive_Type[]>([]); // 하... 나중에 리팩토링
 
 	// useQuery
 	const { data: favorite, isSuccess: isFavoriteExist } = useQuery({
@@ -86,7 +87,7 @@ export default function CategoryWithIsActive({ categoryData, currentPage, itemsP
 	}, [currentPage, favorite, categoryData]);
 
 	if (!isFavoriteExist) {
-		return <div>loading ui</div>;
+		return <>isLoading in CategoryWithIsActive</>;
 	}
 
 	return (
