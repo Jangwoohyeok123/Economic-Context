@@ -164,7 +164,7 @@ export default function renderChartSvg(svg: SVGElement, periodValues_List: DateA
 	}
 
 	function updateTooltipContent(data: DateAndValue_Type) {
-		if (tooltipElement) tooltipElement.innerHTML = `Value: ${data.value}<br>Date: ${data.date.toISOString().split('T')[0]}`;
+		if (tooltipElement) tooltipElement.innerHTML = `Value: ${Number(data.value).toFixed(2)}<br>Date: ${data.date.toISOString().split('T')[0]}`;
 	}
 
 	return svg;
