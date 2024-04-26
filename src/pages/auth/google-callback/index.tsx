@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { getJwtAndGoogleUserData } from '@/api/user';
 import { useDispatch } from 'react-redux';
-import { login } from '@/actions/actions';
+import { loginUser } from '@/actions/actions';
 
 export default function GoogleCallback() {
 	const router = useRouter();
@@ -17,7 +17,7 @@ export default function GoogleCallback() {
 				const result = await getJwtAndGoogleUserData(authCode);
 				const { jwt, userData } = result;
 				sessionStorage.setItem('token', jwt);
-				dispatch(login(userData));
+				dispatch(loginUser(userData));
 				router.push('/');
 			} catch (error) {
 				console.error('인가코드 이용한 로그인 과정에 문제가 있습니다. auth/google-callback', error);

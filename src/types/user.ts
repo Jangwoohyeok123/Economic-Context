@@ -1,3 +1,5 @@
+import React from 'react';
+
 export type User_Type = {
 	isLogin: boolean;
 	id: number;
@@ -11,4 +13,8 @@ export type User_Type = {
 export type JwtAndGoogleUserData_Type = {
 	jwt: string;
 	userData: User_Type;
+};
+
+export type LoginAlertModal_Type = {
+	isLoginAlertModalOpen: boolean;
 };

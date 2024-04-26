@@ -3,7 +3,7 @@ import ContextTable from '../contextTable/ContextTable';
 import ContextTableMethods from '../tableFeatures/TableFeatures';
 import React, { useState } from 'react';
 import MakeContextModal from '../modals/makeContextModal/MakeContextModal';
-import AlertModal from '../modals/alertModal/AlertModal';
+import LoginAlertModal from '../modals/loginAlertModal/LoginAlertModal';
 
 interface CreateContextSection_Props {
 	checkedFavorite_List: FavoriteIndicator_Type[];
