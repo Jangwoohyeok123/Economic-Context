@@ -13,15 +13,39 @@ interface IndicatorDescription_Props {
 	categoryId: number;
 }
 
-const IndicatorCardDescriptionContainer = styled.div``;
+const IndicatorCardDescriptionContainer = styled.div`
+	.topDescription {
+		display: flex;
+		height: 60px;
+		border-bottom: 2px solid #ddd;
 
-const StarCotainer = styled.div`
-	height: 30px;
+		h3 {
+			max-width: calc(100% - 60px);
+			flex-shrink: 0;
+			font-size: 1.2rem;
+			font-weight: 400;
+		}
 
-	.star {
-		width: 25px;
-		height: 100%;
-		cursor: pointer;
+		.starWrapper {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+
+			.star {
+				width: 35px;
+				height: 100%;
+				cursor: pointer;
+				fill: #ccc;
+			}
+		}
+	}
+
+	.midDescription {
+		.tag {
+		}
+		.values {
+		}
 	}
 `;
 
@@ -31,17 +55,17 @@ export default function IndicatorDescription({ indicator, lastData, volatility, 
 
 	return (
 		<IndicatorCardDescriptionContainer>
-			<div>
+			<div className='topDescription'>
 				<h3>{title}</h3>
 				<BubblePopButton clickHandler={() => dispatch(toggleLoginModal())}>
-					<StarCotainer>
+					<div className='starWrapper'>
 						<FaRegStar className='star' />
-					</StarCotainer>
+					</div>
 				</BubblePopButton>
 			</div>
 
-			<div>
-				<span>tag</span>
+			<div className='midDescription'>
+				<span className='tag'>tag</span>
 				<div className='values'>
 					<span>{lastData.toFixed(2)}</span>
 					<Volatility volatility={volatility}>{volatility >= 0 ? `(+${volatility.toFixed(2)}%)` : `(${volatility.toFixed(2)}%)`}</Volatility>

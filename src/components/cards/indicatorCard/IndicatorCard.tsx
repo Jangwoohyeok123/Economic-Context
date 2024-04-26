@@ -18,6 +18,10 @@ interface IndicatorCardWrapper_Props {
 const IndicatorCardWrapper = styled.div<IndicatorCardWrapper_Props>`
 	width: 100%;
 	height: 100%;
+	background: #fff;
+	padding: 20px;
+	border-radius: 30px;
+	box-shadow: 5px 10px 10px #cfcfcf;
 `;
 
 interface IndicatorCard_Props {
