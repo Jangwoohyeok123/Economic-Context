@@ -12,7 +12,7 @@ import { Store_Type } from '@/types/redux';
 import { useQueries } from '@tanstack/react-query';
 import const_queryKey from '@/const/queryKey';
 import { getCategory_List } from '@/api/fred';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import const_categoryId from '@/const/categoryId';
 import { categoryIdList } from './_app';
 import { Indicator_Type } from '@/types/fred';
@@ -21,6 +21,7 @@ import { roboto, poppins, frontUrl } from './_app';
 import Pagination from '@/components/pagination/Pagination';
 import ClipLoader from 'react-spinners/ClipLoader';
 import SEO from '@/components/seo/SEO';
+import { TOGGLE_LOGIN_ALERT_MODAL, toggleLoginModal } from '@/actions/actions';
 
 const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
 const CategoryTabMenu = dynamic(() => import('@/components/categoryTabMenu/CategoryTabMenu'), { ssr: false });
@@ -34,6 +35,8 @@ interface Home_Props {
 
 export default function Home({ interest, exchange, production, consume }: Home_Props) {
 	const user = useSelector((state: Store_Type) => state.user);
+	const loginAlertModal = useSelector((state: Store_Type) => state.loginAlertModal);
+	const dispatch = useDispatch();
 	const router = useRouter();
 
 	const [currentPage, setCurrentPage] = useState(1);
@@ -41,7 +44,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 	const [selectedCategoryId, setSelectedCategoryId] = useState(categoryIdList[0]);
 	const [selectedCategoryIdIndex, setSelectedCategoryIdIndex] = useState(0);
 	const initialStates = [interest, exchange, production, consume];
-	const indicatorsPerPage = 6;
+	const indicatorsPerPage = 2;
 
 	const categoryQueries = useQueries({
 		queries: categoryIdList.map((categoryId: number) => ({
@@ -61,7 +64,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 		setCurrentPage(1);
 	};
 
-	if (!category_List) return <ClipLoader></ClipLoader>;
+	if (!category_List) return <ClipLoader />;
 
 	return (
 		<>
@@ -102,8 +105,8 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 			</main>
 			<Footer />
 			<DynamicAlertModal
-				isModalOpen={isAlertModalOpen}
-				setIsModalOpen={setIsAlertModalOpen}
+				isModalOpen={loginAlertModal.isLoginAlertModalOpen}
+				setIsModalOpen={() => dispatch(toggleLoginModal())}
 				size='small'
 				header='You need to login!'
 				body='Our service is required to login'

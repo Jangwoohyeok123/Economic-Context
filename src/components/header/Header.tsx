@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '@/actions/actions';
+import { logoutUser } from '@/actions/actions';
 import AlertModal from '../modals/alertModal/AlertModal';
 import { Store_Type } from '@/types/redux';
 import { frontUrl } from '@/pages/_app';
@@ -27,7 +27,7 @@ export default function Header() {
 	};
 
 	const userLogout = () => {
-		dispatch(logout());
+		dispatch(logoutUser());
 	};
 
 	// 나중에 조건부 렌더링 컴포넌트 분리

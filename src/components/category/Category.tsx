@@ -14,33 +14,12 @@ interface Category_Props {
 	setIsAlertModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const StarCotainer = styled.div`
-	height: 30px;
-
-	.star {
-		width: 25px;
-		height: 100%;
-		cursor: pointer;
-	}
-`;
-
 export default function Category({ categoryData, currentPage, itemsPerPage, categoryId, setIsAlertModalOpen }: Category_Props) {
 	return (
 		<section className={clsx(styles.Category)}>
 			{categoryData.length > 0 &&
 				categoryData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((seriess: Indicator_Type, idx: number) => {
-					return (
-						<IndicatorCard key={idx} indicator={seriess} categoryId={categoryId} className={styles.IndicatorCard} currentPage={currentPage}>
-							<BubblePopButton
-								clickHandler={() => {
-									setIsAlertModalOpen(true);
-								}}>
-								<StarCotainer>
-									<FaRegStar className='star' />
-								</StarCotainer>
-							</BubblePopButton>
-						</IndicatorCard>
-					);
+					return <IndicatorCard key={idx} indicator={seriess} categoryId={categoryId} currentPage={currentPage}></IndicatorCard>;
 				})}
 		</section>
 	);

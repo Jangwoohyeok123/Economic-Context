@@ -15,7 +15,7 @@ interface ChartWrapper_Props {
 
 // min-height를 주면 렌더링을 나눠서 처리하는 경
 const ChartWrapper = styled.div<ChartWrapper_Props>`
-	width: ${Props => `${Props.width}%`};
+	min-width: ${Props => `${Props.width}vh`};
 	min-height: ${Props => `${Props.height}vh`};
 	position: relative;
 
@@ -86,11 +86,10 @@ export interface LineChart_Props {
  * @width [y]%
  * @className
  */
-const LineChart = ({ categoryId, values: values_List, width = 100, height = 65, className }: LineChart_Props) => {
+const LineChart = ({ categoryId, values: values_List, width = 20, height = 30, className }: LineChart_Props) => {
 	const rootSvgRef = useRef<SVGSVGElement>(null);
 	const rootSvgContainerRef = useRef<HTMLDivElement>(null);
 	const [duration, setDuration] = useState<number>(5);
-	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const lastDate = values_List[values_List.length - 1].date;
 
 	// resize 이벤트 발생시 차트 다시그리기
