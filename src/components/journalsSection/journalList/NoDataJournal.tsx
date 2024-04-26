@@ -8,7 +8,7 @@ export default function NoDataJournal() {
 	return (
 		<div className={clsx(styles.NoDataJournal)}>
 			<div className={clsx(styles.img)}>
-				<Image src={noJournal} alt={'NoDataJournal Image'} />
+				<Image src={noJournal} alt={'NoDataJournal Image'} priority />
 			</div>
 			<h3>Interest Contexts</h3>
 			<p>
