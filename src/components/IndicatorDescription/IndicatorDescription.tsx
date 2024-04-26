@@ -4,42 +4,74 @@ import { FaRegStar } from 'react-icons/fa6';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { toggleLoginModal } from '@/actions/actions';
+import { Volatility } from '@/styles/Volatility.style';
 
 interface IndicatorDescription_Props {
 	indicator: Indicator_Type;
 	lastData: number;
 	volatility: number;
+	categoryId: number;
 }
 
-const StarCotainer = styled.div`
-	height: 30px;
+const IndicatorCardDescriptionContainer = styled.div`
+	.topDescription {
+		display: flex;
+		height: 60px;
+		border-bottom: 2px solid #ddd;
 
-	.star {
-		width: 25px;
-		height: 100%;
-		cursor: pointer;
+		h3 {
+			max-width: calc(100% - 60px);
+			flex-shrink: 0;
+			font-size: 1.2rem;
+			font-weight: 400;
+		}
+
+		.starWrapper {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+
+			.star {
+				width: 35px;
+				height: 100%;
+				cursor: pointer;
+				fill: #ccc;
+			}
+		}
+	}
+
+	.midDescription {
+		.tag {
+		}
+		.values {
+		}
 	}
 `;
 
-export default function IndicatorDescription({ indicator, lastData, volatility }: IndicatorDescription_Props) {
+export default function IndicatorDescription({ indicator, lastData, volatility, categoryId }: IndicatorDescription_Props) {
 	const { title, observation_end } = indicator;
 	const dispatch = useDispatch();
 
 	return (
-		<div className='notChart'>
-			<h3>{title}</h3>
-			<div className='right'>
+		<IndicatorCardDescriptionContainer>
+			<div className='topDescription'>
+				<h3>{title}</h3>
 				<BubblePopButton clickHandler={() => dispatch(toggleLoginModal())}>
-					<StarCotainer>
+					<div className='starWrapper'>
 						<FaRegStar className='star' />
-					</StarCotainer>
+					</div>
 				</BubblePopButton>
+			</div>
+
+			<div className='midDescription'>
+				<span className='tag'>tag</span>
 				<div className='values'>
-					<span>{lastData}</span>
-					<span>{volatility >= 0 ? `(+${volatility}%)` : `(${volatility}%)`}</span>
+					<span>{lastData.toFixed(2)}</span>
+					<Volatility volatility={volatility}>{volatility >= 0 ? `(+${volatility.toFixed(2)}%)` : `(${volatility.toFixed(2)}%)`}</Volatility>
 					<div>last_updated: {observation_end}</div>
 				</div>
 			</div>
-		</div>
+		</IndicatorCardDescriptionContainer>
 	);
 }
