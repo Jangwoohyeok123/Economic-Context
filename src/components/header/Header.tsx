@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '@/actions/actions';
-import AlertModal from '../modals/alertModal/AlertModal';
+import LoginAlertModal from '../modals/alertModal/AlertModal';
 import { Store_Type } from '@/types/redux';
 import { frontUrl } from '@/pages/_app';
 
@@ -50,7 +50,7 @@ export default function Header() {
 						</div>
 					)}
 				</nav>
-				<AlertModal
+				{/* <LoginAlertModal
 					isModalOpen={IsAlertModalOpen}
 					setIsModalOpen={setIsAlertModalOpen}
 					size='small'
@@ -60,7 +60,7 @@ export default function Header() {
 					leftButtonHandler={() => setIsAlertModalOpen(false)}
 					rightButtonContent='Login'
 					rightButtonHandler={() => router.push(`${frontUrl}/login`)}
-				/>
+				/> */}
 			</header>
 		</>
 	);

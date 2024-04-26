@@ -1,23 +1,22 @@
 import clsx from 'clsx';
 import styles from './AlertModal.module.scss';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { roboto, poppins } from '@/pages/_app';
 import { ModalProps } from '@/types/modal';
 import checkingModalSizeAndModifyClassName from '@/utils/checkingModalSizeAndModifyClassName';
+import { useDispatch } from 'react-redux';
+import { toggleLoginModal } from '@/actions/actions';
 
-export default function AlertModal({
+export default function LoginAlertModal({
 	isModalOpen,
-	setIsModalOpen,
 	size, // union type
 	header,
 	body,
-	leftButtonContent,
-	leftButtonHandler,
-	rightButtonContent,
 	rightButtonHandler
 }: ModalProps) {
 	const ModalClassName = checkingModalSizeAndModifyClassName(size);
+	const dispatch = useDispatch();
 
 	return isModalOpen
 		? ReactDOM.createPortal(
@@ -30,11 +29,11 @@ export default function AlertModal({
 								<div className={clsx(styles.modalBody)}>{body}</div>
 							</div>
 							<div className={clsx(styles.buttons)}>
-								<button className={clsx(styles.leftButton)} onClick={leftButtonHandler}>
-									{leftButtonContent}
+								<button className={clsx(styles.leftButton)} onClick={() => dispatch(toggleLoginModal())}>
+									Go Back
 								</button>
 								<button className={clsx(styles.rightButton)} onClick={rightButtonHandler}>
-									{rightButtonContent}
+									Login
 								</button>
 							</div>
 						</div>

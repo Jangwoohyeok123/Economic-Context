@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import useFavoriteQuery from '@/hooks/useFavoriteQuery';
 import useFavoriteMutation from '@/hooks/useFavoriteMutation';
 import { changeCategoryIdToName } from '@/utils/changeNameToCategoryId';
-import AlertModal from '../modals/alertModal/AlertModal';
+import LoginAlertModal from '../modals/alertModal/AlertModal';
 import { FavoriteIndicator_Type } from '@/types/favorite';
 import styled from 'styled-components';
 import const_categoryId, { categoryIds } from '@/const/categoryId';
@@ -262,8 +262,8 @@ export default function IndicatorsTab() {
 					/>
 				</RightContainer>
 			</FavoriteContainer>
-
-			<AlertModal
+			{/* 
+			<LoginAlertModal
 				isModalOpen={isValidateModal}
 				setIsModalOpen={setIsValidateModal}
 				body='카드를 골라주세요'
@@ -272,7 +272,7 @@ export default function IndicatorsTab() {
 				leftButtonContent='close'
 				rightButtonContent='close'
 				leftButtonHandler={() => setIsValidateModal(false)}
-				rightButtonHandler={() => setIsValidateModal(false)}></AlertModal>
+				rightButtonHandler={() => setIsValidateModal(false)}></LoginAlertModal> */}
 		</div>
 	);
 }
