@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import useFavoriteQuery from '@/hooks/useFavoriteQuery';
 import useFavoriteMutation from '@/hooks/useFavoriteMutation';
 import { changeCategoryIdToName } from '@/utils/changeNameToCategoryId';
-import LoginAlertModal from '../modals/alertModal/AlertModal';
+import LoginAlertModal from '../modals/loginAlertModal/LoginAlertModal';
 import { FavoriteIndicator_Type } from '@/types/favorite';
 import styled from 'styled-components';
 import const_categoryId, { categoryIds } from '@/const/categoryId';
@@ -263,16 +263,8 @@ export default function IndicatorsTab() {
 				</RightContainer>
 			</FavoriteContainer>
 			{/* 
-			<LoginAlertModal
-				isModalOpen={isValidateModal}
-				setIsModalOpen={setIsValidateModal}
-				body='카드를 골라주세요'
-				header='카드를 골라주세요'
-				size='small'
-				leftButtonContent='close'
-				rightButtonContent='close'
-				leftButtonHandler={() => setIsValidateModal(false)}
-				rightButtonHandler={() => setIsValidateModal(false)}></LoginAlertModal> */}
+				카드를 하나라도 선택하라는 경고문구를 갖는 모달이 필요함
+			*/}
 		</div>
 	);
 }

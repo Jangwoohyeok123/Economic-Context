@@ -21,9 +21,9 @@ import { roboto, poppins, frontUrl } from './_app';
 import Pagination from '@/components/pagination/Pagination';
 import ClipLoader from 'react-spinners/ClipLoader';
 import SEO from '@/components/seo/SEO';
-import { TOGGLE_LOGIN_ALERT_MODAL, toggleLoginModal } from '@/actions/actions';
+import { toggleLoginModal } from '@/actions/actions';
 
-const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
+const DynamicLoginAlertModal = dynamic(() => import('@/components/modals/loginAlertModal/LoginAlertModal'), { ssr: false });
 const CategoryTabMenu = dynamic(() => import('@/components/categoryTabMenu/CategoryTabMenu'), { ssr: false });
 
 interface Home_Props {
@@ -35,12 +35,8 @@ interface Home_Props {
 
 export default function Home({ interest, exchange, production, consume }: Home_Props) {
 	const user = useSelector((state: Store_Type) => state.user);
-	const loginAlertModal = useSelector((state: Store_Type) => state.loginAlertModal);
-	const dispatch = useDispatch();
-	const router = useRouter();
 
 	const [currentPage, setCurrentPage] = useState(1);
-	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 	const [selectedCategoryId, setSelectedCategoryId] = useState(categoryIdList[0]);
 	const [selectedCategoryIdIndex, setSelectedCategoryIdIndex] = useState(0);
 	const initialStates = [interest, exchange, production, consume];
@@ -87,13 +83,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 						categoryId={selectedCategoryId}
 					/>
 				) : (
-					<Category
-						categoryData={category_List || []}
-						currentPage={currentPage}
-						itemsPerPage={indicatorsPerPage}
-						categoryId={selectedCategoryId}
-						setIsAlertModalOpen={setIsAlertModalOpen}
-					/>
+					<Category categoryData={category_List || []} currentPage={currentPage} itemsPerPage={indicatorsPerPage} categoryId={selectedCategoryId} />
 				)}
 				<Pagination
 					data_List={category_List}
@@ -104,17 +94,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 				/>
 			</main>
 			<Footer />
-			<DynamicAlertModal
-				isModalOpen={loginAlertModal.isLoginAlertModalOpen}
-				setIsModalOpen={() => dispatch(toggleLoginModal())}
-				size='small'
-				header='You need to login!'
-				body='Our service is required to login'
-				leftButtonContent='Cancle'
-				leftButtonHandler={() => setIsAlertModalOpen(false)}
-				rightButtonContent='Login'
-				rightButtonHandler={() => router.push(`${frontUrl}/login`)}
-			/>
+			<DynamicLoginAlertModal size='small' header='You need to login!' body='Our service is required to login' />
 		</>
 	);
 }

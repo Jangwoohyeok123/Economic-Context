@@ -2,23 +2,25 @@ import clsx from 'clsx';
 import styles from './AlertModal.module.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { roboto, poppins } from '@/pages/_app';
+import { roboto, poppins, frontUrl } from '@/pages/_app';
 import { ModalProps } from '@/types/modal';
 import checkingModalSizeAndModifyClassName from '@/utils/checkingModalSizeAndModifyClassName';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toggleLoginModal } from '@/actions/actions';
+import { Store_Type } from '@/types/redux';
+import { Router, useRouter } from 'next/router';
 
 export default function LoginAlertModal({
-	isModalOpen,
 	size, // union type
 	header,
-	body,
-	rightButtonHandler
+	body
 }: ModalProps) {
 	const ModalClassName = checkingModalSizeAndModifyClassName(size);
 	const dispatch = useDispatch();
+	const isLoginAlertModalOpen = useSelector((state: Store_Type) => state.loginAlertModal.isLoginAlertModalOpen);
+	const router = useRouter();
 
-	return isModalOpen
+	return isLoginAlertModalOpen
 		? ReactDOM.createPortal(
 				<React.Fragment>
 					<div className={clsx(styles.Overlay)}></div>
@@ -32,7 +34,7 @@ export default function LoginAlertModal({
 								<button className={clsx(styles.leftButton)} onClick={() => dispatch(toggleLoginModal())}>
 									Go Back
 								</button>
-								<button className={clsx(styles.rightButton)} onClick={rightButtonHandler}>
+								<button className={clsx(styles.rightButton)} onClick={() => router.push(`${frontUrl}/login`)}>
 									Login
 								</button>
 							</div>

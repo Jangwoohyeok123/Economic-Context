@@ -2,19 +2,15 @@ import clsx from 'clsx';
 import styles from './Category.module.scss';
 import { Indicator_Type } from '@/types/fred';
 import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
-import BubblePopButton from '../bubblePopButton/BubblePopButton';
-import { FaRegStar } from 'react-icons/fa6';
-import styled from 'styled-components';
 
 interface Category_Props {
 	categoryData: Indicator_Type[];
 	currentPage: number;
 	itemsPerPage: number;
 	categoryId: number;
-	setIsAlertModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function Category({ categoryData, currentPage, itemsPerPage, categoryId, setIsAlertModalOpen }: Category_Props) {
+export default function Category({ categoryData, currentPage, itemsPerPage, categoryId }: Category_Props) {
 	return (
 		<section className={clsx(styles.Category)}>
 			{categoryData.length > 0 &&
