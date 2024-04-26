@@ -21,10 +21,16 @@ import { roboto, poppins, frontUrl } from './_app';
 import Pagination from '@/components/pagination/Pagination';
 import ClipLoader from 'react-spinners/ClipLoader';
 import SEO from '@/components/seo/SEO';
-import { toggleLoginModal } from '@/actions/actions';
+import styled from 'styled-components';
 
 const DynamicLoginAlertModal = dynamic(() => import('@/components/modals/loginAlertModal/LoginAlertModal'), { ssr: false });
 const CategoryTabMenu = dynamic(() => import('@/components/categoryTabMenu/CategoryTabMenu'), { ssr: false });
+
+const CategoryTabMenuWrapper = styled.div`
+	padding-top: 35px;
+	margin: 0 auto;
+	width: 600px;
+`;
 
 interface Home_Props {
 	interest: Indicator_Type[];
@@ -69,12 +75,15 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 				<Image src={mainImage} alt='mainImage for mainpage' aria-label='mainImage' placeholder='blur' objectFit='cover' quality={80} fill priority />
 			</div>
 			<main className={clsx(styles.Home, poppins.variable, roboto.variable)}>
-				<CategoryTabMenu
-					selectedCategoryId={selectedCategoryId}
-					setSelectedCategoryId={setSelectedCategoryId}
-					selectCategory={selectCategory}
-					categoryIdList={categoryIdList}
-				/>
+				<CategoryTabMenuWrapper>
+					<CategoryTabMenu
+						selectedCategoryId={selectedCategoryId}
+						setSelectedCategoryId={setSelectedCategoryId}
+						selectCategory={selectCategory}
+						categoryIdList={categoryIdList}
+					/>
+				</CategoryTabMenuWrapper>
+
 				{user.isLogin ? (
 					<CategoryWithIsActive
 						categoryData={category_List || []}
