@@ -11,6 +11,7 @@ import { useQuery } from '@tanstack/react-query';
 import { JournalData_Type } from '@/types/journal';
 import JournalForm from '../journalForm/JournalForm';
 import { changeDateToRelativeTime } from '@/utils/changeDate';
+import NoDataJournal from './NoDataJournal';
 
 interface JournalList_Props {
 	type?: string;
@@ -31,15 +32,14 @@ export default function JournalList({ type }: JournalList_Props) {
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
-	// id: number; journal id TODO:: context name 받도록
+	// id: number;
 	// title: string;
 	// body: string;
 	// createdAt: string;
 	// updatedAt: string;
 	return (
 		<JournalWrapper>
-			{!isLoading &&
-				AllJournal_List &&
+			{!isLoading && AllJournal_List && AllJournal_List.length > 0 ? (
 				AllJournal_List.map((journal, idx) => {
 					return (
 						<Journal $type={type} key={idx}>
@@ -84,9 +84,12 @@ export default function JournalList({ type }: JournalList_Props) {
 							</div>
 						</Journal>
 					);
-				})}
+				})
+			) : (
+				<NoDataJournal />
+			)}
 
-			{/* <JournalForm contextId={17} setIsWrite={true} isRight={false} isJournalOpen={true} /> */}
+			{type === 'currentContext' && <JournalForm contextId={17} />}
 		</JournalWrapper>
 	);
 }
