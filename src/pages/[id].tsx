@@ -21,7 +21,7 @@ import AnotherIndicators from '@/components/anotherIndicators/AnotherIndicators'
 import { changeCategoryIdToColor } from '@/utils/changeNameToCategoryId';
 import getVolatility from '@/utils/getVolatility';
 
-const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
+const DynamicAlertModal = dynamic(() => import('@/components/modals/loginAlertModal/LoginAlertModal'), { ssr: false });
 
 const Main = styled.main`
 	width: 80%;
@@ -249,7 +249,7 @@ export default function Morepage() {
 				)}
 			</Main>
 			<Footer />
-			<DynamicAlertModal
+			{/* <DynamicAlertModal
 				isModalOpen={isAlertModalOpen}
 				setIsModalOpen={setIsAlertModalOpen}
 				size='small'
@@ -259,7 +259,7 @@ export default function Morepage() {
 				leftButtonHandler={() => setIsAlertModalOpen(false)}
 				rightButtonContent='Login'
 				rightButtonHandler={() => router.push(`${frontUrl}/login`)}
-			/>
+			/> */}
 		</>
 	);
 }
