@@ -78,58 +78,103 @@ interface Dropdown_Props {
 
 export const JournalFormWrap = styled.div`
 	width: 100%;
-	border-radius: 20px 20px 0 0;
+	display: flex;
+	justify-content: flex-start;
+	padding: 20px;
+	gap: 10px;
+	.formSection {
+		width: 100%;
+		h2 {
+			padding: 7px 0 10px;
+		}
+	}
 `;
 
 export const Form = styled.form`
 	width: 100%;
-	height: 40vh;
-	overflow-y: scroll;
-	padding: 40px 20px;
-	background-color: var(--bgColor-light);
-	input,
-	textarea {
-		display: block;
-		width: 100%;
-		resize: none;
-		outline: 0;
-		margin-bottom: 10px;
-		background: var(--bgColor-light);
-		box-shadow: 5px 5px 20px rgba(var(--fontColor-code), 0.1);
-		border: none;
-		padding: 5px;
-		&::placeholder {
-			padding: 10px;
-			font-size: 0.8rem;
-			color: rgba(var(--fontColor-code), 0.4);
-			font-family: var(--baseFont);
+
+	.formHeader {
+		display: flex;
+		justify-content: space-between;
+		border: 1px solid var(--chartHeaderColor);
+		border-radius: 5px 5px 0 0;
+		background-color: var(--bgColor);
+		> span {
+			line-height: 50px;
+			padding: 0 20px;
+			background-color: var(--bgColor-light);
+			border: 1px solid var(--chartHeaderColor);
+			border-top: none;
+			border-left: none;
+			border-bottom: none;
+			border-radius: 5px 5px 0 0;
+			position: relative;
+			&::after {
+				position: absolute;
+				content: '';
+				display: block;
+				width: 100%;
+				height: 2px;
+				left: 0;
+				bottom: -1px;
+				background-color: var(--bgColor-light);
+			}
 		}
 	}
-	label {
-		display: block;
-		font-size: 1.1rem;
-		font-weight: 500;
-		color: var(--fontColor);
-		padding: 0 10px 5px;
+	.formBody {
+		border: 1px solid var(--chartHeaderColor);
+		border-top: none;
+		border-radius: 0 0 5px 5px;
+		margin-bottom: 20px;
+		padding: 20px;
+		input,
+		textarea {
+			display: block;
+			width: 100%;
+			resize: none;
+			outline: 0;
+			margin-bottom: 10px;
+			background: var(--bgColor-light);
+			border: 1px solid var(--chartHeaderColor);
+			border-radius: 5px;
+			padding: 10px;
+			box-sizing: border-box;
+			font-size: 0.8rem;
+			&::placeholder {
+				font-size: 0.8rem;
+				color: rgba(var(--fontColor-code), 0.4);
+				font-family: var(--baseFont);
+			}
+		}
+		label {
+			display: block;
+			font-size: 1.1rem;
+			font-weight: 500;
+			color: var(--fontColor);
+			padding: 0 10px 5px;
+		}
+		input {
+			height: 30px;
+			margin-bottom: 30px;
+			padding: 20px 10px;
+		}
+		textarea {
+			height: 200px;
+		}
+		> div {
+			text-align: right;
+		}
 	}
-	input {
-		height: 30px;
-		margin-bottom: 30px;
-	}
-	textarea {
-		height: 200px;
-		margin-bottom: 50px;
-	}
-	> div {
+	.formButton {
 		text-align: right;
-	}
-	button {
-		padding: 8px 10px;
-		font-size: 0.8rem;
-		color: var(--bgColor);
-		background: var(--fontColor);
-		border: none;
-		cursor: pointer;
+		> button {
+			padding: 8px 10px;
+			font-size: 0.8rem;
+			color: var(--bgColor);
+			background: var(--fontColor);
+			border: none;
+			cursor: pointer;
+		}
 	}
 	&::-webkit-scrollbar-track {
 		background-color: var(--bgColor-light);
@@ -156,7 +201,7 @@ export const DropDownMenu = styled.div`
 	margin-bottom: 30px;
 	position: relative;
 	> .dropdown {
-		width: 50%;
+		width: 20%;
 		height: 40px;
 		border: 1px solid #eee;
 		display: flex;
@@ -167,7 +212,15 @@ export const DropDownMenu = styled.div`
 		color: var(--fontColor);
 		cursor: pointer;
 		padding: 5px 10px;
-		box-shadow: 5px 5px 20px rgba(var(--fontColor-code), 0.1);
+		border: 1px solid var(--chartHeaderColor);
+		border-radius: 5px;
+		text-align: center;
+		> em {
+			display: flex;
+			width: 100%;
+			justify-content: center;
+			align-items: center;
+		}
 	}
 `;
 export const Dropdown = styled.ul<Dropdown_Props>`

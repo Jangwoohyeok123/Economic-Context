@@ -2,33 +2,26 @@ import { addJournal } from '@/api/journal';
 import const_queryKey from '@/const/queryKey';
 import { JournalParams_Type } from '@/types/journal';
 import { Store_Type } from '@/types/redux';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getContextNameWithKey_List } from '@/api/context';
-import { ContextNameWithKey_Type } from '@/types/context';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
+import { FcIdea, FcApproval, FcCloseUpMode, FcClock } from 'react-icons/fc';
 import { DropDownMenu, Dropdown, Form, JournalFormWrap } from '@/styles/Journal.style';
+import CustomizedDividers from './FormStylingButton';
+import ProfileImage from '@/components/common/profileImage/ProfileImage';
 
 interface JournalForm_Props {
 	contextId: number;
-	setIsWrite: boolean;
-	isRight: boolean;
-	isJournalOpen: boolean;
-	setIsJournalOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function JournalForm({ contextId, setIsWrite, isRight, isJournalOpen, setIsJournalOpen }: JournalForm_Props) {
+export default function JournalForm({ contextId }: JournalForm_Props) {
 	const userId = useSelector((state: Store_Type) => state.user.id);
-	const [journalDataParams, setJournalDataParams] = useState({ contextId: 0, title: '', body: '' });
-	const [isDrop, setIsDrop] = useState(false);
-	const [toggleButtonText, setTogglebuttonText] = useState('전체');
+	const [journalDataParams, setJournalDataParams] = useState({ icon: 'idea', title: '', body: '' });
+	const [isIconPopVisible, setIsIconPopVisible] = useState(false);
+	const [IconButtonText, setIconButtonText] = useState('icon');
 	const queryClient = useQueryClient();
-
-	const { data: contextIdsWithNames, isLoading } = useQuery<ContextNameWithKey_Type[]>({
-		queryKey: [const_queryKey.context, 'names'],
-		queryFn: () => getContextNameWithKey_List(userId)
-	});
+	const iconList = ['idea', 'approval', 'flower', 'clock'];
 
 	const addJournalMutation = useMutation({
 		mutationFn: ({ userId, contextId, journalDataParams }: { userId: number; contextId: number; journalDataParams: JournalParams_Type }) =>
@@ -58,7 +51,7 @@ export default function JournalForm({ contextId, setIsWrite, isRight, isJournalO
 	}
 	const changeJournalInputData = (
 		e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement> | React.MouseEvent<HTMLLIElement>,
-		context?: ContextType
+		icon?: string
 	) => {
 		e.preventDefault();
 		let newParams = { ...journalDataParams };
@@ -70,59 +63,88 @@ export default function JournalForm({ contextId, setIsWrite, isRight, isJournalO
 				[name]: value
 			};
 			setJournalDataParams(newParams);
-		} else if (context?.id && context.id !== 0) {
+		} else if ((e.target instanceof SVGElement && icon) || (e.target instanceof HTMLLIElement && icon)) {
 			newParams = {
 				...journalDataParams,
-				contextId: context.id
+				icon: icon
 			};
-			setTogglebuttonText(context.name);
-			setIsDrop(false);
 			setJournalDataParams(newParams);
-		} else {
-			setTogglebuttonText('전체');
-			setIsDrop(false);
+			setIconButtonText(icon);
+			setIsIconPopVisible(false);
 		}
+		console.log('newParams', newParams);
 	};
 	const toggleDropBox = (e: React.FormEvent<HTMLSpanElement>) => {
 		e.preventDefault();
-		setIsDrop(prev => !prev);
+		setIsIconPopVisible(prev => !prev);
 	};
 	const blurDropdown = (e: React.FormEvent<HTMLDivElement>) => {
 		e.stopPropagation();
-		setIsDrop(false);
+		setIsIconPopVisible(false);
+	};
+	const showTextToIcon = (icon: string) => {
+		let iconElement = <FcIdea />;
+		switch (icon) {
+			case 'idea':
+				iconElement = <FcIdea />;
+				break;
+			case 'approval':
+				iconElement = <FcApproval />;
+				break;
+			case 'flower':
+				iconElement = <FcCloseUpMode />;
+				break;
+			case 'clock':
+				iconElement = <FcClock />;
+				break;
+			default:
+				return iconElement;
+		}
+		return iconElement;
 	};
 	return (
 		<JournalFormWrap>
-			<Form onSubmit={requestAddJournal}>
-				<label>Context</label>
-				<DropDownMenu tabIndex={0} onBlur={e => blurDropdown(e)}>
-					<span className='dropdown' onClick={e => toggleDropBox(e)}>
-						{toggleButtonText}
-						{isDrop ? <BsChevronUp /> : <BsChevronDown />}
-					</span>
-					{!isLoading && isDrop && (
-						<Dropdown $isDrop={isDrop}>
-							<li onClick={e => changeJournalInputData(e, { name: '전체', id: 0 })}>{'전체'}</li>
-							{contextIdsWithNames?.map((context: ContextNameWithKey_Type, index: number) => {
-								const { id, name } = context;
-
-								return (
-									<li key={index} onClick={e => changeJournalInputData(e, context)}>
-										{name}
-									</li>
-								);
-							})}
-						</Dropdown>
-					)}
-				</DropDownMenu>
-				<label htmlFor='title'>Title</label>
-				<input type='text' name='title' placeholder='Journal의 제목을 작성해주세요.' onChange={e => changeJournalInputData(e)} />
-				<label htmlFor='body'>Body</label>
-				<textarea name='body' rows={5} placeholder='Journal의 본문을 작성해주세요.' onChange={e => changeJournalInputData(e)} />
-				<div>
-					<button>등록</button>
-				</div>
-			</Form>
+			<ProfileImage width={30} height={30} />
+			<div className='formSection'>
+				<h2>Try Add a Journal!</h2>
+				<Form onSubmit={requestAddJournal}>
+					<div className='formHeader'>
+						<span>journal</span>
+						<CustomizedDividers />
+					</div>
+					<div className='formBody'>
+						<label>Context</label>
+						<DropDownMenu tabIndex={0} onBlur={e => blurDropdown(e)}>
+							<span className='dropdown' onClick={e => toggleDropBox(e)}>
+								<em>{showTextToIcon(IconButtonText)}</em>
+								{isIconPopVisible ? <BsChevronUp /> : <BsChevronDown />}
+							</span>
+							{isIconPopVisible && (
+								<Dropdown $isDrop={isIconPopVisible}>
+									{iconList.map((icon, index) => {
+										return (
+											<li
+												key={icon + index}
+												onClick={e => {
+													changeJournalInputData(e, icon);
+												}}>
+												{showTextToIcon(icon)}
+											</li>
+										);
+									})}
+								</Dropdown>
+							)}
+						</DropDownMenu>
+						<label htmlFor='title'>Title</label>
+						<input type='text' name='title' placeholder='Journal의 제목을 작성해주세요.' onChange={e => changeJournalInputData(e)} />
+						<label htmlFor='body'>Body</label>
+						<textarea name='body' rows={5} placeholder='Journal의 본문을 작성해주세요.' onChange={e => changeJournalInputData(e)} />
+					</div>
+					<div className='formButton'>
+						<button>등록</button>
+					</div>
+				</Form>
+			</div>
 		</JournalFormWrap>
 	);
 }
