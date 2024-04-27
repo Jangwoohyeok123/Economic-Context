@@ -7,17 +7,16 @@ import dynamic from 'next/dynamic';
 import Category from '@/components/category/Category';
 import mainImage from '@/public/mainImage.jpg';
 import { useState } from 'react';
-import { useRouter } from 'next/router';
 import { Store_Type } from '@/types/redux';
 import { useQueries } from '@tanstack/react-query';
 import const_queryKey from '@/const/queryKey';
 import { getCategory_List } from '@/api/fred';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import const_categoryId from '@/const/categoryId';
 import { categoryIdList } from './_app';
 import { Indicator_Type } from '@/types/fred';
 import CategoryWithIsActive from '@/components/categoryWithIsAcitve/CategoryWithIsActive';
-import { roboto, poppins, frontUrl } from './_app';
+import { roboto, poppins } from './_app';
 import Pagination from '@/components/pagination/Pagination';
 import ClipLoader from 'react-spinners/ClipLoader';
 import SEO from '@/components/seo/SEO';
@@ -46,7 +45,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 	const [selectedCategoryId, setSelectedCategoryId] = useState(categoryIdList[0]);
 	const [selectedCategoryIdIndex, setSelectedCategoryIdIndex] = useState(0);
 	const initialStates = [interest, exchange, production, consume];
-	const indicatorsPerPage = 2;
+	const indicatorsPerPage = 9;
 
 	const categoryQueries = useQueries({
 		queries: categoryIdList.map((categoryId: number) => ({

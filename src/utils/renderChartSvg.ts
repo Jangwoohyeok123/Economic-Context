@@ -41,9 +41,7 @@ export default function renderChartSvg(svg: SVGElement, periodValues_List: DateA
 		.y(linear => linearScale(Number(linear.value)));
 
 	// chart가 그려질 도화지역할을 하는 svg 태그
-	const rootSvg = d3
-		.select(svg)
-		.attr('style', `width: 100%; height: ${height}vh; padding: ${rootSvgPadding}px; padding-top: ${rootSvgPaddingTop}px;`);
+	const rootSvg = d3.select(svg).attr('style', `width: 100%; height: 100%; padding: ${rootSvgPadding}px; padding-top: ${rootSvgPaddingTop}px;`);
 
 	// x 축 (하단 축)을 추가합니다.
 	// 'each' 함수를 사용하여 x 축에서 표시되지 않아야 하는 tick들을 제어합니다.

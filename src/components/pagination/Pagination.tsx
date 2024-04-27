@@ -9,13 +9,7 @@ interface Pagination_Props<T> {
 	pageRangeDisplayed: number;
 }
 
-export default function Pagination<T>({
-	data_List,
-	currentPage,
-	setCurrentPage,
-	itemsPerPage,
-	pageRangeDisplayed
-}: Pagination_Props<T>) {
+export default function Pagination<T>({ data_List, currentPage, setCurrentPage, itemsPerPage, pageRangeDisplayed }: Pagination_Props<T>) {
 	const totalPage = Math.ceil(data_List.length / itemsPerPage);
 	const startPage = Math.max(currentPage - Math.floor(pageRangeDisplayed / 2), 1);
 	const endPage = Math.min(currentPage + Math.floor(pageRangeDisplayed / 2), data_List.length / itemsPerPage + 1);
@@ -51,10 +45,7 @@ export default function Pagination<T>({
 			</li>
 			{page_List.map((pageIndex, index) => {
 				return (
-					<li
-						key={index}
-						onClick={() => setCurrentPage(pageIndex)}
-						className={currentPage === pageIndex ? clsx(styles.on) : ''}>
+					<li key={index} onClick={() => setCurrentPage(pageIndex)} className={currentPage === pageIndex ? clsx(styles.on) : ''}>
 						{pageIndex}
 					</li>
 				);
