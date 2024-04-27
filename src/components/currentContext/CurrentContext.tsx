@@ -7,6 +7,7 @@ import ChartList from '../chartList/ChartList';
 import { Context_Type } from '@/types/context';
 import { getContext } from '@/api/context';
 import { FavoriteIndicator_Type } from '@/types/favorite';
+import CategoryTabMenu from '../categoryTabMenu/CategoryTabMenu';
 
 interface CurrentContext_Props {
 	currentContextId: number;
@@ -28,7 +29,7 @@ export default function CurrentContext({ currentContextId }: CurrentContext_Prop
 
 	return (
 		<section className={clsx(styles.CurrentContext)}>
-			<h2>Context Chart List</h2>
+			{/* <CategoryTabMenu /> */}
 			{/* {seriesIds && <ChartSwiper seriesIds={seriesIds} />} */}
 			{seriesIds && categoryIds && <ChartList seriesIds={seriesIds} categoryIds={categoryIds} />}
 		</section>

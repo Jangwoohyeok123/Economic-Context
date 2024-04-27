@@ -40,7 +40,6 @@ export default function JournalForm({ contextId }: JournalForm_Props) {
 		e.preventDefault();
 		if (journalDataParams.body) {
 			addJournalMutation.mutate({ userId, contextId, journalDataParams });
-			// setIsWrite(false);
 		} else {
 			// alert('모두 작성해주세요.');
 		}

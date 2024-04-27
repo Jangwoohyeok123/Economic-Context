@@ -8,13 +8,7 @@ import IndicatorsTab from '@/components/indicatorsTab/IndicatorsTab';
 import { roboto, poppins } from '../_app';
 import { useSelector } from 'react-redux';
 import { Store_Type } from '@/types/redux';
-import { useQuery } from '@tanstack/react-query';
-import const_queryKey from '@/const/queryKey';
-import { getContextNameWithKey_List } from '@/api/context';
-import JournalToolbar from '@/components/journalsSection/journalToolbar/JournalToolbar';
 import styled from 'styled-components';
-import { AnimatePresence } from 'framer-motion';
-import JournalForm from '@/components/journalsSection/journalForm/JournalForm';
 interface JournalFormSection_Props {
 	$isRight: boolean;
 }
@@ -43,13 +37,7 @@ const JournalFormSection = styled.div<JournalFormSection_Props>`
 `;
 export default function Dashboard() {
 	const [selectedTab, setSelectedTab] = useState<string>('Indicators');
-	const [isJournalOpen, setIsJournalOpen] = useState(false);
-	const [isRight, setIsRight] = useState(false);
 	const userId = useSelector((state: Store_Type) => state.user.id);
-	const { data: contextNamesWithKey, isLoading } = useQuery({
-		queryKey: [const_queryKey.context, 'names'],
-		queryFn: () => getContextNameWithKey_List(userId)
-	});
 
 	return (
 		<>
@@ -64,27 +52,6 @@ export default function Dashboard() {
 					) : (
 						<>
 							<MyContextTab selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
-							<AnimatePresence>
-								{isJournalOpen && (
-									<JournalFormSection $isRight={isRight}>
-										<JournalForm
-											contextId={1}
-											setIsWrite={true}
-											isRight={isRight}
-											isJournalOpen={isJournalOpen}
-											setIsJournalOpen={setIsJournalOpen}
-										/>
-									</JournalFormSection>
-								)}
-							</AnimatePresence>
-							{/* <JournalToolbarSection>
-								<JournalToolbar
-									isRight={isRight}
-									setIsRight={setIsRight}
-									isJournalOpen={isJournalOpen}
-									setIsJournalOpen={setIsJournalOpen}
-								/>
-							</JournalToolbarSection> */}
 						</>
 					)}
 				</section>

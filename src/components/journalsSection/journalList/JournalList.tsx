@@ -89,7 +89,7 @@ export default function JournalList({ type }: JournalList_Props) {
 				<NoDataJournal />
 			)}
 
-			{type === 'currentContext' && <JournalForm contextId={17} setIsWrite={true} isRight={false} isJournalOpen={true} />}
+			{type === 'currentContext' && <JournalForm contextId={17} />}
 		</JournalWrapper>
 	);
 }
