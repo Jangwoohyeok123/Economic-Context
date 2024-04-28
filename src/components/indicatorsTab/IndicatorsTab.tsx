@@ -179,8 +179,6 @@ const RightContainer = styled.div`
 `;
 
 export default function IndicatorsTab() {
-	const [isValidateModal, setIsValidateModal] = useState<boolean>(false);
-
 	const { deleteFavoriteMutationAll } = useFavoriteMutation();
 	const { allFavorites_List } = useFavoriteQuery();
 	const [currentCategoryId, setCurrentCategoryId] = useState<number>(const_categoryId.interest_mortgage);
@@ -198,8 +196,6 @@ export default function IndicatorsTab() {
 			return [...prev, favoriteIndicator];
 		});
 	};
-
-	const openAlertModal = () => setIsValidateModal(!isValidateModal);
 
 	const allClick = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { checked } = e.target;
@@ -260,12 +256,7 @@ export default function IndicatorsTab() {
 					<input type='text' placeholder='write your context name' />
 				</div>
 
-				<CreateContextSection
-					checkedFavorite_List={checkedFavorite_List}
-					setCheckedFavorite_List={setCheckedFavorite_List}
-					isValidateModal={isValidateModal}
-					setIsValidateModalOpen={setIsValidateModal}
-				/>
+				<CreateContextSection checkedFavorite_List={checkedFavorite_List} setCheckedFavorite_List={setCheckedFavorite_List} />
 			</RightContainer>
 		</FavoriteContainer>
 	);
