@@ -55,7 +55,11 @@
 1. 더보기 페이지 layout 변경
 2. alert 제거 
 
-
+🦫 Version 1.3
+1. IndicatorCard, FavoriteIndicator 카드 분리
+2. CardUI 변경
+3. IndicatorsTab UI변경
+4. MyContext, CurrentContext UI 변경 (CurrentContext의 chart부분은 chartList컴포넌트의 문제로 인해 다음 버전에서 업데이트)
 
 
 <!-- CONTACT -->
