@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import styles from './CategoryWithIsActive.module.scss';
 import { Indicator_Type } from '@/types/fred';
-import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
+import * as S from '../../styles/CategoryContainer.style';
 import { useQuery } from '@tanstack/react-query';
 import const_queryKey from '@/const/queryKey';
 import { useSelector } from 'react-redux';
@@ -13,9 +13,8 @@ import { getFavoriteCateogry_List } from '@/api/favorite';
 import { FavoriteIndicatorWithIsActive_Type, FavoriteIndicator_Type } from '@/types/favorite';
 import FavoriteIndicatorCard from '../cards/favoriteIndicatorCard/FavoriteIndicatorCard';
 import styled from 'styled-components';
-import { FaRegStar } from 'react-icons/fa6';
 import { FaStar } from 'react-icons/fa6';
-import ClipLoader from 'react-spinners/ClipLoader';
+import Loading from '../loading/Loading';
 
 interface CategoryWithIsActive_Props {
 	categoryData: Indicator_Type[];
@@ -87,11 +86,11 @@ export default function CategoryWithIsActive({ categoryData, currentPage, itemsP
 	}, [currentPage, favorite, categoryData]);
 
 	if (!isFavoriteExist) {
-		return <>isLoading in CategoryWithIsActive</>;
+		return <Loading />;
 	}
 
 	return (
-		<section className={clsx(styles.CategoryWithIsActive)}>
+		<S.CategoryContainer>
 			{categoryWithIsActive
 				.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
 				.map((seriess: FavoriteIndicatorWithIsActive_Type, idx: number) => {
@@ -121,6 +120,6 @@ export default function CategoryWithIsActive({ categoryData, currentPage, itemsP
 						</FavoriteIndicatorCard>
 					);
 				})}
-		</section>
+		</S.CategoryContainer>
 	);
 }

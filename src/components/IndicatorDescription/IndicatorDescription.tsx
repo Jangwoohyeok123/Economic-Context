@@ -10,7 +10,8 @@ import { BsBookmarkDashFill } from 'react-icons/bs';
 import { changeCategoryIdToColor } from '@/utils/changeNameToCategoryId';
 
 interface IndicatorDescription_Props {
-	indicator: Indicator_Type;
+	title: string;
+	observation_end: string;
 	lastData: number;
 	volatility: number;
 	categoryId: number;
@@ -44,8 +45,8 @@ const IndicatorCardDescriptionContainer = styled.div<IndicatorCardDescriptionCon
 				-webkit-line-clamp: 3;
 				text-overflow: ellipsis;
 				overflow: hidden;
-				line-height: 1.2rem; // 좀 더 세밀한 조정을 하고싶다면 line-height를 지정하는 방법이 있다. 이 방법은 wrapper의 100% height의 크기가 바뀔때마다 재설정해야하는 단점이 있다.
-				font-size: 1.1rem;
+				line-height: 1.1rem; // 좀 더 세밀한 조정을 하고싶다면 line-height를 지정하는 방법이 있다. 이 방법은 wrapper의 100% height의 크기가 바뀔때마다 재설정해야하는 단점이 있다.
+				font-size: 1rem;
 				font-weight: 400;
 			}
 		}
@@ -58,7 +59,7 @@ const IndicatorCardDescriptionContainer = styled.div<IndicatorCardDescriptionCon
 
 			.starWrapper {
 				.star {
-					width: 35px;
+					width: 30px;
 					height: 100%;
 					cursor: pointer;
 					fill: #ccc;
@@ -80,8 +81,8 @@ const IndicatorCardDescriptionContainer = styled.div<IndicatorCardDescriptionCon
 			align-items: center;
 
 			.bookmark {
-				width: 40px;
-				height: 40px;
+				width: 30px;
+				height: 30px;
 				fill: ${props => changeCategoryIdToColor(props.categoryId)};
 			}
 		}
@@ -113,9 +114,8 @@ const IndicatorCardDescriptionContainer = styled.div<IndicatorCardDescriptionCon
 	}
 `;
 
-export default function IndicatorDescription({ indicator, lastData, volatility, categoryId }: IndicatorDescription_Props) {
+export default function IndicatorDescription({ title, observation_end, lastData, volatility, categoryId }: IndicatorDescription_Props) {
 	const titleRef = useRef<HTMLDivElement>(null);
-	const { title, observation_end } = indicator;
 	const dispatch = useDispatch();
 
 	return (

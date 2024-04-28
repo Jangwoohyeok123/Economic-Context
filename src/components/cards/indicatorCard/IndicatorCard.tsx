@@ -10,12 +10,12 @@ import getVolatility from '@/utils/getVolatility';
 import Loading from '@/components/loading/Loading';
 import IndicatorDescription from '@/components/IndicatorDescription/IndicatorDescription';
 
-interface IndicatorCardContainer_Props {
+export interface IndicatorCardContainer_Props {
 	$volatility: number;
 }
 
 // height는 부모요소에서 제어하지 말고 자식요소의 content 크기에서 쪼개서 부여하는게 맞다
-const IndicatorCardContainer = styled.div<IndicatorCardContainer_Props>`
+export const IndicatorCardContainer = styled.div<IndicatorCardContainer_Props>`
 	width: 100%;
 	height: 100%;
 	background: #fff;
@@ -71,7 +71,13 @@ export default function IndicatorCard({ indicator, categoryId, currentPage }: In
 
 	return (
 		<IndicatorCardContainer $volatility={volatility}>
-			<IndicatorDescription indicator={indicator} lastData={lastData} volatility={volatility} categoryId={categoryId} />
+			<IndicatorDescription
+				title={title}
+				observation_end={indicator.observation_end}
+				lastData={lastData}
+				volatility={volatility}
+				categoryId={categoryId}
+			/>
 			<div className='lineChartWrapper'>
 				<LineChart categoryId={categoryId} values={chartDatas} />
 			</div>
