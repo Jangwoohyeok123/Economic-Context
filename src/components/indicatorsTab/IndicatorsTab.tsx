@@ -24,8 +24,14 @@ const LeftContainer = styled.section`
 	width: 50%;
 	height: 100%;
 
+	.categoryTabMenuWrapper {
+		width: 550px;
+		margin: 0 auto;
+		padding: 20px 0;
+	}
+
 	.favoriteList {
-		height: calc(100% - var(--headerSize) - 20px);
+		height: calc(100% - var(--headerSize) - 20px - 40px);
 		overflow-y: auto;
 		transition: 0.5s;
 
@@ -215,7 +221,9 @@ export default function IndicatorsTab() {
 		<div className={clsx(styles.IndicatorsTab)}>
 			<FavoriteContainer>
 				<LeftContainer>
-					<CategoryTabMenu categoryIdList={categoryIds} selectedCategoryId={currentCategoryId} setSelectedCategoryId={setCurrentCategoryId} />
+					<div className='categoryTabMenuWrapper'>
+						<CategoryTabMenu categoryIdList={categoryIds} selectedCategoryId={currentCategoryId} setSelectedCategoryId={setCurrentCategoryId} />
+					</div>
 
 					<div className='favoriteList' ref={refFavoriteList}>
 						<div className='favoriteListHeader'>
