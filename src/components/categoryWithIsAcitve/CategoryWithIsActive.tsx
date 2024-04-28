@@ -97,12 +97,7 @@ export default function CategoryWithIsActive({ categoryData, currentPage, itemsP
 					const { title, seriesId, frequency, popularity, observation_start, observation_end, isActive } = seriess;
 					const notes = seriess.notes ?? '';
 					return (
-						<FavoriteIndicatorCard
-							key={idx}
-							categoryId={categoryId}
-							favoriteIndicator={seriess}
-							currentPage={currentPage}
-							className={styles.IndicatorCard}>
+						<FavoriteIndicatorCard key={idx} categoryId={categoryId} favoriteIndicator={seriess} className={styles.IndicatorCard}>
 							<BubblePopButton
 								className={clsx(isActive ? styles.on : '')}
 								clickHandler={() => {

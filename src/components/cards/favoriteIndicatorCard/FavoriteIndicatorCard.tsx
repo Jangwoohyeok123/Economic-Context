@@ -19,7 +19,6 @@ interface FavoriteIndicatorCard_Props {
 	favoriteIndicator: FavoriteIndicator_Type;
 	children: React.ReactNode;
 	className?: string;
-	currentPage: number;
 }
 /**
  * - required props
@@ -30,7 +29,7 @@ interface FavoriteIndicatorCard_Props {
  * @param observation_start
  * @returns title, 기간 정보가 담기 card 를 반환한다. className 을 통해 커스텀 가능하다.
  */
-export default function FavoriteIndicatorCard({ favoriteIndicator, categoryId, children, className, currentPage }: FavoriteIndicatorCard_Props) {
+export default function FavoriteIndicatorCard({ favoriteIndicator, categoryId }: FavoriteIndicatorCard_Props) {
 	const { title, seriesId, observation_start, observation_end, notes } = favoriteIndicator;
 	const router = useRouter();
 	const cleandTitle = title ? cleanString(title) : 'title';
@@ -42,7 +41,7 @@ export default function FavoriteIndicatorCard({ favoriteIndicator, categoryId, c
 			const { dataArray } = data;
 			setChartDatas(dataArray);
 		});
-	}, [seriesId, currentPage]);
+	}, [seriesId]);
 
 	if (chartDatas.length === 0) return <Loading />;
 
