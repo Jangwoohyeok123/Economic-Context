@@ -16,7 +16,7 @@ import CategoryTabMenu from '../categoryTabMenu/CategoryTabMenu';
 const FavoriteContainer = styled.section`
 	display: flex;
 	width: 100%;
-	height: 100%;
+	height: calc(100vh - var(--headerSize));
 	padding: 20px 40px;
 	justify-content: space-between;
 `;

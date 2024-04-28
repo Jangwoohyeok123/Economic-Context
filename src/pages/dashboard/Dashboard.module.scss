@@ -7,7 +7,7 @@
 	background-color: var(--bgColor-light);
 	> section {
 		width: 100%;
-		height: calc(100vh - var.$headerSize);
+		min-height: calc(100vh - var.$headerSize);
 	}
 }
 
