@@ -19,6 +19,11 @@ export default function Footer() {
 					<li>A website designed</li>
 					<li>for user-friendly access</li>
 					<li>to economic indicators</li>
+					<li>
+						<a href='http://icons8.com/icons' target='_blank' rel='noopener noreferrer'>
+							icon8 icons
+						</a>
+					</li>
 				</ul>
 				<p className={clsx(styles.copyright)}>&copy; 2024 Economic-Context. All Rights Reserved.</p>
 			</div>

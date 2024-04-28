@@ -7,7 +7,7 @@ import makeThrottledHandler from './makeThrottledHandler';
 export default function renderChartSvg(svg: SVGElement, periodValues_List: DateAndValue_Type[], height: number, duration: number): SVGElement {
 	const { x: svgX, y: svgY, bottom: svgBottom, top: svgTop, width: svgWidth, height: svgHeight } = svg.getBoundingClientRect();
 	const [xAxisStartPosition, xAxisLastPosition] = [svgX, svgX + svgWidth];
-	const [xAxisHeight, yAxisWidth] = [25, 50];
+	const [xAxisHeight, yAxisWidth] = [25, 30];
 	const [rootSvgPadding, rootSvgPaddingTop] = [20, 30];
 
 	const [xMin, xMax] = d3.extent(periodValues_List, (value: DateAndValue_Type) => value.date) as [Date, Date];
@@ -41,9 +41,7 @@ export default function renderChartSvg(svg: SVGElement, periodValues_List: DateA
 		.y(linear => linearScale(Number(linear.value)));
 
 	// chart가 그려질 도화지역할을 하는 svg 태그
-	const rootSvg = d3
-		.select(svg)
-		.attr('style', `width: 100%; height: ${height}vh; padding: ${rootSvgPadding}px; padding-top: ${rootSvgPaddingTop}px;`);
+	const rootSvg = d3.select(svg).attr('style', `width: 100%; height: 100%; padding: ${rootSvgPadding}px; padding-top: ${rootSvgPaddingTop}px;`);
 
 	// x 축 (하단 축)을 추가합니다.
 	// 'each' 함수를 사용하여 x 축에서 표시되지 않아야 하는 tick들을 제어합니다.
@@ -57,6 +55,8 @@ export default function renderChartSvg(svg: SVGElement, periodValues_List: DateA
 				.ticks(xAxisLength / xTickLength)
 				.tickSizeOuter(0)
 		)
+		.selectAll('.tick text') // 모든 tick 라벨 선택
+		.style('font-size', '11px') // font-size 스타일 적용
 		.selectAll('.tick')
 		.each(function (_, index, ticks) {
 			const xOffset = 100;
@@ -69,18 +69,22 @@ export default function renderChartSvg(svg: SVGElement, periodValues_List: DateA
 
 	// y 축 (우측 축)을 추가합니다.
 	// y 축의 도메인을 숨기고, 틱 라인을 확장하여 시각적 가이드를 제공합니다.
+	// .attr('style', `transform: translateX(calc(100% - ${yAxisWidth}px)); opacity: 0.9;`)
 	rootSvg
 		.append('g')
-		.attr('style', `transform: translateX(calc(100% - ${yAxisWidth}px)); opacity: 0.9;`)
+		.attr('style', `transform: translateX(calc(100% - ${yAxisWidth}px)); opacity: 0.9; `)
 		.call(d3.axisRight(linearScale).ticks(yAxisLength / yTickLength))
 		.call(g => g.select('.domain').remove())
 		.call(g =>
 			g
 				.selectAll('.tick line')
+				.attr('style', `font-size: 10px;`)
 				.clone() // 틱 라인 확장
 				.attr('x2', '-100%') // -100% 는 y 축 우측으로 이동시킨 것을 의미합니다.
 				.attr('stroke-opacity', 0.15)
 		)
+		.selectAll('.tick text') // 모든 tick 라벨 선택
+		.style('font-size', '11px') // font-size 스타일 적용
 		.selectAll('.tick')
 		.each(function (_, index, ticks) {
 			const yOffset = 100;
@@ -96,24 +100,37 @@ export default function renderChartSvg(svg: SVGElement, periodValues_List: DateA
 		.append('path')
 		.attr('fill', 'none')
 		.attr('stroke', 'steelblue')
-		.attr('stroke-width', 1.5)
+		.attr('stroke-width', 1)
 		.attr('d', makeDataForPath(periodValues_List as DateAndValue_Type[]));
 
 	const dataCount = periodValues_List.length;
 	const lengthForTooltip = svgWidth / dataCount;
 
-	let tooltipElement = document.getElementById('myTooltip');
 	const rootSvgElement = rootSvg.node() as SVGElement;
 	const svgWrapper = rootSvgElement.parentNode;
 
+	// 모든 .myTooltipStyle 요소 검색
+	const tooltips = svgWrapper?.querySelectorAll('.myTooltipStyle');
+
+	// 첫 번째 요소를 제외한 모든 툴팁 요소 제거
+	tooltips?.forEach((tooltip, index) => {
+		if (index > 0) tooltip.remove();
+	});
+
+	// 유효한 첫 번째 툴팁 요소 가져오기 (혹은 존재하지 않는 경우 null)
+	let tooltipElement: HTMLDivElement | null = null;
+	if (tooltips && tooltips.length > 0) tooltips.length > 0 ? (tooltips[0] as HTMLDivElement) : null;
+	// let tooltipElement = tooltips.length > 0 ? (tooltips[0] as HTMLDivElement) : null;
+
+	// 툴팁 요소가 없으면 새로 생성
 	if (!tooltipElement && svgWrapper) {
 		tooltipElement = document.createElement('div');
-		svgWrapper.appendChild(tooltipElement);
 		tooltipElement.classList.add('myTooltipStyle');
+		svgWrapper.appendChild(tooltipElement);
 	}
 
+	// 툴팁이 있는 경우 이벤트 핸들러 설정
 	if (tooltipElement) {
-		tooltipElement.classList.add('myTooltipStyle');
 		rootSvg
 			.selectAll('rect')
 			.data(periodValues_List) // 데이터 바인딩
@@ -123,32 +140,29 @@ export default function renderChartSvg(svg: SVGElement, periodValues_List: DateA
 			.attr('y', 0)
 			.attr('width', lengthForTooltip)
 			.attr('height', svgHeight - 50 - xAxisHeight)
-			.attr('fill', 'black')
 			.attr('opacity', 0)
 			.on('mouseover', function (event, d) {
-				if (tooltipElement) {
-					tooltipElement.style.visibility = 'visible';
-					updateTooltipContent(d);
-				}
+				if (!tooltipElement) return;
+				tooltipElement.style.visibility = 'visible';
+				updateTooltipContent(d);
 			})
 			.on('mousemove', function (event, d) {
-				if (tooltipElement) {
-					const tooltipX = utcScale(d.date);
-					const tooltipY = linearScale(d.value as number);
+				if (!tooltipElement) return;
+				const tooltipX = utcScale(d.date);
+				const tooltipY = linearScale(Number(d.value));
 
-					// 툴팁 위치 조정, SVG 내에서의 좌표 사용
-					tooltipElement.style.left = `${tooltipX - 10}px`;
-					tooltipElement.style.top = `${tooltipY}px`;
-					tooltipElement.style.transform = 'translate(-30%, -30%)';
-				}
+				tooltipElement.style.left = `${tooltipX - 10}px`;
+				tooltipElement.style.top = `${tooltipY}px`;
+				tooltipElement.style.transform = 'translate(-30%, -50%)';
 			})
 			.on('mouseout', function () {
-				if (tooltipElement) tooltipElement.style.visibility = 'hidden';
+				if (!tooltipElement) return;
+				tooltipElement.style.visibility = 'hidden';
 			});
 	}
 
 	function updateTooltipContent(data: DateAndValue_Type) {
-		if (tooltipElement) tooltipElement.innerHTML = `Value: ${data.value}<br>Date: ${data.date.toISOString().split('T')[0]}`;
+		if (tooltipElement) tooltipElement.innerHTML = `Value: ${Number(data.value).toFixed(2)}<br>Date: ${data.date.toISOString().split('T')[0]}`;
 	}
 
 	return svg;

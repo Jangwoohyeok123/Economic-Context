@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import styles from './CategoryWithIsActive.module.scss';
 import { Indicator_Type } from '@/types/fred';
-import IndicatorCard from '../cards/indicatorCard/IndicatorCard';
+import * as S from '../../styles/CategoryContainer.style';
 import { useQuery } from '@tanstack/react-query';
 import const_queryKey from '@/const/queryKey';
 import { useSelector } from 'react-redux';
@@ -11,6 +11,10 @@ import { Store_Type } from '@/types/redux';
 import useFavoriteMutation from '@/hooks/useFavoriteMutation';
 import { getFavoriteCateogry_List } from '@/api/favorite';
 import { FavoriteIndicatorWithIsActive_Type, FavoriteIndicator_Type } from '@/types/favorite';
+import FavoriteIndicatorCard from '../cards/favoriteIndicatorCard/FavoriteIndicatorCard';
+import styled from 'styled-components';
+import { FaStar } from 'react-icons/fa6';
+import Loading from '../loading/Loading';
 
 interface CategoryWithIsActive_Props {
 	categoryData: Indicator_Type[];
@@ -19,14 +23,26 @@ interface CategoryWithIsActive_Props {
 	categoryId: number;
 }
 
-export default function CategoryWithIsActive({
-	categoryData,
-	currentPage,
-	itemsPerPage,
-	categoryId
-}: CategoryWithIsActive_Props) {
+const StarCotainer = styled.div`
+	height: 30px;
+	transition: 0.3s;
+
+	.star {
+		width: 30px;
+		height: 100%;
+		fill: #dddddd;
+		transition: 0.2s;
+		cursor: pointer;
+	}
+
+	.activeStar {
+		fill: var(--yellowColor);
+	}
+`;
+
+export default function CategoryWithIsActive({ categoryData, currentPage, itemsPerPage, categoryId }: CategoryWithIsActive_Props) {
 	const user = useSelector((state: Store_Type) => state.user);
-	const [categoryWithIsActive, setCategoryWithActive] = useState<FavoriteIndicatorWithIsActive_Type[]>([]);
+	const [categoryWithIsActive, setCategoryWithActive] = useState<FavoriteIndicatorWithIsActive_Type[]>([]); // 하... 나중에 리팩토링
 
 	// useQuery
 	const { data: favorite, isSuccess: isFavoriteExist } = useQuery({
@@ -61,8 +77,7 @@ export default function CategoryWithIsActive({
 
 			favorite.forEach((favoriteIndicator: FavoriteIndicator_Type) => {
 				favoriteCategoryWithIsActive.forEach((favoriteCategoryIndicator: FavoriteIndicatorWithIsActive_Type) => {
-					if (favoriteIndicator.seriesId === favoriteCategoryIndicator.seriesId)
-						favoriteCategoryIndicator.isActive = true;
+					if (favoriteIndicator.seriesId === favoriteCategoryIndicator.seriesId) favoriteCategoryIndicator.isActive = true;
 				});
 			});
 
@@ -71,28 +86,18 @@ export default function CategoryWithIsActive({
 	}, [currentPage, favorite, categoryData]);
 
 	if (!isFavoriteExist) {
-		return <div>loading ui</div>;
+		return <Loading />;
 	}
 
 	return (
-		<section className={clsx(styles.CategoryWithIsActive)}>
+		<S.CategoryContainer>
 			{categoryWithIsActive
 				.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-				.map((series: FavoriteIndicatorWithIsActive_Type, idx: number) => {
-					const { title, seriesId, frequency, popularity, observation_start, observation_end, isActive } = series;
-					const notes = series.notes ?? '';
+				.map((seriess: FavoriteIndicatorWithIsActive_Type, idx: number) => {
+					const { title, seriesId, frequency, popularity, observation_start, observation_end, isActive } = seriess;
+					const notes = seriess.notes ?? '';
 					return (
-						<IndicatorCard
-							key={idx}
-							title={title}
-							seriesId={seriesId}
-							categoryId={categoryId}
-							frequency={frequency as string}
-							popularity={popularity as number}
-							notes={notes}
-							observation_end={observation_end as string}
-							observation_start={observation_start as string}
-							className={styles.IndicatorCard}>
+						<FavoriteIndicatorCard key={idx} categoryId={categoryId} favoriteIndicator={seriess} className={styles.IndicatorCard}>
 							<BubblePopButton
 								className={clsx(isActive ? styles.on : '')}
 								clickHandler={() => {
@@ -103,11 +108,13 @@ export default function CategoryWithIsActive({
 										});
 									});
 								}}>
-								{isActive ? 'remove' : 'save'}
+								<StarCotainer>
+									<FaStar className={clsx('star', isActive ? 'activeStar' : '')} />
+								</StarCotainer>
 							</BubblePopButton>
-						</IndicatorCard>
+						</FavoriteIndicatorCard>
 					);
 				})}
-		</section>
+		</S.CategoryContainer>
 	);
 }

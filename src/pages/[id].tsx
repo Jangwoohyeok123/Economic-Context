@@ -18,8 +18,10 @@ import SkeletonMorepage from '@/components/skeleton/SkeletonMorepage';
 import styled from 'styled-components';
 import Footer from '@/components/footer/Footer';
 import AnotherIndicators from '@/components/anotherIndicators/AnotherIndicators';
+import { changeCategoryIdToColor } from '@/utils/changeNameToCategoryId';
+import getVolatility from '@/utils/getVolatility';
 
-const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
+const DynamicAlertModal = dynamic(() => import('@/components/modals/loginAlertModal/LoginAlertModal'), { ssr: false });
 
 const Main = styled.main`
 	width: 80%;
@@ -216,16 +218,10 @@ export default function Morepage() {
 		return <SkeletonMorepage />;
 	}
 
-	// 최신변화율을 만드는 과정이다. 정수로 만든 후 다시 소수로 전환하는 과정을 거친다.
-	function roundTo(num: number, decimalPlaces: number) {
-		const factor = 10 ** decimalPlaces;
-		return Math.round(num * factor) / factor;
-	}
-
 	const prevData = Number(chartDatas[chartDatas.length - 2].value);
 	const lastData = Number(chartDatas[chartDatas.length - 1].value);
 
-	const volatility = roundTo(lastData - prevData, 2);
+	const volatility = getVolatility(prevData, lastData);
 
 	return (
 		<>
@@ -237,7 +233,7 @@ export default function Morepage() {
 								<h1>{indicator.title}</h1>
 								<div className='values'>
 									<span>{lastData}</span>
-									<span>{volatility >= 0 ? `(+${volatility}%)` : `(-${volatility}%)`}</span>
+									<span>{volatility >= 0 ? `(+${volatility}%)` : `(${volatility}%)`}</span>
 								</div>
 								<div>last_updated: {indicator.observation_end}</div>
 							</div>
@@ -246,14 +242,14 @@ export default function Morepage() {
 							</SaveFavoriteIndicatorButton>
 						</IntroduceContainer>
 
-						<LineChart duration={10} indicator={indicator} values={chartDatas} width={100}></LineChart>
+						<LineChart categoryId={Number(categoryId as string)} values={chartDatas} width={100}></LineChart>
 						<ChartDescription indicator={indicator}></ChartDescription>
 						<AnotherIndicators />
 					</>
 				)}
 			</Main>
 			<Footer />
-			<DynamicAlertModal
+			{/* <DynamicAlertModal
 				isModalOpen={isAlertModalOpen}
 				setIsModalOpen={setIsAlertModalOpen}
 				size='small'
@@ -263,7 +259,7 @@ export default function Morepage() {
 				leftButtonHandler={() => setIsAlertModalOpen(false)}
 				rightButtonContent='Login'
 				rightButtonHandler={() => router.push(`${frontUrl}/login`)}
-			/>
+			/> */}
 		</>
 	);
 }

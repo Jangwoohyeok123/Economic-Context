@@ -29,9 +29,6 @@ export const removeComma = (title: string) => {
 export const addEllipsis = (text: string, maxLength: number) => {
 	return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
 };
-export const changeDate = (date: string) => {
-	return date.replace('T', ' ').slice(0, -5);
-};
 
 export const cleanString = (title: string, maxLength?: number, string?: string) => {
 	let cleanedString = title;

@@ -1,12 +1,24 @@
-const const_categoryColor = [
-	{ name: 'interest_mortgage', color: '#E5B04F' },
-	{ name: 'interest_fed', color: '#B88855' },
-	{ name: 'materials', color: '#D8C3A0' },
-	{ name: 'gdp', color: '#A9C9C2' },
-	{ name: 'exchange', color: '#59AEC3' },
-	{ name: 'production', color: '#FEBCD7' },
-	{ name: 'consume', color: '#CBEDFE' },
-	{ name: 'labor', color: '#7CB8EF' }
-];
+interface ComponentTypes {
+	[key: string]: string;
+	interest_mortgage: string;
+	interest_fed: string;
+	materials: string;
+	gdp: string;
+	exchange: string;
+	production: string;
+	consume: string;
+	labor: string;
+}
+
+const const_categoryColor: ComponentTypes = {
+	interest_mortgage: '#E5B04F',
+	interest_fed: '#B88855',
+	materials: '#D8C3A0',
+	gdp: '#A9C9C2',
+	exchange: '#59AEC3',
+	production: '#FEBCD7',
+	consume: '#005a86',
+	labor: '#7CB8EF'
+};
 
 export default const_categoryColor;

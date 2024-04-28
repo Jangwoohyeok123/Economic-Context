@@ -3,16 +3,21 @@ import * as d3 from 'd3';
 import renderChartSvg from '@/utils/renderChartSvg';
 import prepareValues_ListByPeriod from '@/utils/setPeriodValues_List';
 import makeDebouncedHandler from '@/utils/makeDebounceHandler';
-import { Indicator_Type, DateAndValue_Type } from '@/types/fred';
+import { DateAndValue_Type } from '@/types/fred';
 import React, { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/router';
+import { changeCategoryIdToColor } from '@/utils/changeNameToCategoryId';
+import Loading from '@/components/loading/Loading';
+import { setDefaultAutoSelectFamilyAttemptTimeout } from 'net';
 
-interface ChartWrapper_Props {
+interface ChartContainer_Props {
 	width: number;
+	height: number;
 }
 
-const ChartWrapper = styled.div<ChartWrapper_Props>`
-	width: ${Props => `${Props.width}%`};
+// min-height를 주면 렌더링을 나눠서 처리하는 경
+const ChartContainer = styled.div<ChartContainer_Props>`
+	width: 100%;
+	height: calc(100% - 25px);
 	position: relative;
 
 	span {
@@ -23,13 +28,16 @@ const ChartWrapper = styled.div<ChartWrapper_Props>`
 	}
 `;
 
-const ChartFeatures = styled.div`
-	height: var(--chartHeaderSize);
-	background: var(--chartHeaderColor);
+interface ChartFeature_Props {
+	$chartColor: string;
+}
+
+const ChartFeatures = styled.div<ChartFeature_Props>`
 	display: flex;
-	justify-content: space-between;
+	justify-content: right;
 	align-items: center;
 	padding: 0 var(--chartPadding);
+	height: 25px; // chartFeaturesSize
 
 	.icon {
 		cursor: pointer;
@@ -42,17 +50,49 @@ const ChartFeatures = styled.div`
 
 	> ul {
 		display: flex;
-		gap: 15px;
+		width: 100%;
+		border: 1px solid var(--bgColor2);
+		border-radius: 10px;
+		height: 100%;
 
 		li {
+			height: 100%;
+			flex: 1;
+			display: flex;
+			justify-content: center;
+			align-items: center;
 			cursor: pointer;
+			font-size: 0.8rem;
+			border-left: 1px solid var(--bgColor2);
+			transition: 0.3s;
+
+			&:hover {
+				background: ${props => props.$chartColor};
+				color: white;
+			}
+		}
+
+		li:nth-of-type(1) {
+			border-left: none;
+			border-top-left-radius: 10px;
+			border-bottom-left-radius: 10px;
+		}
+
+		li:nth-of-type(3) {
+			border-top-right-radius: 10px;
+			border-bottom-right-radius: 10px;
+		}
+
+		li.active {
+			background: ${props => props.$chartColor};
+			color: white;
 		}
 	}
 `;
 
 const ChartSvgWrapper = styled.div`
 	display: flex;
-	height: calc(100% - var(--chartHeaderSize));
+	height: 100%;
 	border-bottom: 1px solid #fff;
 `;
 
@@ -62,8 +102,7 @@ const Svg = styled.svg`
 `;
 
 export interface LineChart_Props {
-	indicator: Indicator_Type;
-	duration: number;
+	categoryId: number;
 	children?: React.ReactElement;
 	height?: number;
 	width?: number;
@@ -72,31 +111,26 @@ export interface LineChart_Props {
 }
 
 /**
- * @indicator SeriessType
- * @values Value[]
+ * @categoryId number
+ * @values DateAndValue_Type[]
  * @height [x]vh
  * @width [y]%
  * @className
  */
-const LineChart = ({ indicator, values: values_List, width = 100, height = 65, className }: LineChart_Props) => {
+const LineChart = ({ categoryId, values: values_List, width = 20, height = 30, className }: LineChart_Props) => {
 	const rootSvgRef = useRef<SVGSVGElement>(null);
 	const rootSvgContainerRef = useRef<HTMLDivElement>(null);
-	const { frequency } = indicator;
-	const [duration, setDuration] = useState<number>(10);
+	const [duration, setDuration] = useState<number>(5);
 	const lastDate = values_List[values_List.length - 1].date;
+	const preparedValues_List: DateAndValue_Type[] = prepareValues_ListByPeriod(duration, values_List, lastDate);
 
 	// resize 이벤트 발생시 차트 다시그리기
 	useEffect(() => {
 		const resetChart = () => {
 			// tooltip 남아있는 현상 제거
-			const tooltips = document.querySelectorAll('.myTooltipStyle');
-			tooltips.forEach(tooltip => {
-				tooltip.remove();
-			});
-
 			if (rootSvgRef.current && rootSvgContainerRef.current) {
 				d3.select(rootSvgRef.current).selectAll('*').remove();
-				renderChartSvg(rootSvgRef.current, values_List, height, duration);
+				renderChartSvg(rootSvgRef.current, preparedValues_List, height, duration);
 			}
 		};
 		const debounced_resetChart = makeDebouncedHandler(resetChart, 200);
@@ -113,8 +147,6 @@ const LineChart = ({ indicator, values: values_List, width = 100, height = 65, c
 	useEffect(() => {
 		if (!rootSvgRef.current) return;
 		d3.select(rootSvgRef.current).selectAll('*').remove();
-
-		const preparedValues_List: DateAndValue_Type[] = prepareValues_ListByPeriod(duration, values_List, lastDate);
 		renderChartSvg(rootSvgRef.current, preparedValues_List, height, duration);
 	}, [duration]);
 
@@ -122,27 +154,32 @@ const LineChart = ({ indicator, values: values_List, width = 100, height = 65, c
 	useEffect(() => {
 		if (rootSvgRef.current) {
 			d3.select(rootSvgRef.current).selectAll('*').remove();
-			renderChartSvg(rootSvgRef.current, values_List, height, duration);
+			renderChartSvg(rootSvgRef.current, preparedValues_List, height, duration);
 		}
-	}, []);
+
+		setDuration(5);
+	}, [values_List]);
 
 	return (
 		<div className={className}>
-			<ChartWrapper ref={rootSvgContainerRef} width={width}>
-				<ChartFeatures>
-					<div>Frequency: {frequency}</div>
+			<ChartContainer ref={rootSvgContainerRef} width={width} height={height}>
+				<ChartFeatures $chartColor={changeCategoryIdToColor(categoryId)}>
 					<ul>
-						<li onClick={() => setDuration(1)}>1Y</li>
-						<li onClick={() => setDuration(3)}>3Y</li>
-						<li onClick={() => setDuration(5)}>5Y</li>
-						<li onClick={() => setDuration(10)}>MAX</li> {/* 10은 max를 의미한다 */}
+						<li className={duration === 1 ? 'active' : ''} onClick={() => setDuration(1)}>
+							1Y
+						</li>
+						<li className={duration === 5 ? 'active' : ''} onClick={() => setDuration(3)}>
+							5Y
+						</li>
+						<li className={duration === 10 ? 'active' : ''} onClick={() => setDuration(10)}>
+							MAX
+						</li>
 					</ul>
 				</ChartFeatures>
-				<span>units: {indicator.units_short}</span>
 				<ChartSvgWrapper>
 					<Svg ref={rootSvgRef} />
 				</ChartSvgWrapper>
-			</ChartWrapper>
+			</ChartContainer>
 		</div>
 	);
 };

@@ -12,15 +12,16 @@ import { addContext, getContextNameWithKey_List } from '@/api/context';
 import { ContextNameWithKey_Type } from '@/types/context';
 
 interface MakeModalProps {
+	contextName: string;
 	isModalOpen: boolean;
 	setIsModalOpen: Dispatch<SetStateAction<boolean>>;
 	children?: React.ReactNode;
-	favorites: FavoriteIndicatorWithIsPick_Type[];
+	checkedFavorite_List: FavoriteIndicator_Type[];
 }
 
-export default function MakeContextModal({ favorites, isModalOpen, setIsModalOpen, children }: MakeModalProps) {
+// MakeContextModal컴포넌트는 true인 데이터를 전달받는다.
+export default function MakeContextModal({ contextName, checkedFavorite_List, isModalOpen, setIsModalOpen, children }: MakeModalProps) {
 	const userId = useSelector((state: Store_Type) => state.user.id);
-	const [selectedFavorites, setSelectedFavorites] = useState<FavoriteIndicatorWithIsPick_Type[]>();
 	const refInput = useRef<HTMLInputElement>(null);
 	const queryClient = useQueryClient();
 
@@ -41,23 +42,12 @@ export default function MakeContextModal({ favorites, isModalOpen, setIsModalOpe
 		}
 	});
 
-	useEffect(() => {
-		const pickedFavorites = favorites?.filter(favorite => favorite.isPick);
-		setSelectedFavorites(pickedFavorites);
-	}, [favorites]);
+	const makeContext = () => addContextMutation.mutate(checkedFavorite_List);
 
-	const makeContext = () => {
-		const favoritesForContext = selectedFavorites?.map(({ isPick, ...favorite }) => favorite);
-		if (
-			refInput.current &&
-			favoritesForContext &&
-			!contextNamesWithKey?.some((context: ContextNameWithKey_Type) => refInput?.current?.value === context.name)
-		) {
-			addContextMutation.mutate(favoritesForContext);
-		} else {
-			alert('title 이 중복됩니다.');
-		}
-	};
+	useEffect(() => {
+		if (!refInput.current) return;
+		refInput.current.value = contextName;
+	}, []);
 
 	return isModalOpen
 		? ReactDOM.createPortal(
@@ -74,7 +64,7 @@ export default function MakeContextModal({ favorites, isModalOpen, setIsModalOpe
 						</div>
 						<div className={clsx(styles.pickedFavorites)}>
 							<h5>Indicators</h5>
-							<ul>{selectedFavorites?.length}개의 지표를 선택하셨습니다.</ul>
+							<ul>{checkedFavorite_List.length}개의 지표를 선택하셨습니다.</ul>
 						</div>
 						<div className={clsx(styles.buttons)}>
 							<button

@@ -6,6 +6,7 @@ import { getChartData, getIndicator } from '@/api/fred';
 import const_queryKey from '@/const/queryKey';
 import LineChart from '../charts/line/LineChart';
 import { DateAndValue_Type, Indicator_Type } from '@/types/fred';
+import const_categoryId from '@/const/categoryId';
 
 interface ChartSwiper_Props {
 	seriesIds: string[];
@@ -15,7 +16,7 @@ interface ChartSwiper_Props {
 export default function ChartSwiper({ seriesIds }: ChartSwiper_Props) {
 	const queryChartValues = useQueries({
 		queries: seriesIds.map(seriesId => ({
-			queryKey: [const_queryKey.context, seriesId],
+			queryKey: [const_queryKey.context, 'getChartData', seriesId],
 			queryFn: () => getChartData(seriesId)
 		})),
 		combine: results => {
@@ -60,7 +61,8 @@ export default function ChartSwiper({ seriesIds }: ChartSwiper_Props) {
 
 						return (
 							<SwiperSlide key={index}>
-								<LineChart duration={3} indicator={indicator} values={values} />
+								{/* 구조변경 전 default 값으로 처리 */}
+								<LineChart categoryId={const_categoryId.interest_fed} values={values} />
 							</SwiperSlide>
 						);
 					})}

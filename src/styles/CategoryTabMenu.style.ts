@@ -4,15 +4,15 @@ interface MenuButton_Props {
 }
 export const TabMenuWrap = styled.div`
 	width: 100%;
-	padding-top: 50px;
 	text-align: center;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
-	gap: 20px;
+	gap: 15px;
 
 	button {
-		padding: 14px 30px;
+		padding: 14px;
+		padding-left: 15px;
 		transition: 0.3s;
 		border-radius: 3px;
 		cursor: pointer;
@@ -23,8 +23,10 @@ export const TabMenuWrap = styled.div`
 		overflow: hidden;
 		> span.icon {
 			position: absolute;
-			right: -5px;
-			bottom: -5px;
+			transform: scale(70%);
+			right: -9px;
+			bottom: -9px;
+			transition: 0.3s;
 		}
 	}
 	@media screen and (max-width: 1024px) {
@@ -38,6 +40,7 @@ export const TabMenuWrap = styled.div`
 	}
 `;
 export const MenuButton = styled.button<MenuButton_Props>`
+	width: 105px;
 	border: 1px solid ${props => props.$categoryColor};
 	color: ${props => props.$categoryColor};
 	&:hover {

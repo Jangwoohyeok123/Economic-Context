@@ -7,6 +7,8 @@ import ChartList from '../chartList/ChartList';
 import { Context_Type } from '@/types/context';
 import { getContext } from '@/api/context';
 import { FavoriteIndicator_Type } from '@/types/favorite';
+import CategoryTabMenu from '../categoryTabMenu/CategoryTabMenu';
+import Loading from '../loading/Loading';
 
 interface CurrentContext_Props {
 	currentContextId: number;
@@ -14,21 +16,17 @@ interface CurrentContext_Props {
 
 export default function CurrentContext({ currentContextId }: CurrentContext_Props) {
 	const { data: currentContext, isLoading } = useQuery<Context_Type>({
-		queryKey: [const_queryKey.context, currentContextId],
+		queryKey: [const_queryKey.context, 'getContext', currentContextId],
 		queryFn: () => getContext(currentContextId)
 	});
 
-	if (isLoading) return <div>Loading...</div>;
+	if (isLoading) return <Loading />;
 
-	const seriesIds = currentContext?.customIndicators.map((indicator: FavoriteIndicator_Type) => {
-		return indicator.seriesId;
+	const [seriesIds, categoryIds]: [string[], number[]] = [[], []];
+	currentContext?.customIndicators.forEach((indicator: FavoriteIndicator_Type) => {
+		seriesIds.push(indicator.seriesId);
+		categoryIds.push(indicator.categoryId);
 	});
 
-	return (
-		<section className={clsx(styles.CurrentContext)}>
-			<h2>Context Chart List</h2>
-			{/* {seriesIds && <ChartSwiper seriesIds={seriesIds} />} */}
-			{seriesIds && <ChartList seriesIds={seriesIds} />}
-		</section>
-	);
+	return <section className={clsx(styles.CurrentContext)}></section>;
 }

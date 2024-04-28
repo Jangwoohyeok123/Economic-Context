@@ -9,6 +9,7 @@ import Header from '../components/header/Header';
 import { Poppins, Roboto } from 'next/font/google';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import const_categoryId from '@/const/categoryId';
 
 export const roboto = Roboto({
 	subsets: ['latin'],
@@ -22,7 +23,7 @@ export const poppins = Poppins({
 	variable: '--pointFont'
 });
 
-export const categoryNames = ['Interest', 'Exchange', 'Consume', 'Production'];
+export const categoryIdList = Object.values(const_categoryId);
 
 export const frontUrl = process.env.NEXT_PUBLIC_FRONT_URL;
 export const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;

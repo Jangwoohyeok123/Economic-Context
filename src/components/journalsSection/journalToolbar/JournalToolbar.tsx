@@ -130,7 +130,6 @@ export default function JournalToolbar({ isJournalOpen, setIsJournalOpen, isRigh
 	};
 	const routeToJournalPage = (e: React.MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
-		console.log('Journal페이지 이동');
 	};
 	return (
 		<Toolbar>
@@ -152,11 +151,7 @@ export default function JournalToolbar({ isJournalOpen, setIsJournalOpen, isRigh
 			<Button $isToolbarOpen={isToolbarOpen} $isJournalOpen={isJournalOpen} onClick={e => routeToJournalPage(e)}>
 				<BiSolidArea />
 			</Button>
-			<Button
-				$isRight={isRight}
-				$isToolbarOpen={isToolbarOpen}
-				$isJournalOpen={isJournalOpen}
-				onClick={() => setIsRight(prev => !prev)}>
+			<Button $isRight={isRight} $isToolbarOpen={isToolbarOpen} $isJournalOpen={isJournalOpen} onClick={() => setIsRight(prev => !prev)}>
 				{isRight ? <BiSolidDockBottom /> : <BiSolidDockRight />}
 			</Button>
 		</Toolbar>

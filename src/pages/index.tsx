@@ -7,23 +7,29 @@ import dynamic from 'next/dynamic';
 import Category from '@/components/category/Category';
 import mainImage from '@/public/mainImage.jpg';
 import { useState } from 'react';
-import { useRouter } from 'next/router';
 import { Store_Type } from '@/types/redux';
 import { useQueries } from '@tanstack/react-query';
 import const_queryKey from '@/const/queryKey';
 import { getCategory_List } from '@/api/fred';
 import { useSelector } from 'react-redux';
 import const_categoryId from '@/const/categoryId';
-import { categoryNames } from './_app';
+import { categoryIdList } from './_app';
 import { Indicator_Type } from '@/types/fred';
 import CategoryWithIsActive from '@/components/categoryWithIsAcitve/CategoryWithIsActive';
-import { changeNameToCategoryId } from '@/utils/changeNameToCategoryId';
-import { roboto, poppins, frontUrl } from './_app';
+import { roboto, poppins } from './_app';
 import Pagination from '@/components/pagination/Pagination';
+import ClipLoader from 'react-spinners/ClipLoader';
 import SEO from '@/components/seo/SEO';
+import styled from 'styled-components';
 
-const DynamicAlertModal = dynamic(() => import('@/components/modals/alertModal/AlertModal'), { ssr: false });
+const DynamicLoginAlertModal = dynamic(() => import('@/components/modals/loginAlertModal/LoginAlertModal'), { ssr: false });
 const CategoryTabMenu = dynamic(() => import('@/components/categoryTabMenu/CategoryTabMenu'), { ssr: false });
+
+const CategoryTabMenuWrapper = styled.div`
+	padding-top: 35px;
+	margin: 0 auto;
+	width: 550px;
+`;
 
 interface Home_Props {
 	interest: Indicator_Type[];
@@ -34,35 +40,32 @@ interface Home_Props {
 
 export default function Home({ interest, exchange, production, consume }: Home_Props) {
 	const user = useSelector((state: Store_Type) => state.user);
-	const router = useRouter();
 
-	const [categoryIndex, setCategoryIndex] = useState(0);
 	const [currentPage, setCurrentPage] = useState(1);
-	const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
-
+	const [selectedCategoryId, setSelectedCategoryId] = useState(categoryIdList[0]);
+	const [selectedCategoryIdIndex, setSelectedCategoryIdIndex] = useState(0);
 	const initialStates = [interest, exchange, production, consume];
-	const indicatorsPerPage = 12;
-	const categoryId = changeNameToCategoryId(categoryNames[categoryIndex]);
+	const indicatorsPerPage = 9;
 
 	const categoryQueries = useQueries({
-		queries: categoryNames.map((_, idx) => ({
-			queryKey: [const_queryKey.category, 'getCategory', changeNameToCategoryId(categoryNames[idx])],
-			queryFn: () => getCategory_List(changeNameToCategoryId(categoryNames[idx])),
-			staleTime: 1000 * 60 * 10,
-			initialData: initialStates[idx]
+		queries: categoryIdList.map((categoryId: number) => ({
+			queryKey: [const_queryKey.category, `getCategory${categoryId}`, categoryId],
+			queryFn: () => getCategory_List(categoryId, 20),
+			staleTime: 1000 * 60 * 10
 		}))
 	});
-	const category_List = categoryQueries[categoryIndex].data;
-	const selectCategory = (e: React.MouseEvent<HTMLButtonElement>, idx: number) => {
+
+	const category_List = categoryQueries[selectedCategoryIdIndex]?.data as Indicator_Type[];
+
+	const selectCategory = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
 		e.preventDefault();
-		const newIndex = idx;
-		setCategoryIndex(newIndex);
+		const newIndex = categoryIdList.indexOf(id);
+		setSelectedCategoryId(id);
+		setSelectedCategoryIdIndex(newIndex);
 		setCurrentPage(1);
 	};
 
-	if (!category_List) {
-		return <div>isLoading</div>;
-	}
+	if (!category_List) return <ClipLoader />;
 
 	return (
 		<>
@@ -71,22 +74,24 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 				<Image src={mainImage} alt='mainImage for mainpage' aria-label='mainImage' placeholder='blur' objectFit='cover' quality={80} fill priority />
 			</div>
 			<main className={clsx(styles.Home, poppins.variable, roboto.variable)}>
-				<CategoryTabMenu categoryNames={categoryNames} categoryIndex={categoryIndex} selectCategory={selectCategory} />
+				<CategoryTabMenuWrapper>
+					<CategoryTabMenu
+						selectedCategoryId={selectedCategoryId}
+						setSelectedCategoryId={setSelectedCategoryId}
+						selectCategory={selectCategory}
+						categoryIdList={categoryIdList}
+					/>
+				</CategoryTabMenuWrapper>
+
 				{user.isLogin ? (
 					<CategoryWithIsActive
 						categoryData={category_List || []}
 						currentPage={currentPage}
 						itemsPerPage={indicatorsPerPage}
-						categoryId={categoryId}
+						categoryId={selectedCategoryId}
 					/>
 				) : (
-					<Category
-						categoryData={category_List || []}
-						currentPage={currentPage}
-						itemsPerPage={indicatorsPerPage}
-						categoryId={categoryId}
-						setIsAlertModalOpen={setIsAlertModalOpen}
-					/>
+					<Category categoryData={category_List || []} currentPage={currentPage} itemsPerPage={indicatorsPerPage} categoryId={selectedCategoryId} />
 				)}
 				<Pagination
 					data_List={category_List}
@@ -97,17 +102,7 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 				/>
 			</main>
 			<Footer />
-			<DynamicAlertModal
-				isModalOpen={isAlertModalOpen}
-				setIsModalOpen={setIsAlertModalOpen}
-				size='small'
-				header='You need to login!'
-				body='Our service is required to login'
-				leftButtonContent='Cancle'
-				leftButtonHandler={() => setIsAlertModalOpen(false)}
-				rightButtonContent='Login'
-				rightButtonHandler={() => router.push(`${frontUrl}/login`)}
-			/>
+			<DynamicLoginAlertModal size='small' header='You need to login!' body='Our service is required to login' />
 		</>
 	);
 }

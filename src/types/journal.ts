@@ -1,5 +1,5 @@
 export type JournalParams_Type = {
-	contextId: number;
+	icon: string;
 	title: string;
 	body: string;
 };
