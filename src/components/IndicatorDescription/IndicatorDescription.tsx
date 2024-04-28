@@ -44,8 +44,8 @@ const IndicatorCardDescriptionContainer = styled.div<IndicatorCardDescriptionCon
 				-webkit-line-clamp: 3;
 				text-overflow: ellipsis;
 				overflow: hidden;
-				line-height: 1.3rem; // 좀 더 세밀한 조정을 하고싶다면 line-height를 지정하는 방법이 있다. 이 방법은 wrapper의 100% height의 크기가 바뀔때마다 재설정해야하는 단점이 있다.
-				font-size: 1.2rem;
+				line-height: 1.2rem; // 좀 더 세밀한 조정을 하고싶다면 line-height를 지정하는 방법이 있다. 이 방법은 wrapper의 100% height의 크기가 바뀔때마다 재설정해야하는 단점이 있다.
+				font-size: 1.1rem;
 				font-weight: 400;
 			}
 		}

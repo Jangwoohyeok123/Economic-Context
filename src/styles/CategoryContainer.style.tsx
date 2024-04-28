@@ -7,15 +7,15 @@ import styled from 'styled-components';
 export const CategoryContainer = styled.section`
 	padding-top: 50px;
 	display: grid;
-	grid-template-columns: 450px 450px 450px;
-	grid-auto-rows: 500px;
+	grid-template-columns: 31% 31% 31%;
+	grid-auto-rows: 51vh;
 	justify-content: space-between;
 	row-gap: 50px;
 
 	@media screen and (max-width: 1400px) {
 		padding-top: 50px;
 		display: grid;
-		grid-template-columns: 350px 350px 350px;
+		grid-template-columns: 48% 48%;
 		grid-auto-rows: 400px;
 		justify-content: space-between;
 		row-gap: 50px;
