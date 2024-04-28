@@ -4,7 +4,7 @@ import { changeCategoryIdToColor, changeCategoryIdToName } from '@/utils/changeN
 import styled from 'styled-components';
 
 const ContextTableContainer = styled.div`
-	height: 55%;
+	height: calc(100% - 300px);
 	width: 100%;
 	margin-bottom: 20px;
 
@@ -19,7 +19,7 @@ const ContextTableContainer = styled.div`
 		justify-content: space-between;
 		align-items: center;
 		background: var(--bgColor);
-		border-bottom: none;
+		border-bottom: 1px solid #ccc;
 		padding: 0 30px 0 25px;
 
 		> .favoriteListHeader {
@@ -43,7 +43,7 @@ const ContextTableContainer = styled.div`
 
 	.tableBody {
 		overflow-y: scroll;
-		height: calc(100% - 35px);
+		height: calc(100% - 30px);
 
 		&::-webkit-scrollbar {
 			width: 3px;
@@ -63,6 +63,8 @@ const ContextTableContainer = styled.div`
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
+			border-bottom: 1px solid #ccc;
+			height: 40px;
 			padding-left: 20px;
 
 			div {
