@@ -16,23 +16,34 @@ import CategoryTabMenu from '../categoryTabMenu/CategoryTabMenu';
 const FavoriteContainer = styled.section`
 	display: flex;
 	width: 100%;
-	height: calc(100vh - var(--headerSize) - 30px * 2); // 100vh - headerSize - padding * 2 - menuSize
-	justify-content: space-evenly;
+	height: calc(100vh - var(--headerSize));
+	padding: 20px 40px;
+	justify-content: space-between;
 `;
 
-const LeftContainer = styled.section`
+const LeftContainer = styled.div`
 	width: 50%;
-	height: 100%;
+	overflow: hidden;
 
+	// Tabmenu는 고정px
+	.categoryTabMenuWrapper {
+		width: 550px;
+		min-height: 140px;
+		margin: 0 auto;
+		display: flex;
+		align-items: center;
+	}
+
+	// favoriteList는 나머지 여백
 	.favoriteList {
-		height: calc(100% - var(--headerSize) - 20px);
+		height: calc(100% - 180px);
 		overflow-y: auto;
 		transition: 0.5s;
 
 		> .item {
 			padding: 0 20px;
 			width: 100%;
-			height: 60px;
+			height: 50px;
 			display: flex;
 			align-items: center;
 			border-top: 1px solid #ccc;
@@ -43,7 +54,8 @@ const LeftContainer = styled.section`
 			}
 
 			&:hover {
-				background: #ddd;
+				cursor: pointer;
+				background: var(--bgColor);
 			}
 
 			h4 {
@@ -57,7 +69,7 @@ const LeftContainer = styled.section`
 			align-items: center;
 			gap: 20px;
 			width: 100%;
-			height: 40px;
+			height: 35px;
 			background: var(--bgColor2);
 
 			input[type='checkbox'] {
@@ -93,13 +105,16 @@ const LeftContainer = styled.section`
 `;
 
 // 위아래패딩은 30px로 가봅시다.
-const RightContainer = styled.section`
+const RightContainer = styled.div`
 	width: 40%;
-	background: #fff;
-	padding: 30px 40px;
+	height: 100%;
+	overflow: hidden;
+	background-color: var(--bgColor);
+	padding: 20px 40px;
 
+	// 100 85 60
 	> .header {
-		height: 15%;
+		height: 100px;
 
 		h2 {
 			font-weight: 500;
@@ -111,7 +126,10 @@ const RightContainer = styled.section`
 	}
 
 	> .contextName {
-		height: 15%;
+		height: 85px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
 
 		> div {
 			display: flex;
@@ -130,6 +148,8 @@ const RightContainer = styled.section`
 		input {
 			width: 100%;
 			padding: 10px 10px;
+			border-radius: 8px;
+			border: 1px solid var(--bgColor2);
 
 			&::placeholder {
 				opacity: 0.8;
@@ -141,27 +161,12 @@ const RightContainer = styled.section`
 		}
 	}
 
-	> .features {
-		display: flex;
-		gap: 20px;
-		padding-bottom: 10px;
-
-		span {
-			background: #dfdfdf;
-			padding: 3px 15px;
-			border-radius: 10px;
-
-			&:hover {
-				cursor: pointer;
-			}
-		}
-	}
-
 	> .createButtonWrapper {
 		text-align: right;
 
 		button {
-			padding: 10px 20px;
+			height: 40px;
+			padding: 0 10px;
 			border: none;
 			background: #222;
 			color: white;
@@ -174,8 +179,6 @@ const RightContainer = styled.section`
 `;
 
 export default function IndicatorsTab() {
-	const [isValidateModal, setIsValidateModal] = useState<boolean>(false);
-
 	const { deleteFavoriteMutationAll } = useFavoriteMutation();
 	const { allFavorites_List } = useFavoriteQuery();
 	const [currentCategoryId, setCurrentCategoryId] = useState<number>(const_categoryId.interest_mortgage);
@@ -194,8 +197,6 @@ export default function IndicatorsTab() {
 		});
 	};
 
-	const openAlertModal = () => setIsValidateModal(!isValidateModal);
-
 	const allClick = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { checked } = e.target;
 
@@ -212,59 +213,51 @@ export default function IndicatorsTab() {
 	};
 
 	return (
-		<div className={clsx(styles.IndicatorsTab)}>
-			<FavoriteContainer>
-				<LeftContainer>
+		<FavoriteContainer>
+			<LeftContainer>
+				<div className='categoryTabMenuWrapper'>
 					<CategoryTabMenu categoryIdList={categoryIds} selectedCategoryId={currentCategoryId} setSelectedCategoryId={setCurrentCategoryId} />
+				</div>
 
-					<div className='favoriteList' ref={refFavoriteList}>
-						<div className='favoriteListHeader'>
-							<input type='checkbox' checked={isSubset(curFavorites_List, checkedFavorite_List)} onChange={allClick} />
-							<h4>Indicator</h4>
-						</div>
-						{curFavorites_List.length > 0
-							? curFavorites_List?.map((favoriteIndicator: FavoriteIndicator_Type, index: number) => {
-									const { title } = favoriteIndicator;
+				<div className='favoriteList' ref={refFavoriteList}>
+					<div className='favoriteListHeader'>
+						<input type='checkbox' checked={isSubset(curFavorites_List, checkedFavorite_List)} onChange={allClick} />
+						<h4>Indicator</h4>
+					</div>
+					{curFavorites_List.length > 0
+						? curFavorites_List?.map((favoriteIndicator: FavoriteIndicator_Type, index: number) => {
+								const { title } = favoriteIndicator;
 
-									return (
-										<div key={index} className='item' onClick={() => pickIndicator(favoriteIndicator)}>
-											<input
-												type='checkbox'
-												checked={checkedFavorite_List.some(checkedFavoriteIndicator => {
-													return checkedFavoriteIndicator.seriesId === favoriteIndicator.seriesId;
-												})}
-											/>
-											<h4>{title}</h4>
-										</div>
-									);
-							  })
-							: '이 페이지는 작업이 필요해'}
+								return (
+									<div key={index} className='item' onClick={() => pickIndicator(favoriteIndicator)}>
+										<input
+											type='checkbox'
+											checked={checkedFavorite_List.some(checkedFavoriteIndicator => {
+												return checkedFavoriteIndicator.seriesId === favoriteIndicator.seriesId;
+											})}
+										/>
+										<h4>{title}</h4>
+									</div>
+								);
+						  })
+						: '이 페이지는 작업이 필요해'}
+				</div>
+			</LeftContainer>
+			<RightContainer>
+				<div className='header'>
+					<h2>Create Context</h2>
+					<span>make your custom context</span>
+				</div>
+				<div className='contextName'>
+					<div>
+						<h3>Context Name</h3>
+						<Accordian />
 					</div>
-				</LeftContainer>
-				<RightContainer>
-					<div className='header'>
-						<h2>Create Context</h2>
-						<span>make your custom context</span>
-					</div>
-					<div className='contextName'>
-						<div>
-							<h3>Context Name</h3>
-							<Accordian />
-						</div>
-						<input type='text' placeholder='write your context name' />
-					</div>
+					<input type='text' placeholder='write your context name' />
+				</div>
 
-					<CreateContextSection
-						checkedFavorite_List={checkedFavorite_List}
-						setCheckedFavorite_List={setCheckedFavorite_List}
-						isValidateModal={isValidateModal}
-						setIsValidateModalOpen={setIsValidateModal}
-					/>
-				</RightContainer>
-			</FavoriteContainer>
-			{/* 
-				카드를 하나라도 선택하라는 경고문구를 갖는 모달이 필요함
-			*/}
-		</div>
+				<CreateContextSection checkedFavorite_List={checkedFavorite_List} setCheckedFavorite_List={setCheckedFavorite_List} />
+			</RightContainer>
+		</FavoriteContainer>
 	);
 }

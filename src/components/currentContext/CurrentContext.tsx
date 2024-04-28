@@ -8,6 +8,7 @@ import { Context_Type } from '@/types/context';
 import { getContext } from '@/api/context';
 import { FavoriteIndicator_Type } from '@/types/favorite';
 import CategoryTabMenu from '../categoryTabMenu/CategoryTabMenu';
+import Loading from '../loading/Loading';
 
 interface CurrentContext_Props {
 	currentContextId: number;
@@ -19,7 +20,7 @@ export default function CurrentContext({ currentContextId }: CurrentContext_Prop
 		queryFn: () => getContext(currentContextId)
 	});
 
-	if (isLoading) return <div>Loading...</div>;
+	if (isLoading) return <Loading />;
 
 	const [seriesIds, categoryIds]: [string[], number[]] = [[], []];
 	currentContext?.customIndicators.forEach((indicator: FavoriteIndicator_Type) => {
@@ -27,11 +28,5 @@ export default function CurrentContext({ currentContextId }: CurrentContext_Prop
 		categoryIds.push(indicator.categoryId);
 	});
 
-	return (
-		<section className={clsx(styles.CurrentContext)}>
-			{/* <CategoryTabMenu /> */}
-			{/* {seriesIds && <ChartSwiper seriesIds={seriesIds} />} */}
-			{seriesIds && categoryIds && <ChartList seriesIds={seriesIds} categoryIds={categoryIds} />}
-		</section>
-	);
+	return <section className={clsx(styles.CurrentContext)}></section>;
 }

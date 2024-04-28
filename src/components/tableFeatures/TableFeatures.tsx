@@ -4,10 +4,15 @@ import { MdOutlineDeleteOutline } from 'react-icons/md';
 import { MdOutlineRefresh } from 'react-icons/md';
 import React from 'react';
 
+// height 60px;
 const FeaturesContainer = styled.div`
-	display: flex;
-	gap: 20px;
+	height: 30px;
+	padding-top: 20px;
 	padding-bottom: 10px;
+	display: flex;
+	/* background-color: #aaa; */
+	align-items: center;
+	gap: 20px;
 	justify-content: right;
 
 	span {
