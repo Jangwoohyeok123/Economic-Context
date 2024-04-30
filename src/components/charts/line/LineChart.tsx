@@ -120,7 +120,7 @@ export interface LineChart_Props {
 const LineChart = ({ categoryId, values: values_List, width = 20, height = 30, className }: LineChart_Props) => {
 	const rootSvgRef = useRef<SVGSVGElement>(null);
 	const rootSvgContainerRef = useRef<HTMLDivElement>(null);
-	const [duration, setDuration] = useState<number>(5);
+	const [duration, setDuration] = useState<number>(10);
 	const lastDate = values_List[values_List.length - 1].date;
 	const preparedValues_List: DateAndValue_Type[] = prepareValues_ListByPeriod(duration, values_List, lastDate);
 
@@ -157,7 +157,7 @@ const LineChart = ({ categoryId, values: values_List, width = 20, height = 30, c
 			renderChartSvg(rootSvgRef.current, preparedValues_List, height, duration);
 		}
 
-		setDuration(5);
+		setDuration(10);
 	}, [values_List]);
 
 	return (

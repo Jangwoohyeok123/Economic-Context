@@ -3,12 +3,13 @@ import { cleanString } from '@/utils/cleanString';
 import { frontUrl } from '@/pages/_app';
 import { DateAndValue_Type, Indicator_Type } from '@/types/fred';
 import LineChart from '@/components/charts/line/LineChart';
-import { useEffect, useState } from 'react';
 import { getChartData } from '@/api/fred';
 import styled from 'styled-components';
 import getVolatility from '@/utils/getVolatility';
 import Loading from '@/components/loading/Loading';
 import IndicatorDescription from '@/components/IndicatorDescription/IndicatorDescription';
+import { useQuery } from '@tanstack/react-query';
+import const_queryKey from '@/const/queryKey';
 
 export interface IndicatorCardContainer_Props {
 	$volatility: number;
@@ -53,17 +54,18 @@ export default function IndicatorCard({ indicator, categoryId, currentPage }: In
 	const router = useRouter();
 	const cleandTitle = title ? cleanString(title) : 'title';
 	const routeMorePage = (seriesId: string) => router.push(`${frontUrl}/${seriesId}?title=${cleandTitle}&categoryId=${categoryId}`);
-	const [chartDatas, setChartDatas] = useState<DateAndValue_Type[]>([]);
 
-	useEffect(() => {
-		getChartData(seriesId).then(data => {
-			const { dataArray } = data;
-			setChartDatas(dataArray);
-		});
-	}, [seriesId, currentPage]);
+	const { data: chartDatas, isLoading } = useQuery<DateAndValue_Type[]>({
+		queryKey: [const_queryKey.fred, 'getChartData', seriesId],
+		queryFn: () =>
+			getChartData(seriesId).then(data => {
+				const { dataArray } = data;
+				return dataArray;
+			})
+	});
 
 	// chartData를 불러오는 로딩중에 보여줄 clipLoader
-	if (chartDatas.length === 0) return <Loading />;
+	if (isLoading || chartDatas === undefined || chartDatas.length === 0) return <Loading />;
 
 	const [prevData, lastData] = [Number(chartDatas[chartDatas.length - 2].value), Number(chartDatas[chartDatas.length - 1].value)];
 

@@ -8,13 +8,13 @@ import Category from '@/components/category/Category';
 import mainImage from '@/public/mainImage.jpg';
 import { useState } from 'react';
 import { Store_Type } from '@/types/redux';
-import { useQueries } from '@tanstack/react-query';
+import { useQueries, useQuery } from '@tanstack/react-query';
 import const_queryKey from '@/const/queryKey';
-import { getCategory_List } from '@/api/fred';
+import { getCategory_List, getChartData } from '@/api/fred';
 import { useSelector } from 'react-redux';
 import const_categoryId from '@/const/categoryId';
 import { categoryIdList } from './_app';
-import { Indicator_Type } from '@/types/fred';
+import { DateAndValue_Type, Indicator_Type } from '@/types/fred';
 import CategoryWithIsActive from '@/components/categoryWithIsAcitve/CategoryWithIsActive';
 import { roboto, poppins } from './_app';
 import Pagination from '@/components/pagination/Pagination';
@@ -32,30 +32,43 @@ const CategoryTabMenuWrapper = styled.div`
 `;
 
 interface Home_Props {
-	interest: Indicator_Type[];
-	exchange: Indicator_Type[];
-	production: Indicator_Type[];
-	consume: Indicator_Type[];
+	seriesId_List: string[];
+	exchangeChartData_List: any;
 }
 
-export default function Home({ interest, exchange, production, consume }: Home_Props) {
+export default function Home({ seriesId_List, exchangeChartData_List }: Home_Props) {
+	useQueries({
+		queries: seriesId_List.map((seriesId: string, index: number) => {
+			return {
+				queryKey: [const_queryKey.fred, 'getChartData', seriesId],
+				queryFn: () =>
+					getChartData(seriesId).then(data => {
+						const { dataArray } = data;
+						return dataArray;
+					}),
+				initialData: exchangeChartData_List,
+				staleTime: 1000 * 60 * 3,
+				gcTime: 1000 * 20
+			};
+		})
+	});
+
 	const user = useSelector((state: Store_Type) => state.user);
 
 	const [currentPage, setCurrentPage] = useState(1);
 	const [selectedCategoryId, setSelectedCategoryId] = useState(categoryIdList[0]);
 	const [selectedCategoryIdIndex, setSelectedCategoryIdIndex] = useState(0);
-	const initialStates = [interest, exchange, production, consume];
 	const indicatorsPerPage = 9;
 
 	const categoryQueries = useQueries({
 		queries: categoryIdList.map((categoryId: number) => ({
-			queryKey: [const_queryKey.category, `getCategory${categoryId}`, categoryId],
+			queryKey: [const_queryKey.category, `getCategory_List`, categoryId],
 			queryFn: () => getCategory_List(categoryId, 20),
-			staleTime: 1000 * 60 * 10
+			staleTime: 1000 * 60 * 30
 		}))
 	});
 
-	const category_List = categoryQueries[selectedCategoryIdIndex]?.data as Indicator_Type[];
+	const category_List = categoryQueries[selectedCategoryIdIndex].data as Indicator_Type[];
 
 	const selectCategory = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
 		e.preventDefault();
@@ -107,34 +120,39 @@ export default function Home({ interest, exchange, production, consume }: Home_P
 	);
 }
 
+//
 export async function getStaticProps() {
-	const baseUrl = 'https://api.stlouisfed.org/fred/';
-
-	const requests = [
-		axios.get(
-			`${baseUrl}category/series?category_id=${const_categoryId.interest_mortgage}&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`
-		),
-		axios.get(`${baseUrl}category/series?category_id=${const_categoryId.exchange}&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`),
-		axios.get(`${baseUrl}category/series?category_id=${const_categoryId.production}&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`),
-		axios.get(`${baseUrl}category/series?category_id=${const_categoryId.consume}&api_key=${process.env.NEXT_PUBLIC_FREDKEY}&file_type=json`)
-	];
+	const baseUrl = process.env.NEXT_PUBLIC_FRED_BASEURL;
+	const apiKey = process.env.NEXT_PUBLIC_FREDKEY;
 
 	try {
-		const [interest, exchange, production, consume] = await Promise.all(requests);
+		const response1 = await fetch(`${baseUrl}category/series?category_id=${const_categoryId.exchange}&api_key=${apiKey}&file_type=json&limit=20`);
+		const exchangeCategory_List = await response1.json();
+		const seriesId_List = exchangeCategory_List.seriess.map((series: Indicator_Type) => series.id);
+
+		const json = await axios.get(`${baseUrl}series/observations?series_id=${seriesId_List[0]}&api_key=${apiKey}&file_type=json`);
+
+		const { observations } = json.data;
+
+		const dataArray = observations.map((element: DateAndValue_Type) => {
+			if (element.value === '.') element.value = 0;
+			return {
+				date: element.date,
+				value: Number(element.value)
+			};
+		});
 
 		return {
 			props: {
-				interest: interest.data.seriess,
-				exchange: exchange.data.seriess,
-				production: production.data.seriess,
-				consume: consume.data.seriess
+				seriesId_List: seriesId_List,
+				exchangeChartData_List: dataArray
 			}
 		};
 	} catch (error) {
-		console.error('API 호출 중 오류가 발생했습니다:', error);
+		console.error('Error fetching data:', error);
 		return {
 			props: {
-				error: '데이터를 불러오는 데 실패했습니다.'
+				exchangeDatas: 'error'
 			}
 		};
 	}
