@@ -10,11 +10,11 @@ export default function NoDataJournal() {
 			<div className={clsx(styles.img)}>
 				<Image src={noJournal} alt={'NoDataJournal Image'} priority />
 			</div>
-			<h3>Interest Contexts</h3>
+			<h3>There is no journal entry...</h3>
 			<p>
-				Let&apos;s save indicators of interesting topics
+				Based on an interesting context,
 				<br />
-				to create our own convenient context folders!
+				Write a new journal entry!
 			</p>
 		</div>
 	);
