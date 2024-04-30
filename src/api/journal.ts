@@ -31,7 +31,7 @@ export const getContextJournal_List = async (contextId: number): Promise<Journal
 	}
 };
 
-export const getAllJournal = async () => {
+export const getJournalsByUserId = async (userId: number): Promise<JournalData_Type[]> => {
 	try {
 		if (typeof window === 'undefined') {
 			throw new Error('This function can only be used in the client-side');
@@ -41,7 +41,7 @@ export const getAllJournal = async () => {
 		if (!token) {
 			throw new Error('No token found in sessionStorage');
 		}
-		const response = await axios.get(`${backendUrl}/journal`, {
+		const response = await axios.get(`${backendUrl}/journal/${userId}`, {
 			headers: {
 				Authorization: `Bearer ${token}`
 			}

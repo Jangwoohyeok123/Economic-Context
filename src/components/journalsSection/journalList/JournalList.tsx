@@ -5,13 +5,15 @@ import { Menu, MenuItem, IconButton } from '@mui/material';
 import { RiMoreLine, RiDeleteBin6Line } from 'react-icons/ri';
 import { MdModeEdit } from 'react-icons/md';
 import { useState } from 'react';
-import { getAllJournal } from '@/api/journal';
+import { getJournalsByUserId } from '@/api/journal';
 import const_queryKey from '@/const/queryKey';
 import { useQuery } from '@tanstack/react-query';
 import { JournalData_Type } from '@/types/journal';
 import JournalForm from '../journalForm/JournalForm';
 import { changeDateToRelativeTime } from '@/utils/changeDate';
 import NoDataJournal from './NoDataJournal';
+import { Store_Type } from '@/types/redux';
+import { useSelector } from 'react-redux';
 
 interface JournalList_Props {
 	type?: string;
@@ -20,10 +22,10 @@ interface JournalList_Props {
 export default function JournalList({ type }: JournalList_Props) {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
-
+	const userId = useSelector((state: Store_Type) => state.user.id);
 	const { data: AllJournal_List, isLoading } = useQuery<JournalData_Type[]>({
 		queryKey: [const_queryKey.journal, 'journal'],
-		queryFn: () => getAllJournal()
+		queryFn: () => getJournalsByUserId(userId)
 	});
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -80,7 +82,6 @@ export default function JournalList({ type }: JournalList_Props) {
 									</Menu>
 								</header>
 								<div className='body'>{journal.body}</div>
-								{/*TODO:: <div className='icon'>아이콘 선택 menu</div> */}
 							</div>
 						</Journal>
 					);

@@ -8,13 +8,17 @@ import { useSelector } from 'react-redux';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 import { FcIdea, FcApproval, FcCloseUpMode, FcClock } from 'react-icons/fc';
 import { DropDownMenu, Dropdown, Form, JournalFormWrap } from '@/styles/Journal.style';
-import CustomizedDividers from './FormStylingButton';
+import dynamic from 'next/dynamic';
+import 'react-quill/dist/quill.snow.css'; //
 import ProfileImage from '@/components/common/profileImage/ProfileImage';
 
+const ReactQuill = dynamic(import('react-quill'), {
+	ssr: false,
+	loading: () => <p>Loading ...</p>
+});
 interface JournalForm_Props {
 	contextId: number;
 }
-
 export default function JournalForm({ contextId }: JournalForm_Props) {
 	const userId = useSelector((state: Store_Type) => state.user.id);
 	const [journalDataParams, setJournalDataParams] = useState({ icon: 'idea', title: '', body: '' });
@@ -22,7 +26,7 @@ export default function JournalForm({ contextId }: JournalForm_Props) {
 	const [IconButtonText, setIconButtonText] = useState('icon');
 	const queryClient = useQueryClient();
 	const iconList = ['idea', 'approval', 'flower', 'clock'];
-
+	const [content, setContent] = useState('');
 	const addJournalMutation = useMutation({
 		mutationFn: ({ userId, contextId, journalDataParams }: { userId: number; contextId: number; journalDataParams: JournalParams_Type }) =>
 			addJournal(userId, contextId, journalDataParams),
@@ -44,10 +48,6 @@ export default function JournalForm({ contextId }: JournalForm_Props) {
 			// alert('모두 작성해주세요.');
 		}
 	};
-	interface ContextType {
-		id: number;
-		name: string;
-	}
 	const changeJournalInputData = (
 		e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement> | React.MouseEvent<HTMLLIElement>,
 		icon?: string
@@ -109,7 +109,6 @@ export default function JournalForm({ contextId }: JournalForm_Props) {
 				<Form onSubmit={requestAddJournal}>
 					<div className='formHeader'>
 						<span>journal</span>
-						<CustomizedDividers />
 					</div>
 					<div className='formBody'>
 						<label>Context</label>
@@ -136,8 +135,15 @@ export default function JournalForm({ contextId }: JournalForm_Props) {
 						</DropDownMenu>
 						<label htmlFor='title'>Title</label>
 						<input type='text' name='title' placeholder='Journal의 제목을 작성해주세요.' onChange={e => changeJournalInputData(e)} />
-						<label htmlFor='body'>Body</label>
-						<textarea name='body' rows={5} placeholder='Journal의 본문을 작성해주세요.' onChange={e => changeJournalInputData(e)} />
+						<ReactQuill
+							theme={'snow'}
+							value={content}
+							onChange={setContent}
+							placeholder='Journal의 본문을 작성해주세요.'
+							style={{
+								width: '100%'
+							}}
+						/>
 					</div>
 					<div className='formButton'>
 						<button>등록</button>
