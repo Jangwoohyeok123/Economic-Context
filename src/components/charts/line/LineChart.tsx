@@ -168,7 +168,7 @@ const LineChart = ({ categoryId, values: values_List, width = 20, height = 30, c
 						<li className={duration === 1 ? 'active' : ''} onClick={() => setDuration(1)}>
 							1Y
 						</li>
-						<li className={duration === 5 ? 'active' : ''} onClick={() => setDuration(3)}>
+						<li className={duration === 5 ? 'active' : ''} onClick={() => setDuration(5)}>
 							5Y
 						</li>
 						<li className={duration === 10 ? 'active' : ''} onClick={() => setDuration(10)}>

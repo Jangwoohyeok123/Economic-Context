@@ -8,7 +8,7 @@ import Category from '@/components/category/Category';
 import mainImage from '@/public/mainImage.jpg';
 import { useState } from 'react';
 import { Store_Type } from '@/types/redux';
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 import const_queryKey from '@/const/queryKey';
 import { getCategory_List, getChartData } from '@/api/fred';
 import { useSelector } from 'react-redux';
@@ -31,24 +31,32 @@ const CategoryTabMenuWrapper = styled.div`
 	width: 550px;
 `;
 
+type ChartData_Type = {
+	date: string;
+	value: number;
+};
+
 interface Home_Props {
 	seriesId_List: string[];
-	exchangeChartData_List: any;
+	exchangeChartData_List: ChartData_Type[];
 }
 
 export default function Home({ seriesId_List, exchangeChartData_List }: Home_Props) {
 	useQueries({
 		queries: seriesId_List.map((seriesId: string, index: number) => {
 			return {
-				queryKey: [const_queryKey.fred, 'getChartData', seriesId],
+				queryKey: [const_queryKey.fred, 'getChartData', 'Exchange', seriesId],
 				queryFn: () =>
 					getChartData(seriesId).then(data => {
 						const { dataArray } = data;
 						return dataArray;
 					}),
-				initialData: exchangeChartData_List,
-				staleTime: 1000 * 60 * 3,
-				gcTime: 1000 * 20
+				initialData: exchangeChartData_List.map(item => ({
+					...item,
+					date: new Date(item.date)
+				})),
+				staleTime: 1000 * 60 * 5,
+				gcTime: 1000 * 60
 			};
 		})
 	});
@@ -120,7 +128,6 @@ export default function Home({ seriesId_List, exchangeChartData_List }: Home_Pro
 	);
 }
 
-//
 export async function getStaticProps() {
 	const baseUrl = process.env.NEXT_PUBLIC_FRED_BASEURL;
 	const apiKey = process.env.NEXT_PUBLIC_FREDKEY;
@@ -134,13 +141,7 @@ export async function getStaticProps() {
 
 		const { observations } = json.data;
 
-		const dataArray = observations.map((element: DateAndValue_Type) => {
-			if (element.value === '.') element.value = 0;
-			return {
-				date: element.date,
-				value: Number(element.value)
-			};
-		});
+		const dataArray = fixDataArray(observations);
 
 		return {
 			props: {
@@ -156,4 +157,28 @@ export async function getStaticProps() {
 			}
 		};
 	}
+}
+
+function fixDataArray(dataArray: DateAndValue_Type[]) {
+	let prevValue: string | number | null = null;
+
+	dataArray.forEach((curElement, index) => {
+		if (curElement.value !== '.') {
+			curElement.value = Number(curElement.value);
+			prevValue = curElement.value;
+		} else if (curElement.value === '.' && prevValue !== null) {
+			dataArray[index].value = Number(prevValue);
+		}
+	});
+
+	for (let i = dataArray.length - 1; i >= 0; i--) {
+		if (dataArray[i].value !== null) {
+			dataArray[i].value = Number(dataArray[i].value);
+			prevValue = dataArray[i].value;
+		} else if (dataArray[i].value === null && prevValue !== null) {
+			dataArray[i].value = Number(prevValue);
+		}
+	}
+
+	return dataArray;
 }

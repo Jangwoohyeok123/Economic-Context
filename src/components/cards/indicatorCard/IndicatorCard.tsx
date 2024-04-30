@@ -10,6 +10,7 @@ import Loading from '@/components/loading/Loading';
 import IndicatorDescription from '@/components/IndicatorDescription/IndicatorDescription';
 import { useQuery } from '@tanstack/react-query';
 import const_queryKey from '@/const/queryKey';
+import { changeCategoryIdToName } from '@/utils/changeNameToCategoryId';
 
 export interface IndicatorCardContainer_Props {
 	$volatility: number;
@@ -56,12 +57,14 @@ export default function IndicatorCard({ indicator, categoryId, currentPage }: In
 	const routeMorePage = (seriesId: string) => router.push(`${frontUrl}/${seriesId}?title=${cleandTitle}&categoryId=${categoryId}`);
 
 	const { data: chartDatas, isLoading } = useQuery<DateAndValue_Type[]>({
-		queryKey: [const_queryKey.fred, 'getChartData', seriesId],
+		queryKey: [const_queryKey.fred, 'getChartData', changeCategoryIdToName(categoryId), seriesId],
 		queryFn: () =>
 			getChartData(seriesId).then(data => {
 				const { dataArray } = data;
 				return dataArray;
-			})
+			}),
+		staleTime: 1000 * 60 * 5,
+		gcTime: 1000 * 60
 	});
 
 	// chartData를 불러오는 로딩중에 보여줄 clipLoader
