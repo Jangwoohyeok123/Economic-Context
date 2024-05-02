@@ -11,6 +11,7 @@ import IndicatorDescription from '@/components/IndicatorDescription/IndicatorDes
 import { useQuery } from '@tanstack/react-query';
 import const_queryKey from '@/const/queryKey';
 import { changeCategoryIdToName } from '@/utils/changeNameToCategoryId';
+import { fixDataArray } from '@/utils/fixDataArray';
 
 export interface IndicatorCardContainer_Props {
 	$volatility: number;
@@ -61,10 +62,10 @@ export default function IndicatorCard({ indicator, categoryId, currentPage }: In
 		queryFn: () =>
 			getChartData(seriesId).then(data => {
 				const { dataArray } = data;
-				return dataArray;
+				return fixDataArray(dataArray);
 			}),
 		staleTime: 1000 * 60 * 5,
-		gcTime: 1000 * 60
+		gcTime: 1000 * 1
 	});
 
 	// chartData를 불러오는 로딩중에 보여줄 clipLoader

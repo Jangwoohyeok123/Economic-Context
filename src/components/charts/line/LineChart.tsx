@@ -6,8 +6,6 @@ import makeDebouncedHandler from '@/utils/makeDebounceHandler';
 import { DateAndValue_Type } from '@/types/fred';
 import React, { useEffect, useRef, useState } from 'react';
 import { changeCategoryIdToColor } from '@/utils/changeNameToCategoryId';
-import Loading from '@/components/loading/Loading';
-import { setDefaultAutoSelectFamilyAttemptTimeout } from 'net';
 
 interface ChartContainer_Props {
 	width: number;
@@ -120,7 +118,7 @@ export interface LineChart_Props {
 const LineChart = ({ categoryId, values: values_List, width = 20, height = 30, className }: LineChart_Props) => {
 	const rootSvgRef = useRef<SVGSVGElement>(null);
 	const rootSvgContainerRef = useRef<HTMLDivElement>(null);
-	const [duration, setDuration] = useState<number>(10);
+	const [duration, setDuration] = useState<number>(5);
 	const lastDate = values_List[values_List.length - 1].date;
 	const preparedValues_List: DateAndValue_Type[] = prepareValues_ListByPeriod(duration, values_List, lastDate);
 
@@ -157,7 +155,7 @@ const LineChart = ({ categoryId, values: values_List, width = 20, height = 30, c
 			renderChartSvg(rootSvgRef.current, preparedValues_List, height, duration);
 		}
 
-		setDuration(10);
+		setDuration(5);
 	}, [values_List]);
 
 	return (

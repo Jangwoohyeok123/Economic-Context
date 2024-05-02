@@ -14,13 +14,14 @@ import { getCategory_List, getChartData } from '@/api/fred';
 import { useSelector } from 'react-redux';
 import const_categoryId from '@/const/categoryId';
 import { categoryIdList } from './_app';
-import { DateAndValue_Type, Indicator_Type } from '@/types/fred';
+import { Indicator_Type } from '@/types/fred';
 import CategoryWithIsActive from '@/components/categoryWithIsAcitve/CategoryWithIsActive';
 import { roboto, poppins } from './_app';
 import Pagination from '@/components/pagination/Pagination';
 import ClipLoader from 'react-spinners/ClipLoader';
 import SEO from '@/components/seo/SEO';
 import styled from 'styled-components';
+import { fixDataArray } from '@/utils/fixDataArray';
 
 const DynamicLoginAlertModal = dynamic(() => import('@/components/modals/loginAlertModal/LoginAlertModal'), { ssr: false });
 const CategoryTabMenu = dynamic(() => import('@/components/categoryTabMenu/CategoryTabMenu'), { ssr: false });
@@ -51,7 +52,7 @@ export default function Home({ seriesId_List, exchangeChartData_List }: Home_Pro
 						const { dataArray } = data;
 						return dataArray;
 					}),
-				initialData: exchangeChartData_List.map(item => ({
+				initialData: exchangeChartData_List[index].map(item => ({
 					...item,
 					date: new Date(item.date)
 				})),
@@ -138,10 +139,15 @@ export async function getStaticProps() {
 		const seriesId_List = exchangeCategory_List.seriess.map((series: Indicator_Type) => series.id);
 
 		const json = await axios.get(`${baseUrl}series/observations?series_id=${seriesId_List[0]}&api_key=${apiKey}&file_type=json`);
+		const promises = seriesId_List.map((seriesId: string) => {
+			return axios.get(`${baseUrl}series/observations?series_id=${seriesId}&api_key=${apiKey}&file_type=json`);
+		});
 
-		const { observations } = json.data;
+		const chartDataSets = await Promise.all(promises);
 
-		const dataArray = fixDataArray(observations);
+		const dataArray = chartDataSets.map(chartData => {
+			return fixDataArray(chartData.data.observations);
+		});
 
 		return {
 			props: {
@@ -157,28 +163,4 @@ export async function getStaticProps() {
 			}
 		};
 	}
-}
-
-function fixDataArray(dataArray: DateAndValue_Type[]) {
-	let prevValue: string | number | null = null;
-
-	dataArray.forEach((curElement, index) => {
-		if (curElement.value !== '.') {
-			curElement.value = Number(curElement.value);
-			prevValue = curElement.value;
-		} else if (curElement.value === '.' && prevValue !== null) {
-			dataArray[index].value = Number(prevValue);
-		}
-	});
-
-	for (let i = dataArray.length - 1; i >= 0; i--) {
-		if (dataArray[i].value !== null) {
-			dataArray[i].value = Number(dataArray[i].value);
-			prevValue = dataArray[i].value;
-		} else if (dataArray[i].value === null && prevValue !== null) {
-			dataArray[i].value = Number(prevValue);
-		}
-	}
-
-	return dataArray;
 }

@@ -117,10 +117,7 @@ export default function renderChartSvg(svg: SVGElement, periodValues_List: DateA
 		if (index > 0) tooltip.remove();
 	});
 
-	// 유효한 첫 번째 툴팁 요소 가져오기 (혹은 존재하지 않는 경우 null)
 	let tooltipElement: HTMLDivElement | null = null;
-	if (tooltips && tooltips.length > 0) tooltips.length > 0 ? (tooltips[0] as HTMLDivElement) : null;
-	// let tooltipElement = tooltips.length > 0 ? (tooltips[0] as HTMLDivElement) : null;
 
 	// 툴팁 요소가 없으면 새로 생성
 	if (!tooltipElement && svgWrapper) {
