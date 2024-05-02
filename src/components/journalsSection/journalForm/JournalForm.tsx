@@ -109,9 +109,6 @@ export default function JournalForm({ contextId }: JournalForm_Props) {
 				<Form onSubmit={requestAddJournal}>
 					<div className='formHeader'>
 						<span>journal</span>
-					</div>
-					<div className='formBody'>
-						<label>Context</label>
 						<DropDownMenu tabIndex={0} onBlur={e => blurDropdown(e)}>
 							<span className='dropdown' onClick={e => toggleDropBox(e)}>
 								<em>{showTextToIcon(IconButtonText)}</em>
@@ -133,13 +130,16 @@ export default function JournalForm({ contextId }: JournalForm_Props) {
 								</Dropdown>
 							)}
 						</DropDownMenu>
-						<label htmlFor='title'>Title</label>
-						<input type='text' name='title' placeholder='Journal의 제목을 작성해주세요.' onChange={e => changeJournalInputData(e)} />
+					</div>
+					<div className='formBody'>
+						<label htmlFor='title'>Add a title</label>
+						<input type='text' name='title' placeholder='Write a journal title' onChange={e => changeJournalInputData(e)} />
+						<label htmlFor='title'>Add a body</label>
 						<ReactQuill
 							theme={'snow'}
 							value={content}
 							onChange={setContent}
-							placeholder='Journal의 본문을 작성해주세요.'
+							placeholder='Write a journal entry'
 							style={{
 								width: '100%'
 							}}

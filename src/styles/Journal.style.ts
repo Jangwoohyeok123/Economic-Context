@@ -1,15 +1,15 @@
 import styled from 'styled-components';
 
-interface Journal_Props {
-	$type?: string;
-}
-
 export const JournalWrapper = styled.div`
 	width: 100%;
 	display: grid;
 	align-items: stretch;
 	gap: 12px 0;
 `;
+
+interface Journal_Props {
+	$type?: string;
+}
 
 export const Journal = styled.div<Journal_Props>`
 	width: 100%;
@@ -71,11 +71,6 @@ export const Journal = styled.div<Journal_Props>`
 		}
 	}
 `;
-
-interface Dropdown_Props {
-	$isDrop: boolean;
-}
-
 export const JournalFormWrap = styled.div`
 	width: 100%;
 	display: flex;
@@ -96,9 +91,11 @@ export const Form = styled.form`
 	.formHeader {
 		display: flex;
 		justify-content: space-between;
+		align-items: center;
 		border: 1px solid var(--chartHeaderColor);
 		border-radius: 5px 5px 0 0;
 		background-color: var(--bgColor);
+		padding-right: 20px;
 		> span {
 			line-height: 50px;
 			padding: 0 20px;
@@ -127,8 +124,8 @@ export const Form = styled.form`
 		border-radius: 0 0 5px 5px;
 		margin-bottom: 20px;
 		padding: 20px;
-		input,
-		textarea {
+		> input,
+		> textarea {
 			display: block;
 			width: 100%;
 			resize: none;
@@ -146,23 +143,63 @@ export const Form = styled.form`
 				font-family: var(--baseFont);
 			}
 		}
-		label {
+		> label,
+		.ql-picker-label {
 			display: block;
-			font-size: 1.1rem;
-			font-weight: 500;
+			font-size: 0.9rem;
+			font-weight: 200;
 			color: var(--fontColor);
 			padding: 0 10px 5px;
 		}
-		input {
+		> input {
 			height: 30px;
 			margin-bottom: 30px;
 			padding: 20px 10px;
 		}
-		textarea {
+		> textarea {
 			height: 200px;
 		}
-		> div {
-			text-align: right;
+		.quill > .ql-container > .ql-editor.ql-blank::before {
+			font-size: 0.8rem;
+			color: rgba(var(--fontColor-code), 0.4);
+			font-family: var(--baseFont);
+			font-style: normal;
+		}
+		.quill > .ql-container > .ql-editor {
+			color: var(--fontColor);
+		}
+		.ql-toolbar.ql-snow {
+			width: 100%;
+			display: flex;
+			justify-content: flex-end;
+			position: relative;
+			padding-left: 160px;
+		}
+
+		.ql-snow .ql-picker {
+			position: absolute;
+			left: 5px;
+			top: 50%;
+			transform: translateY(-50%);
+		}
+		.ql-snow .ql-picker.ql-header {
+			width: 160px;
+			height: 30px;
+		}
+		.ql-toolbar.ql-snow .ql-picker .ql-picker-label {
+			border: 1px solid var(--chartHeaderColor);
+			border-radius: 5px;
+			padding: 5px 10px;
+		}
+		.ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-options {
+			width: 100%;
+			border: 1px solid var(--chartHeaderColor);
+			box-shadow: none;
+		}
+		.ql-snow .ql-picker-options .ql-picker-item {
+			&:hover {
+				color: var(--pointColor2);
+			}
 		}
 	}
 	.formButton {
@@ -196,14 +233,12 @@ export const Form = styled.form`
 	}
 `;
 export const DropDownMenu = styled.div`
+	width: 60px;
 	display: flex;
 	flex-direction: column;
-	margin-bottom: 30px;
 	position: relative;
 	> .dropdown {
-		width: 20%;
 		height: 40px;
-		border: 1px solid #eee;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -211,10 +246,11 @@ export const DropDownMenu = styled.div`
 		font-weight: 500;
 		color: var(--fontColor);
 		cursor: pointer;
-		padding: 5px 10px;
+		padding: 0 5px;
 		border: 1px solid var(--chartHeaderColor);
 		border-radius: 5px;
 		text-align: center;
+		background: var(--bgColor-light);
 		> em {
 			display: flex;
 			width: 100%;
@@ -223,19 +259,25 @@ export const DropDownMenu = styled.div`
 		}
 	}
 `;
+interface Dropdown_Props {
+	$isDrop: boolean;
+}
 export const Dropdown = styled.ul<Dropdown_Props>`
 	position: absolute;
 	left: 0;
 	top: 40px;
-	width: 50%;
+	width: 100%;
 	z-index: 5;
 	display: ${props => (props.$isDrop ? 'flex' : 'none')};
 	flex-direction: column;
 	word-break: keep-all;
 	transition: 0.3s;
 	box-shadow: 5px 5px 20px rgba(var(--fontColor-code), 0.1);
+	border: 1px solid var(--chartHeaderColor);
+	border-radius: 5px;
 	> li {
 		text-align: center;
+		border-radius: 5px;
 		padding: 5px 0;
 		transition: 0.3s;
 		background-color: var(--bgColor-light);
