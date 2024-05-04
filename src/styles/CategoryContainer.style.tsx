@@ -16,7 +16,7 @@ export const CategoryContainer = styled.section`
 		padding-top: 50px;
 		display: grid;
 		grid-template-columns: 48% 48%;
-		grid-auto-rows: 400px;
+		grid-auto-rows: 520px;
 		justify-content: space-between;
 		row-gap: 50px;
 	}

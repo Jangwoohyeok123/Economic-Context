@@ -46,7 +46,7 @@ export default function Home() {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [selectedCategoryId, setSelectedCategoryId] = useState(categoryIdList[0]);
 	const [selectedCategoryIdIndex, setSelectedCategoryIdIndex] = useState(0);
-	const indicatorsPerPage = 9;
+	const indicatorsPerPage = 12;
 
 	const categoryQueries = useQueries({
 		queries: categoryIdList.map((categoryId: number) => ({
