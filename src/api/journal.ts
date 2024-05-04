@@ -1,22 +1,11 @@
 import { backendUrl } from '@/pages/_app';
+import { backendInstance } from '@/pages/axiosInstance';
 import { JournalData_Type, JournalParams_Type } from '@/types/journal';
 import axios from 'axios';
 
 export const getContextJournal_List = async (contextId: number): Promise<JournalData_Type[]> => {
 	try {
-		if (typeof window === 'undefined') {
-			throw new Error('This function can only be used in the client-side');
-		}
-
-		const token = sessionStorage.getItem('token');
-		if (!token) {
-			throw new Error('No token found in sessionStorage');
-		}
-		const response = await axios.get(`${backendUrl}/journal/${contextId}`, {
-			headers: {
-				Authorization: `Bearer ${token}`
-			}
-		});
+		const response = await backendInstance.get(`/journal/${contextId}`);
 		return response.data;
 	} catch (error: any) {
 		if (error.response) {
@@ -33,19 +22,7 @@ export const getContextJournal_List = async (contextId: number): Promise<Journal
 
 export const getAllJournal = async () => {
 	try {
-		if (typeof window === 'undefined') {
-			throw new Error('This function can only be used in the client-side');
-		}
-
-		const token = sessionStorage.getItem('token');
-		if (!token) {
-			throw new Error('No token found in sessionStorage');
-		}
-		const response = await axios.get(`${backendUrl}/journal`, {
-			headers: {
-				Authorization: `Bearer ${token}`
-			}
-		});
+		const response = await backendInstance.get(`/journal`);
 		return response.data;
 	} catch (error: any) {
 		if (error.response) {
@@ -62,15 +39,11 @@ export const getAllJournal = async () => {
 
 export const addJournal = async (userId: number, contextId: number, journalDataParams: JournalParams_Type) => {
 	try {
-		if (typeof window === 'undefined') {
-			throw new Error('This function can only be used in the client-side');
-		}
-
 		const token = sessionStorage.getItem('token');
 		if (!token) {
 			throw new Error('No token found in sessionStorage');
 		}
-		await axios.post(`${backendUrl}/journal/${userId}/${contextId}`, journalDataParams, {
+		await backendInstance.post(`/journal/${userId}/${contextId}`, journalDataParams, {
 			headers: {
 				Authorization: `Bearer ${token}`
 			}
@@ -88,19 +61,7 @@ export const addJournal = async (userId: number, contextId: number, journalDataP
 
 export const deleteJournal = async (journalId: number) => {
 	try {
-		if (typeof window === 'undefined') {
-			throw new Error('This function can only be used in the client-side');
-		}
-
-		const token = sessionStorage.getItem('token');
-		if (!token) {
-			throw new Error('No token found in sessionStorage');
-		}
-		await axios.delete(`${backendUrl}/journal/${journalId}`, {
-			headers: {
-				Authorization: `Bearer ${token}`
-			}
-		});
+		await backendInstance.delete(`/journal/${journalId}`);
 	} catch (error: any) {
 		if (error.response) {
 			console.error(`Error: ${error.response.status} - ${error.response.data}`);
@@ -114,19 +75,7 @@ export const deleteJournal = async (journalId: number) => {
 
 export const deleteJournal_List = async (contextId: number) => {
 	try {
-		if (typeof window === 'undefined') {
-			throw new Error('This function can only be used in the client-side');
-		}
-
-		const token = sessionStorage.getItem('token');
-		if (!token) {
-			throw new Error('No token found in sessionStorage');
-		}
-		await axios.delete(`${backendUrl}/journal/${contextId}`, {
-			headers: {
-				Authorization: `Bearer ${token}`
-			}
-		});
+		await backendInstance.delete(`/journal/${contextId}`);
 	} catch (error: any) {
 		if (error.response) {
 			console.error(`Error: ${error.response.status} - ${error.response.data}`);
@@ -140,26 +89,10 @@ export const deleteJournal_List = async (contextId: number) => {
 
 export const modifyJournal = async (journalId: number, title: string, body: string) => {
 	try {
-		if (typeof window === 'undefined') {
-			throw new Error('This function can only be used in the client-side');
-		}
-
-		const token = sessionStorage.getItem('token');
-		if (!token) {
-			throw new Error('No token found in sessionStorage');
-		}
-		await axios.put(
-			`${backendUrl}/journal/${journalId}`,
-			{
-				title: title,
-				body: body
-			},
-			{
-				headers: {
-					Authorization: `Bearer ${token}`
-				}
-			}
-		);
+		await backendInstance.put(`/journal/${journalId}`, {
+			title: title,
+			body: body
+		});
 	} catch (error: any) {
 		if (error.response) {
 			console.error(`Error: ${error.response.status} - ${error.response.data}`);

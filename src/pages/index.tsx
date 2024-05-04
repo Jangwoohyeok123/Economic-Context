@@ -22,6 +22,7 @@ import ClipLoader from 'react-spinners/ClipLoader';
 import SEO from '@/components/seo/SEO';
 import styled from 'styled-components';
 import { fixDataArray } from '@/utils/fixDataArray';
+import MainImage from '@/components/mainImage/MainImage';
 
 const DynamicLoginAlertModal = dynamic(() => import('@/components/modals/loginAlertModal/LoginAlertModal'), { ssr: false });
 const CategoryTabMenu = dynamic(() => import('@/components/categoryTabMenu/CategoryTabMenu'), { ssr: false });
@@ -39,7 +40,7 @@ type ChartData_Type = {
 
 interface Home_Props {
 	seriesId_List: string[];
-	exchangeChartData_List: ChartData_Type[];
+	exchangeChartData_List: ChartData_Type[][];
 }
 
 export default function Home({ seriesId_List, exchangeChartData_List }: Home_Props) {
@@ -92,9 +93,7 @@ export default function Home({ seriesId_List, exchangeChartData_List }: Home_Pro
 	return (
 		<>
 			<SEO title='Economic-Context' description='Economic indicators can be selected and utilized within myContext' />
-			<div className={clsx(styles.mainImage)}>
-				<Image src={mainImage} alt='mainImage for mainpage' aria-label='mainImage' placeholder='blur' objectFit='cover' quality={80} fill priority />
-			</div>
+			<MainImage />
 			<main className={clsx(styles.Home, poppins.variable, roboto.variable)}>
 				<CategoryTabMenuWrapper>
 					<CategoryTabMenu
@@ -134,19 +133,21 @@ export async function getStaticProps() {
 	const apiKey = process.env.NEXT_PUBLIC_FREDKEY;
 
 	try {
-		const response1 = await fetch(`${baseUrl}category/series?category_id=${const_categoryId.exchange}&api_key=${apiKey}&file_type=json&limit=20`);
-		const exchangeCategory_List = await response1.json();
+		const category_List = await fetch(
+			`${baseUrl}/category/series?category_id=${const_categoryId.exchange}&api_key=${apiKey}&file_type=json&limit=20`
+		);
+		const exchangeCategory_List = await category_List.json();
+
 		const seriesId_List = exchangeCategory_List.seriess.map((series: Indicator_Type) => series.id);
 
-		const json = await axios.get(`${baseUrl}series/observations?series_id=${seriesId_List[0]}&api_key=${apiKey}&file_type=json`);
 		const promises = seriesId_List.map((seriesId: string) => {
-			return axios.get(`${baseUrl}series/observations?series_id=${seriesId}&api_key=${apiKey}&file_type=json`);
+			return axios.get(`${baseUrl}/series/observations?series_id=${seriesId}&api_key=${apiKey}&file_type=json`);
 		});
 
 		const chartDataSets = await Promise.all(promises);
 
 		const dataArray = chartDataSets.map(chartData => {
-			return fixDataArray(chartData.data.observations);
+			return fixDataArray(chartData.data.observations, 'server');
 		});
 
 		return {

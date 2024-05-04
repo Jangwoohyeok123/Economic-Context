@@ -1,6 +1,11 @@
 import { DateAndValue_Type } from '@/types/fred';
 
-export function fixDataArray(dataArray: DateAndValue_Type[]) {
+interface fixDataArray {
+	dataArray: DateAndValue_Type[];
+	type: 'client' | 'server';
+}
+
+export function fixDataArray(dataArray: DateAndValue_Type[], type = 'client') {
 	let prevValue: string | number | null = null;
 
 	dataArray.forEach((curElement, index) => {
@@ -19,6 +24,13 @@ export function fixDataArray(dataArray: DateAndValue_Type[]) {
 		} else if (dataArray[i].value === null && prevValue !== null) {
 			dataArray[i].value = Number(prevValue);
 		}
+	}
+
+	if (type === 'client') {
+		return dataArray.map(item => ({
+			...item,
+			date: new Date(item.date)
+		}));
 	}
 
 	return dataArray;

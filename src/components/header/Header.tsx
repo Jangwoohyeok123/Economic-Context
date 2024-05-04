@@ -1,14 +1,10 @@
 import clsx from 'clsx';
 import styles from './Header.module.scss';
 import { Poppins } from 'next/font/google';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser, toggleLoginModal } from '@/actions/actions';
-import LoginAlertModal from '../modals/loginAlertModal/LoginAlertModal';
 import { Store_Type } from '@/types/redux';
-import { frontUrl } from '@/pages/_app';
 
 const poppins = Poppins({
 	subsets: ['latin'],
@@ -20,7 +16,6 @@ export default function Header() {
 	const isLogin = useSelector((state: Store_Type) => state.user.isLogin);
 	const dispatch = useDispatch();
 
-	// 나중에 조건부 렌더링 컴포넌트 분리
 	return (
 		<>
 			<header className={clsx(styles.Header, poppins.variable)}>

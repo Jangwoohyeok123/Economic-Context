@@ -1,7 +1,8 @@
 import { createGlobalStyle } from 'styled-components';
-import styled from 'styled-components';
 
 export const GlobalStyles = createGlobalStyle`
+
+
   :root {
 	  --bgColor-light: #fefefe;
 	  --bgColor-light-code: 254, 254, 254;
