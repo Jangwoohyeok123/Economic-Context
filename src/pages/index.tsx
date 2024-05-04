@@ -5,14 +5,12 @@ import styles from './Home.module.scss';
 import Footer from '@/components/footer/Footer';
 import dynamic from 'next/dynamic';
 import Category from '@/components/category/Category';
-import mainImage from '@/public/mainImage.jpg';
 import { useState } from 'react';
 import { Store_Type } from '@/types/redux';
 import { useQueries } from '@tanstack/react-query';
 import const_queryKey from '@/const/queryKey';
-import { getCategory_List, getChartData } from '@/api/fred';
+import { getCategory_List } from '@/api/fred';
 import { useSelector } from 'react-redux';
-import const_categoryId from '@/const/categoryId';
 import { categoryIdList } from './_app';
 import { Indicator_Type } from '@/types/fred';
 import CategoryWithIsActive from '@/components/categoryWithIsAcitve/CategoryWithIsActive';
@@ -21,11 +19,10 @@ import Pagination from '@/components/pagination/Pagination';
 import ClipLoader from 'react-spinners/ClipLoader';
 import SEO from '@/components/seo/SEO';
 import styled from 'styled-components';
-import { fixDataArray } from '@/utils/fixDataArray';
 import MainImage from '@/components/mainImage/MainImage';
 
 const DynamicLoginAlertModal = dynamic(() => import('@/components/modals/loginAlertModal/LoginAlertModal'), { ssr: false });
-const CategoryTabMenu = dynamic(() => import('@/components/categoryTabMenu/CategoryTabMenu'), { ssr: false });
+const CategoryTabMenu = dynamic(() => import('@/components/categoryTabMenu/CategoryTabMenu'), { ssr: true });
 
 const CategoryTabMenuWrapper = styled.div`
 	padding-top: 35px;
@@ -43,26 +40,7 @@ interface Home_Props {
 	exchangeChartData_List: ChartData_Type[][];
 }
 
-export default function Home({ seriesId_List, exchangeChartData_List }: Home_Props) {
-	useQueries({
-		queries: seriesId_List.map((seriesId: string, index: number) => {
-			return {
-				queryKey: [const_queryKey.fred, 'getChartData', 'Exchange', seriesId],
-				queryFn: () =>
-					getChartData(seriesId).then(data => {
-						const { dataArray } = data;
-						return dataArray;
-					}),
-				initialData: exchangeChartData_List[index].map(item => ({
-					...item,
-					date: new Date(item.date)
-				})),
-				staleTime: 1000 * 60 * 5,
-				gcTime: 1000 * 60
-			};
-		})
-	});
-
+export default function Home() {
 	const user = useSelector((state: Store_Type) => state.user);
 
 	const [currentPage, setCurrentPage] = useState(1);
@@ -126,42 +104,4 @@ export default function Home({ seriesId_List, exchangeChartData_List }: Home_Pro
 			<DynamicLoginAlertModal size='small' header='You need to login!' body='Our service is required to login' />
 		</>
 	);
-}
-
-export async function getStaticProps() {
-	const baseUrl = process.env.NEXT_PUBLIC_FRED_BASEURL;
-	const apiKey = process.env.NEXT_PUBLIC_FREDKEY;
-
-	try {
-		const category_List = await fetch(
-			`${baseUrl}/category/series?category_id=${const_categoryId.exchange}&api_key=${apiKey}&file_type=json&limit=20`
-		);
-		const exchangeCategory_List = await category_List.json();
-
-		const seriesId_List = exchangeCategory_List.seriess.map((series: Indicator_Type) => series.id);
-
-		const promises = seriesId_List.map((seriesId: string) => {
-			return axios.get(`${baseUrl}/series/observations?series_id=${seriesId}&api_key=${apiKey}&file_type=json`);
-		});
-
-		const chartDataSets = await Promise.all(promises);
-
-		const dataArray = chartDataSets.map(chartData => {
-			return fixDataArray(chartData.data.observations, 'server');
-		});
-
-		return {
-			props: {
-				seriesId_List: seriesId_List,
-				exchangeChartData_List: dataArray
-			}
-		};
-	} catch (error) {
-		console.error('Error fetching data:', error);
-		return {
-			props: {
-				exchangeDatas: 'error'
-			}
-		};
-	}
 }
