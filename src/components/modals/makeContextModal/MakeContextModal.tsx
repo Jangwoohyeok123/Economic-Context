@@ -12,14 +12,15 @@ import { addContext, getContextNameWithKey_List } from '@/api/context';
 import { ContextNameWithKey_Type } from '@/types/context';
 
 interface MakeModalProps {
+	contextName: string;
 	isModalOpen: boolean;
 	setIsModalOpen: Dispatch<SetStateAction<boolean>>;
 	children?: React.ReactNode;
-	pickedFavorites_List: FavoriteIndicator_Type[];
+	checkedFavorite_List: FavoriteIndicator_Type[];
 }
 
 // MakeContextModal컴포넌트는 true인 데이터를 전달받는다.
-export default function MakeContextModal({ pickedFavorites_List, isModalOpen, setIsModalOpen, children }: MakeModalProps) {
+export default function MakeContextModal({ contextName, checkedFavorite_List, isModalOpen, setIsModalOpen, children }: MakeModalProps) {
 	const userId = useSelector((state: Store_Type) => state.user.id);
 	const refInput = useRef<HTMLInputElement>(null);
 	const queryClient = useQueryClient();
@@ -41,9 +42,12 @@ export default function MakeContextModal({ pickedFavorites_List, isModalOpen, se
 		}
 	});
 
-	const makeContext = () => {
-		addContextMutation.mutate(pickedFavorites_List);
-	};
+	const makeContext = () => addContextMutation.mutate(checkedFavorite_List);
+
+	useEffect(() => {
+		if (!refInput.current) return;
+		refInput.current.value = contextName;
+	}, []);
 
 	return isModalOpen
 		? ReactDOM.createPortal(
@@ -60,7 +64,7 @@ export default function MakeContextModal({ pickedFavorites_List, isModalOpen, se
 						</div>
 						<div className={clsx(styles.pickedFavorites)}>
 							<h5>Indicators</h5>
-							<ul>{pickedFavorites_List.length}개의 지표를 선택하셨습니다.</ul>
+							<ul>{checkedFavorite_List.length}개의 지표를 선택하셨습니다.</ul>
 						</div>
 						<div className={clsx(styles.buttons)}>
 							<button

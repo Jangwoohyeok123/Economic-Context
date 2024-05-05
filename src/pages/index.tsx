@@ -28,7 +28,7 @@ const CategoryTabMenu = dynamic(() => import('@/components/categoryTabMenu/Categ
 const CategoryTabMenuWrapper = styled.div`
 	padding-top: 35px;
 	margin: 0 auto;
-	width: 600px;
+	width: 550px;
 `;
 
 interface Home_Props {

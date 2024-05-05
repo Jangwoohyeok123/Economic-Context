@@ -6,6 +6,8 @@ interface CateogoryName_Props {
 
 export const CategoryName = styled.span<CateogoryName_Props>`
 	background: ${Props => Props.$categoryColor};
+	color: #fff;
+	font-size: 0.8rem;
 	display: flex;
 	justify-content: center;
 	padding: 3px 5px;

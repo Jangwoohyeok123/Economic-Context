@@ -8,7 +8,7 @@ export const TabMenuWrap = styled.div`
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
-	gap: 20px;
+	gap: 15px;
 
 	button {
 		padding: 14px;
@@ -40,7 +40,7 @@ export const TabMenuWrap = styled.div`
 	}
 `;
 export const MenuButton = styled.button<MenuButton_Props>`
-	width: 120px;
+	width: 105px;
 	border: 1px solid ${props => props.$categoryColor};
 	color: ${props => props.$categoryColor};
 	&:hover {
