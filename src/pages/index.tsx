@@ -26,6 +26,17 @@ const CategoryTabMenuWrapper = styled.div`
 	padding-top: 35px;
 	margin: 0 auto;
 	width: 550px;
+
+	> div {
+		text-align: center;
+		margin: 30px auto;
+
+		h3 {
+			padding-bottom: 15px;
+			font-weight: 500;
+			font-size: 2rem;
+		}
+	}
 `;
 
 type ChartData_Type = {
@@ -72,6 +83,10 @@ export default function Home() {
 			<MainImage />
 			<main className={clsx(styles.Home, poppins.variable, roboto.variable)}>
 				<CategoryTabMenuWrapper>
+					<div>
+						<h3>Categorys</h3>
+						<span>Please choose one of the eight main categories.</span>
+					</div>
 					<CategoryTabMenu
 						selectedCategoryId={selectedCategoryId}
 						setSelectedCategoryId={setSelectedCategoryId}

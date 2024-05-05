@@ -6,9 +6,9 @@ import Image from 'next/image';
 export default function MainImage() {
 	return (
 		<MainImageContainer className={clsx(poppins.variable, roboto.variable)}>
-			<Image alt='mainpage Image' src='/public/mainImage-2.jpg' fill />
+			<Image alt='mainpage_Image' src='/mainImage.jpg' fill />
 			<article>
-				<h2>Create my own collection of economic indicators</h2>
+				<h2>Create your economic context</h2>
 			</article>
 		</MainImageContainer>
 	);
@@ -23,7 +23,9 @@ const MainImageContainer = styled.div`
 	position: relative;
 
 	img {
-		position: absolute;
+		top: 60px;
+		left: 0px;
+		height: 100%;
 	}
 
 	> article {
@@ -32,9 +34,10 @@ const MainImageContainer = styled.div`
 		margin: 0 auto;
 
 		h2 {
-			width: 400px;
+			padding-top: 100px;
+			width: 450px;
 			color: #fff;
-			font-size: 2rem;
+			font-size: 3rem;
 			font-weight: 400;
 		}
 	}
