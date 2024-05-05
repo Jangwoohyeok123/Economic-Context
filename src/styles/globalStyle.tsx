@@ -21,5 +21,19 @@ export const GlobalStyles = createGlobalStyle`
   	--chartHeaderSize: 28px;
 	  --chartPadding: 20px;
 	  --yellowColor: #f7e704;
+		--mobile: 768px;
+		--tablet: 1024px;
+		--laptop: 1400px;
   }
 `;
+
+/*
+$tablet: 1024px; // 769px ~ 1024px
+$mobile: 768px; // ~ 768px
+$dashMenuWidth: 250px;
+$dashMenuWidth-mobile: 180px;
+$headerSize: 60px;
+$tabPagePadding: 30px;
+
+
+*/

@@ -1,6 +1,4 @@
 import clsx from 'clsx';
-import Image from 'next/image';
-import axios from 'axios';
 import styles from './Home.module.scss';
 import Footer from '@/components/footer/Footer';
 import dynamic from 'next/dynamic';
@@ -22,7 +20,7 @@ import styled from 'styled-components';
 import MainImage from '@/components/mainImage/MainImage';
 
 const DynamicLoginAlertModal = dynamic(() => import('@/components/modals/loginAlertModal/LoginAlertModal'), { ssr: false });
-const CategoryTabMenu = dynamic(() => import('@/components/categoryTabMenu/CategoryTabMenu'), { ssr: true });
+const CategoryTabMenu = dynamic(() => import('@/components/categoryTabMenu/CategoryTabMenu'), { ssr: false });
 
 const CategoryTabMenuWrapper = styled.div`
 	padding-top: 35px;
