@@ -3,19 +3,15 @@ import const_queryKey from '@/const/queryKey';
 import { JournalParams_Type } from '@/types/journal';
 import { Store_Type } from '@/types/redux';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
 import { FcIdea, FcApproval, FcCloseUpMode, FcClock } from 'react-icons/fc';
 import { DropDownMenu, Dropdown, Form, JournalFormWrap } from '@/styles/Journal.style';
-import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css'; //
 import ProfileImage from '@/components/common/profileImage/ProfileImage';
+import QuillEditor from './QuillEditor';
 
-const ReactQuill = dynamic(import('react-quill'), {
-	ssr: false,
-	loading: () => <p>Loading ...</p>
-});
 interface JournalForm_Props {
 	contextId: number;
 }
@@ -26,7 +22,8 @@ export default function JournalForm({ contextId }: JournalForm_Props) {
 	const [IconButtonText, setIconButtonText] = useState('icon');
 	const queryClient = useQueryClient();
 	const iconList = ['idea', 'approval', 'flower', 'clock'];
-	const [content, setContent] = useState('');
+	const titleInputRef = useRef<HTMLInputElement>(null);
+	const [body, setBody] = useState('');
 	const addJournalMutation = useMutation({
 		mutationFn: ({ userId, contextId, journalDataParams }: { userId: number; contextId: number; journalDataParams: JournalParams_Type }) =>
 			addJournal(userId, contextId, journalDataParams),
@@ -39,46 +36,59 @@ export default function JournalForm({ contextId }: JournalForm_Props) {
 			console.error(error);
 		}
 	});
-
 	const requestAddJournal = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		if (journalDataParams.body) {
+
+		if (journalDataParams.title.length > 0 && journalDataParams.body.length > 0) {
 			addJournalMutation.mutate({ userId, contextId, journalDataParams });
 		} else {
-			// alert('모두 작성해주세요.');
+			if (!journalDataParams.title.length) {
+				return alert('제목을 작성해주세요.');
+			}
+			if (!body.length) {
+				return alert('본문을 작성해주세요.');
+			} else {
+				setJournalDataParams(prevParams => {
+					let newParams = { ...prevParams };
+					newParams = {
+						...newParams,
+						body: body
+					};
+					return newParams;
+				});
+			}
 		}
 	};
-	const changeJournalInputData = (
-		e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement> | React.MouseEvent<HTMLLIElement>,
-		icon?: string
-	) => {
-		e.preventDefault();
-		let newParams = { ...journalDataParams };
-		const target = e.target as HTMLInputElement | HTMLTextAreaElement;
-		if (target.value) {
-			const { name, value } = target; // e.target에서 name과 value를 추출
-			newParams = {
-				...journalDataParams,
-				[name]: value
-			};
-			setJournalDataParams(newParams);
-		} else if ((e.target instanceof SVGElement && icon) || (e.target instanceof HTMLLIElement && icon)) {
-			newParams = {
-				...journalDataParams,
-				icon: icon
-			};
-			setJournalDataParams(newParams);
-			setIconButtonText(icon);
-			setIsIconPopVisible(false);
-		}
-		console.log('newParams', newParams);
+	const onChangeJournalData = (type: string, content?: string) => {
+		setJournalDataParams(prevParams => {
+			let newParams = { ...prevParams };
+
+			// icon 업데이트
+			if (type === 'icon' && content) {
+				newParams = {
+					...newParams,
+					icon: content
+				};
+				setIconButtonText(content);
+				blurDropdown();
+			}
+
+			// title 업데이트
+			if (type === 'title' && titleInputRef?.current) {
+				newParams = {
+					...newParams,
+					title: titleInputRef.current.value
+				};
+			}
+
+			return newParams;
+		});
 	};
 	const toggleDropBox = (e: React.FormEvent<HTMLSpanElement>) => {
 		e.preventDefault();
 		setIsIconPopVisible(prev => !prev);
 	};
-	const blurDropdown = (e: React.FormEvent<HTMLDivElement>) => {
-		e.stopPropagation();
+	const blurDropdown = () => {
 		setIsIconPopVisible(false);
 	};
 	const showTextToIcon = (icon: string) => {
@@ -109,7 +119,7 @@ export default function JournalForm({ contextId }: JournalForm_Props) {
 				<Form onSubmit={requestAddJournal}>
 					<div className='formHeader'>
 						<span>journal</span>
-						<DropDownMenu tabIndex={0} onBlur={e => blurDropdown(e)}>
+						<DropDownMenu tabIndex={0} onBlur={() => blurDropdown()}>
 							<span className='dropdown' onClick={e => toggleDropBox(e)}>
 								<em>{showTextToIcon(IconButtonText)}</em>
 								{isIconPopVisible ? <BsChevronUp /> : <BsChevronDown />}
@@ -120,8 +130,8 @@ export default function JournalForm({ contextId }: JournalForm_Props) {
 										return (
 											<li
 												key={icon + index}
-												onClick={e => {
-													changeJournalInputData(e, icon);
+												onClick={() => {
+													onChangeJournalData('icon', icon);
 												}}>
 												{showTextToIcon(icon)}
 											</li>
@@ -133,17 +143,9 @@ export default function JournalForm({ contextId }: JournalForm_Props) {
 					</div>
 					<div className='formBody'>
 						<label htmlFor='title'>Add a title</label>
-						<input type='text' name='title' placeholder='Write a journal title' onChange={e => changeJournalInputData(e)} />
+						<input ref={titleInputRef} type='text' name='title' placeholder='Write a journal title' onChange={() => onChangeJournalData('title')} />
 						<label htmlFor='title'>Add a body</label>
-						<ReactQuill
-							theme={'snow'}
-							value={content}
-							onChange={setContent}
-							placeholder='Write a journal entry'
-							style={{
-								width: '100%'
-							}}
-						/>
+						<QuillEditor setBody={setBody} />
 					</div>
 					<div className='formButton'>
 						<button>등록</button>

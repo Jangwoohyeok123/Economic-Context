@@ -89,8 +89,8 @@ export default function JournalList({ type }: JournalList_Props) {
 			) : (
 				<NoDataJournal />
 			)}
-
-			{type === 'currentContext' && <JournalForm contextId={17} />}
+			{/* TODO:: contextid를 넘기지 않고, store에서 꺼내쓰도록 하기 */}
+			{type === 'currentContext' && <JournalForm contextId={23} />}
 		</JournalWrapper>
 	);
 }
