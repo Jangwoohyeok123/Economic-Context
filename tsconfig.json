@@ -3,7 +3,7 @@
 		"target": "es5",
 		"lib": ["dom", "dom.iterable", "esnext"],
 		"allowJs": true,
-		"downlevelIteration": true, // 이 옵션을 활성화
+		"downlevelIteration": true,
 		"skipLibCheck": true,
 		"strict": true,
 		"noEmit": true,
