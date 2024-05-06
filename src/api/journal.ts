@@ -1,5 +1,5 @@
 import { backendUrl } from '@/pages/_app';
-import { backendInstance } from '@/pages/axiosInstance';
+import { backendInstance } from '@/api/axiosInstance';
 import { JournalData_Type, JournalParams_Type } from '@/types/journal';
 import axios from 'axios';
 

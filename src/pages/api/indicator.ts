@@ -1,6 +1,6 @@
 import { Observation_Type } from '@/types/fred';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { fredInstance } from '../axiosInstance';
+import { fredInstance } from '../../api/axiosInstance';
 
 type ApiResponse = {
 	observations?: Observation_Type[];

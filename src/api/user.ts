@@ -1,4 +1,4 @@
-import { backendInstance } from '@/pages/axiosInstance';
+import { backendInstance } from '@/api/axiosInstance';
 import { JwtAndGoogleUserData_Type } from '@/types/user';
 
 export async function getJwtAndGoogleUserData(authCode: string): Promise<JwtAndGoogleUserData_Type> {

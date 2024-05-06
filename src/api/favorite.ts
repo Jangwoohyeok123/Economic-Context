@@ -1,5 +1,5 @@
 import { backendUrl } from '@/pages/_app';
-import { backendInstance } from '@/pages/axiosInstance';
+import { backendInstance } from '@/api/axiosInstance';
 import { FavoriteIndicator_Type } from '@/types/favorite';
 import axios from 'axios';
 

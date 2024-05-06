@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { fredInstance } from '../axiosInstance';
+import { fredInstance } from '../../api/axiosInstance';
 
 interface Observation {
 	date: string;
