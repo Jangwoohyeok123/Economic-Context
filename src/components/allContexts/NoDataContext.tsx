@@ -11,7 +11,7 @@ export default function NoDataContext({ setSelectedContext }: NoDataContext_Prop
 	return (
 		<div className={clsx(styles.NoDataContext)}>
 			<div className={clsx(styles.imgs)}>
-				<Image src={noContext} alt={'folder Image'} />
+				<Image src={noContext} alt={'folder Image'} priority />
 			</div>
 			<h3>Interest Contexts</h3>
 			<p>

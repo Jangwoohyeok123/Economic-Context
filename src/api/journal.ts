@@ -20,9 +20,21 @@ export const getContextJournal_List = async (contextId: number): Promise<Journal
 	}
 };
 
-export const getAllJournal = async () => {
+export const getJournalsByUserId = async (userId: number): Promise<JournalData_Type[]> => {
 	try {
-		const response = await backendInstance.get(`/journal`);
+		if (typeof window === 'undefined') {
+			throw new Error('This function can only be used in the client-side');
+		}
+
+		const token = sessionStorage.getItem('token');
+		if (!token) {
+			throw new Error('No token found in sessionStorage');
+		}
+		const response = await axios.get(`${backendUrl}/journal/${userId}`, {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		});
 		return response.data;
 	} catch (error: any) {
 		if (error.response) {
