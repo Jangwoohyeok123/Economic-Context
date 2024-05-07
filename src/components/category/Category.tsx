@@ -14,7 +14,7 @@ export default function Category({ categoryData, currentPage, itemsPerPage, cate
 		<S.CategoryContainer>
 			{categoryData.length > 0 &&
 				categoryData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((seriess: Indicator_Type, idx: number) => {
-					return <IndicatorCard key={idx} indicator={seriess} categoryId={categoryId} currentPage={currentPage}></IndicatorCard>;
+					return <IndicatorCard key={idx} indicator={seriess} categoryId={categoryId}></IndicatorCard>;
 				})}
 		</S.CategoryContainer>
 	);

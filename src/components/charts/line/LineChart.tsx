@@ -6,8 +6,6 @@ import makeDebouncedHandler from '@/utils/makeDebounceHandler';
 import { DateAndValue_Type } from '@/types/fred';
 import React, { useEffect, useRef, useState } from 'react';
 import { changeCategoryIdToColor } from '@/utils/changeNameToCategoryId';
-import Loading from '@/components/loading/Loading';
-import { setDefaultAutoSelectFamilyAttemptTimeout } from 'net';
 
 interface ChartContainer_Props {
 	width: number;
@@ -118,9 +116,10 @@ export interface LineChart_Props {
  * @className
  */
 const LineChart = ({ categoryId, values: values_List, width = 20, height = 30, className }: LineChart_Props) => {
+	const initialDuration = 1;
 	const rootSvgRef = useRef<SVGSVGElement>(null);
 	const rootSvgContainerRef = useRef<HTMLDivElement>(null);
-	const [duration, setDuration] = useState<number>(5);
+	const [duration, setDuration] = useState<number>(initialDuration);
 	const lastDate = values_List[values_List.length - 1].date;
 	const preparedValues_List: DateAndValue_Type[] = prepareValues_ListByPeriod(duration, values_List, lastDate);
 
@@ -157,7 +156,7 @@ const LineChart = ({ categoryId, values: values_List, width = 20, height = 30, c
 			renderChartSvg(rootSvgRef.current, preparedValues_List, height, duration);
 		}
 
-		setDuration(5);
+		setDuration(initialDuration);
 	}, [values_List]);
 
 	return (
@@ -168,7 +167,7 @@ const LineChart = ({ categoryId, values: values_List, width = 20, height = 30, c
 						<li className={duration === 1 ? 'active' : ''} onClick={() => setDuration(1)}>
 							1Y
 						</li>
-						<li className={duration === 5 ? 'active' : ''} onClick={() => setDuration(3)}>
+						<li className={duration === 5 ? 'active' : ''} onClick={() => setDuration(5)}>
 							5Y
 						</li>
 						<li className={duration === 10 ? 'active' : ''} onClick={() => setDuration(10)}>

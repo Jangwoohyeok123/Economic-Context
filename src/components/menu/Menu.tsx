@@ -29,32 +29,22 @@ export default function Menu({ selectedTab, setSelectedTab }: Menu_Props) {
 		mutationFn: (contextId: number) => deleteContext(contextId),
 		onSuccess() {
 			if (contextIdsWithNames) {
-				const newContextIdsWithNames = contextIdsWithNames.filter(
-					(context: ContextNameWithKey_Type) => context.name !== selectedTab
-				);
+				const newContextIdsWithNames = contextIdsWithNames.filter((context: ContextNameWithKey_Type) => context.name !== selectedTab);
 				queryClient.setQueryData([const_queryKey.context, 'names'], newContextIdsWithNames); // 내일 정리하기
 				queryClient.invalidateQueries({
 					queryKey: [const_queryKey.context, 'names']
 				});
 
 				if (contextIdsWithNames.length >= 2) {
-					// 왜 -1 ?
 					const currentIndex = contextIdsWithNames.findIndex((context: ContextNameWithKey_Type) => {
 						return context.name.trim() === selectedTab.trim();
 					});
 
 					setSelectedTab(contextIdsWithNames[currentIndex - 1].name);
 				} else {
-					// 통과
 					setSelectedTab(tabs[1]);
 				}
 			}
-
-			/*
-				contextIdsWithNames 가 2개 이상이라면
-				selectedTab 이 이전으로 이동한다.
-				만약, 1개라면 myContext Tab 으로 이동한다.
-			*/
 		},
 		onError(error) {
 			console.error(error);
@@ -88,10 +78,7 @@ export default function Menu({ selectedTab, setSelectedTab }: Menu_Props) {
 							const { id: contextId, name } = context;
 
 							return (
-								<div
-									key={index}
-									onClick={() => setSelectedTab(name)}
-									className={clsx(styles.context, { [styles.on]: selectedTab === name })}>
+								<div key={index} onClick={() => setSelectedTab(name)} className={clsx(styles.context, { [styles.on]: selectedTab === name })}>
 									<span>{name}</span>
 									<span className={clsx(styles.deleteIcon)} onClick={() => deleteContextMutation.mutate(contextId)}>
 										<RiDeleteBin6Line />
@@ -104,15 +91,3 @@ export default function Menu({ selectedTab, setSelectedTab }: Menu_Props) {
 		</aside>
 	);
 }
-
-/*
-								<div key={index} className={clsx(styles.context)}>
-									<span
-										onClick={() => setSelectedTab(context.name)}
-										className={selectedTab === context.name ? clsx(styles.on) : ''}>
-										{context.name}
-										<RiDeleteBin6Line />
-									</span>
-								</div>
-
-*/

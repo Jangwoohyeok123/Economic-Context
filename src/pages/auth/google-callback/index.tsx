@@ -15,8 +15,7 @@ export default function GoogleCallback() {
 		if (authCode) {
 			try {
 				const result = await getJwtAndGoogleUserData(authCode);
-				const { jwt, userData } = result;
-				sessionStorage.setItem('token', jwt);
+				const { userData } = result;
 				dispatch(loginUser(userData));
 				router.push('/');
 			} catch (error) {

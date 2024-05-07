@@ -9,8 +9,7 @@ import SEO from '@/components/seo/SEO';
 
 export default function Login() {
 	const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-	const redirectUrl =
-		process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URL || 'https://dev-economic-context.vercel.app/google-callback';
+	const redirectUrl = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URL || 'https://dev-economic-context.vercel.app/google-callback';
 
 	const googleLogin = () => {
 		const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(
@@ -22,16 +21,7 @@ export default function Login() {
 	return (
 		<div className={clsx(styles.Login, poppins.variable, roboto.variable)}>
 			<SEO title='Login' description='login to Economic Context' />
-			<Image
-				className={clsx(styles.background)}
-				src={loginBackground}
-				alt='login-background'
-				quality={100}
-				fill
-				style={{ objectFit: 'cover' }}
-				placeholder='blur'
-				priority
-			/>
+			<Image className={clsx(styles.background)} src={loginBackground} alt='login-background' quality={100} fill priority={true} />
 			<div className={clsx(styles.wrap)}>
 				<Link href={'/'} className={clsx(styles.logo)}>
 					<p>
