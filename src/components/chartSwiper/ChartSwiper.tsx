@@ -20,7 +20,6 @@ export default function ChartSwiper({ seriesIds }: ChartSwiper_Props) {
 			queryFn: () => getChartData(seriesId)
 		})),
 		combine: results => {
-			// value 로 이뤄진 Array 를 담은 Array (2 차원 배열)
 			const valuesArrays = results.map<DateAndValue_Type[]>(result => result.data?.dataArray || []);
 
 			return {

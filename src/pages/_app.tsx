@@ -1,6 +1,5 @@
 import '@/styles/Global.scss';
 import '@/styles/Reset.scss';
-
 import store from '@/store/store';
 import { Provider } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -10,6 +9,9 @@ import { Poppins, Roboto } from 'next/font/google';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import const_categoryId from '@/const/categoryId';
+import { GlobalStyles } from '@/styles/globalStyle';
+import { checkRouterPathname } from '@/utils/checkRouterPathname';
+import axios from 'axios';
 
 export const roboto = Roboto({
 	subsets: ['latin'],
@@ -24,27 +26,22 @@ export const poppins = Poppins({
 });
 
 export const categoryIdList = Object.values(const_categoryId);
-
 export const frontUrl = process.env.NEXT_PUBLIC_FRONT_URL;
 export const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-// 이 APP 컴포넌트에는 어떤 Props 를 사용할지 정의함
+const axiosInstance = axios.create({
+	baseURL: ''
+});
+
 export default function App({ Component, pageProps }: AppProps) {
 	const router = useRouter();
-	const checkRouterPathname = () => {
-		const pathname = router.pathname;
-		if (pathname === '/login') return false;
-		if (pathname === '/dashboard') return false;
-
-		return true;
-	};
-
 	const queryClient = new QueryClient();
 
 	return (
 		<Provider store={store}>
 			<QueryClientProvider client={queryClient}>
-				{checkRouterPathname() ? <Header /> : null}
+				<GlobalStyles />
+				{checkRouterPathname(router.pathname) ? <Header /> : null}
 				<Component {...pageProps} />
 				<ReactQueryDevtools initialIsOpen={false} />
 			</QueryClientProvider>
