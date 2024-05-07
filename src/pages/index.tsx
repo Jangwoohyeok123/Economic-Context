@@ -51,7 +51,6 @@ interface Home_Props {
 
 export default function Home() {
 	const user = useSelector((state: Store_Type) => state.user);
-
 	const [currentPage, setCurrentPage] = useState(1);
 	const [selectedCategoryId, setSelectedCategoryId] = useState(categoryIdList[0]);
 	const [selectedCategoryIdIndex, setSelectedCategoryIdIndex] = useState(0);
@@ -60,7 +59,7 @@ export default function Home() {
 	const categoryQueries = useQueries({
 		queries: categoryIdList.map((categoryId: number) => ({
 			queryKey: [const_queryKey.category, `getCategory_List`, categoryId],
-			queryFn: () => getCategory_List(categoryId, 20),
+			queryFn: () => getCategory_List(categoryId, 36),
 			staleTime: 1000 * 60 * 30
 		}))
 	});
@@ -83,8 +82,8 @@ export default function Home() {
 			<MainImage />
 			<main className={clsx(styles.Home, poppins.variable, roboto.variable)}>
 				<CategoryTabMenuWrapper>
-					<div>
-						<h3>Categorys</h3>
+					<div id='scrollTarget'>
+						<h3>CATEGORY</h3>
 						<span>Please choose one of the eight main categories.</span>
 					</div>
 					<CategoryTabMenu

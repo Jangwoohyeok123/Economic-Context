@@ -2,11 +2,15 @@ import styled from 'styled-components';
 import { roboto, poppins } from '@/pages/_app';
 import clsx from 'clsx';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
+import moveViewPort from '@/utils/moveViewPort';
 
 export default function MainImage() {
+	const router = useRouter();
+
 	return (
 		<MainImageContainer className={clsx(poppins.variable, roboto.variable)}>
-			<Image alt='mainpage_Image' src='/mainImage.jpg' fill />
+			<Image alt='mainpage_Image' src='/mainImage.jpg' fill priority={true} />
 			<article>
 				<h2>Trusted economic indicator</h2>
 				<p>make your economic context</p>
@@ -19,14 +23,14 @@ export default function MainImage() {
 						<div className='line'></div>
 					</div>
 					<div className='item'>
-						<span>20</span>
+						<span>160</span>
 						<div>Indicators</div>
 					</div>
 				</div>
 
 				<div className='buttons'>
-					<button>About</button>
-					<button>Login</button>
+					<button onClick={() => moveViewPort()}>About</button>
+					<button onClick={() => router.push('/login')}>Login</button>
 				</div>
 			</article>
 		</MainImageContainer>
@@ -35,7 +39,7 @@ export default function MainImage() {
 
 const MainImageContainer = styled.div`
 	font-family: var(--baseFont);
-	height: calc(var(--headerSize) + 55vh);
+	height: calc(100vh);
 	width: 100%;
 	position: relative;
 	display: flex;
@@ -80,12 +84,11 @@ const MainImageContainer = styled.div`
 				align-items: center;
 
 				> span {
-					font-size: 3.5rem;
+					font-size: 4rem;
 				}
 
 				.line {
 					margin: 0 auto;
-
 					width: 1px;
 					height: 50px;
 					background: #aaa;
@@ -101,11 +104,12 @@ const MainImageContainer = styled.div`
 			gap: 30px;
 
 			button {
-				width: 150px;
-				height: 40px;
+				width: 190px;
+				height: 50px;
 				border: none;
 				color: #fff;
 				cursor: pointer;
+				font-weight: 500;
 			}
 
 			button:nth-of-type(1) {

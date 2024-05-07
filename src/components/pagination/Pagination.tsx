@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import styles from './Pagination.module.scss';
+import moveViewPort from '@/utils/moveViewPort';
 
 interface Pagination_Props<T> {
 	data_List: T[];
@@ -31,11 +32,18 @@ export default function Pagination<T>({ data_List, currentPage, setCurrentPage, 
 	const moveToPrevPage = () => {
 		if (currentPage === 1) return;
 		setCurrentPage(currentPage - 1);
+		moveViewPort();
 	};
 
 	const moveToNextPage = () => {
 		if (currentPage === totalPage) return;
 		setCurrentPage(currentPage + 1);
+		moveViewPort();
+	};
+
+	const clickPage = (pageIndex: number) => {
+		setCurrentPage(pageIndex);
+		moveViewPort();
 	};
 
 	return (
@@ -45,7 +53,7 @@ export default function Pagination<T>({ data_List, currentPage, setCurrentPage, 
 			</li>
 			{page_List.map((pageIndex, index) => {
 				return (
-					<li key={index} onClick={() => setCurrentPage(pageIndex)} className={currentPage === pageIndex ? clsx(styles.on) : ''}>
+					<li key={index} onClick={() => clickPage(pageIndex)} className={currentPage === pageIndex ? clsx(styles.on) : ''}>
 						{pageIndex}
 					</li>
 				);
