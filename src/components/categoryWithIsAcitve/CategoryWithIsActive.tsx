@@ -42,9 +42,8 @@ const StarCotainer = styled.div`
 
 export default function CategoryWithIsActive({ categoryData, currentPage, itemsPerPage, categoryId }: CategoryWithIsActive_Props) {
 	const user = useSelector((state: Store_Type) => state.user);
-	const [categoryWithIsActive, setCategoryWithActive] = useState<FavoriteIndicatorWithIsActive_Type[]>([]); // 하... 나중에 리팩토링
+	const [categoryWithIsActive, setCategoryWithActive] = useState<FavoriteIndicatorWithIsActive_Type[]>([]);
 
-	// useQuery
 	const { data: favorite, isSuccess: isFavoriteExist } = useQuery({
 		queryKey: [const_queryKey.favorite, categoryId],
 		queryFn: () => getFavoriteCateogry_List(user.id, categoryId)

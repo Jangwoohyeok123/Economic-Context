@@ -3,8 +3,9 @@ import styles from './AllContexts.module.scss';
 import Image from 'next/image';
 import noContext from '@/public/noContext.png';
 import Button from '@mui/material/Button';
+import { Dispatch, SetStateAction } from 'react';
 interface NoDataContext_Props {
-	setSelectedContext: React.Dispatch<React.SetStateAction<string>>;
+	setSelectedContext: Dispatch<SetStateAction<string>>;
 }
 
 export default function NoDataContext({ setSelectedContext }: NoDataContext_Props) {

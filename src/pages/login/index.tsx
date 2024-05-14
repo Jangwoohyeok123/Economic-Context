@@ -3,7 +3,6 @@ import styles from './Login.module.scss';
 import loginBackground from '@/public/loginBackground.jpg';
 import Image from 'next/image';
 import { roboto, poppins } from '../_app';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 import SEO from '@/components/seo/SEO';
 
@@ -11,11 +10,11 @@ export default function Login() {
 	const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 	const redirectUrl = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URL || 'https://dev-economic-context.vercel.app/google-callback';
 
-	const googleLogin = () => {
+	const googleLoginAndRedirectUrl = () => {
 		const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(
 			redirectUrl
 		)}&response_type=code&scope=email profile`;
-		window.location.href = url; //
+		window.location.href = url;
 	};
 
 	return (
@@ -30,7 +29,7 @@ export default function Login() {
 					</p>
 				</Link>
 				<div className={clsx(styles.buttonWrap)}>
-					<div className={clsx(styles.loginButton)} onClick={googleLogin}>
+					<div className={clsx(styles.loginButton)} onClick={googleLoginAndRedirectUrl}>
 						<span>Google Login</span>
 					</div>
 					<span className={clsx(styles.terms)}>Please agree to the Terms of Use of Economic-Context</span>

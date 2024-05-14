@@ -1,11 +1,12 @@
 import clsx from 'clsx';
-import styles from './Header.module.scss';
 import { Poppins } from 'next/font/google';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser, toggleLoginModal } from '@/actions/actions';
 import { Store_Type } from '@/types/redux';
 import styled from 'styled-components';
+import Image from 'next/image';
+import { test } from '../../const/responsive';
 
 const poppins = Poppins({
 	subsets: ['latin'],
@@ -18,18 +19,18 @@ export default function Header() {
 	const dispatch = useDispatch();
 
 	return (
-		<NavContainer className={clsx(styles.Header, poppins.variable)}>
-			<nav className={clsx(styles.mainNav)}>
-				<h1>
-					<Link href='/'>EconomicContext</Link>
-				</h1>
+		<NavContainer className={clsx(poppins.variable)}>
+			<nav>
+				<Link href='/'>
+					<Image src='/logo.png' alt='logo' width={224} height={32} />
+				</Link>
 				{isLogin ? (
-					<div className={clsx(styles.users)}>
+					<div>
 						<Link href='/dashboard'>MyContext</Link>
 						<span onClick={() => dispatch(logoutUser())}>Logout</span>
 					</div>
 				) : (
-					<div className={clsx(styles.users)}>
+					<div>
 						<span onClick={() => dispatch(toggleLoginModal())}>MyContext</span>
 						<Link href='/login'>Login</Link>
 					</div>
@@ -49,44 +50,27 @@ const NavContainer = styled.header`
 	top: 0;
 	z-index: 10;
 
-	h1 {
-		font-weight: 500;
-	}
-
-	a,
-	span {
-		font-size: 1.2rem;
-	}
-
-	.users {
+	nav {
 		display: flex;
-		gap: 20px;
-
-		span {
-			cursor: pointer;
-		}
-	}
-
-	.mainNav {
-		width: 80%;
+		padding: 0 40px;
 		height: 100%;
-		margin: 0 auto;
-		display: flex;
 		justify-content: space-between;
 		align-items: center;
 
 		h1 {
-			display: flex;
-			justify-content: center;
-			align-items: center;
+			font-weight: 500;
+		}
+
+		a,
+		span {
+			font-size: 1.2rem;
 		}
 	}
 
-	@media screen and (max-width: var(--mobile)) {
-		.Header {
-			.mainNav {
-				width: 95%;
-			}
+	// screen의 크기가 최대 1000px까지
+	@media screen and (max-width: 800px) {
+		nav {
+			padding: 0 0px;
 		}
 	}
 `;
