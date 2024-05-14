@@ -40,7 +40,7 @@ export const TabMenuWrap = styled.div`
 	}
 `;
 export const MenuButton = styled.button<MenuButton_Props>`
-	width: 105px;
+	width: 120px;
 	border: 1px solid ${props => props.$categoryColor};
 	color: ${props => props.$categoryColor};
 	&:hover {

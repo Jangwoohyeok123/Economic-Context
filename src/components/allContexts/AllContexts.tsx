@@ -13,10 +13,11 @@ import { getAllContexts_List } from '@/api/context';
 import Folder from '@/public/folder.svg';
 import Tooltip from '@mui/material/Tooltip';
 import NoDataContext from './NoDataContext';
+import { Dispatch, SetStateAction } from 'react';
 
 interface AllContexts_Props {
 	selectedContext: string;
-	setSelectedContext: React.Dispatch<React.SetStateAction<string>>;
+	setSelectedContext: Dispatch<SetStateAction<string>>;
 }
 export default function AllContexts({ selectedContext, setSelectedContext }: AllContexts_Props) {
 	const userId = useSelector((store: Store_Type) => store.user.id);

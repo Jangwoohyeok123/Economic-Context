@@ -11,7 +11,9 @@ import { DropDownMenu, Dropdown, Form, JournalFormWrap } from '@/styles/Journal.
 import 'react-quill/dist/quill.snow.css';
 import ProfileImage from '@/components/common/profileImage/ProfileImage';
 import dynamic from 'next/dynamic';
+
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+
 const modules = {
 	toolbar: [
 		['bold', 'italic', 'underline', 'strike'], // 기본 툴바 옵션
@@ -21,9 +23,11 @@ const modules = {
 		['blockquote', 'code-block'] // 인용구와 코드 블록 옵션
 	]
 };
+
 interface JournalForm_Props {
 	contextId: number;
 }
+
 export default function JournalForm({ contextId }: JournalForm_Props) {
 	const userId = useSelector((state: Store_Type) => state.user.id);
 	const [journalDataParams, setJournalDataParams] = useState({ icon: 'idea', title: '', body: '' });
@@ -34,6 +38,7 @@ export default function JournalForm({ contextId }: JournalForm_Props) {
 	const titleInputRef = useRef<HTMLInputElement>(null);
 	const [quillValue, setQuillValue] = useState('');
 	const quillRef = useRef<typeof ReactQuill>(null);
+
 	const addJournalMutation = useMutation({
 		mutationFn: ({ userId, contextId, journalDataParams }: { userId: number; contextId: number; journalDataParams: JournalParams_Type }) =>
 			addJournal(userId, contextId, journalDataParams),
@@ -46,6 +51,7 @@ export default function JournalForm({ contextId }: JournalForm_Props) {
 			console.error(error);
 		}
 	});
+
 	const requestAddJournal = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (journalDataParams.title.length <= 0) {
@@ -56,9 +62,8 @@ export default function JournalForm({ contextId }: JournalForm_Props) {
 			setQuillValue('');
 			return alert('본문을 작성해주세요.');
 		} else {
-			let newParams = { ...journalDataParams };
-			newParams = {
-				...newParams,
+			const newParams = {
+				...journalDataParams,
 				body: quillValue
 			};
 			setJournalDataParams(newParams);
@@ -68,6 +73,7 @@ export default function JournalForm({ contextId }: JournalForm_Props) {
 			}
 		}
 	};
+
 	const onChangeJournalData = (type: string, content?: string) => {
 		setJournalDataParams(prevParams => {
 			let newParams = { ...prevParams };
@@ -93,13 +99,16 @@ export default function JournalForm({ contextId }: JournalForm_Props) {
 			return newParams;
 		});
 	};
+
 	const toggleDropBox = (e: React.FormEvent<HTMLSpanElement>) => {
 		e.preventDefault();
 		setIsIconPopVisible(prev => !prev);
 	};
+
 	const blurDropdown = () => {
 		setIsIconPopVisible(false);
 	};
+
 	const showTextToIcon = (icon: string) => {
 		let iconElement = <FcIdea />;
 		switch (icon) {
@@ -120,6 +129,7 @@ export default function JournalForm({ contextId }: JournalForm_Props) {
 		}
 		return iconElement;
 	};
+
 	return (
 		<JournalFormWrap>
 			<ProfileImage width={30} height={30} />

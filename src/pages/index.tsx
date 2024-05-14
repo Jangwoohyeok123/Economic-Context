@@ -14,10 +14,11 @@ import { Indicator_Type } from '@/types/fred';
 import CategoryWithIsActive from '@/components/categoryWithIsAcitve/CategoryWithIsActive';
 import { roboto, poppins } from './_app';
 import Pagination from '@/components/pagination/Pagination';
-import ClipLoader from 'react-spinners/ClipLoader';
 import SEO from '@/components/seo/SEO';
 import styled from 'styled-components';
 import MainImage from '@/components/mainImage/MainImage';
+import ClipLoader from 'react-spinners/ClipLoader';
+import Image from 'next/image';
 
 const DynamicLoginAlertModal = dynamic(() => import('@/components/modals/loginAlertModal/LoginAlertModal'), { ssr: false });
 const CategoryTabMenu = dynamic(() => import('@/components/categoryTabMenu/CategoryTabMenu'), { ssr: false });
@@ -59,7 +60,7 @@ export default function Home() {
 	const categoryQueries = useQueries({
 		queries: categoryIdList.map((categoryId: number) => ({
 			queryKey: [const_queryKey.category, `getCategory_List`, categoryId],
-			queryFn: () => getCategory_List(categoryId, 36),
+			queryFn: () => getCategory_List(categoryId, 30),
 			staleTime: 1000 * 60 * 30
 		}))
 	});
@@ -93,7 +94,7 @@ export default function Home() {
 						categoryIdList={categoryIdList}
 					/>
 				</CategoryTabMenuWrapper>
-
+				<Image src='/logo.png' alt='logo' width={300} height={35} />
 				{user.isLogin ? (
 					<CategoryWithIsActive
 						categoryData={category_List || []}
