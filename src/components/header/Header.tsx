@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import styles from './Header.module.scss';
 import { Poppins } from 'next/font/google';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,6 +6,7 @@ import { logoutUser, toggleLoginModal } from '@/actions/actions';
 import { Store_Type } from '@/types/redux';
 import styled from 'styled-components';
 import Image from 'next/image';
+import { test } from '../../const/responsive';
 
 const poppins = Poppins({
 	subsets: ['latin'],
@@ -22,7 +22,7 @@ export default function Header() {
 		<NavContainer className={clsx(poppins.variable)}>
 			<nav>
 				<Link href='/'>
-					<Image src='/logo.png' alt='logo' width={300} height={43} />
+					<Image src='/logo.png' alt='logo' width={224} height={32} />
 				</Link>
 				{isLogin ? (
 					<div>
@@ -52,6 +52,8 @@ const NavContainer = styled.header`
 
 	nav {
 		display: flex;
+		padding: 0 40px;
+		height: 100%;
 		justify-content: space-between;
 		align-items: center;
 
@@ -65,11 +67,10 @@ const NavContainer = styled.header`
 		}
 	}
 
-	@media screen and (max-width: var(--mobile)) {
-		.Header {
-			.mainNav {
-				width: 95%;
-			}
+	// screen의 크기가 최대 1000px까지
+	@media screen and (max-width: 800px) {
+		nav {
+			padding: 0 0px;
 		}
 	}
 `;

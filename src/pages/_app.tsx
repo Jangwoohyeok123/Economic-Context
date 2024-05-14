@@ -1,5 +1,4 @@
-import '@/styles/Global.scss';
-import '@/styles/Reset.scss';
+// import '@/styles/Reset.scss';
 import store from '@/store/store';
 import { Provider } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -11,7 +10,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import const_categoryId from '@/const/categoryId';
 import { GlobalStyles } from '@/styles/globalStyle';
 import { checkRouterPathname } from '@/utils/checkRouterPathname';
-import axios from 'axios';
 
 export const roboto = Roboto({
 	subsets: ['latin'],
@@ -29,18 +27,14 @@ export const categoryIdList = Object.values(const_categoryId);
 export const frontUrl = process.env.NEXT_PUBLIC_FRONT_URL;
 export const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-const axiosInstance = axios.create({
-	baseURL: ''
-});
-
 export default function App({ Component, pageProps }: AppProps) {
 	const router = useRouter();
 	const queryClient = new QueryClient();
 
 	return (
 		<Provider store={store}>
+			<GlobalStyles />
 			<QueryClientProvider client={queryClient}>
-				<GlobalStyles />
 				{checkRouterPathname(router.pathname) ? <Header /> : null}
 				<Component {...pageProps} />
 				<ReactQueryDevtools initialIsOpen={false} />
