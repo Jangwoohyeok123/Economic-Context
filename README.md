@@ -34,7 +34,7 @@
 > 목표
 - [x] 카테고리별로 경제지표를 제공한다.
 - [x] 경제지표는 카테고리별로 고유의 색을 통해 구분된다.
-- [ ] 투자일지를 작성하고 일짜순으로 볼 수 있게한다.
+- [ ] 투자일지를 작성하고 일자순으로 볼 수 있게한다.
 - [x] 현재 4가지 카테고리를 사용하지만 더 많은 카테고리를 사용하게 한다. 
 - [ ] 카테고리의 개수를 Fred와 동일하게 처리한다.
 - [ ] 알림 기능을 제공한다.
@@ -65,7 +65,9 @@
 <!-- CONTACT -->
 ## Contact
 
-Your Name - dkanvk1@gmail.com</br>
+장우혁 - dkanvk1@gmail.com</br>
+안주연 - aajy.000@gmail.com</br>
+
 Project Link: https://github.com/Jangwoohyeok123/Economic-Context
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
