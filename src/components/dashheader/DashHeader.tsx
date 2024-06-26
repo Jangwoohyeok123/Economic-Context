@@ -1,11 +1,12 @@
 import clsx from 'clsx';
 import styles from './DashHeader.module.scss';
 import ProfileImage from '../common/profileImage/ProfileImage';
-interface Dashboard_Prop {
-	selectedTab: string;
-}
+import { useContext } from 'react';
+import { SelectedTabContext } from '@/store/selectedTab-context';
 
-export default function DashHeader({ selectedTab }: Dashboard_Prop) {
+export default function DashHeader() {
+	const { selectedTab } = useContext(SelectedTabContext);
+
 	return (
 		<header className={clsx(styles.DashHeader)}>
 			<h2>{selectedTab}</h2>

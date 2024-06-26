@@ -5,17 +5,14 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSelector } from 'react-redux';
 import { Store_Type } from '@/types/redux';
 import const_queryKey from '@/const/queryKey';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { deleteContext, getContextNameWithKey_List } from '@/api/context';
 import { ContextNameWithKey_Type } from '@/types/context';
+import { SelectedTabContext } from '@/store/selectedTab-context';
 
-interface Menu_Props {
-	selectedTab: string;
-	setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
-}
-
-export default function Menu({ selectedTab, setSelectedTab }: Menu_Props) {
+export default function Menu() {
+	const { selectedTab, setSelectedTab } = useContext(SelectedTabContext);
 	const tabs = ['Indicators', 'MyContext'];
 	const queryClient = useQueryClient();
 	const [isAccordionOpen, setIsAccordionOpen] = useState(false);

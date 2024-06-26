@@ -19,6 +19,7 @@ import styled from 'styled-components';
 import MainImage from '@/components/mainImage/MainImage';
 import ClipLoader from 'react-spinners/ClipLoader';
 import Image from 'next/image';
+import { SelectedTabProvider } from '@/store/selectedTab-context';
 
 const DynamicLoginAlertModal = dynamic(() => import('@/components/modals/loginAlertModal/LoginAlertModal'), { ssr: false });
 const CategoryTabMenu = dynamic(() => import('@/components/categoryTabMenu/CategoryTabMenu'), { ssr: false });
@@ -78,7 +79,7 @@ export default function Home() {
 	if (!category_List) return <ClipLoader />;
 
 	return (
-		<>
+		<SelectedTabProvider>
 			<SEO title='Economic-Context' description='Economic indicators can be selected and utilized within myContext' />
 			<MainImage />
 			<main className={clsx(styles.Home, poppins.variable, roboto.variable)}>
@@ -115,6 +116,6 @@ export default function Home() {
 			</main>
 			<Footer />
 			<DynamicLoginAlertModal size='small' header='You need to login!' body='Our service is required to login' />
-		</>
+		</SelectedTabProvider>
 	);
 }
