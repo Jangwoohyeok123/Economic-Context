@@ -1,29 +1,23 @@
+import { useSelectedTabContext } from '@/hooks/useSelectedContext';
 import { ReactNode, createContext, useContext, useState } from 'react';
 
-interface ContextType {
+interface SelectedTabContextType {
 	selectedTab: string;
 	setSelectedTab: (tab: string) => void;
+	updateTab?: (tab: string) => void;
 }
 
-const defaultContextValue: ContextType = {
+const defaultContextValue: SelectedTabContextType = {
 	selectedTab: 'Indicators',
 	setSelectedTab: () => {}
 };
 
-export const SelectedTabContext = createContext<ContextType>(defaultContextValue);
+const SelectedTabContext = createContext(defaultContextValue);
 
-// Provider 컴포넌트
-export const SelectedTabProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+const SelectedTabProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 	const [selectedTab, setSelectedTab] = useState<string>(defaultContextValue.selectedTab);
-
-	console.log('context', selectedTab);
-	return <SelectedTabContext.Provider value={{ selectedTab, setSelectedTab }}>{children}</SelectedTabContext.Provider>;
+	const { updateTab } = useContext(SelectedTabContext);
+	return <SelectedTabContext.Provider value={{ selectedTab, setSelectedTab, updateTab }}>{children}</SelectedTabContext.Provider>;
 };
 
-export const useSelectedTab = () => {
-	const context = useContext(SelectedTabContext);
-	if (!context) {
-		throw new Error('useSelectedTab must be used within a SelectedTabProvider');
-	}
-	return context;
-};
+export { SelectedTabContext, SelectedTabProvider };

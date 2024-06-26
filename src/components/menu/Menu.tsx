@@ -13,6 +13,7 @@ import { SelectedTabContext } from '@/store/selectedTab-context';
 
 export default function Menu() {
 	const { selectedTab, setSelectedTab } = useContext(SelectedTabContext);
+
 	const tabs = ['Indicators', 'MyContext'];
 	const queryClient = useQueryClient();
 	const [isAccordionOpen, setIsAccordionOpen] = useState(false);

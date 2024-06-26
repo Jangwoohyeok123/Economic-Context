@@ -6,7 +6,7 @@ import { useContext, useState } from 'react';
 import MyContextTab from '@/components/myContext/MyContext';
 import IndicatorsTab from '@/components/indicatorsTab/IndicatorsTab';
 import { roboto, poppins } from '../_app';
-import { SelectedTabContext, SelectedTabProvider, useSelectedTab } from '@/store/selectedTab-context';
+import { SelectedTabContext } from '@/store/selectedTab-context';
 
 export default function Dashboard() {
 	const { selectedTab } = useContext(SelectedTabContext);
