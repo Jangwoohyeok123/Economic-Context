@@ -18,7 +18,7 @@ interface Menu_Props {
 export default function Menu({ selectedTab, setSelectedTab }: Menu_Props) {
 	const tabs = ['Indicators', 'MyContext'];
 	const queryClient = useQueryClient();
-	const [isAccordianOpen, setIsAccordianOpen] = useState(false);
+	const [isAccordionOpen, setIsAccordionOpen] = useState(false);
 	const userId = useSelector((state: Store_Type) => state.user.id);
 	const { data: contextIdsWithNames, isLoading } = useQuery<ContextNameWithKey_Type[]>({
 		queryKey: [const_queryKey.context, 'names'],
@@ -53,8 +53,8 @@ export default function Menu({ selectedTab, setSelectedTab }: Menu_Props) {
 
 	const tabClick = (name: string) => {
 		setSelectedTab(name);
-		if (name === 'Indicators') setIsAccordianOpen(false);
-		if (name === 'MyContext') setIsAccordianOpen(!isAccordianOpen);
+		if (name === 'Indicators') setIsAccordionOpen(false);
+		if (name === 'MyContext') setIsAccordionOpen(!isAccordionOpen);
 	};
 
 	return (
@@ -73,7 +73,7 @@ export default function Menu({ selectedTab, setSelectedTab }: Menu_Props) {
 				})}
 
 				<div className={clsx(styles.contexts)}>
-					{isAccordianOpen &&
+					{isAccordionOpen &&
 						contextIdsWithNames?.map((context: ContextNameWithKey_Type, index: number) => {
 							const { id: contextId, name } = context;
 
