@@ -14,7 +14,7 @@ import { ContextNameWithKey_Type } from '@/types/context';
 import { getContextNameWithKey_List } from '@/api/context';
 import Profile from './propfile/Profile';
 import JournalSection from '../journalsSection/JournalSection';
-import { SelectedTabContext } from '@/store/selectedTab-context';
+import { SelectedTabContext } from '@/store/context/selectedTabContext';
 
 export default function MyContextTab() {
 	const { selectedTab, setSelectedTab } = useContext(SelectedTabContext);

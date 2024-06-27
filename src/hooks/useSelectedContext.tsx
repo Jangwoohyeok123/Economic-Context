@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { SelectedTabContext } from '@/store/selectedTab-context';
+import { SelectedTabContext } from '@/store/context/selectedTabContext';
 
 export const useSelectedTabContext = () => {
 	const { setSelectedTab } = useContext(SelectedTabContext);

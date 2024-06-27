@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import styles from './DashHeader.module.scss';
 import ProfileImage from '../common/profileImage/ProfileImage';
 import { useContext } from 'react';
-import { SelectedTabContext } from '@/store/selectedTab-context';
+import { SelectedTabContext } from '@/store/context/selectedTabContext';
 
 export default function DashHeader() {
 	const { selectedTab } = useContext(SelectedTabContext);
