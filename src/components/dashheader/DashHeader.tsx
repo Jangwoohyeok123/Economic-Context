@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 import styles from './DashHeader.module.scss';
 import ProfileImage from '../common/profileImage/ProfileImage';
-import { useTabMenuViewer } from '@/pages/dashboard/TabMenuViewer';
 
 interface DashHeaderProps {
 	tab: string;

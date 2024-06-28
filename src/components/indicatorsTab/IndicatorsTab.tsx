@@ -43,7 +43,7 @@ export default function IndicatorsTab() {
 
 	return (
 		<FavoriteContainer>
-			<DashHeader />
+			<DashHeader tab={'Indicators'} />
 			<LeftContainer>
 				<div className='categoryTabMenuWrapper'>
 					<CategoryTabMenu categoryIdList={categoryIds} selectedCategoryId={currentCategoryId} setSelectedCategoryId={setCurrentCategoryId} />
