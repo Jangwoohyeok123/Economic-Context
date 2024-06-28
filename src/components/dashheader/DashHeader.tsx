@@ -1,15 +1,16 @@
 import clsx from 'clsx';
 import styles from './DashHeader.module.scss';
 import ProfileImage from '../common/profileImage/ProfileImage';
-import { useContext } from 'react';
-import { SelectedTabContext } from '@/store/context/selectedTabContext';
+import { useTabMenuViewer } from '@/pages/dashboard/TabMenuViewer';
 
-export default function DashHeader() {
-	const { selectedTab } = useContext(SelectedTabContext);
+interface DashHeaderProps {
+	tab: string;
+}
 
+export default function DashHeader({ tab }: DashHeaderProps) {
 	return (
 		<header className={clsx(styles.DashHeader)}>
-			<h2>{selectedTab}</h2>
+			<h2>{tab}</h2>
 			<ProfileImage width={40} height={40} />
 		</header>
 	);

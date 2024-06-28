@@ -164,7 +164,7 @@ function IndicatorsTab() {
 
 	return (
 		<FavoriteContainer>
-			<DashHeader />
+			<DashHeader tab={'Indicators'} />
 			<LeftContainer>
 				<div className='categoryTabMenuWrapper'>
 					<CategoryTabMenu categoryIdList={categoryIds} selectedCategoryId={currentCategoryId} setSelectedCategoryId={setCurrentCategoryId} />
@@ -249,6 +249,7 @@ function MyContextTab() {
 	if (isLoading) return <div className={clsx(styles.MyContext)}>loading...</div>;
 	return (
 		<div className={clsx(styles.MyContext)}>
+			<DashHeader tab={'MyContext'} />
 			<Profile />
 			{selectedTab === 'MyContext' ? (
 				<AllContexts selectedContext={selectedContext} setSelectedContext={setSelectedContext} />
