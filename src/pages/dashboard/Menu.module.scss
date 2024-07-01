@@ -1,0 +1,103 @@
+@use '../../styles/Variable' as var;
+
+// .MenuBottom {
+// 	width: var.$dashMenuWidth;
+// }
+
+.Menu {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: var.$dashMenuWidth;
+	min-height: calc(100vh);
+	font-family: var(--baseFont);
+	background: var(--fontColor);
+	color: var(--bgColor);
+	transition: 0.3s;
+
+	nav {
+		display: flex;
+		flex-direction: column;
+		align-content: center;
+		.logo {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: var.$headerSize;
+			margin-bottom: 30px;
+			font-size: 1.3rem;
+			background: var(--bgColor-dark);
+		}
+
+		> span {
+			opacity: 0.5;
+			font-size: 1.3rem;
+			transition: 0.3s;
+			padding: 15px 20px;
+
+			&:hover {
+				opacity: 1;
+				cursor: pointer;
+			}
+
+			&.on {
+				opacity: 1;
+				color: var(--bgColor);
+				background: rgba(var(--bgColor-code), 0.3);
+			}
+		}
+
+		.contexts {
+			display: flex;
+			flex-direction: column;
+			align-items: right;
+
+			.context {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 0px 40px;
+				transition: 0.3s;
+				cursor: pointer;
+				> span {
+					opacity: 0.5;
+					font-size: 1.1rem;
+					padding: 15px 20px;
+					color: var(--bgColor);
+					transition: 0.3s;
+				}
+			}
+
+			.deleteIcon {
+				display: none;
+				> svg {
+					margin-bottom: -3px;
+				}
+			}
+
+			.context.on {
+				opacity: 1;
+				background: rgba(var(--bgColor-code), 0.3);
+			}
+
+			.context:hover {
+				> span:first-child {
+					opacity: 1;
+				}
+				background: rgba(var(--bgColor-code), 0.3);
+				.deleteIcon {
+					display: block;
+					&:hover {
+						color: var(--pointColor);
+					}
+				}
+			}
+		}
+	}
+}
+
+@media screen and (max-width: var.$mobile) {
+	.Menu {
+		width: var.$dashMenuWidth-mobile;
+	}
+}

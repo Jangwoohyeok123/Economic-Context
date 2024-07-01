@@ -1,7 +1,7 @@
 import { MdExpandMore } from 'react-icons/md';
 import styled from 'styled-components';
 
-const AccordianContainer = styled.div`
+const AccordionContainer = styled.div`
 	position: absolute;
 	right: 0;
 	top: 5px;
@@ -21,7 +21,7 @@ const AccordianContainer = styled.div`
 		height: 30px;
 	}
 
-	> .labelAccordian.active {
+	> .labelAccordion.active {
 		background: #fff;
 		height: 100px;
 
@@ -31,15 +31,15 @@ const AccordianContainer = styled.div`
 	}
 `;
 
-export default function Accordian() {
+export default function Accordion() {
 	return (
-		<AccordianContainer className='labelAccordian active'>
+		<AccordionContainer className='labelAccordion active'>
 			<div className='label'>
 				<span>Label</span>
 				<span>
 					<MdExpandMore />
 				</span>
 			</div>
-		</AccordianContainer>
+		</AccordionContainer>
 	);
 }

@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { Store_Type } from '@/types/redux';
 import const_queryKey from '@/const/queryKey';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -14,13 +14,10 @@ import { ContextNameWithKey_Type } from '@/types/context';
 import { getContextNameWithKey_List } from '@/api/context';
 import Profile from './propfile/Profile';
 import JournalSection from '../journalsSection/JournalSection';
+import { SelectedTabContext } from '@/store/context/selectedTabContext';
 
-interface MyContextTab_Props {
-	selectedTab: string;
-	setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
-}
-
-export default function MyContextTab({ selectedTab, setSelectedTab }: MyContextTab_Props) {
+export default function MyContextTab() {
+	const { selectedTab, setSelectedTab } = useContext(SelectedTabContext);
 	const userId = useSelector((state: Store_Type) => state.user.id);
 	const [currentContextId, setCurrentContextId] = useState<number | undefined>();
 	const [selectedContext, setSelectedContext] = useState<string>('');

@@ -20,6 +20,6 @@
 			"@/public/*": ["public/*"]
 		}
 	},
-	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/components/contextTable"],
+	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/components/contextTable", "src/**/*.tsx"],
 	"exclude": ["node_modules"]
 }
