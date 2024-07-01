@@ -3,7 +3,7 @@ import useFavoriteQuery from '@/hooks/useFavoriteQuery';
 import { FavoriteContainer, LeftContainer, RightContainer } from '@/styles/IndicatorsTab.style';
 import { FavoriteIndicator_Type } from '@/types/favorite';
 import const_categoryId, { categoryIds } from '@/const/categoryId';
-import Accordian from '../accordian/Accordian';
+import Accordion from '../accordion/Accordion';
 import CategoryTabMenu from '../categoryTabMenu/CategoryTabMenu';
 import DashHeader from '../dashheader/DashHeader';
 import CreateContextSection from '../createContextSection/CreateContextSection';
@@ -81,7 +81,7 @@ export default function IndicatorsTab() {
 				<div className='contextName'>
 					<div>
 						<h3>Context Name</h3>
-						<Accordian />
+						<Accordion />
 					</div>
 					<input type='text' placeholder='write your context name' />
 				</div>

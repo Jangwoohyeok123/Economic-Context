@@ -8,7 +8,6 @@ const DashboardContent = () => {
 
 	return (
 		<section className={clsx(styles.Dashboard)}>
-			{/* <Menu /> */}
 			<TabMenuViewer.TabMenu tabs={tabs} />
 			{selectedTab === 'Indicators' ? <TabMenuViewer.IndicatorsTab /> : <TabMenuViewer.MyContextTab />}
 		</section>

@@ -9,10 +9,10 @@ import { useContext, useEffect, useState } from 'react';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { deleteContext, getContextNameWithKey_List } from '@/api/context';
 import { ContextNameWithKey_Type } from '@/types/context';
-import { SelectedTabContext } from '@/store/selectedTab-context';
+import { useTabMenuViewer } from '@/pages/dashboard/TabMenuViewer';
 
 export default function Menu() {
-	const { selectedTab, setSelectedTab } = useContext(SelectedTabContext);
+	const { selectedTab, setSelectedTab } = useTabMenuViewer();
 
 	const tabs = ['Indicators', 'MyContext'];
 	const queryClient = useQueryClient();

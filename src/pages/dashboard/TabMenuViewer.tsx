@@ -20,7 +20,7 @@ import useFavoriteQuery from '@/hooks/useFavoriteQuery';
 import { FavoriteIndicator_Type } from '@/types/favorite';
 import DashHeader from '@/components/dashheader/DashHeader';
 import CategoryTabMenu from '@/components/categoryTabMenu/CategoryTabMenu';
-import Accordian from '@/components/accordian/Accordian';
+import Accordion from '@/components/accordion/Accordion';
 import CreateContextSection from '@/components/createContextSection/CreateContextSection';
 
 interface TabMenuViewContextType {
@@ -128,7 +128,7 @@ function TabMenu({ tabs }: MenuProps) {
 	);
 }
 
-function IndicatorsTab() {
+function IndicatorsTabViewer() {
 	const { deleteFavoriteMutationAll } = useFavoriteMutation();
 	const { allFavorites_List } = useFavoriteQuery();
 	const [currentCategoryId, setCurrentCategoryId] = useState<number>(const_categoryId.interest_mortgage);
@@ -202,7 +202,7 @@ function IndicatorsTab() {
 				<div className='contextName'>
 					<div>
 						<h3>Context Name</h3>
-						<Accordian />
+						<Accordion />
 					</div>
 					<input type='text' placeholder='write your context name' />
 				</div>
@@ -213,7 +213,7 @@ function IndicatorsTab() {
 	);
 }
 
-function MyContextTab() {
+function MyContextTabViewer() {
 	const { selectedTab, setSelectedTab } = useTabMenuViewer();
 	const userId = useSelector((state: Store_Type) => state.user.id);
 	const [currentContextId, setCurrentContextId] = useState<number | undefined>();
@@ -262,7 +262,7 @@ function MyContextTab() {
 }
 
 TabMenuViewer.TabMenu = TabMenu;
-TabMenuViewer.MyContextTab = MyContextTab;
-TabMenuViewer.IndicatorsTab = IndicatorsTab;
+TabMenuViewer.MyContextTab = MyContextTabViewer;
+TabMenuViewer.IndicatorsTab = IndicatorsTabViewer;
 
 export default TabMenuViewer;
